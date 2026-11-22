@@ -1,0 +1,46 @@
+# Entorno y secretos locales
+.env
+.env.*
+!.env.example
+.envrc
+.netrc
+credentials/
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Dependencias, compilación y cachés
+node_modules/
+dist/
+*.tsbuildinfo
+.wrangler/
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage/
+
+# Archivos temporales
+*.log
+*.tmp
+*.swp
+*~
+.DS_Store
+
+# Copias de partidas y muestras privadas
+saves/
+backups/
+*.sav
+*.save
+*.data
+*.skdb
+*.playerprefs.xml
+item_data_*
+season_data_*
+statistic_*
+*.skdemo
+!frontend/public/ejemplo.skdemo
+!backend/tests/fixtures/sintetico.skdemo

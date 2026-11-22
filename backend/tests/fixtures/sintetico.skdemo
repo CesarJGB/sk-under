@@ -1,0 +1,7 @@
+SK-EDITOR-DEMO/1
+{
+  "fixture_id": "fixture-backend",
+  "label": "Ejemplo sintético",
+  "sample_count": 4,
+  "sample_limit": 10
+}

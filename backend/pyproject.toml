@@ -1,0 +1,19 @@
+[project]
+name = "soul-knight-editor-api"
+version = "0.2.0"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.121,<1",
+    "pydantic-settings>=2.11,<3",
+    "uvicorn>=0.38,<1",
+]
+
+[dependency-groups]
+dev = [
+    "httpx2<3",
+    "pytest>=9,<10",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
