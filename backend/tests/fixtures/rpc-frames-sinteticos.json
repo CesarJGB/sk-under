@@ -1,0 +1,13 @@
+[
+  {"wire": null, "kind": "null_input", "body": null},
+  {"wire": "", "kind": "passthrough", "body": ""},
+  {"wire": "00", "kind": "passthrough", "body": "00"},
+  {"wire": "0000", "kind": "passthrough", "body": "0000"},
+  {"wire": "000000", "kind": "passthrough", "body": "000000"},
+  {"wire": "80000000", "kind": "passthrough", "body": "80000000"},
+  {"wire": "fffffeff00", "kind": "passthrough", "body": "fffffeff00"},
+  {"wire": "ffffffff", "kind": "null_marker", "body": null},
+  {"wire": "ffffffff01", "kind": "null_marker", "body": null},
+  {"wire": "00000080", "kind": "compressed", "body": ""},
+  {"wire": "00000080deadbeef", "kind": "compressed", "body": "deadbeef"}
+]

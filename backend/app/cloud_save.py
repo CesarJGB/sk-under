@@ -38,7 +38,19 @@ RECOGNIZED_FIELDS = frozenset(
 
 
 class CloudSaveError(ValueError):
-    pass
+    code = "cloud_save"
+
+
+class AggregateFormatError(CloudSaveError):
+    code = "invalid_aggregate"
+
+
+class UnsupportedEncoding(CloudSaveError):
+    code = "unknown_format"
+
+
+class CopyLimitError(CloudSaveError):
+    code = "size_limit"
 
 
 @dataclass(frozen=True)
@@ -78,28 +90,28 @@ class ReconstructedCloudSave:
 def _unpack(source: bytes) -> tuple[Encoding, bytes]:
     if not source.startswith(b"\x1f\x8b"):
         if len(source) > MAX_JSON_BYTES:
-            raise CloudSaveError("El JSON supera el límite permitido.")
+            raise CopyLimitError("El JSON supera el límite permitido.")
         if not source.lstrip(b" \t\r\n").startswith(b"{"):
-            raise CloudSaveError("Se esperaba un objeto JSON UTF-8 o gzip.")
+            raise UnsupportedEncoding("Se esperaba un objeto JSON UTF-8 o gzip.")
         return "json", source
 
     decoder = zlib.decompressobj(wbits=16 + zlib.MAX_WBITS)
     try:
         document = decoder.decompress(source, MAX_JSON_BYTES + 1)
     except zlib.error:
-        raise CloudSaveError("El gzip está dañado.") from None
+        raise AggregateFormatError("El gzip está dañado.") from None
     if len(document) > MAX_JSON_BYTES:
-        raise CloudSaveError("El JSON supera el límite permitido.")
+        raise CopyLimitError("El JSON supera el límite permitido.")
     if not decoder.eof or decoder.unused_data:
-        raise CloudSaveError("El gzip está truncado o contiene bytes adicionales.")
+        raise AggregateFormatError("El gzip está truncado o contiene bytes adicionales.")
     return "gzip", document
 
 
 def _validate_json_tree(value: JsonValue, depth: int = 0) -> None:
     if depth > MAX_JSON_DEPTH:
-        raise CloudSaveError("El JSON supera la profundidad permitida.")
+        raise AggregateFormatError("El JSON supera la profundidad permitida.")
     if isinstance(value, float) and not math.isfinite(value):
-        raise CloudSaveError("El JSON contiene un número fuera de rango.")
+        raise AggregateFormatError("El JSON contiene un número fuera de rango.")
     if isinstance(value, dict):
         for member in value.values():
             _validate_json_tree(member, depth + 1)
@@ -112,27 +124,27 @@ def _reconstruct(document: bytes) -> CloudSaveGameData:
     try:
         root = parse_json(document)
     except (ValueError, RecursionError):
-        raise CloudSaveError("El documento no contiene JSON UTF-8 válido.") from None
+        raise AggregateFormatError("El documento no contiene JSON UTF-8 válido.") from None
     if not isinstance(root, dict):
-        raise CloudSaveError("Se esperaba un objeto JSON en la raíz.")
+        raise AggregateFormatError("Se esperaba un objeto JSON en la raíz.")
     _validate_json_tree(root)
 
     version = root.get("serialzedVersion")
     if type(version) is not int or version < 0:
-        raise CloudSaveError("Se requiere serialzedVersion como entero no negativo.")
+        raise AggregateFormatError("Se requiere serialzedVersion como entero no negativo.")
     save_id = root.get("cloudSaveId")
     if not isinstance(save_id, str) or not save_id.strip():
-        raise CloudSaveError("Se requiere cloudSaveId como texto no vacío.")
+        raise AggregateFormatError("Se requiere cloudSaveId como texto no vacío.")
     platform_id = root.get("platformId")
     if not isinstance(platform_id, str) or not platform_id.strip():
-        raise CloudSaveError("Se requiere platformId como texto no vacío.")
+        raise AggregateFormatError("Se requiere platformId como texto no vacío.")
     game_data = root.get("gameData")
     if not isinstance(game_data, dict):
-        raise CloudSaveError("Se requiere gameData como objeto JSON.")
+        raise AggregateFormatError("Se requiere gameData como objeto JSON.")
     for name in OBJECT_SECTIONS:
         section = root.get(name)
         if section is not None and not isinstance(section, dict):
-            raise CloudSaveError(f"La sección {name} debe ser un objeto JSON o nula.")
+            raise AggregateFormatError(f"La sección {name} debe ser un objeto JSON o nula.")
 
     return CloudSaveGameData(
         serialzed_version=version,
@@ -147,7 +159,7 @@ def _reconstruct(document: bytes) -> CloudSaveGameData:
 def reconstruct_cloud_save(source: bytes) -> ReconstructedCloudSave:
     """Reconstruye una copia en memoria y calcula la huella de los bytes recibidos."""
     if len(source) > MAX_INPUT_BYTES:
-        raise CloudSaveError("La entrada supera el límite permitido.")
+        raise CopyLimitError("La entrada supera el límite permitido.")
     encoding, document = _unpack(source)
     data = _reconstruct(document)
     return ReconstructedCloudSave(encoding, len(source), sha256(source).hexdigest(), data)

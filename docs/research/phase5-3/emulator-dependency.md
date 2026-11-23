@@ -1,0 +1,20 @@
+# Qué operaciones se pueden ejecutar en Linux
+
+| Operación | Android actual | Linux actual | Evidencia | Dependencia y siguiente comprobación |
+| --- | --- | --- | --- | --- |
+| Autenticación de juego | Sí, para la cuenta Android estudiada | Sin integración demostrada | Formulario y resultado en [5.1](../phase5-experimental/experimentos.md) | Sesión oficial del titular. Verificar con el proveedor si autoriza delegación de solo lectura. |
+| Consulta de metadatos | Sí para mostrar el resumen remoto | Sí para tamaño, huella y esquema de una copia local | [Inventario y validación](real-save-validation.md) | Hace falta un contrato para consultar una revisión remota. |
+| Adquisición del respaldo | Recuperación dentro del cliente | Bloqueada para una adquisición directa | [Cronología](session-timeline.md) y [contratos](fetch-comparison.md) | Obtener una exportación legítima o una interfaz de lectura del proveedor. |
+| Validación | Prescindible para archivos suministrados | Sí | [Comparación con inventario](real-save-validation.md) y [pruebas del agregado](blob-format.md) | La autenticidad remota depende del emisor de los metadatos. |
+| Descompresión | Prescindible para un gzip suministrado | Sí para un miembro gzip acotado. Solo clasificación para el bloque RPC | [Vectores y límites](blob-format.md) | Contrastar el algoritmo de ZipHelper con un par entrada–salida autorizado. |
+| Interpretación | Prescindible para los formatos verificados | Nueve familias 8.6.0 y esquema provisional de agregado | [Resultados reales](real-save-validation.md) y [uso](importer.md) | Validar Data, FixData y versión con una revisión real de 8.8.0. |
+| Extracción | Prescindible para secciones suministradas | Sí, secciones JSON con presencia, nulo o ausencia | [Prueba de la CLI](../../../backend/tests/test_local_cloud_import.py) | Comparar un subsistema con su archivo 8.8.0 materializado. |
+| Edición local | Prescindible para el editor | Sí en el formato sintético editable. Los nueve esquemas reales admiten inspección y copia intacta | [Pruebas del motor](../../../backend/tests/test_engine.py) y [regresión privada](../../../backend/tests/test_private_save_roundtrip.py) | Verificar semántica de un campo y preservar los demás antes de habilitarlo. |
+| Exportación | Prescindible para archivos que ya tiene el titular | Sí para copia intacta y salida JSON de una sección | [Referencia reproducible](real-save-validation.md) y [CLI](importer.md) | Una exportación de nube a archivo continúa pendiente. |
+| Restauración | Sí en el cliente Android investigado | Sin restauración de juego desde el backend | [Confirmación y aplicación 5.1](../phase5-experimental/experimentos.md) | Vincular la revisión recibida con la aplicada. La edición y la escritura remota quedan fuera del ensayo. |
+
+## Mecanismos publicados
+
+Se consultaron el manual Android de Soul Knight, su FAQ de nube y el portal de soporte de ChillyRoom. El manual describe la descarga de progreso desde la pantalla de nube y la recuperación asistida por soporte. La FAQ indica que el respaldo admitido pasa por la función del juego, requiere el mismo método de acceso y distingue Android de iOS. En estas fuentes no se localizó una API pública delegada, una descarga web del archivo ni una exportación machine-readable del agregado. Esta conclusión se limita a la documentación consultada. [Manual de Android](https://soulknight.chillyroom.com/et/article/base/3) · [FAQ](https://soulknight.chillyroom.com/et/article/base/6) · [Soporte](https://www.chillyroom.com/en/support)
+
+La siguiente consulta concreta para soporte es si el titular puede recibir una copia de una revisión propia de Android 8.8.0 con formato, tamaño y huella, o si existe una integración aprobada equivalente. Esta fase revisó las fuentes públicas. Una respuesta que solo indique cómo restaurar en el cliente deja pendiente la entrega del archivo al titular. El censo del manifiesto y de los proveedores de contenido de 5.2 tampoco mostró una salida de este tipo. [Censo del APK](../phase5-trace/architecture.md)

@@ -8,6 +8,8 @@ La Fase 4 documenta el análisis estático del APK 8.8.0 y las pruebas con las m
 
 La Fase 5.1 registra las pruebas de ejecución de Soul Knight 8.8.0 y de acceso al guardado en un laboratorio Android. [Validación experimental](docs/research/phase5-experimental/README.md)
 
+La Fase 5.3 verificó una ruta condicional de precarga en el panel y reconstruyó las nueve referencias locales 8.6.0 en Linux. El importador acepta agregados suministrados en JSON o gzip. [Informe de Fase 5.3](docs/research/phase5-3/README.md) · [Uso del importador](docs/research/phase5-3/importer.md)
+
 ## Arquitectura
 
 ```text
