@@ -1,0 +1,11 @@
+# Limitaciones y riesgos
+
+| Riesgo o límite | Implicación para el editor |
+| --- | --- |
+| Acceso al servicio | La documentación pública describe restauración en el cliente. El inicio de sesión web y el acceso de solo lectura dependen de un contrato para aplicaciones externas, con consentimiento y alcance de guardados propios. [Manual de Android](https://soulknight.chillyroom.com/et/article/base/3) |
+| Identidad y canal | Correo, proveedor de inicio de sesión, usuario del SDK, jugador e identidad de guardado son dominios distintos. El acceso futuro deberá vincular la respuesta a la sesión verificada por el proveedor. Un ID declarado dentro del JSON sirve como dato para comprobar, no como prueba de titularidad. [Preguntas frecuentes](https://soulknight.chillyroom.com/et/article/base/6) |
+| Límites de dispositivo | El proveedor documenta hasta cinco vinculaciones por ciclo de 90 días, con al menos 24 horas entre vinculaciones. Incluye el uso de emulador al subir o descargar. Una restauración sustituye el progreso del dispositivo. [Límites](https://soulknight.chillyroom.com/et/article/base/4) · [Soporte por canal](https://www.chilly.tech/zh/soul-knight/support) |
+| Cobertura estática | Hay hotfixes, ramas por configuración y cuerpos parciales. Se identificó el esquema del cliente 8.8.0 y se probaron localmente muestras atribuidas a 8.6.0. Falta comparar copias reales de la misma versión, cuenta y plataforma. |
+| Integridad y pérdida de datos | SHA-256 verifica igualdad de bytes con la copia recibida. La autenticidad depende del origen autorizado. Gzip y esquema válido tampoco prueban coherencia de progreso. Conservar los bytes originales preserva representación numérica, formato y miembros desconocidos. |
+| Privacidad | La partida puede contener identidad, configuración y estados de tienda. La arquitectura de lectura debe aislarla por sesión, acotar su retención y exponer solo los campos de resumen necesarios. |
+| Cambios y sincronización posterior | La restauración puede reconciliar compras y progreso o activar migraciones. El soporte documenta restricciones sobre guardados modificados. Una futura escritura exige evaluación y autorización propias, incluso si la lectura llega a funcionar. [Soporte oficial](https://www.chilly.tech/zh/soul-knight/support) |

@@ -1,0 +1,15 @@
+# Estructuras utilizables para presets
+
+Los campos de esta tabla se observaron en el APK. Las rutas expresan la relación entre el agregado y sus modelos. La codificación remota de los miembros, el catálogo de entradas y las reglas de modificación quedan pendientes de medición.
+
+| Preset | Campos candidatos | Dependencias que deben comprobarse |
+| --- | --- | --- |
+| Recursos al máximo | `gameData.gems`, `lastGems`, `varGems`, `cumulativeGems`, `cumulativeConsumeGems`, `fishChip`, `rebornCard`. `itemData.materials`, `seeds`. `seasonData.coin` y sus contadores. | Saldo y contadores históricos, variantes por temporada, límites reales y reconciliación con recompensas y compras. Separar la economía general de las divisas de modo y temporada. |
+| Personajes desbloqueados | `gameData.heroUnlock`, `heroLevel`, `heroSkill`, `heroSkillUnlock`, `skinLock`, `currentSkinDatas`. | Catálogo de héroes y habilidades de la compilación, selección activa, niveles y derechos asociados a compras. Comprobar los cruces con el estado PvP si el catálogo se comparte. |
+| Armas desbloqueadas | `itemData.itemUnlock`, `itemData.blueprints`, `itemData.forgeWeapons`, `statisticData.StatisticsData`, `statisticData.handbookWeaponCollectionTrackedLevels` y `weaponEvolutionData.weapons`. | Diferenciar entrada del manual, uso, forja y evolución. Verificar las reglas para materiales, planos y registros de forja, incluidos `forgeWeaponMaterialPayments`. |
+| Mejoras desbloqueadas | `gameData.heroLevel`, `gameData.roomLevel`, `gameData.roomObjectLevel`, `gameData.isWaveMachineUpgraded`, `weaponEvolutionData.weapons` y `seasonData.chips`. | Ramas de evolución, límites de nivel, aspecto seleccionado, requisito previo de desbloqueo y mejoras que pertenecen exclusivamente a un modo. |
+| Progreso avanzado | `gameData.certificates` y `normalModePassCertificates`, `statisticData.passInfo` y `achieve_record`, `taskData.tasks`, `monsterRiseData.maxClearLevel` y `battlePassSaveData.seasonData`. | Coherencia entre dificultad, certificados, logros, tareas reclamadas, temporadas y desbloqueo de modos. Verificar migraciones y efectos en recompensas antes de definir cambios. |
+
+Los tipos de referencia son `AboGameData` (`0x02000bf1`), `ItemData` (`0x02000bf5`), `StatisticData` (`0x02000c5a`), `SeasonData` (`0x02000c3b`), `WeaponEvolutionData` (`0x02003f6c`) y `CloudSaveExtraData` (`0x02001185`). Para armas existen `GetWeaponCount` (`0x06009d6c`) y `GetCanForgeWeaponCount` (`0x06009d6d`). Para comparaciones, `CloudSaveExtraData.CreateExtraData` (`0x06009da5`) y `GetExceptRMBPayDescribe` (`0x06009dab`) aparecen en `LoadGame`. Los nueve archivos aportan ejemplos de mapas y listas de subsistemas. [Correspondencia con 8.6.0](reconstruccion.md)
+
+Para pasar de candidatos a un preset verificable, obtener pares de copias autorizadas de la misma compilación tras una sola acción en el juego, cotejar el catálogo de esa compilación y registrar los campos que varían juntos. Los derechos de compra y los marcadores de reconciliación requieren un contrato específico del proveedor. Esta fase entrega únicamente el mapa de campos.

@@ -1,0 +1,11 @@
+{
+  "serialzedVersion": 0,
+  "cloudSaveId": "sintetico-cuenta",
+  "platformId": "sintetico-plataforma",
+  "gameData": {},
+  "itemData": {"materials": {}},
+  "statisticData": {"StatisticsData": {}},
+  "taskData": null,
+  "maps": {},
+  "campoSintetico": {"entero": 9007199254740993}
+}

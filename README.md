@@ -217,7 +217,7 @@ El token concede el mismo acceso a quienes lo comparten. Esta solución está pr
 | `.skdemo` v1 | Verificado con dos muestras sintéticas. Firma `SK-EDITOR-DEMO/1` seguida de salto de línea y JSON UTF-8. Incluye una etiqueta, un ID de solo lectura y dos enteros de prueba con la regla cantidad ≤ límite. |
 | XML de preferencias y datos históricos de Android documentados en la investigación | Pendientes de verificación con muestras representativas. Se rechazan en esta fase. |
 | Otras variantes de Android e iOS | Compatibilidad pendiente por canal y versión. |
-| Sincronización con ChillyRoom | Fuera del alcance de este editor de copias locales. |
+| Acceso a guardados de ChillyRoom | En investigación. Hay un reconstructor experimental de solo lectura probado con fixtures sintéticos. La conexión y la descarga automática dependen de una vía autorizada por el proveedor. [Fase 5](docs/research/phase5/README.md) |
 
 La investigación local `SHOULXING_RESEARCH`, en particular los informes 03, 06 y 07, describe XML de preferencias y archivos históricos con JSON, Base64 y DES-CBC, así como las limitaciones de ABI y del análisis estático. Se verificó la licencia Apache-2.0 del clon de SHOULXING en el commit de referencia. La implementación del adaptador sintético es propia y el motor funciona de forma independiente de esos componentes. [Referencia histórica de SHOULXING](https://github.com/STE4LPH/SHOULXING/tree/685691e09798aa6d39ae2f44f29e31ad6423b98d)
 
