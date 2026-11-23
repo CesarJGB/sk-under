@@ -30,6 +30,6 @@ class FormatAdapter(Protocol):
         """Devuelve un documento válido con las ediciones aplicadas a una copia."""
         ...
 
-    def serialize(self, document: Document) -> SerializedFile:
-        """Codifica el documento para descargarlo con un nombre seguro."""
+    def serialize(self, document: Document, original: bytes) -> SerializedFile:
+        """Prepara la descarga con un nombre seguro y acceso al original validado."""
         ...

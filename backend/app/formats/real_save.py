@@ -4,7 +4,7 @@ from typing import cast
 from ..errors import EditorError
 from ..models import EditableValue, EditorField, FormatInfo, IntegerField, TextField
 from ..parsers.real_save import SCHEMAS, ciphertext, read_payload
-from ..serializers.real_save import encode_payload
+from ..serializers.real_save import serialize_real_copy
 from .adapter import Document, SerializedFile
 
 JS_SAFE_INTEGER = (1 << 53) - 1
@@ -32,24 +32,24 @@ class RealSaveAdapter:
 
         matches = []
         for key, statistics in ((self.general_key, False), (self.statistics_key, True)):
-            result = read_payload(encrypted, key, self.iv)
-            if result is None:
+            payload = read_payload(encrypted, key, self.iv)
+            if payload is None:
                 continue
-            plaintext, payload = result
             matches.extend(
-                (kind, payload, plaintext) for kind, schema in SCHEMAS.items()
+                (kind, payload) for kind, schema in SCHEMAS.items()
                 if (kind == "statistic") == statistics and schema.matches(payload)
             )
 
         if len(matches) != 1:
             return None
 
-        kind, payload, plaintext = matches[0]
+        kind, payload = matches[0]
         schema = SCHEMAS[kind]
         values: dict[str, int] = {}
         for name in schema.fields:
-            value = payload[name]
-            values[name] = len(value) if isinstance(value, (list, dict)) else value
+            if name in payload:
+                value = payload[name]
+                values[name] = len(value) if isinstance(value, (list, dict)) else cast(int, value)
         if schema.version is not None:
             name, version = schema.version
             value = payload.get(name)
@@ -57,7 +57,7 @@ class RealSaveAdapter:
                 raise EditorError(415, "unsupported_version", "El marcador de versión del archivo está fuera de la cobertura verificada.")
             values[name] = value
 
-        return {"kind": kind, "values": values, "plaintext": plaintext}
+        return {"kind": kind, "values": values}
 
     def fields(self, document: Document) -> list[EditorField]:
         kind = str(document["kind"])
@@ -73,6 +73,7 @@ class RealSaveAdapter:
         fields.extend(
             self.number(name, label, schema.category, values[name])
             for name, label in schema.fields.items()
+            if name in values
         )
         return fields
 
@@ -90,8 +91,5 @@ class RealSaveAdapter:
             raise EditorError(422, "invalid_changes", "El formato admite únicamente copias intactas.")
         return document
 
-    def serialize(self, document: Document) -> SerializedFile:
-        kind = str(document["kind"])
-        key = self.statistics_key if kind == "statistic" else self.general_key
-        data = encode_payload(str(document["plaintext"]), key, self.iv)
-        return SerializedFile(data=data, filename=f"copia-{kind}.data")
+    def serialize(self, document: Document, original: bytes) -> SerializedFile:
+        return serialize_real_copy(str(document["kind"]), original)

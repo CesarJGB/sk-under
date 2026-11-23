@@ -15,3 +15,5 @@ Todos los campos reales son de solo lectura. Los contadores se muestran como ent
 | `weapon_evolution_data` | Número de entradas de `weapons` y `favorWeapons` | Registros con nombre, nivel, índice de aspecto y lista de aspectos |
 
 El contrato devuelve únicamente la proyección de esta tabla y metadatos de inspección. Los campos desconocidos y las estructuras auxiliares permanecen dentro de la copia intacta. `.skdemo` conserva los campos editables de la Fase 2.
+
+El reconocimiento permite omitir `bpShopOthersPurchaseCounts`, `equippedKillEffectIdByScene`, `pvpSkinSelectionByHero`, `passInfo`, `ActivityTaskData` y `favorWeapons` si se conservan los marcadores requeridos del tipo correspondiente. Cuando están presentes, estos campos se validan según su tipo. Si falta `favorWeapons`, se omite su contador. Esta tolerancia se probó con fixtures sintéticos.

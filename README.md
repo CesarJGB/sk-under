@@ -143,6 +143,8 @@ uv run --locked pytest -q
 # Desde frontend/
 npm ci
 npm run build
+npx playwright install chromium
+npm run test:browser
 
 # Desde la raíz del monorepo
 docker build -t soul-knight-editor:local backend

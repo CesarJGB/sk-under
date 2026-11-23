@@ -18,14 +18,14 @@ def ciphertext(data: bytes) -> bytes | None:
     return decoded
 
 
-def read_payload(data: bytes, key: bytes, iv: bytes) -> tuple[str, dict] | None:
+def read_payload(data: bytes, key: bytes, iv: bytes) -> dict[str, object] | None:
     try:
         plain = unpad(DES.new(key, DES.MODE_CBC, iv).decrypt(data), DES.block_size)
         if not plain.lstrip().startswith(b"{"):
             return None
         parsed = parse_json(plain)
         if isinstance(parsed, dict):
-            return plain.decode("utf-8"), parsed
+            return parsed
     except (ValueError, RecursionError):
         pass
     return None
@@ -61,9 +61,12 @@ class Schema:
     markers: dict[str, type | Callable[[object], bool]]
     fields: dict[str, str]
     version: tuple[str, int] | None = None
+    optional: tuple[str, ...] = ()
 
-    def matches(self, payload: dict) -> bool:
+    def matches(self, payload: dict[str, object]) -> bool:
         for key, expected in self.markers.items():
+            if key in self.optional and key not in payload:
+                continue
             value = payload.get(key)
             if isinstance(expected, type):
                 if type(value) is not expected:
@@ -78,7 +81,7 @@ SCHEMAS = {
         "seasonData": records(list, Key=int, Value=dict),
         "bpShopOthersPurchaseCounts": list,
         "bpShopOthersRefreshMonthKey": int,
-    }, {"seasonData": "Entradas de temporada"}),
+    }, {"seasonData": "Entradas de temporada"}, optional=("bpShopOthersPurchaseCounts",)),
     "item_data": Schema("Inventario", "Inventario", {
         "materials": entries(dict, int),
         "seeds": entries(dict, int),
@@ -97,7 +100,7 @@ SCHEMAS = {
         "isReturnPlayerInit": bool,
         "unlockedKillEffectIds": entries(list, int),
         "equippedKillEffectIdByScene": records(list, Key=int, Value=int),
-    }, {"unlockedKillEffectIds": "Efectos de eliminación registrados"}),
+    }, {"unlockedKillEffectIds": "Efectos de eliminación registrados"}, optional=("equippedKillEffectIdByScene",)),
     "monsrise_data": Schema("Monster Rise", "Progreso", {
         "maxClearLevel": int,
         "pveGameTimes": int,
@@ -113,7 +116,7 @@ SCHEMAS = {
         "pvpLobbyOpenCount": int,
         "pvpTaskData": dict,
         "pvpSkinSelectionByHero": dict,
-    }, {"pvpLobbyOpenCount": "Aperturas de la sala PvP"}),
+    }, {"pvpLobbyOpenCount": "Aperturas de la sala PvP"}, optional=("pvpSkinSelectionByHero",)),
     "season_data": Schema("Temporada", "Temporada", {
         "coin": int,
         "gainedCoinToday": int,
@@ -135,16 +138,17 @@ SCHEMAS = {
         "StatisticsData": "Grupos de estadísticas registrados",
         "handbookWeaponCollectionTrackedLevels": "Entradas de armas en el manual",
         "achieve_record": "Entradas de logros",
-    }),
+    }, optional=("passInfo",)),
     "task": Schema("Tareas", "Tareas", {
         "NewTaskData": records(list, ID=int, Status=str, CurrentProgress=int, TargetProgress=int),
         "tasks": entries(list, dict),
         "ActivityTaskData": dict,
         "changeCount": int,
-    }, {"NewTaskData": "Entradas de tareas nuevas", "tasks": "Entradas de tareas"}),
+    }, {"NewTaskData": "Entradas de tareas nuevas", "tasks": "Entradas de tareas"}, optional=("ActivityTaskData",)),
     "weapon_evolution_data": Schema("Evolución de armas", "Armas", {
         "weapons": records(dict, Name=str, Level=int, CurrentSkinIndex=int, UnlockedSkins=list),
         "blindBoxOpenCount0": int,
         "favorWeapons": list,
-    }, {"weapons": "Entradas de evolución de armas", "favorWeapons": "Armas favoritas registradas"}),
+    }, {"weapons": "Entradas de evolución de armas", "favorWeapons": "Armas favoritas registradas"},
+        optional=("favorWeapons",)),
 }

@@ -1,9 +1,9 @@
 # Implementación de la Fase 3
 
 - `backend/app/parsers/real_save.py` valida la envoltura, prueba las dos variantes DES y describe los marcadores estructurales por tipo. El reconocimiento devuelve el documento ya leído. Un sobre ambiguo, incompatible o inválido se rechaza.
-- `backend/app/formats/real_save.py` registra las nueve estructuras bajo una familia de formato. Proyecta únicamente campos permitidos y conserva el texto UTF-8 original en memoria. `backend/app/serializers/real_save.py` recifra ese texto, preservando los bytes, el orden y el formato de claves desconocidas.
+- `backend/app/formats/real_save.py` registra las nueve estructuras bajo una familia de formato. El adaptador devuelve la proyección de campos admitidos después del reconocimiento. `backend/app/serializers/real_save.py` prepara la descarga con los bytes recibidos, preservando toda la envoltura original.
 - El motor rechaza cambios a los campos de lectura y exige la igualdad exacta antes de reabrir una exportación real. Las rutas conservan la autenticación, límites, CORS, respuestas sin caché y errores sin fragmentos del archivo. El servidor no escribe los guardados en disco.
-- La interfaz consulta la API para ofrecer `.data`, muestra las categorías verificadas con el estilo existente y guía al usuario a validar y descargar una copia intacta. `.skdemo` conserva la edición.
+- La interfaz consulta la API para ofrecer `.data` y muestra las categorías reconocidas. Antes de descargar, compara el tamaño y el SHA-256 de la validación con la inspección, y verifica el SHA-256 de la respuesta binaria mediante Web Crypto. La aplicación de producción se sirve por HTTPS y las pruebas pueden usar loopback. `.skdemo` conserva la edición.
 
 ## Habilitar en una instancia privada
 
@@ -16,4 +16,4 @@ uv sync --locked
 uv run --env-file "$HOME/.config/sk-under/phase3/cipher.env" uvicorn app.main:create_app --factory --host 127.0.0.1 --port 8017 --no-proxy-headers --no-access-log
 ```
 
-Los parámetros de cifrado y el token de acceso se administran en el backend. La publicación de esta rama y su PR no requieren cambios en Cloudflare Pages ni en Coolify.
+Los parámetros de cifrado y el token de acceso se administran en el backend. Para activar `.data` en Coolify, configura las tres variables del códec como secretos de runtime en la aplicación del backend y verifica que `/api/v1/formats` publique `read_only` después del despliegue.

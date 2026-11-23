@@ -27,11 +27,11 @@ class Settings(BaseSettings):
 
     @field_validator("save_general_key_hex", "save_statistics_key_hex", "save_iv_hex", mode="before")
     @classmethod
-    def validate_save_hex(cls, value: str | SecretStr | None) -> SecretStr | None:
+    def validate_save_hex(cls, value: object) -> SecretStr | None:
         secret = value.get_secret_value() if isinstance(value, SecretStr) else value
-        if not secret:
+        if secret is None or secret == "":
             return None
-        if not re.fullmatch(r"[0-9a-fA-F]{16}", secret):
+        if not isinstance(secret, str) or not re.fullmatch(r"[0-9a-fA-F]{16}", secret):
             raise ValueError("Las claves y el IV de guardados requieren 16 dígitos hexadecimales cada uno.")
         return SecretStr(secret)
 

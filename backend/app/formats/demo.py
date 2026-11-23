@@ -47,5 +47,5 @@ class DemoAdapter:
     def validate_changes(self, document: Document, changes: dict[str, EditableValue]) -> Document:
         return validate_demo(document | changes, applying_changes=True).model_dump(mode="json")
 
-    def serialize(self, document: Document) -> SerializedFile:
+    def serialize(self, document: Document, original: bytes) -> SerializedFile:
         return serialize_demo(document)

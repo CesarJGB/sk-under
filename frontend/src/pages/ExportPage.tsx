@@ -1,7 +1,7 @@
 import { CircleCheck, Download, FileCheck2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
-import { api, type Validation } from '../api'
+import { api, ApiProblem, type Validation } from '../api'
 import { formatSize, summarize, type Draft, type Session } from '../session'
 import { Loading, NoSession, Notice, PageTitle, Problem } from '../ui'
 import { useOperation } from '../useOperation'
@@ -24,7 +24,7 @@ export function ExportPage({ session, draft, token }: {
 }
 
 function ExportForm({ session, draft, token }: { session: Session; draft: Draft; token: string }) {
-  const { fields, format } = session.inspection
+  const { fields, format, sha256, byte_size } = session.inspection
   const readOnly = format.compatibility === 'read_only'
   const { changes, invalid, summary } = summarize(fields, draft)
   const [validation, setValidation] = useState<Validation | null>(null)
@@ -36,12 +36,27 @@ function ExportForm({ session, draft, token }: { session: Session; draft: Draft;
   async function validate() {
     setValidation(null)
     setDownload(null)
-    const result = await operation.run((signal) => api.validate(session.content, changes, token, signal))
+    const result = await operation.run(async (signal) => {
+      const result = await api.validate(session.content, changes, token, signal)
+      if (readOnly && (result.output_sha256 !== sha256 || result.output_byte_size !== byte_size)) {
+        throw new ApiProblem('La copia validada difiere del archivo importado.')
+      }
+      return result
+    })
     if (result) setValidation(result)
   }
 
   async function exportCopy() {
-    const result = await operation.run((signal) => api.export(session.content, changes, token, signal))
+    setDownload(null)
+    const result = await operation.run(async (signal) => {
+      const result = await api.export(session.content, changes, token, signal)
+      if (readOnly) {
+        const digest = await crypto.subtle.digest('SHA-256', await result.blob.arrayBuffer())
+        const actual = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('')
+        if (actual !== sha256) throw new ApiProblem('El SHA-256 de la descarga difiere del archivo importado.')
+      }
+      return result
+    })
     if (!result) return
     const url = URL.createObjectURL(result.blob)
     setDownload({ url, name: result.name })
@@ -85,9 +100,10 @@ function ExportForm({ session, draft, token }: { session: Session; draft: Draft;
       {invalid.size > 0 && <Notice tone="warning">Corrige los campos pendientes que no cumplen los rangos indicados.</Notice>}
       {operation.problem && <Problem problem={operation.problem} fields={fields} />}
       {operation.pending && <Loading>{validation ? 'Preparando la descarga…' : 'Validando la copia…'}</Loading>}
-      {validation && (
+      {validation && !operation.problem && (
         <p className="success" role="status">
-          <CircleCheck size={20} aria-hidden="true" />Copia verificada por el motor · {formatSize(validation.output_byte_size)}
+          <CircleCheck size={20} aria-hidden="true" />
+          {readOnly ? 'SHA-256 coincide con el original' : 'Copia verificada por el motor'} · {formatSize(validation.output_byte_size)}
         </p>
       )}
       <div className="actions editor-actions">

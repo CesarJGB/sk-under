@@ -52,7 +52,7 @@ def wrap(plaintext: bytes, key: bytes = GENERAL) -> bytes:
     return base64.b64encode(DES.new(key, DES.MODE_CBC, IV).encrypt(pad(plaintext, 8)))
 
 
-def encoded_payload(payload: dict, key: bytes = GENERAL) -> bytes:
+def encoded_payload(payload: object, key: bytes = GENERAL) -> bytes:
     return wrap(json.dumps(payload).encode(), key)
 
 
@@ -77,6 +77,7 @@ def test_real_noop_roundtrip(real_client, kind):
     assert inspection["format"]["compatibility"] == "read_only"
     assert inspection["sha256"] == sha256(original).hexdigest()
     assert all(not field["editable"] for field in inspection["fields"])
+    assert inspection["fields"][0]["id"] == "save_type"
     assert "unknownSynthetic" not in response.text
 
     request = envelope(original, changes={})
@@ -102,6 +103,32 @@ def test_projected_values(real_client):
                       "blueprints": 0, "itemUnlock": 0, "cumulativeFishCount": str(1 << 53)}
 
 
+@pytest.mark.parametrize(("kind", "optional"), [
+    ("bp_data", "bpShopOthersPurchaseCounts"),
+    ("misc_data", "equippedKillEffectIdByScene"),
+    ("pvp_data", "pvpSkinSelectionByHero"),
+    ("statistic", "passInfo"),
+    ("task", "ActivityTaskData"),
+    ("weapon_evolution_data", "favorWeapons"),
+])
+def test_optional_field_may_be_absent_but_must_be_typed_if_present(real_client, kind, optional):
+    payload = SCHEMAS[kind].copy()
+    del payload[optional]
+    key = STATISTICS if kind == "statistic" else GENERAL
+    original = encoded_payload(payload, key)
+    result = real_client.post(FILES + "/inspect", headers=AUTH, json=envelope(original))
+    assert result.status_code == 200
+    assert optional not in {field["id"] for field in result.json()["fields"]}
+    exported = real_client.post(FILES + "/export", headers=AUTH, json=envelope(original, changes={}))
+    assert exported.status_code == 200
+    assert exported.headers["Content-Disposition"] == f'attachment; filename="copia-{kind}.data"'
+    assert exported.content == original
+
+    malformed = encoded_payload(payload | {optional: None}, key)
+    assert_error(real_client.post(FILES + "/inspect", headers=AUTH, json=envelope(malformed)),
+                 415, "unsupported_format")
+
+
 @pytest.mark.parametrize("broken", [
     b"not-a-format", b"YWJjZA==", b"YWFhYWFhYWE=\n", b"YWFhYWFhYWF=",
     wrap(b"{"), wrap(b'{"private_example":1,"private_example":2}'), wrap(b"\xff"),
@@ -111,6 +138,9 @@ def test_projected_values(real_client):
     encoded_payload(SCHEMAS["pvp_data"] | SCHEMAS["misc_data"]),
     encoded_payload(SCHEMAS["statistic"], GENERAL),
     encoded_payload(SCHEMAS["item_data"], STATISTICS),
+    wrap(json.dumps(SCHEMAS["season_data"])[:-1].encode() + b',"unknown":{"x":1,"x":2}}'),
+    encoded_payload({"weapons": {}, "favorWeapons": []}),
+    encoded_payload([SCHEMAS["pvp_data"]]),
 ])
 def test_invalid_envelopes_and_schemas(real_client, broken):
     response = real_client.post(FILES + "/inspect", headers=AUTH, json=envelope(broken))
@@ -140,6 +170,17 @@ def test_incompatible_version(real_client, kind, version, invalid):
                  415, "unsupported_version")
 
 
+@pytest.mark.parametrize(("kind", "version"), [("item_data", "AppVersion"), ("monsrise_data", "version")])
+def test_missing_version_marker_is_rejected(real_client, kind, version):
+    payload = SCHEMAS[kind].copy()
+    del payload[version]
+    original = encoded_payload(payload)
+    for operation in ("/inspect", "/validate", "/export"):
+        changes = {} if operation == "/inspect" else {"changes": {}}
+        assert_error(real_client.post(FILES + operation, headers=AUTH, json=envelope(original, **changes)),
+                     415, "unsupported_version")
+
+
 @pytest.mark.parametrize("changes", [{"coin": 4}, {"coin": 71}, {"unknown": "value"}])
 def test_real_edits_rejected(real_client, changes):
     data = encoded_payload(SCHEMAS["season_data"])
@@ -151,8 +192,8 @@ def test_real_edits_rejected(real_client, changes):
 
 def test_real_export_rejects_a_structurally_valid_but_modified_copy():
     class FaultyAdapter(RealSaveAdapter):
-        def serialize(self, document):
-            output = super().serialize(document)
+        def serialize(self, document, original):
+            output = super().serialize(document, original)
             modified = encoded_payload(SCHEMAS["season_data"] | {"unknownSynthetic": "changed"})
             return replace(output, data=modified)
 
@@ -177,3 +218,9 @@ def test_cipher_configuration_is_complete_and_redacted():
     assert "private-example" not in str(caught.value)
     with pytest.raises(ValidationError):
         Settings(_env_file=None, save_general_key_hex=GENERAL.hex())
+
+
+@pytest.mark.parametrize("invalid", [False, 0, 1234567890123456])
+def test_cipher_rejects_non_text_configuration(invalid):
+    with pytest.raises(ValidationError, match="16 dígitos hexadecimales"):
+        Settings(_env_file=None, **(CONFIG | {"save_iv_hex": invalid}))

@@ -49,7 +49,7 @@ class Editor:
             for field_id, value in editable.items()
             if value != modified[field_id]
         ]
-        output = adapter.serialize(candidate)
+        output = adapter.serialize(candidate, original)
         if candidate == document and adapter.info.compatibility != "read_only":
             output = replace(output, data=original)
         require_size(output.data, size_limit)
