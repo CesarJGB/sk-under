@@ -1,7 +1,6 @@
 """Proveedores de adquisición de una copia de nube autorizada.
 
-La Fase 5.7 no obtuvo un token de juego válido. Por eso este módulo separa tres
-cosas que no deben confundirse:
+Este módulo separa tres cosas que no deben confundirse:
 
 * ``DisabledCloudSaveProvider``: estado por defecto. No abre sockets y falla
   con un error tipado.
@@ -30,7 +29,7 @@ from typing import Protocol
 from urllib.parse import urlsplit
 
 from ..cloud_import import CopyMetadata, LocalFileSource
-from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError, CopyLimitError
+from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError, CopyLimitError, reconstruct_cloud_save
 
 type Fetch = Callable[[str, dict[str, str], float], tuple[int, bytes]]
 
@@ -104,8 +103,8 @@ class DisabledCloudSaveProvider:
     """Proveedor por defecto: no hay una interfaz remota verificada."""
 
     reason: str = (
-        "No se obtuvo un token de juego válido ni se confirmó el contrato de "
-        "descarga del gateway. La adquisición remota permanece deshabilitada."
+        "No se confirmó el contrato de descarga de CloudSaveGameData. "
+        "La adquisición remota permanece deshabilitada."
     )
 
     def metadata(self) -> CloudSaveMetadata:
@@ -274,6 +273,13 @@ class GatewayCloudSaveProvider:
         payload = self._payload_from_body(self._request(limit))
         if not payload or len(payload) > limit:
             raise CopyLimitError("La copia supera el límite permitido.")
+        # Un 200 o un campo "data" por sí solos no identifican una copia.
+        # La validación estructural tampoco demuestra que la respuesta sea
+        # auténtica o que contenga progreso: el endpoint sigue sin verificar.
+        try:
+            reconstruct_cloud_save(payload)
+        except CloudSaveError:
+            raise CloudProviderProtocolError("La respuesta no contiene un agregado de copia válido.") from None
         metadata = CloudSaveMetadata(
             revision="gateway-read-only",
             size=len(payload),

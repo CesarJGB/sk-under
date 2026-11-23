@@ -164,3 +164,11 @@ def test_cloud_bridge_accepts_gzip_fixture(tmp_path: Path) -> None:
     assert acquisition.acquired.metadata.source == "fixture"
     assert acquisition.copy.aggregate.encoding == "gzip"
     assert acquisition.copy.aggregate.data.game_data["gems"] == 7
+
+
+def test_gateway_provider_does_not_treat_arbitrary_data_as_cloud_save() -> None:
+    def fetch(url: str, headers: dict[str, str], timeout: float) -> tuple[int, bytes]:
+        return 200, b'{"data":{"message":"not a save"}}'
+
+    with pytest.raises(CloudProviderProtocolError):
+        GatewayCloudSaveProvider(token="t", fetch=fetch).download()

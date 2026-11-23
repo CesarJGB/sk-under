@@ -1,0 +1,13 @@
+# Experimento Android
+
+## Entorno y recuperación
+
+El AVD `sk57` persistía en `/tmp/sk57avd`, pero su `sk57.ini` apuntaba a `/avd/sk57.avd`, ruta del contenedor de 5.7. Un arranque directo en el host falló por esa ruta; tras corregirla, falló al abrir el lock propiedad de root. El usuario del host no tiene acceso directo a `/dev/kvm`. Se usó la imagen local `sk-phase51-android-lab:local` en un contenedor nuevo, con `/dev/kvm`, SDK y AVD montados, 4 CPU, 4 GiB de RAM Android, API 30 `google_apis` x86_64 y `swiftshader_indirect`. `adb shell getprop sys.boot_completed` devolvió `1`; `dumpsys package` confirmó 8.8.0, `versionCode=1080800`, `primaryCpuAbi=arm64-v8a`.
+
+Se lanzó `com.ChillyRoom.DungeonShooter/com.chillyroomsdk.sdkbridge.BasePlayerActivity`. Con el perfil existente cargó recursos y alcanzó `LoginInit`, pero la pantalla permaneció al 100 %. `uiautomator dump` encontró vistas Android sin texto de controles de Unity. Se salvó `files/` y `shared_prefs/` mediante tar privado y se ejecutó `pm clear`; con datos limpios se lanzó de nuevo. La primera ejecución limpia completó `LoadInitBundles` y terminó con `SIGSEGV` en `UnityMain` (dirección 0x135), un detalle distinto del hilo observado en 5.7. Se capturó `logcat` y se lanzó una segunda vez como recomienda la recuperación de 5.7.
+
+Las capturas, logs y respaldo están bajo `~/.config/sk-under/phase5-8/`. No se enviaron credenciales ni valores de perfil al repositorio. Se registran a continuación los resultados adicionales de esta ejecución.
+
+La segunda ejecución limpia llegó al selector de acceso y se usó la cuenta de laboratorio por email. El registro mostró login correcto, `FetchGameDataResp` y llegada al menú. Mediante controles táctiles ADB se completaron el tutorial y el portal final: el cliente mostró que guardaba datos locales, desbloqueó un personaje y mostró una recompensa de 1.000 gemas. Se respaldó el perfil antes de reabrir el cliente. La instrucción posterior del usuario fue conservar el progreso y evitar seguir jugando; se siguió desde ese estado, sin volver a borrar datos ni repetir el tutorial. Los experimentos posteriores de nube y el reinicio se detallan en [guardado y recuperación](cloud-roundtrip.md).
+
+**Resultado:** se llegó al hall y se ejecutó la subida y recuperación desde la interfaz. **Limitación:** el crash de Scudo posterior coincidió temporalmente con el escaneo amplio de memoria y no se ha probado su causa; un nuevo proceso pudo volver al panel. **Siguiente experimento:** instrumentación acotada y reproducible de la ruta de lectura, sin escanear indiscriminadamente el espacio de direcciones.

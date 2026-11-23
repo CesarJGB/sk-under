@@ -18,6 +18,8 @@ La Fase 5.6 obtuvo un perfil local auténtico de Soul Knight 8.8.0 desde el APK 
 
 La Fase 5.7 estabilizó el cliente 8.8.0 en un AVD Android 11 x86_64 con ABI arm64, inició sesión ChillyRoom por email y ejecutó una lectura auténtica de `/Backup/FetchGameData` desde Linux con el token del cliente. La cuenta de laboratorio devolvió un agregado legacy vacío; no se obtuvo `CloudSaveGameData` ni se demostró la aceptación visible de una modificación. [Informe de Fase 5.7](docs/research/phase5-7/README.md) · [Estabilización](docs/research/phase5-7/emulator-stabilization.md) · [Lectura de nube](docs/research/phase5-7/authentic-cloud-read.md)
 
+La Fase 5.8 realizó un guardado y una recuperación oficiales con progreso visible, extrajo del proceso un agregado auténtico no vacío y verificó su relación parcial con archivos locales. La descarga directa del agregado moderno desde Linux sigue pendiente. [Resultados experimentales](docs/research/phase5-8/README.md).
+
 ## Arquitectura
 
 ```text
