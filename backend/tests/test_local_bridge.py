@@ -15,7 +15,6 @@ from app.bridge import (
     LocalSectionEditor,
     LocalSectionValidator,
     LocalFileExporter,
-    LocalSectionValidator,
     build_bridge,
     read_regular_file,
 )
