@@ -1,0 +1,91 @@
+{
+  "date_utc": "2026-11-23",
+  "baseline_commit": "c0714a0",
+  "production_clean_browser": {
+    "browser": "Chromium",
+    "initial_cookies": 0,
+    "manual_tickets": 0,
+    "credentials_sent": false,
+    "page_http": 200,
+    "health_http": 200,
+    "accounts_http": 200,
+    "storage_status": "ready",
+    "account_count": 0,
+    "session_active": false,
+    "password_login_available": false,
+    "password_input_disabled": true,
+    "download_button_visible": false,
+    "empty_json_login_http": 503,
+    "login_code": "cloud_login_unavailable",
+    "login_cache_control": "no-store",
+    "sk_under_cookie_issued": false
+  },
+  "official_account_portal": {
+    "source": "https://www.chillyroom.com/en/support/58",
+    "login_origin": "https://accounts.chillyroom.com",
+    "login_path": "/login",
+    "observed_redirect_parameter": "redirectTo",
+    "observed_redirect_target": "https://accounts.chillyroom.com/",
+    "lab_correct_password": {
+      "http": 200,
+      "account_management_visible": true,
+      "external_handoff_observed": false
+    },
+    "lab_wrong_password": {
+      "http": 400,
+      "stayed_on_login": true,
+      "authenticated": false
+    },
+    "synthetic_nonexistent_email": {
+      "domain": "example.invalid",
+      "http": 400,
+      "portal_message": "Account does not exist.",
+      "authenticated": false
+    },
+    "after_portal_login_same_browser_context": {
+      "sk_under_accounts_http": 200,
+      "sk_under_account_count": 0,
+      "sk_under_session_active": false,
+      "sk_under_cookie_present": false
+    }
+  },
+  "discovery": {
+    "paths": [
+      "/.well-known/openid-configuration",
+      "/.well-known/oauth-authorization-server"
+    ],
+    "hosts": {
+      "www.chillyroom.com": {
+        "statuses": [404, 404]
+      },
+      "soulknight.chillyroom.com": {
+        "statuses": [404, 404]
+      },
+      "api-gateway.soulknight.chillyroom.com": {
+        "statuses": [404, 404]
+      },
+      "accounts.chillyroom.com": {
+        "statuses": [200, 200],
+        "content_type": "text/html",
+        "bodies_identical_to_portal_root": true
+      }
+    },
+    "authorization_metadata_found": false
+  },
+  "production_lab_download": {
+    "credential_source": "configured, previously issued ChillyRoom game session",
+    "status_http": 200,
+    "download_http": 200,
+    "bytes": 114778,
+    "gems": 1002
+  },
+  "regression": {
+    "backend_compiled": true,
+    "backend_passed": 340,
+    "backend_skipped_private_samples": 16,
+    "frontend_build_passed": true,
+    "chromium_passed": 14,
+    "webkit_cloud_accounts_passed": 4,
+    "independent_real_accounts_confirmed": 1
+  }
+}

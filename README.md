@@ -264,6 +264,7 @@ Para usar un subdominio como `editor.example.com`, abre **Custom domains → Set
 | Healthcheck | El de la imagen en `/api/v1/health` |
 
 Las cuentas vinculadas, los volúmenes de producción y el diagnóstico del login están en la [guía de la Fase 6.4](docs/research/phase6-4/README.md).
+La [Fase 6.5](docs/research/phase6-5/README.md) verifica el acceso al portal de ChillyRoom y documenta qué falta para que ese acceso abra la partida en `/partida`.
 
 El puerto `8017` corresponde al desarrollo local. Dentro del contenedor, Uvicorn escucha en `0.0.0.0:8000` como usuario sin privilegios. El Dockerfile se construye usando únicamente el contexto `backend/`. En Coolify, deja desactivado el ajuste de healthcheck del panel para que se utilice el de la imagen. La inspección y exportación local no requieren volúmenes. El laboratorio de nube usa `/var/lib/sk-under/backups` dentro del contenedor; si vas a habilitar la escritura real, monta ahí un volumen persistente y privado. [Dockerfile en Coolify](https://coolify.io/docs/applications/builds/dockerfile) · [Healthchecks en Coolify](https://coolify.io/docs/applications/configuration/health-checks)
 
