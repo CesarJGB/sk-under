@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .api.routes import router
 from .engine import Editor
 from .errors import install_error_handlers
+from .formats.game_data import GameDataAdapter
 from .formats.real_save import RealSaveAdapter
 from .formats.registry import ADAPTERS
 from .settings import Settings
@@ -18,7 +19,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     )
     app.state.settings = settings
     cipher = settings.save_cipher
-    adapters = (*ADAPTERS, RealSaveAdapter(*cipher)) if cipher is not None else ADAPTERS
+    adapters = (*ADAPTERS, RealSaveAdapter(*cipher), GameDataAdapter()) if cipher is not None else ADAPTERS
     app.state.editor = Editor(adapters)
     install_error_handlers(app)
     app.add_middleware(

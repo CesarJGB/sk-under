@@ -19,10 +19,10 @@ class RealSaveAdapter:
     info = FormatInfo(
         id="sk-local-des-cbc",
         name="Guardado local de Soul Knight",
-        version="8.6.0 (muestras)",
+        version="8.6.0–8.8.0 (locales)",
         extensions=[".data"],
         compatibility="read_only",
-        description="Nueve estructuras observadas en 8.6.0. Inspección y descarga de una copia intacta.",
+        description="Doce estructuras JSON locales observadas en 8.6.0 y 8.8.0. Inspección y descarga de una copia intacta.",
     )
 
     def read_if_matching(self, data: bytes) -> Document | None:
@@ -47,15 +47,19 @@ class RealSaveAdapter:
         schema = SCHEMAS[kind]
         values: dict[str, int] = {}
         for name in schema.fields:
-            if name in payload:
-                value = payload[name]
-                values[name] = len(value) if isinstance(value, (list, dict)) else cast(int, value)
+            if name not in payload:
+                continue
+            value = payload[name]
+            if isinstance(value, (list, dict)):
+                values[name] = len(value)
+            elif type(value) is int:
+                values[name] = value
         if schema.version is not None:
-            name, version = schema.version
+            name, _ = schema.version
             value = payload.get(name)
-            if type(value) is not int or value != version:
+            if not schema.accepts_version(value):
                 raise EditorError(415, "unsupported_version", "El marcador de versión del archivo está fuera de la cobertura verificada.")
-            values[name] = value
+            values[name] = cast(int, value)
 
         return {"kind": kind, "values": values}
 

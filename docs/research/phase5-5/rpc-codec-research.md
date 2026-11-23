@@ -1,5 +1,11 @@
 # Códec RPC: evidencia estática y límite de la virtualización
 
+> **Actualización Fase 5.6 (2026-11-23):** esta fase obtuvo una referencia
+> local auténtica 8.8.0, decodificó `game.data` y confirmó gzip en el cuerpo de
+> `ZipHelper.Decompress`. El agregado de nube y la aceptación por el cliente
+> siguen pendientes. Véase [Fase 5.6](../phase5-6/README.md).
+
+
 **Estado: parcial y acotado.** Se identificó la clase y la firma que el cliente
 usa para descomprimir el bloque RPC, se confirmó el sobre de cuatro bytes y se
 implementó un decodificador **gzip candidato, opt-in**, con vectores sintéticos.

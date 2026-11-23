@@ -1,5 +1,11 @@
 # Diferencias de esquema 8.6.0 → 8.8.0
 
+> **Actualización Fase 5.6 (2026-11-23):** esta fase obtuvo una referencia
+> local auténtica 8.8.0, decodificó `game.data` y confirmó gzip en el cuerpo de
+> `ZipHelper.Decompress`. El agregado de nube y la aceptación por el cliente
+> siguen pendientes. Véase [Fase 5.6](../phase5-6/README.md).
+
+
 **Método.** Las claves 8.6.0 se obtuvieron descifrando los nueve `.data`
 privados (AES/DES local del cliente) y leyendo solo los **nombres** de las
 claves superiores. Los campos 8.8.0 se obtuvieron de la metadata del APK. No se

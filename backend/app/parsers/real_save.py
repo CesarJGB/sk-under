@@ -1,4 +1,5 @@
 import base64
+import json
 from collections.abc import Callable
 from dataclasses import dataclass
 
@@ -54,6 +55,30 @@ def records(container: type, **members: type) -> Callable[[object], bool]:
     return check
 
 
+def records_or_empty_dict(**members: type) -> Callable[[object], bool]:
+    """Acepta la lista observada o el objeto vacío que usa una colección sin entradas."""
+    as_records = records(list, **members)
+
+    def check(value: object) -> bool:
+        if type(value) is dict:
+            return not value
+        return as_records(value)
+
+    return check
+
+
+def entries_or_empty_dict(entry: type) -> Callable[[object], bool]:
+    as_list = entries(list, entry)
+    as_dict = entries(dict, entry)
+
+    def check(value: object) -> bool:
+        if type(value) is dict:
+            return as_dict(value)
+        return as_list(value)
+
+    return check
+
+
 @dataclass(frozen=True)
 class Schema:
     name: str
@@ -62,6 +87,12 @@ class Schema:
     fields: dict[str, str]
     version: tuple[str, int] | None = None
     optional: tuple[str, ...] = ()
+    alt_versions: tuple[int, ...] = ()
+
+    def accepts_version(self, value: object) -> bool:
+        if self.version is None:
+            return True
+        return type(value) is int and (value == self.version[1] or value in self.alt_versions)
 
     def matches(self, payload: dict[str, object]) -> bool:
         for key, expected in self.markers.items():
@@ -78,8 +109,8 @@ class Schema:
 
 SCHEMAS = {
     "bp_data": Schema("Pase de batalla", "Pase de batalla", {
-        "seasonData": records(list, Key=int, Value=dict),
-        "bpShopOthersPurchaseCounts": list,
+        "seasonData": records_or_empty_dict(Key=int, Value=dict),
+        "bpShopOthersPurchaseCounts": entries_or_empty_dict(int),
         "bpShopOthersRefreshMonthKey": int,
     }, {"seasonData": "Entradas de temporada"}, optional=("bpShopOthersPurchaseCounts",)),
     "item_data": Schema("Inventario", "Inventario", {
@@ -94,7 +125,7 @@ SCHEMAS = {
         "blueprints": "Planos registrados",
         "itemUnlock": "Desbloqueos de objetos registrados",
         "cumulativeFishCount": "Peces acumulados",
-    }, version=("AppVersion", 80300)),
+    }, version=("AppVersion", 80300), alt_versions=(0, 80800)),
     "misc_data": Schema("Datos de retorno y efectos", "Efectos", {
         "returningEventCurrentDay": int,
         "isReturnPlayerInit": bool,
@@ -132,7 +163,7 @@ SCHEMAS = {
     "statistic": Schema("Estadísticas", "Estadísticas", {
         "StatisticsData": entries(dict, dict),
         "handbookWeaponCollectionTrackedLevels": entries(dict, int),
-        "achieve_record": records(list, Key=int, Value=dict),
+        "achieve_record": records_or_empty_dict(Key=int, Value=dict),
         "passInfo": entries(dict, str),
     }, {
         "StatisticsData": "Grupos de estadísticas registrados",
@@ -151,4 +182,95 @@ SCHEMAS = {
         "favorWeapons": list,
     }, {"weapons": "Entradas de evolución de armas", "favorWeapons": "Armas favoritas registradas"},
         optional=("favorWeapons",)),
+    "setting": Schema("Ajustes locales", "Ajustes", {
+        "shakeLevel": int,
+        "sandboxFlyable": bool,
+        "promotionIndex": int,
+        "bgmName": str,
+        "customKeyboardLayoutVersion": int,
+    }, {
+        "shakeLevel": "Intensidad de vibración registrada",
+        "promotionIndex": "Índice de promoción",
+        "customKeyboardLayoutVersion": "Versión del diseño de teclado",
+    }, optional=("customKeyboardLayoutVersion",)),
+    "mall_reload": Schema("Recargas de tienda", "Tienda", {
+        "mallPurchaseCountHistoryIndexed": dict,
+        "buyGemCount800": int,
+        "hasGetWeeklyBundle": bool,
+    }, {
+        "buyGemCount800": "Compras del paquete de 800 gemas",
+        "buyGemCount5000": "Compras del paquete de 5000 gemas",
+        "buyGemCount12000": "Compras del paquete de 12000 gemas",
+    }),
+    "escape_season": Schema("Temporada Escape", "Escape", {
+        "version": int,
+        "maxRaidSessionId": int,
+        "money": int,
+        "playerBag": dict,
+        "safeSlots": dict,
+        "totalIronMoneyEarned": int,
+    }, {
+        "money": "Dinero de Escape",
+        "maxRaidSessionId": "Identificador máximo de incursión",
+        "totalIronMoneyEarned": "Hierro acumulado",
+    }, version=("version", 1)),
 }
+
+
+# Capa de ofuscación observada en ``game.data`` 8.8.0. No es autenticación ni
+# cifrado fuerte: es un XOR repetido que el cliente aplica al JSON local. La
+# clave se verificó contra la muestra auténtica del entorno privado.
+LOCAL_GAME_XOR_KEY = bytes(
+    (115, 108, 99, 122, 125, 103, 117, 99, 127, 87, 109, 108, 107, 74, 95)
+)
+MAX_GAME_DATA_BYTES = 8 * 1024 * 1024
+
+GAME_DATA_SCHEMA = Schema(
+    "Datos de juego",
+    "Juego",
+    {
+        "skinLock": dict,
+        "heroUnlock": dict,
+        "heroLevel": dict,
+        "gems": int,
+        "roomLevel": int,
+        "gameVersion": int,
+        "lastPlayTime": int,
+        "rebornCard": bool,
+    },
+    {
+        "gems": "Gemas actuales",
+        "lastGems": "Gemas de la última partida",
+        "varGems": "Gemas variables",
+        "cumulativeGems": "Gemas acumuladas",
+        "cumulativeConsumeGems": "Gemas consumidas acumuladas",
+        "fishChip": "Fichas de pesca",
+        "roomLevel": "Nivel de la sala",
+        "gameVersion": "Marcador de versión del juego",
+        "lastPlayTime": "Última partida",
+        "lastPlayTimeWithNetworkTime": "Última partida con hora de red",
+        "totalGameTime": "Tiempo total de juego",
+    },
+)
+
+
+def xor_game_data(data: bytes) -> bytes:
+    key = LOCAL_GAME_XOR_KEY
+    return bytes(value ^ key[index % len(key)] for index, value in enumerate(data))
+
+
+def decode_game_data(data: bytes) -> dict[str, object] | None:
+    if not 0 < len(data) <= MAX_GAME_DATA_BYTES:
+        return None
+    try:
+        parsed = parse_json(xor_game_data(data))
+    except (ValueError, RecursionError):
+        return None
+    if isinstance(parsed, dict) and GAME_DATA_SCHEMA.matches(parsed):
+        return parsed
+    return None
+
+
+def encode_game_data(document: dict[str, object]) -> bytes:
+    plain = json.dumps(document, ensure_ascii=False, separators=(",", ":"), allow_nan=False).encode("utf-8")
+    return xor_game_data(plain)

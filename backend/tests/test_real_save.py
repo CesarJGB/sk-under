@@ -11,6 +11,7 @@ from pydantic import ValidationError
 from app.engine import Editor
 from app.errors import EditorError
 from app.formats.real_save import RealSaveAdapter
+from app.parsers.real_save import encode_game_data
 from app.settings import Settings
 from conftest import make_client
 from test_api import FILES, TEST_TOKEN, V1, assert_error, envelope
@@ -205,7 +206,7 @@ def test_real_export_rejects_a_structurally_valid_but_modified_copy():
 
 def test_real_adapter_opt_in_and_auth(client, real_client):
     formats = real_client.get(V1 + "/formats").json()["formats"]
-    assert [entry["compatibility"] for entry in formats] == ["synthetic", "read_only"]
+    assert [entry["compatibility"] for entry in formats] == ["synthetic", "read_only", "read_only"]
     data = encoded_payload(SCHEMAS["season_data"])
     assert_error(client.post(FILES + "/inspect", json=envelope(data)), 415, "unsupported_format")
     for operation in ("/inspect", "/validate", "/export"):
@@ -224,3 +225,119 @@ def test_cipher_configuration_is_complete_and_redacted():
 def test_cipher_rejects_non_text_configuration(invalid):
     with pytest.raises(ValidationError, match="16 dígitos hexadecimales"):
         Settings(_env_file=None, **(CONFIG | {"save_iv_hex": invalid}))
+
+
+SCHEMAS_880 = {
+    "item_data": {
+        "AppVersion": 80800,
+        "materials": {},
+        "seeds": {},
+        "blueprints": {},
+        "itemUnlock": [],
+        "cumulativeFishCount": 0,
+        "trainingJourney": {"steps": []},
+        "unknownSynthetic880": {"entero": 9007199254740993},
+    },
+    "setting": {
+        "shakeLevel": 1,
+        "sandboxFlyable": False,
+        "promotionIndex": -1,
+        "bgmName": "bgm_room",
+        "customKeyboardLayoutVersion": 1,
+        "ChillyUid": "synthetic-account",
+    },
+    "mall_reload": {
+        "mallPurchaseCountHistoryIndexed": {},
+        "buyGemCount800": 0,
+        "buyGemCount5000": 0,
+        "buyGemCount12000": 0,
+        "hasGetWeeklyBundle": False,
+    },
+    "escape_season": {
+        "version": 1,
+        "maxRaidSessionId": 0,
+        "money": 0,
+        "playerBag": {},
+        "safeSlots": {},
+        "totalIronMoneyEarned": 0,
+    },
+    "bp_data": {
+        "seasonData": {},
+        "bpShopOthersPurchaseCounts": {},
+        "bpShopOthersRefreshMonthKey": 0,
+    },
+    "statistic": {
+        "StatisticsData": {"A": {}},
+        "handbookWeaponCollectionTrackedLevels": {},
+        "achieve_record": {},
+        "passInfo": {},
+    },
+}
+
+
+@pytest.mark.parametrize("kind", SCHEMAS_880)
+def test_880_local_sections_are_read_only_and_roundtrip(real_client, kind):
+    key = STATISTICS if kind == "statistic" else GENERAL
+    original = encoded_payload(SCHEMAS_880[kind], key)
+    inspection = real_client.post(FILES + "/inspect", headers=AUTH, json=envelope(original))
+    assert inspection.status_code == 200
+    body = inspection.json()
+    assert body["format"]["id"] == "sk-local-des-cbc"
+    assert body["format"]["compatibility"] == "read_only"
+    assert all(not field["editable"] for field in body["fields"])
+    assert body["sha256"] == sha256(original).hexdigest()
+
+    request = envelope(original, changes={})
+    validated = real_client.post(FILES + "/validate", headers=AUTH, json=request)
+    assert validated.status_code == 200
+    assert validated.json()["output_sha256"] == sha256(original).hexdigest()
+    exported = real_client.post(FILES + "/export", headers=AUTH, json=request)
+    assert exported.status_code == 200
+    assert exported.content == original
+    assert exported.headers["Content-Disposition"] == f'attachment; filename="copia-{kind}.data"'
+
+
+def test_880_item_version_zero_is_the_prelogin_default(real_client):
+    payload = encoded_payload(SCHEMAS_880["item_data"] | {"AppVersion": 0})
+    result = real_client.post(FILES + "/inspect", headers=AUTH, json=envelope(payload))
+    assert result.status_code == 200
+    assert {row["id"]: row["value"] for row in result.json()["fields"]}["AppVersion"] == 0
+
+
+def test_880_unknown_item_version_is_rejected(real_client):
+    payload = encoded_payload(SCHEMAS_880["item_data"] | {"AppVersion": 80700})
+    assert_error(real_client.post(FILES + "/inspect", headers=AUTH, json=envelope(payload)),
+                 415, "unsupported_version")
+
+
+def test_880_game_data_xor_is_read_only_and_binary_exact(real_client):
+    document = {
+        "skinLock": {"Knight": []}, "heroUnlock": {"Knight": True},
+        "heroLevel": {"Knight": 0}, "gems": 0, "lastGems": 0, "varGems": 0,
+        "cumulativeGems": 0, "rebornCard": False, "roomLevel": 0,
+        "gameVersion": 0, "lastPlayTime": 0, "totalGameTime": 0,
+        "unknownSyntheticGame": {"entero": 9007199254740993},
+    }
+    original = encode_game_data(document)
+    inspection = real_client.post(FILES + "/inspect", headers=AUTH, json=envelope(original))
+    assert inspection.status_code == 200
+    body = inspection.json()
+    assert body["format"]["id"] == "sk-local-game-xor"
+    assert body["format"]["compatibility"] == "read_only"
+    assert all(not field["editable"] for field in body["fields"])
+    fields = {row["id"]: row["value"] for row in body["fields"]}
+    assert fields["gems"] == 0 and fields["gameVersion"] == 0
+
+    request = envelope(original, changes={})
+    exported = real_client.post(FILES + "/export", headers=AUTH, json=request)
+    assert exported.status_code == 200
+    assert exported.content == original
+    assert exported.headers["Content-Disposition"] == 'attachment; filename="copia-game.data"'
+
+    changed = real_client.post(FILES + "/export", headers=AUTH, json=envelope(original, changes={"gems": 1}))
+    assert_error(changed, 422, "invalid_changes")
+
+
+def test_game_data_adapter_does_not_guess_arbitrary_data(real_client):
+    assert_error(real_client.post(FILES + "/inspect", headers=AUTH, json=envelope(b"not-a-game")),
+                 415, "unsupported_format")

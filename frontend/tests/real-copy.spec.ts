@@ -5,7 +5,7 @@ import { expect, test } from '@playwright/test'
 const original = Buffer.from('copia sintetica')
 const sha256 = createHash('sha256').update(original).digest('hex')
 const format = {
-  id: 'sk-local-des-cbc', name: 'Guardado local de Soul Knight', version: '8.6.0 (muestras)',
+  id: 'sk-local-des-cbc', name: 'Guardado local de Soul Knight', version: '8.6.0–8.8.0 (locales)',
   extensions: ['.data'], compatibility: 'read_only', description: 'Inspección y copia intacta.',
 }
 const validation = { valid: true, changes: [], output_sha256: sha256, output_byte_size: original.length }

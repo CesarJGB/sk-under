@@ -218,3 +218,44 @@ def test_preview_issues_distinguish_null_from_missing() -> None:
         grouped.setdefault(issue.code, set()).add(issue.section)
     assert grouped["null_section"] == {"settingData", "maps"}
     assert grouped["missing_section"] == {"mallReloadData"}
+
+
+def test_gzip_diagnostics_report_header_crc_and_size() -> None:
+    from app.cloud.decoder import diagnose_gzip, diagnose_payload
+
+    raw = DOCUMENT.read_bytes()
+    body = gzip.compress(raw, mtime=0)
+    report = diagnose_gzip(body)
+    assert report.header is True
+    assert report.crc_ok is True
+    assert report.decompressed_bytes == len(raw)
+    assert report.trailing_bytes == 0
+    assert report.error is None
+
+    framed = b"\x00\x00\x00\x80" + body
+    payload = diagnose_payload(framed)
+    assert payload["rpc"] == "compressed"
+    assert payload["format"] == "gzip"
+    assert payload["decoded"] is True
+    assert payload["error"] is None
+
+
+def test_gzip_diagnostics_reject_truncated_trailing_and_oversized_members() -> None:
+    from app.cloud.decoder import diagnose_gzip
+
+    body = gzip.compress(DOCUMENT.read_bytes(), mtime=0)
+    assert diagnose_gzip(body[:-4]).error == "truncated"
+    assert diagnose_gzip(body + b"x").error == "trailing_bytes"
+    assert diagnose_gzip(b"not-gzip").error == "missing_header"
+    bomb = gzip.compress(b"{" + b" " * (MAX_JSON_BYTES + 1), mtime=0)
+    assert diagnose_gzip(bomb).error == "size_limit"
+
+
+def test_diagnostics_do_not_hide_an_unknown_rpc_body() -> None:
+    from app.cloud.decoder import diagnose_payload
+
+    payload = diagnose_payload(b"\x00\x00\x00\x80cuerpo")
+    assert payload["rpc"] == "compressed"
+    assert payload["format"] == "unknown"
+    assert payload["decoded"] is False
+    assert payload["error"] == "rpc_body_not_gzip"

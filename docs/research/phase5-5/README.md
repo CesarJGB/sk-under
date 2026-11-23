@@ -1,5 +1,11 @@
 # Fase 5.5 · Códec RPC, esquema 8.8.0 y adquisición verificable
 
+> **Actualización Fase 5.6 (2026-11-23):** esta fase obtuvo una referencia
+> local auténtica 8.8.0, decodificó `game.data` y confirmó gzip en el cuerpo de
+> `ZipHelper.Decompress`. El agregado de nube y la aceptación por el cliente
+> siguen pendientes. Véase [Fase 5.6](../phase5-6/README.md).
+
+
 **Resultado en una frase:** el editor ya descifra e inventaría la metadata real
 de 8.8.0, demuestra que las nueve estructuras 8.6.0 conservan todos sus nombres
 en el modelo nuevo y añade un laboratorio local de edición; el códec RPC queda
