@@ -33,7 +33,11 @@ def prepare_upload_candidate(aggregate: bytes) -> UploadCandidate:
         raise CopyLimitError('La copia está vacía o supera el límite.')
     reconstruct_cloud_save(aggregate)
     document = json.dumps({'data': aggregate.decode('utf-8')}, ensure_ascii=False,
-                          separators=(',', ':'), allow_nan=False).encode('utf-8')
+                          separators=(',', ':'), allow_nan=False)
+    # Json.NET escapa estos separadores incluso con StringEscapeHandling.Default.
+    for char in ('\u0085', '\u2028', '\u2029'):
+        document = document.replace(char, f'\\u{ord(char):04x}')
+    document = document.encode('utf-8')
     body = gzip.compress(document, mtime=0)
     decoded = parse_json(gzip.decompress(body))
     if not isinstance(decoded, dict) or decoded.get('data', '').encode('utf-8') != aggregate:
