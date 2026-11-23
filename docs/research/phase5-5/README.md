@@ -20,7 +20,7 @@ Fecha de trabajo: 2026-11-22. Punto de partida: `0d706f2`.
 | Referencia real 8.8.0 | **No obtenida** | Solo APK y `.data` 8.6.0; fixture sintético. [real-880-reference.md](real-880-reference.md) |
 | Laboratorio de edición | **Confirmado (sintético)** | `SaveLab`, 9 pruebas, CLI, diff semántico/binario. [save-editing-lab.md](save-editing-lab.md) |
 | Integración backend | **Confirmada** | `decode_rpc_gzip` opt-in; `validate_payload(rpc_body=...)`; sin rutas nuevas. |
-| CI de GitHub | **Confirmado localmente; remoto pendiente** | `.github/workflows/ci.yml`; pruebas y build locales. |
+| CI de GitHub | **Confirmado** | [Run 45118719722](https://github.com/CesarJGB/sk-under/actions/runs/45118719722): backend, frontend, navegador e higiene en `success`. |
 
 ## 2. Resultados técnicos nuevos
 
@@ -200,6 +200,7 @@ códec.
 | `cd frontend && npm run test:browser` | **4 passed**. |
 | `git diff --check` | Sin errores. |
 | CI local de higiene | Sin secretos ni artefactos privados rastreados. |
+| GitHub Actions (run 45118719722) | **4/4 jobs success**. |
 
 Las 9 pruebas omitidas son las muestras privadas 8.6.0; con el entorno privado
 pasan las 9 y la suite total es 191. No se publican valores, identidades ni
