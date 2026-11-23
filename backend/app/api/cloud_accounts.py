@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import sqlite3
 from datetime import UTC, datetime
 from typing import Annotated, Literal
@@ -19,6 +20,8 @@ from .cloud_lab import _http_error
 from .uploads import BoundedJSONRequest
 
 LOGIN_MESSAGE = "El inicio de sesión con correo y contraseña de ChillyRoom aún no está disponible."
+STORAGE_MESSAGE = "El almacén de cuentas no está disponible."
+logger = logging.getLogger(__name__)
 Hash = Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
 
 
@@ -33,7 +36,7 @@ class AccountRoute(APIRoute):
                 raise EditorError(403, "cloud_origin_denied", "Abre el editor desde el sitio principal de UnderDive.")
             if request.method == "POST":
                 if not accounts:
-                    if request.url.path.endswith("/login"):
+                    if self.endpoint is login:
                         raise EditorError(503, "cloud_login_unavailable", LOGIN_MESSAGE)
                     problem = request.app.state.cloud_accounts_problem
                     raise EditorError(problem.status, problem.code, str(problem))
@@ -49,8 +52,14 @@ class AccountRoute(APIRoute):
                 raise EditorError(exc.status, exc.code, str(exc)) from None
             except CloudSaveError as exc:
                 raise _http_error(exc) from None
-            except (OSError, sqlite3.Error):
-                raise EditorError(503, "cloud_accounts_storage", "El almacén de cuentas no está disponible.") from None
+            except (OSError, sqlite3.Error) as exc:
+                logger.warning("Cloud accounts storage error in %s (%s)", self.name, type(exc).__name__)
+                raise EditorError(503, "cloud_accounts_storage", STORAGE_MESSAGE) from None
+            except EditorError:
+                raise
+            except Exception as exc:
+                logger.error("Cloud accounts error in %s (%s)", self.name, type(exc).__name__)
+                raise EditorError(500, "cloud_accounts_error", "No se pudo completar la operación de cuentas.") from None
             response.headers.update(PRIVATE_HEADERS)
             return response
 
@@ -97,14 +106,24 @@ Browser = Annotated[tuple[CloudAccounts, str], Depends(browser)]
 def list_accounts(request: Request):
     accounts = request.app.state.cloud_accounts
     problem = request.app.state.cloud_accounts_problem
+    settings = request.app.state.settings
+    active, owned = False, []
+    if accounts:
+        active, owned = accounts.browser_state(request.cookies.get(accounts.cookie_name, ""))
     return {
         "configured": accounts is not None,
+        "storage_status": (
+            "ready" if accounts else "unavailable" if problem.code == "cloud_accounts_storage" else "misconfigured"
+        ),
+        "problem_code": problem.code if problem else None,
         "message": str(problem) if problem else None,
         "password_login_available": False,
         "login_message": LOGIN_MESSAGE,
+        "session_active": active,
+        "write_enabled": settings.cloud_write_enabled,
         "min_gems": MIN_GEMS,
         "max_gems": MAX_GEMS,
-        "accounts": accounts.list(request.cookies.get(accounts.cookie_name, "")) if accounts else [],
+        "accounts": owned,
     }
 
 
@@ -119,7 +138,14 @@ def claim(payload: ClaimInput, response: Response, session: Browser):
     cookie = accounts.claim(cookie, payload.ticket)
     response.set_cookie(accounts.cookie_name, cookie, max_age=BROWSER_TTL,
                         secure=accounts.secure, httponly=True, samesite="strict", path="/")
-    return {"accounts": accounts.list(cookie)}
+    return {"accounts": accounts.list(cookie), "session_active": True}
+
+
+@router.post("/logout", status_code=204)
+def logout(response: Response, session: Browser) -> None:
+    accounts, cookie = session
+    accounts.logout(cookie)
+    response.delete_cookie(accounts.cookie_name, secure=accounts.secure, httponly=True, samesite="strict", path="/")
 
 
 @router.post("/{account_id}/rename")

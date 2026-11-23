@@ -1,0 +1,39 @@
+{
+  "production": {
+    "browser": "Chromium, perfil Pixel 7 emulado",
+    "test_started_at": "2026-11-23T22:05:54.691Z",
+    "authentication": "ticket de vinculación con sesión emitida previamente",
+    "gems": {
+      "original": 1002,
+      "candidate": 1003,
+      "independent_download": 1003,
+      "after_restore": 1002
+    },
+    "save_size_bytes": 114778,
+    "upload_returned_persisted": true,
+    "separate_download_matched_candidate_hash": true,
+    "restored_download_matched_original_hash": true
+  },
+  "container_restart": {
+    "browser": "WebKit, perfil iPhone 13 emulado",
+    "test_started_at": "2026-11-23T22:10:55.851Z",
+    "gems": 1002,
+    "backup_records": 1,
+    "same_cookie": true,
+    "separate_browser_http": 401,
+    "viewport_without_horizontal_scroll": true
+  },
+  "official_client": {
+    "version": "8.8.0",
+    "version_code": 1080800,
+    "android_api": 30,
+    "wrong_password_at": "2026-11-23T22:04:25.453Z",
+    "wrong_password_status": "BadRequest",
+    "correct_password_at": "2026-11-23T22:04:54.380Z",
+    "correct_password_status": "OK",
+    "fresh_session": true,
+    "fresh_session_accepted_by_blob_download": true,
+    "downloaded_gems": 1002,
+    "downloaded_bytes": 114778
+  }
+}

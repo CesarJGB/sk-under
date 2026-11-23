@@ -114,7 +114,7 @@ async def require_cloud_admin(
             "cloud_admin_not_configured",
             "Falta configurar la autorización administrativa de escritura.",
         )
-    if credentials is None or not compare_digest(credentials, secret.get_secret_value()):
+    if credentials is None or not credentials.isascii() or not compare_digest(credentials, secret.get_secret_value()):
         raise EditorError(
             403,
             "cloud_admin_denied",
@@ -137,7 +137,9 @@ def _http_error(exc: CloudSaveError) -> EditorError:
         return EditorError(
             502, "cloud_session_rejected", "El servicio de nube rechazó la sesión de laboratorio."
         )
-    if isinstance(exc, (CloudProviderUnavailable, CloudProviderProtocolError, CloudUploadRejected)):
+    if isinstance(exc, CloudProviderUnavailable):
+        return EditorError(502, exc.code, "ChillyRoom Cloud no respondió o devolvió un error de disponibilidad.")
+    if isinstance(exc, (CloudProviderProtocolError, CloudUploadRejected)):
         return EditorError(502, exc.code, "No se pudo completar la operación con el servicio de nube.")
     if isinstance(exc, (BackupStoreError, BackupIntegrityError)):
         return EditorError(500, exc.code, "El respaldo privado no superó la verificación.")

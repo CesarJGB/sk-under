@@ -249,13 +249,17 @@ export type CloudAccount = {
 }
 export type CloudAccounts = {
   configured: boolean
+  storage_status?: 'ready' | 'misconfigured' | 'unavailable'
   message: string | null
   password_login_available: boolean
   login_message: string
+  session_active?: boolean
+  write_enabled?: boolean
   min_gems: number
   max_gems: number
   accounts: CloudAccount[]
 }
+type CloudAccountSession = { accounts: CloudAccount[]; session_active?: boolean }
 export type AccountSave = LabSave & { downloaded_at: string }
 export type AccountBackup = LabBackup & { confirmed: boolean }
 
@@ -266,9 +270,11 @@ async function accountRequest<T>(path: string, signal: AbortSignal, payload?: ob
 export const cloudAccounts = {
   list: (signal: AbortSignal) => accountRequest<CloudAccounts>('', signal),
   claim: (ticket: string, signal: AbortSignal) =>
-    accountRequest<{ accounts: CloudAccount[] }>('/claim', signal, { ticket }),
+    accountRequest<CloudAccountSession>('/claim', signal, { ticket }),
   login: (email: string, password: string, signal: AbortSignal) =>
-    accountRequest<{ accounts: CloudAccount[] }>('/login', signal, { platform: 'android-global', email, password }),
+    accountRequest<CloudAccountSession>('/login', signal, { platform: 'android-global', email, password }),
+  logout: (signal: AbortSignal) =>
+    request('/cloud/accounts/logout', signal, {}, '', '', 'include'),
   account(id: string) {
     const path = `/${encodeURIComponent(id)}`
     return {

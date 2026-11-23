@@ -21,8 +21,7 @@ function formatDate(value: string) {
     : new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium', timeStyle: 'short' }).format(parsed)
 }
 
-function statusLabel(status: LabStatus | null) {
-  if (!status) return 'Comprobando laboratorio'
+function statusLabel(status: LabStatus) {
   if (status.mode === 'live') return 'Laboratorio real · escritura habilitada'
   if (status.mode === 'read_only') return 'Laboratorio real · solo lectura'
   return 'Laboratorio no configurado'
@@ -41,7 +40,8 @@ export function LabEditorPage({ token, setToken, adminToken, setAdminToken, heal
   loading: boolean
 }) {
   const needsToken = health?.access_mode === 'token'
-  const canCall = !loading && health !== null && (!needsToken || token.trim().length > 0)
+  const canCall = !loading && health !== null && health.access_mode !== 'disabled' &&
+    (!needsToken || token.trim().length > 0)
   const [status, setStatus] = useState<LabStatus | null>(null)
   const [backups, setBackups] = useState<LabBackup[]>([])
   const [loaded, setLoaded] = useState<LabSave | null>(null)
@@ -56,6 +56,11 @@ export function LabEditorPage({ token, setToken, adminToken, setAdminToken, heal
   const [selectedBackup, setSelectedBackup] = useState('')
 
   const statusOperation = useOperation()
+  const uncheckedLabel = loading || statusOperation.pending ? 'Comprobando laboratorio'
+    : !health ? 'API sin conexión'
+    : health.access_mode === 'disabled' ? 'Acceso privado deshabilitado'
+    : needsToken && !token.trim() ? 'Autorización requerida'
+    : statusOperation.problem ? 'Consulta fallida' : 'Estado sin consultar'
   const loadOperation = useOperation()
   const prepareOperation = useOperation()
   const confirmOperation = useOperation()
@@ -105,8 +110,8 @@ export function LabEditorPage({ token, setToken, adminToken, setAdminToken, heal
   }
 
   useEffect(() => {
+    setStatus(null)
     if (!canCall) {
-      setStatus(null)
       setBackups([])
       return
     }
@@ -188,14 +193,14 @@ export function LabEditorPage({ token, setToken, adminToken, setAdminToken, heal
             <span className="lab-hero-icon"><Gem size={26} aria-hidden="true" /></span>
             <div>
               <h2 id="lab-hero-title">Gemas · laboratorio</h2>
-              <p>{statusLabel(status)}</p>
+              <p>{status ? statusLabel(status) : uncheckedLabel}</p>
             </div>
           </div>
           <div className="lab-hero-meta">
-            <span className={`lab-pill ${status?.mode === 'live' ? 'live' : status?.mode === 'read_only' ? 'read' : ''}`}>
+            {status && <span className={`lab-pill ${status.mode === 'live' ? 'live' : status.mode === 'read_only' ? 'read' : ''}`}>
               <span className="lab-dot" aria-hidden="true" />
-              {status?.mode === 'live' ? 'Escritura protegida' : status?.mode === 'read_only' ? 'Solo lectura' : 'Sin configurar'}
-            </span>
+              {status.mode === 'live' ? 'Escritura protegida' : status.mode === 'read_only' ? 'Solo lectura' : 'Sin configurar'}
+            </span>}
             {status && <span className="lab-mono">{status.backup_count} respaldo{status.backup_count === 1 ? '' : 's'}</span>}
           </div>
         </section>
@@ -230,7 +235,9 @@ export function LabEditorPage({ token, setToken, adminToken, setAdminToken, heal
               </div>
               <dl className="lab-facts">
                 <div><dt>Modo</dt><dd>{status.mode === 'live' ? 'Real con escritura' : status.mode === 'read_only' ? 'Real de solo lectura' : 'Deshabilitado'}</dd></div>
-                <div><dt>Lectura</dt><dd>{status.read_ready ? 'Disponible' : 'No disponible'}</dd></div>
+                <div><dt>Lectura</dt><dd>{status.read_ready ? 'Configurada' : 'Sin configurar'}</dd></div>
+                <div><dt>ChillyRoom Cloud</dt><dd>{loadOperation.pending ? 'Consultando'
+                  : loadOperation.problem ? 'Última descarga fallida' : loaded ? 'Última descarga verificada' : 'Sin consultar'}</dd></div>
                 <div><dt>Escritura</dt><dd>{status.write_ready ? 'Habilitada' : 'Deshabilitada'}</dd></div>
                 <div><dt>Autorización administrativa</dt><dd>{status.admin_configured ? 'Configurada en el servidor' : 'No configurada'}</dd></div>
               </dl>

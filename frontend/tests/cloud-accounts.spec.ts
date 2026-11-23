@@ -74,3 +74,30 @@ test('vincula, confirma con cookie y reinicia la vista al cambiar de cuenta', as
   await expect(page.getByText('Reconexión necesaria', { exact: false })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Descargar partida' })).toBeDisabled()
 })
+
+test('cierra la sesión y elimina la partida cargada de la vista', async ({ page }) => {
+  let active = true
+  await page.route('**/api/v1/cloud/accounts', (route) => route.fulfill({
+    json: { ...status, session_active: active, accounts: active ? [first] : [] },
+  }))
+  await page.route('**/api/v1/cloud/accounts/first/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  await page.route('**/api/v1/cloud/accounts/first/save', (route) => route.fulfill({
+    json: { gems: 1001, size: 1000, sha256, downloaded_at: '2026-11-23T21:00:00Z' },
+  }))
+  await page.route('**/api/v1/cloud/accounts/logout', async (route) => {
+    expect(route.request().method()).toBe('POST')
+    expect(route.request().headers().authorization).toBeUndefined()
+    active = false
+    await route.fulfill({ status: 204 })
+  })
+
+  await page.goto('/partida')
+  await page.getByRole('button', { name: 'Descargar partida' }).click()
+  await expect(page.getByTestId('cloud-current-gems')).toHaveText('1,001')
+  page.once('dialog', (dialog) => dialog.accept())
+  await page.getByRole('button', { name: 'Cerrar sesión' }).click()
+  await expect(page.getByTestId('cloud-current-gems')).toHaveCount(0)
+  await page.reload()
+  await expect(page.getByRole('button', { name: 'Cerrar sesión' })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Descargar partida' })).toHaveCount(0)
+})

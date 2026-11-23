@@ -73,7 +73,7 @@ class AccountProvider:
 
 class CloudAccounts:
     def __init__(self, settings: Settings) -> None:
-        origin = settings.cloud_accounts_origin
+        origin = settings.cloud_accounts_origin.removesuffix("/")
         if origin not in settings.allowed_origins:
             raise AccountError("cloud_accounts_origin", "Configura el origen seguro para las cuentas.", 503)
         parsed = urlsplit(origin)
@@ -131,7 +131,7 @@ class CloudAccounts:
             ) from None
 
     def connect(self) -> sqlite3.Connection:
-        db = sqlite3.connect(self.database)
+        db = sqlite3.connect(self.database.as_uri() + "?mode=rw", uri=True)
         db.row_factory = sqlite3.Row
         db.execute("PRAGMA foreign_keys = ON")
         db.execute("PRAGMA secure_delete = ON")
@@ -208,19 +208,38 @@ class CloudAccounts:
             db.execute("DELETE FROM grants WHERE token = ?", (grant["token"],))
         return cookie
 
-    def list(self, cookie: str) -> list[dict]:
-        with closing(self.connect()) as db:
+    def browser_state(self, cookie: str) -> tuple[bool, list[dict]]:
+        with closing(self.connect()) as db, db:
+            db.execute("BEGIN")
             owner = self.owner(db, cookie)
+            if owner is None:
+                return False, []
             rows = db.execute("SELECT id, label, expires, can_write FROM accounts WHERE owner = ? ORDER BY label, id",
                               (owner,))
-            return [
-                {
+            now = time()
+            accounts = []
+            for row in rows:
+                connected = bool(row["expires"] and row["expires"] > now)
+                accounts.append({
                     "id": row["id"], "label": row["label"], "platform": "android-global",
-                    "connected": bool(row["expires"] and row["expires"] > time()),
-                    "write_ready": bool(self.write_enabled and row["can_write"] and row["expires"] and row["expires"] > time()),
-                }
-                for row in rows
-            ]
+                    "connected": connected,
+                    "write_ready": self.write_enabled and bool(row["can_write"]) and connected,
+                })
+            return True, accounts
+
+    def list(self, cookie: str) -> list[dict]:
+        return self.browser_state(cookie)[1]
+
+    def logout(self, cookie: str) -> None:
+        with closing(self.connect()) as db, db:
+            db.execute("BEGIN IMMEDIATE")
+            owner = self.owner(db, cookie)
+            if owner is None:
+                return
+            db.execute("DELETE FROM grants WHERE account_id IN (SELECT id FROM accounts WHERE owner = ?)", (owner,))
+            db.execute("UPDATE accounts SET owner = NULL, sealed = NULL, expires = NULL, can_write = 0 WHERE owner = ?",
+                       (owner,))
+            db.execute("DELETE FROM browsers WHERE id = ?", (owner,))
 
     @contextmanager
     def locked(self, account_id: str):

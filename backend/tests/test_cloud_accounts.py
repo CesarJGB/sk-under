@@ -1,4 +1,5 @@
 import json
+import sqlite3
 from concurrent.futures import ThreadPoolExecutor
 from time import time
 
@@ -74,10 +75,74 @@ def test_unavailable_login_never_collects_credentials_and_reports_missing_config
     client = TestClient(create_app(Settings(_env_file=None)), base_url=BASE)
     status = client.get(API)
     assert status.json()["configured"] is False
+    assert status.json()["storage_status"] == "misconfigured"
+    assert status.json()["problem_code"] == "cloud_accounts_origin"
     assert status.json()["password_login_available"] is False
     rejected = client.post(API + "/login", json={"password": "ignored-fixture-password"})
     assert_error(rejected, 503, "cloud_login_unavailable")
     assert "ignored-fixture-password" not in rejected.text
+
+
+def test_origin_trailing_slash_is_canonicalized_so_browser_origin_stays_exact(setup):
+    settings, _, _, _, *_ = setup
+    app = create_app(settings.model_copy(update={"cloud_accounts_origin": ORIGIN + "/"}))
+    assert app.state.cloud_accounts.origin == ORIGIN
+    client = TestClient(app, base_url=BASE)
+    assert client.get(API, headers=HEADERS).json()["storage_status"] == "ready"
+    assert_error(client.get(API, headers={"Origin": ORIGIN + "/"}), 403, "cloud_origin_denied")
+
+
+def test_disabled_login_checks_origin_without_parsing_the_body(setup):
+    _, _, _, client, *_ = setup
+    payload = {"content": b"{" + b"private-fixture" * 1000}
+    assert_error(client.post(API + "/login", headers=HEADERS | {"Content-Type": "application/json"}, **payload),
+                 503, "cloud_login_unavailable")
+    assert_error(client.post(API + "/login", headers={"Content-Type": "application/json"}, **payload),
+                 403, "cloud_origin_denied")
+
+
+def test_accounts_storage_failure_does_not_mark_api_unavailable(setup, monkeypatch, caplog):
+    _, store, _, client, *_ = setup
+
+    def unavailable():
+        raise sqlite3.OperationalError("private-fixture")
+
+    with monkeypatch.context() as temporary:
+        temporary.setattr(store, "connect", unavailable)
+        response = client.get(API, headers=HEADERS)
+        assert_error(response, 503, "cloud_accounts_storage")
+        assert response.headers["access-control-allow-origin"] == ORIGIN
+        assert "private-fixture" not in response.text + caplog.text
+        assert client.get("/api/v1/health").status_code == 200
+    assert client.get(API, headers=HEADERS).json()["storage_status"] == "ready"
+
+
+def test_logout_revokes_browser_cookie_and_cloud_session_without_affecting_second_owner(setup):
+    _, store, app, client, *_ = setup
+    account = claim(client, issue(store)).json()["accounts"][0]["id"]
+    other = TestClient(app, base_url=BASE)
+    other_id = claim(other, issue(store, SECOND)).json()["accounts"][0]["id"]
+    assert_error(other.get(endpoint(account, "save")), 404, "cloud_account_missing")
+    draft = prepare(client, account)
+    pending_reconnect = issue(store)
+    old_session = client.cookies.get("__Host-sk_under")
+    assert client.get(API).json()["session_active"] is True
+    assert_error(client.post(API + "/logout", json={}), 403, "cloud_origin_denied")
+
+    response = client.post(API + "/logout", headers=HEADERS, json={})
+    assert response.status_code == 204
+    assert "Max-Age=0" in response.headers["set-cookie"]
+    assert "HttpOnly" in response.headers["set-cookie"] and "Secure" in response.headers["set-cookie"]
+    assert client.get(API).json()["session_active"] is False
+    replay = TestClient(app, base_url=BASE, cookies={"__Host-sk_under": old_session})
+    assert_error(replay.get(endpoint(account, "save")), 401, "cloud_browser_required")
+    assert_error(replay.post(API + "/claim", headers=HEADERS, json={"ticket": pending_reconnect}),
+                 404, "cloud_grant_invalid")
+    assert other.get(endpoint(other_id, "save")).status_code == 200
+
+    assert claim(client, issue(store)).json()["accounts"][0]["id"] == account
+    assert client.get(endpoint(account, "backups")).json()["backups"][0]["id"] == draft["backup"]["id"]
+    assert_error(replay.get(endpoint(account, "save")), 401, "cloud_browser_required")
 
 
 def test_claim_checks_origin_replays_and_cookie_privacy(setup):

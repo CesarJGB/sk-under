@@ -19,6 +19,7 @@ export function CloudAccountsPage() {
   const [ticket, setTicket] = useState(() => new URLSearchParams(window.location.hash.slice(1)).get('vincular'))
   const [managing, setManaging] = useState(false)
   const operation = useOperation()
+  const authentication = useOperation()
 
   function refresh() {
     void operation.run(async (signal) => setState(await cloudAccounts.list(signal)))
@@ -31,8 +32,10 @@ export function CloudAccountsPage() {
 
   const account = state?.accounts.find(({ id }) => id === selected) ?? state?.accounts[0]
 
-  function updateAccounts(next: { accounts: CloudAccount[] }) {
-    setState((previous) => previous && { ...previous, accounts: next.accounts })
+  function updateAccounts(next: { accounts: CloudAccount[]; session_active?: boolean }) {
+    setState((previous) => previous && {
+      ...previous, accounts: next.accounts, session_active: next.session_active ?? previous.session_active,
+    })
   }
 
   function linkAccount() {
@@ -48,10 +51,23 @@ export function CloudAccountsPage() {
     if (!state?.password_login_available) return
     const fields = new FormData(event.currentTarget)
     event.currentTarget.reset()
-    void operation.run(async (signal) => {
+    void authentication.run(async (signal) => {
       updateAccounts(await cloudAccounts.login(String(fields.get('email')), String(fields.get('password')), signal))
     })
   }
+
+  function logout() {
+    if (!window.confirm('¿Cerrar sesión? Necesitarás un nuevo enlace para volver a acceder a las cuentas vinculadas.')) return
+    void authentication.run(async (signal) => {
+      await cloudAccounts.logout(signal)
+      updateAccounts({ accounts: [], session_active: false })
+      setSelected('')
+      setManaging(false)
+      setTicket(null)
+    })
+  }
+
+  const pending = operation.pending || authentication.pending
 
   return <>
     <PageTitle title="Partida en la nube" />
@@ -67,9 +83,13 @@ export function CloudAccountsPage() {
           <button className="button lab-quiet" type="button" onClick={refresh}>Actualizar cuentas</button></>}
         {ticket && <div className="lab-actions">
           <button className="button lab-primary" type="button" onClick={linkAccount}
-            disabled={!state?.configured || operation.pending}>Vincular cuenta del enlace</button>
+            disabled={!state?.configured || pending}>Vincular cuenta del enlace</button>
           <button className="button lab-quiet" type="button" onClick={() => setTicket(null)}>Cancelar</button>
         </div>}
+        {(state?.session_active ?? Boolean(account)) && <div className="lab-actions">
+          <button className="button lab-quiet" type="button" disabled={pending} onClick={logout}>Cerrar sesión</button>
+        </div>}
+        {authentication.problem && <Problem problem={authentication.problem} />}
         {account && <>
           <label className="lab-field"><span>Cuenta seleccionada</span>
             <select className="lab-input" value={account.id} onChange={(event) => {
@@ -92,10 +112,10 @@ export function CloudAccountsPage() {
               <label className="lab-field"><span>Nombre local</span>
                 <input className="lab-input" name="label" defaultValue={account.label} required maxLength={80} />
               </label>
-              <button className="button lab-quiet" disabled={operation.pending}>Guardar nombre</button>
+              <button className="button lab-quiet" disabled={pending}>Guardar nombre</button>
             </form>
             <p className="lab-hint">Para reconectar, abre un nuevo enlace de esta cuenta en el mismo navegador.</p>
-            <button className="button lab-quiet" type="button" disabled={operation.pending} onClick={() => {
+            <button className="button lab-quiet" type="button" disabled={pending} onClick={() => {
               if (window.confirm(`¿Desvincular ${account.label} de este navegador?`)) {
                 void operation.run(async (signal) => {
                   updateAccounts(await cloudAccounts.account(account.id).unlink(signal))
@@ -114,15 +134,17 @@ export function CloudAccountsPage() {
                 <option value="ios" disabled>iOS — Próximamente</option>
               </select>
             </label>
-            <p className="lab-hint" role="status">{state?.login_message ?? 'Comprobando el inicio de sesión…'}</p>
-            <fieldset className="account-credentials" disabled={!state?.password_login_available || operation.pending}>
+            <p className="lab-hint" role="status">{state?.login_message ?? (operation.problem
+              ? 'El estado del inicio de sesión no se pudo consultar.'
+              : 'Comprobando el inicio de sesión…')}</p>
+            <fieldset className="account-credentials" disabled={!state?.password_login_available || pending}>
               <label className="lab-field"><span>Correo electrónico de ChillyRoom</span>
                 <input className="lab-input" name="email" type="email" inputMode="email" autoComplete="username" required />
               </label>
               <label className="lab-field"><span>Contraseña</span>
                 <input className="lab-input" name="password" type="password" autoComplete="current-password" required />
               </label>
-              <button className="button lab-primary">Iniciar sesión</button>
+              <button className="button lab-primary">{authentication.pending && !account ? 'Iniciando sesión…' : 'Iniciar sesión'}</button>
             </fieldset>
             {state?.configured && !state.password_login_available && <p className="lab-hint">
               Si recibiste un enlace privado de vinculación, ábrelo en el navegador donde usarás el editor.
@@ -131,7 +153,8 @@ export function CloudAccountsPage() {
         </details>
       </section>
 
-      {state && account ? <AccountEditor key={account.id} account={account} limits={state} onExpired={refresh} /> : <>
+      {state && account ? <AccountEditor key={account.id} account={account} limits={state}
+        serverWriteEnabled={state.write_enabled} onExpired={refresh} /> : <>
         <section className="lab-card"><h2>Mi partida</h2><p>Selecciona una cuenta vinculada para descargar su partida.</p></section>
         <section className="lab-card"><h2>Respaldos</h2><p>El historial de respaldos aparecerá al seleccionar una cuenta.</p></section>
       </>}
@@ -144,9 +167,10 @@ export function CloudAccountsPage() {
   </>
 }
 
-function AccountEditor({ account, limits, onExpired }: {
+function AccountEditor({ account, limits, serverWriteEnabled, onExpired }: {
   account: CloudAccount
   limits: Pick<CloudAccounts, 'min_gems' | 'max_gems'>
+  serverWriteEnabled?: boolean
   onExpired: () => void
 }) {
   const [save, setSave] = useState<AccountSave | null>(null)
@@ -170,7 +194,8 @@ function AccountEditor({ account, limits, onExpired }: {
       try {
         await task(signal)
       } catch (error) {
-        if (!signal.aborted && error instanceof ApiProblem && error.code === 'cloud_session_expired') onExpired()
+        if (!signal.aborted && error instanceof ApiProblem &&
+          ['cloud_session_expired', 'cloud_browser_required'].includes(error.code ?? '')) onExpired()
         throw error
       }
     })
@@ -195,7 +220,9 @@ function AccountEditor({ account, limits, onExpired }: {
         <div><h2 id="save-title">Mi partida</h2><p>{account.label} · Android Global</p></div>
       </div>
       {!account.connected && <Notice tone="warning">La sesión caducó. Solicita un nuevo enlace privado para reconectar.</Notice>}
-      {account.connected && !account.write_ready && <Notice tone="warning">Esta cuenta está disponible en solo lectura.</Notice>}
+      {account.connected && !account.write_ready && <Notice tone="warning">{serverWriteEnabled === false
+        ? 'La escritura está deshabilitada en el servidor.'
+        : 'Esta cuenta está autorizada para lectura.'}</Notice>}
       <button className="button lab-primary" disabled={disabled} onClick={() => run(async (signal) => {
         clearPreview()
         setSave(null)
