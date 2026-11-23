@@ -1,0 +1,7 @@
+# Identidad y alcance de la sesión
+
+En la ruta de cuenta ChillyRoom, el formulario llama a `EmailOrPhoneLogin(string account, string password)`, cuyo retorno administrado es `Task<(bool,string)>`. La máquina valida la cuenta y entra en `BaseLogin`, donde hay un control de frecuencia. El tipo del resultado que consume `NewCloudSaveAgent.OnLoginResultAction` distingue éxito de cuenta y fallo tipado. Las dos firmas pertenecen a límites distintos del SDK. En 5.1 los registros y el paso al menú acreditan un login aceptado. Falta el tramo que enlaza ese resultado con la primera lectura de la cuenta. [Análisis del SDK](../phase5/autenticacion.md)
+
+El runner comprueba el estado de login y la identidad del SDK. El agregado también incluye `cloudSaveId` y `platformId`. La posibilidad de resolver esos campos en el cliente oficial no proporciona al backend consentimiento delegado, ámbito de lectura ni una copia autenticada.
+
+El manual documenta acceso usando Google o una cuenta ChillyRoom. La FAQ especifica que el mismo correo en ambos proveedores puede identificar dos cuentas independientes. Para iOS, el proveedor documenta sistemas de cuenta y estructuras diferentes, y excluye la transferencia Android–iOS. La comparación binaria realizada aquí cubre únicamente el APK de Android. [Manual de Android](https://soulknight.chillyroom.com/et/article/base/3) · [FAQ oficial](https://soulknight.chillyroom.com/et/article/base/6)

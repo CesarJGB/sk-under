@@ -1,0 +1,17 @@
+# Arquitectura web y frontera de adquisición
+
+| Alternativa | Componente que puede ejecutarse hoy | Dependencia y coste | Evidencia que habilitaría producción |
+| --- | --- | --- | --- |
+| A. Backend Python directo | Inspección en memoria de un agregado entregado voluntariamente, verificación de tamaño/huella y resumen | Por copia; sin Android para procesarla. El acceso remoto requiere un mecanismo delegado que vincule al titular, revisión y ámbito de lectura. | Contrato aprobado de autenticación y lectura o exportación del proveedor, seguido de una muestra real contrastada con la UI. |
+| B. Puente ligero | Un selector del SO o un receptor de una URI concedida por el juego podría entregar la misma entrada | Por transferencia; permisos de lectura temporales y soporte nativo por plataforma. Para un fichero ya exportado basta cargarlo directamente. | Acción verificable en el cliente que entregue un documento de partida a otra app, o exportación al titular. |
+| C. Android de laboratorio | Cliente y restauración probados en 5.1; UID, SNI y tiempos de arranque medidos en 5.2 | Requiere imagen compatible, KVM, recursos gráficos y conservar el vínculo del dispositivo para ensayos posteriores. El primer arranque volvió a fallar con SIGSEGV. | Sirve de referencia para validar versiones y comparar esquemas o resúmenes con el progreso visible. |
+
+## Experimento sobre el puente
+
+En el manifiesto decodificado del APK se contaron **13 proveedores de contenido** bajo application. Doce tienen exported=false y el único exportado es `com.facebook.FacebookContentProvider`. Tres proveedores declaran concesión de URI (UniWebView, FitAndroidQ y TaurusX). La búsqueda de acciones declaradas en filtros de componentes por document, save, send o export devolvió únicamente SAVE_PROFILE del instalador de perfiles. Este censo cubre entradas declaradas; un juego también puede iniciar un selector o conceder una URI desde código. La clase Java `SaveUtil.SaveImage` escribe con MIME de imagen en MediaStore.Images. Ninguna de estas evidencias establece una acción disponible para entregar el agregado. Se contrastó con el registro de ContentProviders de la instalación y con los resultados de acceso tras restaurar. [Sondeo posterior a la restauración](../phase5-experimental/archivos.md)
+
+La frontera que falta es una fuente de **una revisión concreta, autorizada por el titular**, junto con su formato. Un conector futuro puede implementar el contrato Python de lectura tras obtener esa autorización. El contrato actual exige SHA-256 y tamaño del agregado a procesar. Si el proveedor entrega una envoltura, se verificará primero según su contrato y se identificará por separado la huella del agregado. Un consentimiento para iniciar sesión en el juego no documenta delegación a otro servicio. El portal público explica recuperación asistida y el cliente oficial. [Manual de nube](https://soulknight.chillyroom.com/et/article/base/3) · [Soporte](https://www.chillyroom.com/en/support)
+
+## Plataformas
+
+El proveedor distingue cuentas Android por método de acceso, y Android e iOS por sistema de cuenta y estructura de datos. El SDK Android consulta identidad de plataforma. Para incorporar iOS se necesita una salida aprobada y una muestra iOS con procedencia y versión. Podría reutilizarse la verificación de copia; compartir el reconstructor requiere comprobar equivalencia de modelo. La fase no ejecutó un cliente iOS. [Identidad y fuentes](authentication.md)
