@@ -337,6 +337,8 @@ h3 { font-weight: 650; letter-spacing: -.02em; }
 
 @media (max-width: 480px) {
   .editor-actions { display: grid; grid-template-columns: 1fr; }
+  .file-strip { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+  .file-strip .edit-count { grid-column: 2; justify-self: start; margin-left: 0; }
 }
 
 @media (max-width: 380px) {

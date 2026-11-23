@@ -1,3 +1,4 @@
+import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { expect, test } from '@playwright/test'
 
@@ -58,4 +59,15 @@ test('bloquea los bytes alterados aunque la validación y el tamaño coincidan',
   await expect(page.getByText('SHA-256 coincide con el original', { exact: false })).toHaveCount(0)
   await expect(page.getByRole('link', { name: 'Descargar de nuevo' })).toHaveCount(0)
   expect(downloaded).toBe(false)
+})
+
+test('mantiene espacio para el nombre y muestra el estado debajo en móvil', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 760 })
+  await page.getByRole('link', { name: 'Volver a la inspección' }).click()
+  await expect(page.getByRole('heading', { name: 'Inspeccionar copia' })).toBeVisible()
+  const name = await page.getByText('sintetico.data', { exact: true }).boundingBox()
+  const badge = await page.getByRole('status').filter({ hasText: 'Solo lectura' }).boundingBox()
+  assert.ok(name && badge)
+  expect(name.y + name.height).toBeLessThanOrEqual(badge.y)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
 })

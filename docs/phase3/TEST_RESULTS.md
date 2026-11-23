@@ -5,7 +5,7 @@
 | `cd backend && uv sync --locked && uv run --locked pytest -q` | 90 pruebas aprobadas |
 | `cd frontend && npm ci && npm run build` | Node.js 24.21.0 y npm 11.19.0. TypeScript y Vite completaron la compilación y generaron `frontend/dist` |
 | `cd backend && docker build --no-cache -t sk-under-phase3-local .` | Instalación de PyCryptodome 4.6.0 y arranque de Uvicorn. Salud, CORS permitido y rechazado, autenticación y `Cache-Control: no-store` verificados. Sin token, la API de archivos devuelve `503` |
-| `cd frontend && npm run test:browser` | 3 pruebas de Chromium rechazan un hash incorrecto, un tamaño incorrecto o bytes alterados en la descarga |
+| `cd frontend && npm run test:browser` | 4 pruebas de Chromium cubren el rechazo de un hash, tamaño o descarga alterados y la disposición del nombre y estado a 320 píxeles |
 | Chromium en loopback | A 1440 y 320 píxeles se autenticó, inspeccionó, validó, descargó y reimportó un `.data` sintético de solo lectura con el mismo SHA-256. En ambos tamaños se editó, validó, descargó y reimportó una muestra `.skdemo` |
 | API autenticada con los nueve archivos reales | 9/9 identificados, validados, descargados y reimportados. Los bytes y SHA-256 de cada descarga coinciden con su original. Los nueve rechazan cambios |
 | SHA-256 de los originales | Los nueve SHA-256 coinciden con el inventario privado antes y después de las pruebas. Las muestras solo se leyeron y las descargas de la API se compararon en memoria |
