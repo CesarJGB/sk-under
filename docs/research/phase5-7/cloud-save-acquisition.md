@@ -1,9 +1,32 @@
 # Adquisición de la partida de nube
 
-**Estado: PARCIAL.** Se obtuvo una sesión auténtica en el portal oficial de
-cuentas y se caracterizó el gateway del juego. **No se obtuvo una copia de
-`CloudSaveGameData`.** El portal no expone el contenido del guardado y el
-gateway rechazó la sesión web como token de juego.
+**Estado: PARCIAL; LECTURA `FetchGameData` CONSEGUIDA.** Se obtuvo una sesión
+auténtica en el portal oficial, se caracterizó el gateway y, en la revisión del
+2026-11-23, se extrajo el token de la sesión del cliente oficial y se ejecutó
+`POST /Backup/FetchGameData` desde Linux: **`200` con 600 bytes de agregado
+legacy vacío**. **No se obtuvo `CloudSaveGameData`**: `/Backup/GetBlobSave`
+devolvió `500` y `/BlobSave/Download` `404`. El detalle nuevo está en
+[lectura auténtica](authentic-cloud-read.md). Las secciones 1–5 conservan la
+primera tanda del portal y del gateway.
+
+## 0. Addendum 2026-11-23: token del cliente y lectura real
+
+| Elemento | Resultado |
+| --- | --- |
+| Token | Extraído del `shared_prefs` del cliente; archivo privado `0600`; no publicado |
+| Host operativo | `api-gateway.soulknight.chillyroom.com` (el host legacy devuelve `503`) |
+| Petición | `POST /Backup/FetchGameData` con `Authorization: Bearer <token>` |
+| Respuesta | **`200`**, `application/json`, **600 bytes**, 17 claves, colecciones vacías |
+| Cuenta invitado | Mismo esquema vacío |
+| Cuenta del titular | Mismo esquema vacío; la cuenta no tiene progreso en este endpoint |
+| `CloudSaveGameData` | **No obtenido**; `GetBlobSave` `500`, `BlobSave/Download` `404` |
+| Escrituras | **Ninguna**; solo lecturas |
+
+La respuesta no contiene `serialzedVersion`, `cloudSaveId` ni `platformId`; es
+el agregado legacy de `FetchGameData`, no el wrapper nuevo. No se debe
+presentar como “partida de nube” completa. La lectura demuestra que el token
+del cliente es aceptado desde Linux y que la ruta es reproducible; no demuestra
+que exista una copia no vacía ni que el cliente acepte una modificación.
 
 ## 1. Hipótesis
 
@@ -100,18 +123,23 @@ estable y contar la vinculación.
 
 ## 4. Limitaciones
 
-- No se obtuvo un token de juego. El login del cliente (`/UserAuth/Login`)
-  devolvió `10000` con el cuerpo probado; no se siguió adivinando el esquema
-  para no bloquear la cuenta.
+- En la primera tanda no se obtuvo un token de juego: el login del cliente
+  (`/UserAuth/Login`) devolvió `10000` con el cuerpo probado y no se siguió
+  adivinando el esquema para no bloquear la cuenta. La revisión posterior sí
+  obtuvo el token de la sesión del cliente y ejecutó `FetchGameData`; ver el
+  addendum 0.
 - El portal de cuentas no es una interfaz de descarga de partidas.
 - `/BlobSave/Download` no existe en el host del gateway; puede vivir en otro
   servicio o requerir otro método/cabeceras. No se inventó una ruta.
 - No se capturó tráfico TLS del cliente. El cliente se cierra antes de un
   login estable y no se instaló una CA ni se alteró el pinning.
 
-## 5. Conclusión
+## 5. Conclusión de la primera tanda
 
-La adquisición auténtica de nube **no se completó**. La evidencia nueva es la
-sesión oficial, el `gameId`, el contrato de error del gateway y la distinción
-entre sesión web y token de juego. La copia de nube sigue siendo el bloqueo
-principal de la fase.
+La adquisición de `CloudSaveGameData` **no se completó en la primera tanda**.
+La evidencia nueva de entonces es la sesión oficial, el `gameId`, el contrato
+de error del gateway y la distinción entre sesión web y token de juego. La
+revisión del 2026-11-23 añadió una lectura auténtica de `FetchGameData` con el
+token del cliente (agregado legacy vacío); el wrapper nuevo sigue siendo el
+bloqueo principal. Ver el addendum 0 y
+[lectura auténtica](authentic-cloud-read.md).

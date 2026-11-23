@@ -3,7 +3,10 @@
 **Estado: PARCIAL, SIN COMPORTAMIENTO CONFIRMADO.** La Fase 5.7 volvió a
 confirmar la existencia y las firmas de los métodos de corrección, pero no
 decompiló sus cuerpos ni observó una migración real. No se añadieron pruebas de
-comportamiento porque no hay una transformación confirmada que reproducir.
+comportamiento porque no hay una transformación confirmada que reproducir. En
+la revisión del 2026-11-23 el cliente ya arranca en `arm64-v8a` y permite
+login; eso no aportó cuerpos nuevos de `FixData`, que sigue siendo una caja
+gris.
 
 ## 1. Hipótesis
 

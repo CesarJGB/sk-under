@@ -4,39 +4,45 @@
 
 | Bloqueo | Consecuencia | Evidencia | Qué falta exactamente |
 | --- | --- | --- | --- |
-| Cliente inestable en el AVD | No hay menú, no hay restauración, no hay captura | `SIGSEGV` en `libndk_translation` y en `libil2cpp`; [validación](official-client-validation.md) | Un dispositivo ARM estable o un build oficial que arranque |
-| Sin token de juego | El gateway rechaza la lectura | `10001` sin token; `10015` con la sesión web; [adquisición](cloud-save-acquisition.md) | Un token emitido por el login oficial |
-| Cuerpo de `AccountLogin` desconocido | No se puede reproducir el login en Linux | Firma `(string, string, callback, exp)`; `/UserAuth/Login` devuelve `10000` | El cuerpo/cabeceras exactos, observados en una sesión real |
-| Esquema de éxito de la descarga desconocido | El proveedor HTTP no se puede validar | No hay respuesta con `CloudSaveGameData` | Una respuesta auténtica de `/Backup/GetBlobSave` o `/BlobSave/Download` |
-| Sin `CloudSaveGameData` | No hay comparación ni `cloudSaveId`/`platformId` | [comparación](cloud-local-comparison.md) | La copia de nube |
+| Cuenta de laboratorio sin progreso | `FetchGameData` devuelve un agregado vacío; no hay comparación útil | Respuesta de 600 bytes con colecciones vacías; [lectura](authentic-cloud-read.md) | Una cuenta con progreso, o crear progreso y confirmar que el agregado deja de estar vacío |
+| `GetBlobSave` devuelve `500` | No se obtiene el wrapper nuevo | `500` con token y con varias variantes de cuerpo | El cuerpo/cabeceras exactos que espera el servicio, o un contrato oficial |
+| `BlobSave/Download` devuelve `404` | La ruta legacy no existe en el host actual | `404`; host legacy `503` | Confirmar el host/ruta reales |
+| Sin `CloudSaveGameData` | No hay `serialzedVersion`/`cloudSaveId`/`platformId` | [comparación](cloud-local-comparison.md) | Una respuesta auténtica del wrapper nuevo |
+| Login de Google Play roto en el APK | No se puede usar la vía Play Games | `NoClassDefFoundError: PendingIntentCompat`; GMS 20.18.17 < 21.30.00; [estabilización](emulator-stabilization.md) | GMS actualizado y una cuenta Google autorizada, o un APK que no tenga el fallo |
+| Primer arranque en frío cae | Hay que relanzar una vez | `SIGSEGV` en `IL2CPP Threadpool`; [estabilización](emulator-stabilization.md) | Entorno ARM nativo o un arranque que no dependa de la traducción |
+| Auto-login con sesión obsoleta se atasca | La restauración no-op no llega al menú | `LoginInit`/100 %; [aceptación](modification-acceptance.md) | Iniciar sesión de nuevo o limpiar la sesión antes de la prueba |
+| Aceptación visible no demostrada | No se puede afirmar que una edición se use | `game.data.gems=424242` se conserva, pero el HUD mostró 1.000 | Un ciclo post-tutorial con guardado/recarga y un campo visible |
 | `CheckSaveMac`/MAC no resuelto | No se sabe si una copia editada pasará | Nombre del método; sin respuesta | Cuerpo del método o prueba de aceptación |
 | `FixData` no decompilado | No se conoce la migración | [FixData](fixdata-analysis.md) | Cuerpo del método o prueba 8.6.0 → 8.8.0 |
 | Límite de vinculaciones | Cada login de cuenta en emulador cuesta una | Documentación oficial: 5/90 días y 24 h | Reservar una vinculación para una prueba definitiva |
 
 ## 2. Orden recomendado
 
-1. **Estabilizar el cliente.** Probar el APK oficial 8.8.0 en un dispositivo
-   ARM físico o en un build que no dependa del pago Xiaomi. No usar el emulador
-   inestable para una vinculación de cuenta.
-2. **Reservar una vinculación.** Iniciar sesión una sola vez, con la cuenta de
-   laboratorio, en el dispositivo estable. Registrar la versión, el perfil y el
-   estado de sincronización.
-3. **Restauración no-op.** Copiar la partida local auténtica, restaurarla,
-   comprobar que el juego la acepta y que persiste tras reiniciar. Este es el
-   mínimo de la fase.
-4. **Modificación controlada.** Cambiar un solo campo escalar de bajo impacto,
-   restaurar y observar si el cliente lo muestra y lo conserva.
-5. **Descarga de nube.** Abrir el panel oficial, descargar el guardado y
-   conservar el JSON/`Data` auténtico. Comparar con el local.
-6. **Token de juego.** Con la sesión estable, capturar la petición
-   `AccountLogin`/`AccessToken` en los límites de serialización, sin eludir TLS
-   ni pinning. Usar el token solo en el proceso Linux autorizado.
-7. **Validar el proveedor HTTP.** Confirmar ruta, cuerpo y esquema con la
-   respuesta real. Etiquetar el resultado como lectura verificada solo entonces.
-8. **FixData y MAC.** Leer los cuerpos en runtime con el cliente estable o
+1. **Conservar el AVD estable.** API 30 `google_apis` x86_64, KVM, 4 vCPU,
+   4 GiB, `swiftshader_indirect`, ABI `arm64-v8a`. No cambiar de imagen sin
+   necesidad. El primer arranque en frío requiere un segundo intento.
+2. **Crear progreso en la cuenta.** Completar el tutorial y guardar de forma
+   normal. Verificar que `FetchGameData` deja de devolver colecciones vacías y
+   que el agregado tiene datos comparables.
+3. **Resolver `GetBlobSave`.** Obtener el cuerpo exacto que espera el servicio
+   desde el cliente estable o desde un contrato oficial. Probar solo lectura
+   con el token actual y etiquetar el resultado como verificado solo si hay
+   `200` con un wrapper reconocible.
+4. **Aceptación visible post-tutorial.** Editar un campo visible de bajo
+   impacto, restaurar con el hotfix permitido y la nube bloqueada, y observar el
+   HUD y el archivo tras un guardado/recarga. Separar `gems`, `lastGems` y
+   `varGems`.
+5. **Restauración no-op con sesión fresca.** Repetir la copia intacta de 5.6
+   sin restaurar el token obsoleto, iniciar sesión de nuevo y comprobar que el
+   cliente conserva el progreso y no lo repara.
+6. **Proveedor Linux.** Añadir un proveedor de solo lectura para
+   `FetchGameData` (agregado legacy) con pruebas sintéticas, y otro para
+   `CloudSaveGameData` solo cuando el contrato de `GetBlobSave` esté verificado.
+   No presentar el agregado legacy como la partida nueva.
+7. **FixData y MAC.** Leer los cuerpos en runtime con el cliente estable o
    probar la restauración 8.6.0. No implementar una migración especulativa.
-9. **Escritura.** Solo después de 3–8, con copia remota y procedimiento de
-   recuperación.
+8. **Escritura.** Solo después de 3–7, con copia remota, autorización explícita
+   y procedimiento de recuperación.
 
 ## 3. Qué no hacer
 
@@ -44,8 +50,10 @@
 - No desactivar TLS, pinning, anti-cheat ni controles del proveedor.
 - No parchear el cliente para saltar el pago, el consentimiento o la
   integridad.
-- No presentar un fixture local como una descarga.
-- No declarar aceptación por generar un archivo que el cliente no abrió.
+- No presentar un fixture local ni el agregado legacy como una descarga de
+  `CloudSaveGameData`.
+- No declarar aceptación por generar un archivo que el cliente no abrió o cuyo
+  valor no se observó.
 - No publicar credenciales, tokens, IDs, `cloudSaveId`, `platformId` ni hashes
   de la partida.
 
@@ -55,8 +63,8 @@ La fase solo se puede cerrar como éxito si existe una de estas dos evidencias,
 con el mismo cliente y la misma cuenta:
 
 - una restauración no-op aceptada y persistente, más una modificación de un
-  campo aceptada; o
-- una descarga auténtica de `CloudSaveGameData` y una comparación reproducible
-  con la partida local.
+  campo aceptada y visible; o
+- una descarga auténtica de `CloudSaveGameData` no vacío y una comparación
+  reproducible con la partida local.
 
 Todo lo demás es progreso parcial y debe etiquetarse como tal.

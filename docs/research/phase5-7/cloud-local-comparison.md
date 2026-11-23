@@ -1,8 +1,11 @@
 # Comparación entre la partida local y la nube
 
-**Estado: BLOQUEADA.** Se dispone de la referencia local auténtica de 8.8.0,
-pero no de una copia de nube. La comparación de campos, identificadores,
-checksums y transformaciones no se puede ejecutar sin la muestra remota.
+**Estado: BLOQUEADA.** Se dispone de la referencia local auténtica de 8.8.0 y
+de una lectura real de `/Backup/FetchGameData` (agregado legacy vacío de 600
+bytes), pero **no de una copia de nube no vacía ni de `CloudSaveGameData`**. La
+comparación de campos, identificadores, checksums y transformaciones no se puede
+ejecutar sin la muestra remota. La lectura nueva está en
+[lectura auténtica](authentic-cloud-read.md).
 
 ## 1. Hipótesis
 
@@ -62,8 +65,9 @@ declara las secciones y que el perfil local no contiene la envoltura.
 - Sin muestra remota, cualquier tabla de “campos idénticos” sería inventada.
 - El perfil local es de invitado; la cuenta de nube tiene otra identidad y otro
   `pid`. No se puede comparar el mismo estado sin una descarga.
-- El cliente no arranca de forma estable en el AVD, así que tampoco se puede
-  generar una copia local nueva desde la cuenta.
+- El cliente arranca en la configuración arm64 documentada, pero la cuenta de
+  laboratorio no tiene progreso y la lectura legacy está vacía; no hay un
+  “mismo estado” que comparar con la copia local.
 
 ## 7. Conclusión
 

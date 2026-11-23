@@ -1,9 +1,20 @@
 # Validación en el cliente oficial
 
-**Estado: BLOQUEADO.** El cliente oficial 8.8.0 no completa el arranque en el
-AVD de laboratorio. Se intentó una restauración no-op del perfil local
-auténtico de la Fase 5.6 y el proceso terminó con `SIGSEGV` antes de mostrar el
-menú. No se observó aceptación, reparación ni persistencia de la partida.
+**Estado: PARCIALMENTE SUPERADO (revisión 2026-11-23).** La primera tanda se
+cerró con `SIGSEGV` y se documentó como bloqueo. La revisión posterior, con un
+AVD limpio y ABI `arm64-v8a`, sí completa el arranque, muestra el menú de
+login, permite iniciar sesión con ChillyRoom por email y llega al tutorial y al
+hall. El primer arranque en frío tras `pm clear` sigue cayendo en
+`IL2CPP Threadpool`; el segundo funciona. El login de Google Play falla por un
+`NoClassDefFoundError` del propio APK. La restauración no-op carga hasta la
+escena de login sin `SIGSEGV`, pero el auto-login con el token de 5.6 se queda
+en `LoginInit`. No se observó aceptación visible de una modificación.
+
+El detalle nuevo está en [estabilización del emulador](emulator-stabilization.md),
+[lectura auténtica de nube](authentic-cloud-read.md) y
+[aceptación de archivos](modification-acceptance.md). Las secciones 2–6 de este
+documento conservan el procedimiento y la evidencia de la primera tanda con
+ABI de 32 bits; se leen como historial, no como conclusión vigente.
 
 ## 1. Hipótesis
 
@@ -107,17 +118,36 @@ menos dos caminos de fallo, pero no permite separar el efecto del perfil.
 
 - El cierre es del entorno (traducción ARM, SDK Xiaomi, servicios del
   emulador), no una decisión del juego sobre la partida.
-- No se dispone de un dispositivo ARM físico ni de un AVD estable para repetir
-  la prueba.
+- En esta tanda no se disponía de un dispositivo ARM físico ni de una
+  configuración de AVD estable para repetir la prueba.
 - No se capturó el contenido de la pantalla de carga previa al cierre; solo los
   mensajes de `logcat`.
 - El perfil restaurado es de invitado. No se usó la cuenta de nube en esta
   prueba para no consumir una vinculación de dispositivo.
 
-## 7. Conclusión
+## 7. Conclusión de la primera tanda (histórica)
 
-**A.2 no se cumple.** No se puede declarar que el cliente acepte la copia
-no-op. La afirmación correcta es: el cliente oficial 8.8.0 se cierra durante el
-arranque en este laboratorio, antes de que sea posible atribuir el resultado a
-los archivos restaurados. Sin un arranque estable no se debe intentar A.3 ni
-A.4.
+**A.2 no se cumple en esta configuración.** No se puede declarar que el cliente
+acepte la copia no-op. La afirmación correcta para la tanda de 32 bits es: el
+cliente oficial 8.8.0 se cierra durante el arranque en este laboratorio, antes
+de que sea posible atribuir el resultado a los archivos restaurados. Sin un
+arranque estable no se debe intentar A.3 ni A.4.
+
+## 8. Revisión 2026-11-23
+
+La revisión corrige la conclusión anterior:
+
+| Comprobación | Resultado nuevo |
+| --- | --- |
+| ¿El juego arranca en un AVD limpio? | **Sí**, con ABI `arm64-v8a`, API 30 `google_apis`, KVM y `swiftshader_indirect`; el primer arranque tras `pm clear` cae y el segundo llega al menú |
+| ¿El login de ChillyRoom por email funciona? | **Sí**; `UserAuthClient: OK`, `login success, type: Email`, tutorial y hall |
+| ¿El login de Google Play funciona? | **No**; `NoClassDefFoundError: androidx.core.app.PendingIntentCompat` con GMS 20.18.17 |
+| ¿La restauración no-op de 5.6 muestra el menú? | **No concluyente**; llega a `LoginInit` sin `SIGSEGV` y se queda ahí por el token obsoleto |
+| ¿Se observó una modificación en el HUD? | **No**; el `game.data` modificado se conserva, pero el tutorial mostró 1.000 gemas |
+| ¿Se obtuvo una lectura de nube? | **Sí, `FetchGameData` 200** con token del cliente; agregado legacy vacío de 600 bytes |
+
+La atribución “el cliente se cierra por la partida restaurada” queda descartada:
+el primer arranque en frío cae también sin restaurar nada, y el segundo arranca.
+La atribución “el cliente no arranca en este entorno” también queda limitada:
+arranca en la configuración descrita, con dos fallos concretos y reproducibles.
+Para el detalle, véanse las tres addendas enlazadas al principio.

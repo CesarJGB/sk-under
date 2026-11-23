@@ -14,10 +14,10 @@ serialización y la restauración local.
 
 | Requisito previo | Estado | Consecuencia |
 | --- | --- | --- |
-| Descarga auténtica de la cuenta | No | No hay una revisión base que modificar |
-| Token de juego válido | No | No hay una sesión autorizada desde Linux |
-| Restauración no-op aceptada por el cliente | No | No se sabe si el cliente acepta la copia |
-| Modificación controlada aceptada localmente | No | No hay evidencia de aceptación |
+| Descarga auténtica de la cuenta | Parcial: `FetchGameData` 200, agregado legacy vacío | No hay una revisión base no vacía que modificar |
+| Token de juego válido | Sí, token de sesión del cliente (solo lectura) | Hay una sesión autorizada desde Linux, pero no se usó para escribir |
+| Restauración no-op aceptada por el cliente | No concluyente | El cliente carga hasta login y el auto-login obsoleto se atasca |
+| Modificación controlada aceptada localmente | No demostrada visiblemente | El archivo se conserva, pero el HUD no mostró el valor modificado |
 | Contrato de `CheckSaveMac`/MAC | No | Una subida podría ser rechazada o marcar la cuenta |
 | Comportamiento ante conflictos | No | No se sabe qué revisión gana ni cómo se recupera |
 | Límite de vinculaciones | 5 por 90 días, 24 h entre ellas | Cada intento puede consumir una vinculación |

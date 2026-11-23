@@ -3,6 +3,11 @@
 **Estado: SIN CAPTURA REAL.** No se obtuvo un `NetPack` de una operación de la
 cuenta. Se confirmaron la superficie de rutas, las firmas de los métodos y el
 contrato de error del gateway; el cuerpo y la cabecera siguen sin observarse.
+En la revisión del 2026-11-23 el cliente ya arranca y permite login, y se
+obtuvo un token de sesión y una respuesta `FetchGameData` (`200`, agregado
+legacy vacío) desde Linux; **no** se capturó un `NetPack` ni
+`CloudSaveGameData`, y `/Backup/GetBlobSave` devuelve `500`. La lectura nueva
+está en [lectura auténtica](authentic-cloud-read.md).
 
 ## 1. Hipótesis
 
@@ -98,8 +103,10 @@ un mensaje de la cuenta.
 
 ## 5. Limitaciones
 
-- Sin un cliente estable no hay una sesión de juego desde la que capturar.
-- Sin token de juego no se puede provocar una descarga desde Linux.
+- El cliente arranca en la configuración arm64 y permite login, pero no se
+  capturó un `NetPack` ni el cuerpo de `GetBlobSave`.
+- Hay token de sesión, pero `/Backup/GetBlobSave` devuelve `500`; no se puede
+  provocar la descarga del wrapper nuevo desde Linux sin su contrato.
 - No se capturó TLS; no se intentó eludir pinning ni controles del servicio.
 - El cuerpo de `AccountLogin` y el esquema de éxito de la descarga siguen sin
   verificarse. Cualquier implementación debe etiquetarse como hipótesis.

@@ -1,10 +1,30 @@
 # Proveedor Linux de nube (solo lectura, experimental)
 
-**Estado: PROTOTIPO, SIN DESCARGA REAL.** Existe la interfaz desacoplada, un
-proveedor deshabilitado por defecto, un proveedor de fixture local y un
-proveedor HTTP de solo lectura para el gateway oficial. La ruta de éxito del
-proveedor HTTP **no se verificó** contra el servicio real porque no se obtuvo un
-token de juego válido.
+**Estado: PROTOTIPO; LECTURA REAL DE `FetchGameData` VERIFICADA, WRAPPER NUEVO
+NO.** Existe la interfaz desacoplada, un proveedor deshabilitado por defecto, un
+proveedor de fixture local y un proveedor HTTP de solo lectura para el gateway
+oficial. En la revisión del 2026-11-23 se obtuvo un token de sesión del cliente
+y se ejecutó una lectura real de `/Backup/FetchGameData` desde Linux (`200`,
+600 bytes, agregado vacío). La ruta de éxito de `GatewayCloudSaveProvider`
+(`/Backup/GetBlobSave`) **sigue sin verificarse**: devuelve `500`. El detalle
+está en [lectura auténtica](authentic-cloud-read.md).
+
+## 0. Addendum 2026-11-23
+
+| Elemento | Resultado |
+| --- | --- |
+| Token de sesión | Obtenido del cliente estable; archivo privado `0600` |
+| `POST /Backup/FetchGameData` | **`200`**, 600 bytes, agregado legacy vacío |
+| `POST /Backup/GetBlobSave` | `500` en todas las variantes probadas |
+| `POST /BlobSave/Download` | `404` |
+| Proveedor `GatewayCloudSaveProvider` | Sin cambios; su ruta de éxito no está validada |
+| Escrituras | Ninguna |
+
+La lectura real no pasó por `GatewayCloudSaveProvider`: se ejecutó con un probe
+de solo lectura y se guardó como evidencia privada. El proveedor y su contrato
+siguen siendo un prototipo. Un siguiente paso concreto es añadir un proveedor
+específico para `FetchGameData` (agregado legacy), separado del proveedor de
+`CloudSaveGameData`, para no mezclar ambos formatos.
 
 ## 1. Archivos
 
@@ -110,7 +130,10 @@ no lo lee de Git ni lo escribe en logs. Antes de usarlo:
 
 ## 8. Conclusión
 
-El proveedor Linux es una **interfaz real y probada con datos sintéticos**, no
-una adquisición remota demostrada. No se debe presentar como “lectura de nube
-desde Linux” hasta que una ejecución autorizada devuelva una copia auténtica y
-el cliente oficial la acepte.
+El proveedor Linux es una **interfaz real y probada con datos sintéticos**. La
+lectura remota demostrada en esta revisión es `FetchGameData` (agregado legacy
+vacío), ejecutada fuera de `GatewayCloudSaveProvider`; la ruta de
+`GetBlobSave`/`CloudSaveGameData` sigue sin validar. No se debe presentar el
+agregado legacy como la partida nueva ni afirmar que el proveedor HTTP está
+verificado hasta que una respuesta auténtica de `GetBlobSave` devuelva el
+wrapper y el cliente lo acepte.
