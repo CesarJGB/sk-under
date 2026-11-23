@@ -29,6 +29,12 @@ Para completar la integración, ChillyRoom tendría que confirmar un flujo autor
 
 Cuando haya un contrato verificable, la prueba de aceptación debe partir de `/partida` en un navegador limpio. SK Under debe verificar la autorización y la correspondencia con el titular antes de emitir su cookie. El backend debe cifrar la sesión, limitar los intentos y permitir que el usuario complete cualquier desafío en ChillyRoom sin guardar su contraseña. Para comprobar aislamiento se necesitan dos cuentas autorizadas con partidas independientes.
 
+## Regresión del acceso con vinculación privada
+
+En producción se reutilizó la sesión de juego ya emitida para vincular la cuenta de laboratorio en modo de solo lectura. Chromium descargó su partida desde `/partida` antes y durante el despliegue de `919c4ca`. Con el contenedor nuevo saludable se repitió la descarga. La cookie y el SHA-256 de la partida coincidieron.
+
+En otra prueba con esa revisión, el cierre de sesión desde Pages devolvió `204`, eliminó la cookie y dejó su repetición con `401 cloud_browser_required`. Un nuevo ticket reconectó la misma cuenta y permitió descargar la misma partida. El ticket fijó una vigencia local de 40 segundos para probar la caducidad de forma controlada. Después del plazo, SK Under marcó la cuenta como desconectada y su API devolvió `409 cloud_session_expired`. La caducidad y la renovación en el proveedor quedan pendientes.
+
 ## Estado de las pruebas
 
 | Caso | Evidencia real | Regresión automatizada |
@@ -37,10 +43,10 @@ Cuando haya un contrato verificable, la prueba de aceptación debe partir de `/p
 | Contraseña incorrecta | `400` en el portal oficial para la cuenta de laboratorio. | SK Under no envía credenciales al proveedor. |
 | Cuenta inexistente | `400` en el portal oficial para una dirección generada en `example.invalid`. | Sin intercambio directo en SK Under. |
 | Descarga del titular | Partida real leída en Coolify con una sesión de laboratorio ya emitida. | Pruebas de identidad y descarga con fixtures. |
-| Cierre y revocación de la cookie | El recorrido vinculado devolvió `401` al reutilizar la cookie revocada en la [Fase 6.4](../phase6-4/README.md#evidencia-y-alcance). | Revocación, repetición y conservación del historial. |
-| Nuevo acceso después del cierre | Pendiente para el acceso autónomo. | Reconexión de la cuenta vinculada con otro ticket. |
+| Cierre y revocación de la cookie | Cierre desde Pages y `401` al reutilizar la cookie del recorrido vinculado. | Revocación, repetición y conservación del historial. |
+| Nuevo acceso después del cierre | Descarga de la misma partida tras la reconexión por ticket. El acceso autónomo sigue pendiente. | Reconexión de la cuenta vinculada con otro ticket. |
 | Aislamiento de dos cuentas | Disponible una sola identidad autorizada con partida validada. | Dos identidades simuladas y rechazo de lecturas cruzadas. |
-| Persistencia tras recrear el contenedor | Probada con la cookie de una cuenta vinculada en la [Fase 6.4](../phase6-4/evidence.json). | Reapertura del mismo almacén con las mismas credenciales de cifrado. |
-| Caducidad | Pendientes la caducidad y la renovación observadas en ChillyRoom para una integración habilitada. | Caducidad local y rechazo remoto simulado. |
+| Persistencia tras recrear el contenedor | Descarga con la misma cookie durante el despliegue de `919c4ca`. En la [Fase 6.4](../phase6-4/evidence.json) también se verificó el historial tras recrear. | Reapertura del mismo almacén con las mismas credenciales de cifrado. |
+| Caducidad | `409` tras vencer la vigencia local controlada de la sesión vinculada. Falta la caducidad real del proveedor y su renovación. | Caducidad local y rechazo remoto simulado. |
 
 Regresión local con las dependencias bloqueadas del repositorio. Backend compilado y `340` pruebas aprobadas, con `16` omitidas que requieren muestras privadas. El build de TypeScript y Vite pasó. Pasaron `14` pruebas de Chromium y `4` pruebas de cuentas en WebKit. Las suites de cuentas usan fixtures o respuestas interceptadas.

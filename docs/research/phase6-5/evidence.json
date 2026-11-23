@@ -79,6 +79,25 @@
     "bytes": 114778,
     "gems": 1002
   },
+  "production_linked_account": {
+    "credential_source": "administrative read-only ticket with the existing lab game session",
+    "download_bytes": 114779,
+    "download_gems": 10000,
+    "deploy_revision": "919c4ca",
+    "new_container_healthy_at_recheck": true,
+    "same_browser_cookie_at_recheck": true,
+    "same_download_hash_at_recheck": true,
+    "logout_http": 204,
+    "cookie_removed": true,
+    "revoked_cookie_http": 401,
+    "revoked_cookie_code": "cloud_browser_required",
+    "new_ticket_same_account_and_download_hash": true,
+    "controlled_local_expiry_seconds": 40,
+    "locally_expired_session_http": 409,
+    "locally_expired_session_code": "cloud_session_expired",
+    "provider_expiration_observed": false,
+    "final_logout_http": 204
+  },
   "regression": {
     "backend_compiled": true,
     "backend_passed": 340,
