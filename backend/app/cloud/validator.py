@@ -15,7 +15,7 @@ from ..cloud_save import (
     CopyLimitError,
     ReconstructedCloudSave,
 )
-from .decoder import DecodedCopy, DetectedFormat, decode_copy
+from .decoder import DecodedCopy, DetectedFormat, RpcBodyPolicy, decode_copy
 
 
 class CopyIntegrityError(CloudSaveError):
@@ -58,8 +58,14 @@ def validate_payload(
     *,
     expected: DeclaredRevision | None = None,
     limit: int = MAX_INPUT_BYTES,
+    rpc_body: RpcBodyPolicy = "reject",
 ) -> ValidatedCopy:
-    """Verifica la copia y la decodifica sin llamadas externas."""
+    """Verifica la copia y la decodifica sin llamadas externas.
+
+    ``rpc_body="gzip_candidate"`` habilita únicamente el intento experimental
+    de interpretar el cuerpo RPC como gzip. El valor por defecto conserva el
+    rechazo tipado.
+    """
     verify_copy_bytes(payload, expected, limit=limit)
-    decoded: DecodedCopy = decode_copy(payload)
+    decoded: DecodedCopy = decode_copy(payload, rpc_body=rpc_body)
     return ValidatedCopy(decoded.format, decoded.aggregate, decoded.original)

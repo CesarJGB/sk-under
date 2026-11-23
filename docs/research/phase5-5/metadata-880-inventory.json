@@ -1,0 +1,3610 @@
+{
+  "source": {
+    "apk_sha256": "54bb332be9444596501ec99f745f21adfa55265feea3a15331c735009b517f34",
+    "libil2cpp_arm64_sha256": "4cef1adecda2ed7c523d683df1412a88d43e0704b2c230f5a962b54c569921b9",
+    "global_metadata_sha256": "bc56e0bb9efd9165aa708c4e4c715871d4817f5363e29e425676ccdf7d51ec15",
+    "global_metadata_decrypted_sha256": "dbd07b72cee1f2188810841a4dbb2c11bc931cab4840a49e57baddd5463c48c0",
+    "metadata_version": 31,
+    "type_count": 152692,
+    "type_definition_count": 46649,
+    "method_definition_count": 380122,
+    "field_definition_count": 350248,
+    "note": "Inventario estático del APK 8.8.0. Los campos son los declarados en metadata; no se confirma que una partida real los use."
+  },
+  "types": [
+    {
+      "index": 1067,
+      "name": "ByteBuffer",
+      "fields": [
+        {
+          "name": "DEFAULT_BUFF_SIZE",
+          "type": "uint",
+          "token": "0x04001eab"
+        },
+        {
+          "name": "__InOut_buf",
+          "type": "szarray",
+          "token": "0x04001eac"
+        },
+        {
+          "name": "m_rpos",
+          "type": "uint",
+          "token": "0x04001ead"
+        },
+        {
+          "name": "m_wpos",
+          "type": "uint",
+          "token": "0x04001eae"
+        },
+        {
+          "name": "m_buff",
+          "type": "szarray",
+          "token": "0x04001eaf"
+        }
+      ],
+      "token": "0x0200042b"
+    },
+    {
+      "index": 1070,
+      "name": "ZipHelper",
+      "fields": [],
+      "token": "0x0200042f"
+    },
+    {
+      "index": 15046,
+      "name": "ChillyRoom.Utils.ZipHelper",
+      "fields": [
+        {
+          "name": "zip",
+          "type": "ChillyRoom.Utils.IZip",
+          "token": "0x040146e4"
+        }
+      ],
+      "token": "0x02003ac7"
+    },
+    {
+      "index": 3018,
+      "name": "CloudSaveGameData",
+      "fields": [
+        {
+          "name": "serialzedVersion",
+          "type": "int",
+          "token": "0x04005779"
+        },
+        {
+          "name": "cloudSaveId",
+          "type": "string",
+          "token": "0x0400577a"
+        },
+        {
+          "name": "platformId",
+          "type": "string",
+          "token": "0x0400577b"
+        },
+        {
+          "name": "gameData",
+          "type": "AboGameData",
+          "token": "0x0400577c"
+        },
+        {
+          "name": "itemData",
+          "type": "ItemData",
+          "token": "0x0400577d"
+        },
+        {
+          "name": "statisticData",
+          "type": "StatisticData",
+          "token": "0x0400577e"
+        },
+        {
+          "name": "settingData",
+          "type": "SettingData",
+          "token": "0x0400577f"
+        },
+        {
+          "name": "taskData",
+          "type": "RGScript.Data.TaskDatas",
+          "token": "0x04005780"
+        },
+        {
+          "name": "maps",
+          "type": "SandboxMaps",
+          "token": "0x04005781"
+        },
+        {
+          "name": "sandboxConfig",
+          "type": "SandboxConfigData",
+          "token": "0x04005782"
+        },
+        {
+          "name": "seasonData",
+          "type": "SeasonData",
+          "token": "0x04005783"
+        },
+        {
+          "name": "mallReloadData",
+          "type": "RGScript.Data.Mall.MallReloadData",
+          "token": "0x04005784"
+        },
+        {
+          "name": "monsterRiseData",
+          "type": "MonsterRiseData",
+          "token": "0x04005785"
+        },
+        {
+          "name": "weaponEvolutionData",
+          "type": "RGScript.WeaponEvolution.WeaponEvolutionData",
+          "token": "0x04005786"
+        },
+        {
+          "name": "miscData",
+          "type": "RGScript.Data.MiscData",
+          "token": "0x04005787"
+        },
+        {
+          "name": "pvpData",
+          "type": "RGScript.Data.PvpData",
+          "token": "0x04005788"
+        },
+        {
+          "name": "battlePassSaveData",
+          "type": "RGScript.Data.BattlePassSaveData",
+          "token": "0x04005789"
+        },
+        {
+          "name": "escapeSeasonData",
+          "type": "ModeSeason.Escape.Scripts.EscapeSeasonData",
+          "token": "0x0400578a"
+        }
+      ],
+      "token": "0x02000bcb"
+    },
+    {
+      "index": 3056,
+      "name": "AboGameData",
+      "fields": [
+        {
+          "name": "skinLock",
+          "type": "generic",
+          "token": "0x040058bf"
+        },
+        {
+          "name": "currentSkinDatas",
+          "type": "generic",
+          "token": "0x040058c0"
+        },
+        {
+          "name": "heroUnlock",
+          "type": "generic",
+          "token": "0x040058c1"
+        },
+        {
+          "name": "heroLevel",
+          "type": "generic",
+          "token": "0x040058c2"
+        },
+        {
+          "name": "heroSkill",
+          "type": "generic",
+          "token": "0x040058c3"
+        },
+        {
+          "name": "heroSkillUnlock",
+          "type": "generic",
+          "token": "0x040058c4"
+        },
+        {
+          "name": "petUnlock",
+          "type": "generic",
+          "token": "0x040058c5"
+        },
+        {
+          "name": "roomObjectLevel",
+          "type": "generic",
+          "token": "0x040058c6"
+        },
+        {
+          "name": "usedSecretKeys",
+          "type": "generic",
+          "token": "0x040058c7"
+        },
+        {
+          "name": "promotions2RewardVersion",
+          "type": "generic",
+          "token": "0x040058c8"
+        },
+        {
+          "name": "unlockRoomDecorate",
+          "type": "generic",
+          "token": "0x040058c9"
+        },
+        {
+          "name": "certificates",
+          "type": "generic",
+          "token": "0x040058ca"
+        },
+        {
+          "name": "normalModePassCertificates",
+          "type": "generic",
+          "token": "0x040058cb"
+        },
+        {
+          "name": "bossRushPassCertificate",
+          "type": "CertificateData",
+          "token": "0x040058cc"
+        },
+        {
+          "name": "ironTidePassCertificate",
+          "type": "CertificateData",
+          "token": "0x040058cd"
+        },
+        {
+          "name": "aramPassCertificate",
+          "type": "CertificateData",
+          "token": "0x040058ce"
+        },
+        {
+          "name": "currentRoomDecorate",
+          "type": "emRoomDecorate",
+          "token": "0x040058cf"
+        },
+        {
+          "name": "gems",
+          "type": "int",
+          "token": "0x040058d0"
+        },
+        {
+          "name": "lastGems",
+          "type": "int",
+          "token": "0x040058d1"
+        },
+        {
+          "name": "varGems",
+          "type": "int",
+          "token": "0x040058d2"
+        },
+        {
+          "name": "cumulativeGems",
+          "type": "int",
+          "token": "0x040058d3"
+        },
+        {
+          "name": "cumulativeConsumeGems",
+          "type": "int",
+          "token": "0x040058d4"
+        },
+        {
+          "name": "rebornCard",
+          "type": "bool",
+          "token": "0x040058d5"
+        },
+        {
+          "name": "hasTutorial",
+          "type": "int",
+          "token": "0x040058d6"
+        },
+        {
+          "name": "firstInRoom",
+          "type": "int",
+          "token": "0x040058d7"
+        },
+        {
+          "name": "roomLevel",
+          "type": "int",
+          "token": "0x040058d8"
+        },
+        {
+          "name": "fishChip",
+          "type": "int",
+          "token": "0x040058d9"
+        },
+        {
+          "name": "gameVersion",
+          "type": "int",
+          "token": "0x040058da"
+        },
+        {
+          "name": "lastPlayTime",
+          "type": "int",
+          "token": "0x040058db"
+        },
+        {
+          "name": "lastPlayTimeWithNetworkTime",
+          "type": "int",
+          "token": "0x040058dc"
+        },
+        {
+          "name": "totalIndex",
+          "type": "int",
+          "token": "0x040058dd"
+        },
+        {
+          "name": "totalGameTime",
+          "type": "int",
+          "token": "0x040058de"
+        },
+        {
+          "name": "generalSeed",
+          "type": "int",
+          "token": "0x040058df"
+        },
+        {
+          "name": "tutorialEndTime",
+          "type": "string",
+          "token": "0x040058e0"
+        },
+        {
+          "name": "checkUnlockWorkShopTime",
+          "type": "string",
+          "token": "0x040058e1"
+        },
+        {
+          "name": "fontSettingValue",
+          "type": "int",
+          "token": "0x040058e2"
+        },
+        {
+          "name": "superHeroInHeroRoom",
+          "type": "int",
+          "token": "0x040058e3"
+        },
+        {
+          "name": "isWaveMachineUpgraded",
+          "type": "bool",
+          "token": "0x040058e4"
+        },
+        {
+          "name": "retiredKnightGotAdItemTime",
+          "type": "string",
+          "token": "0x040058e5"
+        },
+        {
+          "name": "lastTalentAdRefreshDay",
+          "type": "int",
+          "token": "0x040058e6"
+        },
+        {
+          "name": "activeShopGemReceiptMarkers",
+          "type": "generic",
+          "token": "0x040058e7"
+        }
+      ],
+      "token": "0x02000bf1"
+    },
+    {
+      "index": 3070,
+      "name": "ItemData",
+      "fields": [
+        {
+          "name": "_data",
+          "type": "ItemData",
+          "token": "0x040058f3"
+        },
+        {
+          "name": "MagicNames",
+          "type": "szarray",
+          "token": "0x040058f4"
+        },
+        {
+          "name": "AppVersion",
+          "type": "int",
+          "token": "0x040058f5"
+        },
+        {
+          "name": "FertilizeName",
+          "type": "string",
+          "token": "0x040058f6"
+        },
+        {
+          "name": "TryTicketName",
+          "type": "string",
+          "token": "0x040058f7"
+        },
+        {
+          "name": "RebornCard",
+          "type": "string",
+          "token": "0x040058f8"
+        },
+        {
+          "name": "Plantpot_1",
+          "type": "string",
+          "token": "0x040058f9"
+        },
+        {
+          "name": "Plantpot_2",
+          "type": "string",
+          "token": "0x040058fa"
+        },
+        {
+          "name": "Plantpot_3",
+          "type": "string",
+          "token": "0x040058fb"
+        },
+        {
+          "name": "Plantpot_4",
+          "type": "string",
+          "token": "0x040058fc"
+        },
+        {
+          "name": "GemName",
+          "type": "string",
+          "token": "0x040058fd"
+        },
+        {
+          "name": "FishName",
+          "type": "string",
+          "token": "0x040058fe"
+        },
+        {
+          "name": "BpPointName",
+          "type": "string",
+          "token": "0x040058ff"
+        },
+        {
+          "name": "SeasonCoinName",
+          "type": "string",
+          "token": "0x04005900"
+        },
+        {
+          "name": "ComboGunSparkCoinName",
+          "type": "string",
+          "token": "0x04005901"
+        },
+        {
+          "name": "SeasonTreasureBoxName",
+          "type": "string",
+          "token": "0x04005902"
+        },
+        {
+          "name": "SeasonTreasureBoxName1",
+          "type": "string",
+          "token": "0x04005903"
+        },
+        {
+          "name": "SeasonTreasureBoxName2",
+          "type": "string",
+          "token": "0x04005904"
+        },
+        {
+          "name": "SeasonTreasureBoxName3",
+          "type": "string",
+          "token": "0x04005905"
+        },
+        {
+          "name": "SeasonTreasureBoxTicketName2",
+          "type": "string",
+          "token": "0x04005906"
+        },
+        {
+          "name": "WeaponBlueprintFragmentUnidentified",
+          "type": "string",
+          "token": "0x04005907"
+        },
+        {
+          "name": "FeatureMoreSelectSeat",
+          "type": "string",
+          "token": "0x04005908"
+        },
+        {
+          "name": "FeatureMoreBagCapacity",
+          "type": "string",
+          "token": "0x04005909"
+        },
+        {
+          "name": "CellName",
+          "type": "string",
+          "token": "0x0400590a"
+        },
+        {
+          "name": "GearName",
+          "type": "string",
+          "token": "0x0400590b"
+        },
+        {
+          "name": "WoodName",
+          "type": "string",
+          "token": "0x0400590c"
+        },
+        {
+          "name": "IronName",
+          "type": "string",
+          "token": "0x0400590d"
+        },
+        {
+          "name": "BatteryName",
+          "type": "string",
+          "token": "0x0400590e"
+        },
+        {
+          "name": "TokenEquipment",
+          "type": "string",
+          "token": "0x0400590f"
+        },
+        {
+          "name": "TokenHero",
+          "type": "string",
+          "token": "0x04005910"
+        },
+        {
+          "name": "HopperTicket",
+          "type": "string",
+          "token": "0x04005911"
+        },
+        {
+          "name": "PostmanUpgrade",
+          "type": "string",
+          "token": "0x04005912"
+        },
+        {
+          "name": "plants",
+          "type": "generic",
+          "token": "0x04005913"
+        },
+        {
+          "name": "sellerRefreshTime",
+          "type": "int",
+          "token": "0x04005914"
+        },
+        {
+          "name": "sellerWeaponRefreshTime",
+          "type": "int",
+          "token": "0x04005915"
+        },
+        {
+          "name": "cumulativeFishCount",
+          "type": "int",
+          "token": "0x04005916"
+        },
+        {
+          "name": "commodities",
+          "type": "generic",
+          "token": "0x04005917"
+        },
+        {
+          "name": "itemUnlock",
+          "type": "generic",
+          "token": "0x04005918"
+        },
+        {
+          "name": "forgeWeapons",
+          "type": "generic",
+          "token": "0x04005919"
+        },
+        {
+          "name": "forgeWeaponMaterialPayments",
+          "type": "generic",
+          "token": "0x0400591a"
+        },
+        {
+          "name": "skinTrialEntries",
+          "type": "generic",
+          "token": "0x0400591b"
+        },
+        {
+          "name": "_deletingForgeItems",
+          "type": "generic",
+          "token": "0x0400591c"
+        },
+        {
+          "name": "mechInRoom",
+          "type": "string",
+          "token": "0x0400591d"
+        },
+        {
+          "name": "mechInRoomPaymentName",
+          "type": "string",
+          "token": "0x0400591e"
+        },
+        {
+          "name": "mechInRoomPaymentMaterials",
+          "type": "generic",
+          "token": "0x0400591f"
+        },
+        {
+          "name": "mechInRoomProductId",
+          "type": "string",
+          "token": "0x04005920"
+        },
+        {
+          "name": "blueprints",
+          "type": "generic",
+          "token": "0x04005921"
+        },
+        {
+          "name": "seeds",
+          "type": "generic",
+          "token": "0x04005922"
+        },
+        {
+          "name": "materials",
+          "type": "generic",
+          "token": "0x04005923"
+        },
+        {
+          "name": "trainingJourney",
+          "type": "Activities.TrainingJourney.Scripts.TrainingJourneySaveData",
+          "token": "0x04005924"
+        },
+        {
+          "name": "activeShopReceiptMarkers",
+          "type": "generic",
+          "token": "0x04005925"
+        },
+        {
+          "name": "tokenTickets",
+          "type": "generic",
+          "token": "0x04005926"
+        },
+        {
+          "name": "restoreKeys",
+          "type": "generic",
+          "token": "0x04005927"
+        },
+        {
+          "name": "alreadyGetRealNameAward",
+          "type": "bool",
+          "token": "0x04005928"
+        },
+        {
+          "name": "BugFeatureRedeemRecords",
+          "type": "generic",
+          "token": "0x04005929"
+        },
+        {
+          "name": "SchoolRedeemRecords",
+          "type": "generic",
+          "token": "0x0400592a"
+        },
+        {
+          "name": "SchoolRedeemRecords202508",
+          "type": "generic",
+          "token": "0x0400592b"
+        },
+        {
+          "name": "DreamRedeemRecords",
+          "type": "generic",
+          "token": "0x0400592c"
+        },
+        {
+          "name": "Christmas2024RedeemRecords",
+          "type": "generic",
+          "token": "0x0400592d"
+        },
+        {
+          "name": "FireRedeemRecords",
+          "type": "generic",
+          "token": "0x0400592e"
+        },
+        {
+          "name": "ActivityRedeemRecords",
+          "type": "generic",
+          "token": "0x0400592f"
+        },
+        {
+          "name": "SelectRewardClaimRecords",
+          "type": "generic",
+          "token": "0x04005930"
+        },
+        {
+          "name": "jewelryData",
+          "type": "generic",
+          "token": "0x04005931"
+        },
+        {
+          "name": "jewelryBlueprints",
+          "type": "generic",
+          "token": "0x04005932"
+        },
+        {
+          "name": "jewelryPlayerData",
+          "type": "generic",
+          "token": "0x04005933"
+        },
+        {
+          "name": "mythicWeapons",
+          "type": "generic",
+          "token": "0x04005934"
+        },
+        {
+          "name": "lastBuyBeginnerPkgId",
+          "type": "int",
+          "token": "0x04005935"
+        },
+        {
+          "name": "lastRewardBeginnerPkgId",
+          "type": "int",
+          "token": "0x04005936"
+        },
+        {
+          "name": "lastBuyReturnPlayerPkgId",
+          "type": "int",
+          "token": "0x04005937"
+        },
+        {
+          "name": "lastRewardReturnPlayerPkgId",
+          "type": "int",
+          "token": "0x04005938"
+        },
+        {
+          "name": "UnlockNewPackageTime",
+          "type": "long",
+          "token": "0x04005939"
+        },
+        {
+          "name": "_AllMythicWeaponIds",
+          "type": "generic",
+          "token": "0x0400593a"
+        },
+        {
+          "name": "CanNotSaleWeapons",
+          "type": "generic",
+          "token": "0x0400593b"
+        },
+        {
+          "name": "specialTickets",
+          "type": "generic",
+          "token": "0x0400593c"
+        },
+        {
+          "name": "hopperEnteredModes",
+          "type": "generic",
+          "token": "0x0400593d"
+        },
+        {
+          "name": "fishChipConfigId",
+          "type": "string",
+          "token": "0x0400593e"
+        },
+        {
+          "name": "seasonStoreConfigId",
+          "type": "string",
+          "token": "0x0400593f"
+        },
+        {
+          "name": "bossrush_time",
+          "type": "int",
+          "token": "0x04005940"
+        },
+        {
+          "name": "eggMachineUniqueSeed",
+          "type": "int",
+          "token": "0x04005941"
+        },
+        {
+          "name": "eggMachineTimes",
+          "type": "int",
+          "token": "0x04005942"
+        },
+        {
+          "name": "eggMachineUseTimes",
+          "type": "int",
+          "token": "0x04005943"
+        },
+        {
+          "name": "eggMachineMode",
+          "type": "int",
+          "token": "0x04005944"
+        },
+        {
+          "name": "EggMachineGuaranteeRewardTimes",
+          "type": "generic",
+          "token": "0x04005945"
+        },
+        {
+          "name": "easterEggTempPets",
+          "type": "generic",
+          "token": "0x04005946"
+        },
+        {
+          "name": "fusionWeaponPathUnlock",
+          "type": "generic",
+          "token": "0x04005947"
+        },
+        {
+          "name": "todayTriggerActivityNpcCount",
+          "type": "int",
+          "token": "0x04005948"
+        },
+        {
+          "name": "fishChipStorePurchaseHistory",
+          "type": "generic",
+          "token": "0x04005949"
+        },
+        {
+          "name": "fishChipStorePurchaseHistoryIndexed",
+          "type": "generic",
+          "token": "0x0400594a"
+        },
+        {
+          "name": "fishChipStoreAllPurchaseHistoryIndexed",
+          "type": "generic",
+          "token": "0x0400594b"
+        },
+        {
+          "name": "lastFishChipStoreAllPurchaseHistoryIndexed",
+          "type": "generic",
+          "token": "0x0400594c"
+        },
+        {
+          "name": "seasonStorePurchaseHistoryIndexed",
+          "type": "generic",
+          "token": "0x0400594d"
+        },
+        {
+          "name": "seasonStoreAllPurchaseHistoryIndexed",
+          "type": "generic",
+          "token": "0x0400594e"
+        },
+        {
+          "name": "lastSeasonStoreAllPurchaseHistoryIndexed",
+          "type": "generic",
+          "token": "0x0400594f"
+        },
+        {
+          "name": "RandomSeedMap",
+          "type": "generic",
+          "token": "0x04005950"
+        },
+        {
+          "name": "got_bossrush_ticket",
+          "type": "bool",
+          "token": "0x04005951"
+        },
+        {
+          "name": "roomDecorateDic",
+          "type": "generic",
+          "token": "0x04005952"
+        },
+        {
+          "name": "roomDecorateCurSkinDic",
+          "type": "generic",
+          "token": "0x04005953"
+        },
+        {
+          "name": "hasGetAchievementCategoryRewardList",
+          "type": "generic",
+          "token": "0x04005954"
+        },
+        {
+          "name": "hasGetAchievementGroupRewardList",
+          "type": "generic",
+          "token": "0x04005955"
+        },
+        {
+          "name": "TodayStatueTimes",
+          "type": "int",
+          "token": "0x04005956"
+        },
+        {
+          "name": "hasGetRewardQuestionnaireList",
+          "type": "generic",
+          "token": "0x04005957"
+        },
+        {
+          "name": "hasGetH5YearlyStatsReward",
+          "type": "bool",
+          "token": "0x04005958"
+        },
+        {
+          "name": "todayPlantMaterialAdTimes",
+          "type": "int",
+          "token": "0x04005959"
+        },
+        {
+          "name": "todayTvRandomGiftAdTimes",
+          "type": "int",
+          "token": "0x0400595a"
+        },
+        {
+          "name": "tvHasGuarantee",
+          "type": "bool",
+          "token": "0x0400595b"
+        },
+        {
+          "name": "todayEggMachineAdTimes",
+          "type": "int",
+          "token": "0x0400595c"
+        },
+        {
+          "name": "todayTvGoldAdTimes",
+          "type": "int",
+          "token": "0x0400595d"
+        },
+        {
+          "name": "todaySkinTrialAdTimes",
+          "type": "int",
+          "token": "0x0400595e"
+        },
+        {
+          "name": "adMallRandomWeaponFragmentName",
+          "type": "string",
+          "token": "0x0400595f"
+        },
+        {
+          "name": "adMallNextRefreshTime",
+          "type": "long",
+          "token": "0x04005960"
+        },
+        {
+          "name": "magicWellFishedTimes",
+          "type": "int",
+          "token": "0x04005961"
+        },
+        {
+          "name": "evolutionWeaponBossRatesIndex",
+          "type": "int",
+          "token": "0x04005962"
+        },
+        {
+          "name": "todayTalentRerollTimes",
+          "type": "int",
+          "token": "0x04005963"
+        },
+        {
+          "name": "meetWeaponCollectorCount",
+          "type": "int",
+          "token": "0x04005964"
+        },
+        {
+          "name": "windowHeroListShowDrawing",
+          "type": "bool",
+          "token": "0x04005965"
+        },
+        {
+          "name": "handStyleIndexList",
+          "type": "generic",
+          "token": "0x04005966"
+        },
+        {
+          "name": "SeedNameAliasMap",
+          "type": "generic",
+          "token": "0x04005967"
+        },
+        {
+          "name": "ItemLoad",
+          "type": "string",
+          "token": "0x04005968"
+        }
+      ],
+      "token": "0x02000bf5"
+    },
+    {
+      "index": 3094,
+      "name": "MonsterRiseData",
+      "fields": [
+        {
+          "name": "TeamSize",
+          "type": "int",
+          "token": "0x040059db"
+        },
+        {
+          "name": "VERSION",
+          "type": "int",
+          "token": "0x040059dc"
+        },
+        {
+          "name": "version",
+          "type": "int",
+          "token": "0x040059dd"
+        },
+        {
+          "name": "lastCharacterIdx",
+          "type": "int",
+          "token": "0x040059de"
+        },
+        {
+          "name": "lastCharacterSkinIdx",
+          "type": "int",
+          "token": "0x040059df"
+        },
+        {
+          "name": "maxClearLevel",
+          "type": "int",
+          "token": "0x040059e0"
+        },
+        {
+          "name": "lastLevelIndex",
+          "type": "int",
+          "token": "0x040059e1"
+        },
+        {
+          "name": "unlockedContents",
+          "type": "generic",
+          "token": "0x040059e2"
+        },
+        {
+          "name": "battleSaveData",
+          "type": "string",
+          "token": "0x040059e3"
+        },
+        {
+          "name": "pveGameTimes",
+          "type": "int",
+          "token": "0x040059e4"
+        },
+        {
+          "name": "usingTeamIdx",
+          "type": "int",
+          "token": "0x040059e5"
+        },
+        {
+          "name": "monsterTeams",
+          "type": "generic",
+          "token": "0x040059e6"
+        },
+        {
+          "name": "WeeklyExchangeResetDay",
+          "type": "int",
+          "token": "0x040059e7"
+        },
+        {
+          "name": "weeklyExchangeTimeRecord",
+          "type": "WeeklyDaysRecord",
+          "token": "0x040059e8"
+        },
+        {
+          "name": "weeklyExchangeRecords",
+          "type": "generic",
+          "token": "0x040059e9"
+        },
+        {
+          "name": "monsterShopUniqueSeed",
+          "type": "int",
+          "token": "0x040059ea"
+        },
+        {
+          "name": "monsterChestOpenTimesTotal",
+          "type": "int",
+          "token": "0x040059eb"
+        },
+        {
+          "name": "monsterChestOpenTimesDaily",
+          "type": "int",
+          "token": "0x040059ec"
+        },
+        {
+          "name": "CollectedMonsters",
+          "type": "generic",
+          "token": "0x040059ed"
+        },
+        {
+          "name": "replayList",
+          "type": "generic",
+          "token": "0x040059ee"
+        },
+        {
+          "name": "CollectedEmblems",
+          "type": "generic",
+          "token": "0x040059ef"
+        },
+        {
+          "name": "_data",
+          "type": "MonsterRiseData",
+          "token": "0x040059f0"
+        },
+        {
+          "name": "MonsterRiseDataLoad",
+          "type": "string",
+          "token": "0x040059f1"
+        }
+      ],
+      "token": "0x02000c14"
+    },
+    {
+      "index": 3131,
+      "name": "SeasonData",
+      "fields": [
+        {
+          "name": "coin",
+          "type": "int",
+          "token": "0x04005a86"
+        },
+        {
+          "name": "gainedCoinToday",
+          "type": "int",
+          "token": "0x04005a87"
+        },
+        {
+          "name": "gainedCoinThisWeek",
+          "type": "int",
+          "token": "0x04005a88"
+        },
+        {
+          "name": "cumulativeCoinCount",
+          "type": "int",
+          "token": "0x04005a89"
+        },
+        {
+          "name": "gainedCoinInSeason",
+          "type": "generic",
+          "token": "0x04005a8a"
+        },
+        {
+          "name": "lastOpenBoxStoreId",
+          "type": "string",
+          "token": "0x04005a8b"
+        },
+        {
+          "name": "lastOpenBoxCount",
+          "type": "int",
+          "token": "0x04005a8c"
+        },
+        {
+          "name": "treasureBox1OpenBoxCount",
+          "type": "int",
+          "token": "0x04005a8d"
+        },
+        {
+          "name": "lastOpenMachineHistoryStr",
+          "type": "string",
+          "token": "0x04005a8e"
+        },
+        {
+          "name": "lastOpenMachineHistoryStr1",
+          "type": "string",
+          "token": "0x04005a8f"
+        },
+        {
+          "name": "buyCoin5",
+          "type": "int",
+          "token": "0x04005a90"
+        },
+        {
+          "name": "buyCoin15",
+          "type": "int",
+          "token": "0x04005a91"
+        },
+        {
+          "name": "buyCoin30",
+          "type": "int",
+          "token": "0x04005a92"
+        },
+        {
+          "name": "buyCoin68",
+          "type": "int",
+          "token": "0x04005a93"
+        },
+        {
+          "name": "seasonGuildStep",
+          "type": "int",
+          "token": "0x04005a94"
+        },
+        {
+          "name": "chestRandomSeed",
+          "type": "int",
+          "token": "0x04005a95"
+        },
+        {
+          "name": "showShootTutorialTimes",
+          "type": "int",
+          "token": "0x04005a96"
+        },
+        {
+          "name": "showNewShootTutorialTimes",
+          "type": "int",
+          "token": "0x04005a97"
+        },
+        {
+          "name": "mechaUnlockProgress",
+          "type": "int",
+          "token": "0x04005a98"
+        },
+        {
+          "name": "isNewPlayerAfter40210",
+          "type": "bool",
+          "token": "0x04005a99"
+        },
+        {
+          "name": "isNewPlayerAfter40300",
+          "type": "bool",
+          "token": "0x04005a9a"
+        },
+        {
+          "name": "levelIndex",
+          "type": "int",
+          "token": "0x04005a9b"
+        },
+        {
+          "name": "hasNewPlayerFactor",
+          "type": "bool",
+          "token": "0x04005a9c"
+        },
+        {
+          "name": "hasSendSeasonInherit1Reward",
+          "type": "bool",
+          "token": "0x04005a9d"
+        },
+        {
+          "name": "extraRewardChestTimes",
+          "type": "int",
+          "token": "0x04005a9e"
+        },
+        {
+          "name": "extraRewardChestNoChipTimes",
+          "type": "int",
+          "token": "0x04005a9f"
+        },
+        {
+          "name": "extraRewardChipTimesToday",
+          "type": "int",
+          "token": "0x04005aa0"
+        },
+        {
+          "name": "extraReplaceHeroSeatCount",
+          "type": "int",
+          "token": "0x04005aa1"
+        },
+        {
+          "name": "MaxExtraReplaceHeroSeatCount",
+          "type": "int",
+          "token": "0x04005aa2"
+        },
+        {
+          "name": "MaxReplaceHeroSeatCount",
+          "type": "int",
+          "token": "0x04005aa3"
+        },
+        {
+          "name": "chipSchemes",
+          "type": "IronTide.ChipSchemes",
+          "token": "0x04005aa4"
+        },
+        {
+          "name": "chips",
+          "type": "generic",
+          "token": "0x04005aa5"
+        },
+        {
+          "name": "hasClaimedARAMInitialReward",
+          "type": "bool",
+          "token": "0x04005aa6"
+        },
+        {
+          "name": "hasClaimedComboGunInitialReward",
+          "type": "bool",
+          "token": "0x04005aa7"
+        },
+        {
+          "name": "aramLastDifficulty",
+          "type": "int",
+          "token": "0x04005aa8"
+        },
+        {
+          "name": "comboGunData",
+          "type": "ModeSeason.ComboGun.ComboGunData",
+          "token": "0x04005aa9"
+        },
+        {
+          "name": "hasUnlockTroop2SkillHaste",
+          "type": "bool",
+          "token": "0x04005aaa"
+        },
+        {
+          "name": "hasUnlockTroop2SkillFrostBurst",
+          "type": "bool",
+          "token": "0x04005aab"
+        },
+        {
+          "name": "hasUnlockTroop2SkillShield",
+          "type": "bool",
+          "token": "0x04005aac"
+        },
+        {
+          "name": "hasUnlockTroop2SkillPowerUp",
+          "type": "bool",
+          "token": "0x04005aad"
+        },
+        {
+          "name": "hasUnlockTroop2SkillBonus",
+          "type": "bool",
+          "token": "0x04005aae"
+        },
+        {
+          "name": "extraTroop2ExtraReplaceHeroSeatCount",
+          "type": "int",
+          "token": "0x04005aaf"
+        },
+        {
+          "name": "troop2InitPresentCount",
+          "type": "int",
+          "token": "0x04005ab0"
+        },
+        {
+          "name": "troop2AutoStoreLevelUpCount",
+          "type": "int",
+          "token": "0x04005ab1"
+        },
+        {
+          "name": "troop2ExtraTeamSize",
+          "type": "int",
+          "token": "0x04005ab2"
+        },
+        {
+          "name": "troop2MaxExtraHeroSeatCount",
+          "type": "int",
+          "token": "0x04005ab3"
+        },
+        {
+          "name": "troop2MaxInitPresentCount",
+          "type": "int",
+          "token": "0x04005ab4"
+        },
+        {
+          "name": "troop2MaxAutoStoreLevelUpCount",
+          "type": "int",
+          "token": "0x04005ab5"
+        },
+        {
+          "name": "troop2MaxExtraTeamSize",
+          "type": "int",
+          "token": "0x04005ab6"
+        },
+        {
+          "name": "troop2UnlockedDifficulty",
+          "type": "int",
+          "token": "0x04005ab7"
+        },
+        {
+          "name": "lastTroop2Difficulty",
+          "type": "int",
+          "token": "0x04005ab8"
+        },
+        {
+          "name": "troop2ChampionNormalTasks",
+          "type": "generic",
+          "token": "0x04005ab9"
+        },
+        {
+          "name": "troop2ChampionWeeklyTasks",
+          "type": "generic",
+          "token": "0x04005aba"
+        },
+        {
+          "name": "troop2GetRewardNormalTaskIds",
+          "type": "generic",
+          "token": "0x04005abb"
+        },
+        {
+          "name": "troop2BoughtMercenary",
+          "type": "generic",
+          "token": "0x04005abc"
+        },
+        {
+          "name": "troop2GetRewardWeeklyTaskCount",
+          "type": "int",
+          "token": "0x04005abd"
+        },
+        {
+          "name": "troop2TrophyLevel",
+          "type": "int",
+          "token": "0x04005abe"
+        },
+        {
+          "name": "troop2ClaimedTrophyLevel",
+          "type": "int",
+          "token": "0x04005abf"
+        },
+        {
+          "name": "troop2TaskExp",
+          "type": "int",
+          "token": "0x04005ac0"
+        },
+        {
+          "name": "artifacts2ChampionNormalTasks",
+          "type": "generic",
+          "token": "0x04005ac1"
+        },
+        {
+          "name": "artifacts2ChampionWeeklyTasks",
+          "type": "generic",
+          "token": "0x04005ac2"
+        },
+        {
+          "name": "artifacts2GetRewardNormalTaskIds",
+          "type": "generic",
+          "token": "0x04005ac3"
+        },
+        {
+          "name": "artifacts2BoughtMercenary",
+          "type": "generic",
+          "token": "0x04005ac4"
+        },
+        {
+          "name": "artifacts2GetRewardWeeklyTaskCount",
+          "type": "int",
+          "token": "0x04005ac5"
+        },
+        {
+          "name": "artifacts2TrophyLevel",
+          "type": "int",
+          "token": "0x04005ac6"
+        },
+        {
+          "name": "artifacts2ClaimedTrophyLevel",
+          "type": "int",
+          "token": "0x04005ac7"
+        },
+        {
+          "name": "artifacts2TaskExp",
+          "type": "int",
+          "token": "0x04005ac8"
+        },
+        {
+          "name": "aram2ChampionNormalTasks",
+          "type": "generic",
+          "token": "0x04005ac9"
+        },
+        {
+          "name": "aram2ChampionWeeklyTasks",
+          "type": "generic",
+          "token": "0x04005aca"
+        },
+        {
+          "name": "aram2GetRewardNormalTaskIds",
+          "type": "generic",
+          "token": "0x04005acb"
+        },
+        {
+          "name": "aram2BoughtMercenary",
+          "type": "generic",
+          "token": "0x04005acc"
+        },
+        {
+          "name": "aram2TrophyLevel",
+          "type": "int",
+          "token": "0x04005acd"
+        },
+        {
+          "name": "aram2ClaimedTrophyLevel",
+          "type": "int",
+          "token": "0x04005ace"
+        },
+        {
+          "name": "aram2TaskExp",
+          "type": "int",
+          "token": "0x04005acf"
+        },
+        {
+          "name": "_data",
+          "type": "SeasonData",
+          "token": "0x04005ad0"
+        },
+        {
+          "name": "Events",
+          "type": "generic",
+          "token": "0x04005ad1"
+        },
+        {
+          "name": "DailyEvents",
+          "type": "generic",
+          "token": "0x04005ad2"
+        },
+        {
+          "name": "SeasonDataLoad",
+          "type": "string",
+          "token": "0x04005ad3"
+        }
+      ],
+      "token": "0x02000c3b"
+    },
+    {
+      "index": 3146,
+      "name": "SettingData",
+      "fields": [
+        {
+          "name": "_data",
+          "type": "SettingData",
+          "token": "0x04005b48"
+        },
+        {
+          "name": "SettingLoad",
+          "type": "string",
+          "token": "0x04005b49"
+        },
+        {
+          "name": "MaxLevel",
+          "type": "int",
+          "token": "0x04005b4a"
+        },
+        {
+          "name": "shakeLevel",
+          "type": "int",
+          "token": "0x04005b4b"
+        },
+        {
+          "name": "sandboxFlyable",
+          "type": "bool",
+          "token": "0x04005b4c"
+        },
+        {
+          "name": "enableCharacterSelectOutline",
+          "type": "bool",
+          "token": "0x04005b4d"
+        },
+        {
+          "name": "showInitWeapon",
+          "type": "bool",
+          "token": "0x04005b4e"
+        },
+        {
+          "name": "heroRoomFoldButtonsExpanded",
+          "type": "bool",
+          "token": "0x04005b4f"
+        },
+        {
+          "name": "doubleClickSelectBuff",
+          "type": "bool",
+          "token": "0x04005b50"
+        },
+        {
+          "name": "promotionIndex",
+          "type": "int",
+          "token": "0x04005b51"
+        },
+        {
+          "name": "promotionID",
+          "type": "string",
+          "token": "0x04005b52"
+        },
+        {
+          "name": "bgmName",
+          "type": "string",
+          "token": "0x04005b53"
+        },
+        {
+          "name": "movePosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b54"
+        },
+        {
+          "name": "skillPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b55"
+        },
+        {
+          "name": "skillSubPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b56"
+        },
+        {
+          "name": "weaponPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b57"
+        },
+        {
+          "name": "attackPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b58"
+        },
+        {
+          "name": "specialPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b59"
+        },
+        {
+          "name": "emoticonPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b5a"
+        },
+        {
+          "name": "fishingPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b5b"
+        },
+        {
+          "name": "mountPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b5c"
+        },
+        {
+          "name": "inventoryPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b5d"
+        },
+        {
+          "name": "specialSeasonPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b5e"
+        },
+        {
+          "name": "firingPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b5f"
+        },
+        {
+          "name": "seasonMovePosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b60"
+        },
+        {
+          "name": "seasonSkillPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b61"
+        },
+        {
+          "name": "seasonSkillSubPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b62"
+        },
+        {
+          "name": "seasonWeaponPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b63"
+        },
+        {
+          "name": "seasonAttackPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b64"
+        },
+        {
+          "name": "seasonEmoticonPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b65"
+        },
+        {
+          "name": "seasonFishingPosition",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b66"
+        },
+        {
+          "name": "seasonKeyboardPositions",
+          "type": "generic",
+          "token": "0x04005b67"
+        },
+        {
+          "name": "customKeyboardLayoutVersion",
+          "type": "int",
+          "token": "0x04005b68"
+        },
+        {
+          "name": "CurrentCustomKeyboardLayoutVersion",
+          "type": "int",
+          "token": "0x04005b69"
+        },
+        {
+          "name": "lastSendEmailTime",
+          "type": "long",
+          "token": "0x04005b6a"
+        },
+        {
+          "name": "useNewLayout",
+          "type": "bool",
+          "token": "0x04005b6b"
+        },
+        {
+          "name": "UseRijData",
+          "type": "bool",
+          "token": "0x04005b6c"
+        },
+        {
+          "name": "UseNewtonJsonData",
+          "type": "bool",
+          "token": "0x04005b6d"
+        },
+        {
+          "name": "MovePosition2",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b6e"
+        },
+        {
+          "name": "SkillPosition2",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b6f"
+        },
+        {
+          "name": "SkillSubPosition2",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b70"
+        },
+        {
+          "name": "WeaponPosition2",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b71"
+        },
+        {
+          "name": "AttackPosition2",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b72"
+        },
+        {
+          "name": "SpecialPosition2",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b73"
+        },
+        {
+          "name": "EmoticonPosition2",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b74"
+        },
+        {
+          "name": "FishingPosition2",
+          "type": "UnityEngine.Vector2",
+          "token": "0x04005b75"
+        },
+        {
+          "name": "ChillyUid",
+          "type": "string",
+          "token": "0x04005b76"
+        }
+      ],
+      "token": "0x02000c4b"
+    },
+    {
+      "index": 3163,
+      "name": "StatisticData",
+      "fields": [
+        {
+          "name": "HandbookCollectionUserPropertiesRecordedEvent",
+          "type": "string",
+          "token": "0x04005bb6"
+        },
+        {
+          "name": "HandbookSkinGoldenCollectionUserPropertiesRecordedEvent",
+          "type": "string",
+          "token": "0x04005bb7"
+        },
+        {
+          "name": "zongzi2026ActivityData",
+          "type": "Activities.Zongzi2026.Scripts.Zongzi2026ActivityData",
+          "token": "0x04005bb8"
+        },
+        {
+          "name": "StatisticsData",
+          "type": "generic",
+          "token": "0x04005bb9"
+        },
+        {
+          "name": "object2PassLevel",
+          "type": "generic",
+          "token": "0x04005bba"
+        },
+        {
+          "name": "object2PassTime",
+          "type": "generic",
+          "token": "0x04005bbb"
+        },
+        {
+          "name": "hero2PurpleFramePassTime",
+          "type": "generic",
+          "token": "0x04005bbc"
+        },
+        {
+          "name": "skin2PurpleFramePassTime",
+          "type": "generic",
+          "token": "0x04005bbd"
+        },
+        {
+          "name": "weapon2PurpleFramePassTime",
+          "type": "generic",
+          "token": "0x04005bbe"
+        },
+        {
+          "name": "handbookHonoraryTitleTrackedLevels",
+          "type": "generic",
+          "token": "0x04005bbf"
+        },
+        {
+          "name": "handbookEnemyCollectionTrackedLevels",
+          "type": "generic",
+          "token": "0x04005bc0"
+        },
+        {
+          "name": "handbookWeaponCollectionTrackedLevels",
+          "type": "generic",
+          "token": "0x04005bc1"
+        },
+        {
+          "name": "handbookSeasonTitleTrackedLevels",
+          "type": "generic",
+          "token": "0x04005bc2"
+        },
+        {
+          "name": "handbookCollectionUserPropertiesInitialized",
+          "type": "bool",
+          "token": "0x04005bc3"
+        },
+        {
+          "name": "goldframeShopSaveData",
+          "type": "RGScript.Data.GoldframeShopSaveData",
+          "token": "0x04005bc4"
+        },
+        {
+          "name": "KrppVerifiedUsdCents",
+          "type": "long",
+          "token": "0x04005bc5"
+        },
+        {
+          "name": "KrppCountedOrderIds",
+          "type": "generic",
+          "token": "0x04005bc6"
+        },
+        {
+          "name": "_uiOpenTimes",
+          "type": "generic",
+          "token": "0x04005bc7"
+        },
+        {
+          "name": "PaySignInRecords",
+          "type": "generic",
+          "token": "0x04005bc8"
+        },
+        {
+          "name": "_enemyKilledCount",
+          "type": "generic",
+          "token": "0x04005bc9"
+        },
+        {
+          "name": "_usedEmoji",
+          "type": "generic",
+          "token": "0x04005bca"
+        },
+        {
+          "name": "object2ObtainTime",
+          "type": "generic",
+          "token": "0x04005bcb"
+        },
+        {
+          "name": "firePassDifficultyLevel",
+          "type": "generic",
+          "token": "0x04005bcc"
+        },
+        {
+          "name": "fireExtraReplaceHeroSeatCount",
+          "type": "int",
+          "token": "0x04005bcd"
+        },
+        {
+          "name": "firePassDifficultyLevel2",
+          "type": "generic",
+          "token": "0x04005bce"
+        },
+        {
+          "name": "fireExtraReplaceHeroSeatCount2",
+          "type": "int",
+          "token": "0x04005bcf"
+        },
+        {
+          "name": "legendClaimOutBuffs",
+          "type": "generic",
+          "token": "0x04005bd0"
+        },
+        {
+          "name": "legendWing",
+          "type": "generic",
+          "token": "0x04005bd1"
+        },
+        {
+          "name": "legendWingPray",
+          "type": "int",
+          "token": "0x04005bd2"
+        },
+        {
+          "name": "legendKnife",
+          "type": "generic",
+          "token": "0x04005bd3"
+        },
+        {
+          "name": "legendKnifePray",
+          "type": "int",
+          "token": "0x04005bd4"
+        },
+        {
+          "name": "legendLight",
+          "type": "generic",
+          "token": "0x04005bd5"
+        },
+        {
+          "name": "legendLightPray",
+          "type": "int",
+          "token": "0x04005bd6"
+        },
+        {
+          "name": "legendSharedPray",
+          "type": "int",
+          "token": "0x04005bd7"
+        },
+        {
+          "name": "legendMagicReloadCount",
+          "type": "int",
+          "token": "0x04005bd8"
+        },
+        {
+          "name": "event2Count",
+          "type": "generic",
+          "token": "0x04005bd9"
+        },
+        {
+          "name": "recordedEvents",
+          "type": "generic",
+          "token": "0x04005bda"
+        },
+        {
+          "name": "passInfo",
+          "type": "generic",
+          "token": "0x04005bdb"
+        },
+        {
+          "name": "season2Prizes",
+          "type": "generic",
+          "token": "0x04005bdc"
+        },
+        {
+          "name": "c02_skill_times",
+          "type": "int",
+          "token": "0x04005bdd"
+        },
+        {
+          "name": "explode_kill_enemy",
+          "type": "int",
+          "token": "0x04005bde"
+        },
+        {
+          "name": "one_pounch_kill_boss_count",
+          "type": "int",
+          "token": "0x04005bdf"
+        },
+        {
+          "name": "hand_cut_index",
+          "type": "int",
+          "token": "0x04005be0"
+        },
+        {
+          "name": "manual_change_hand_cut_index",
+          "type": "bool",
+          "token": "0x04005be1"
+        },
+        {
+          "name": "buy_good_times",
+          "type": "int",
+          "token": "0x04005be2"
+        },
+        {
+          "name": "achieve_record",
+          "type": "generic",
+          "token": "0x04005be3"
+        },
+        {
+          "name": "googlePlayHistoricalAchievementsSynced",
+          "type": "bool",
+          "token": "0x04005be4"
+        },
+        {
+          "name": "googlePlayEventCounts",
+          "type": "generic",
+          "token": "0x04005be5"
+        },
+        {
+          "name": "googlePlayClearedMaps",
+          "type": "generic",
+          "token": "0x04005be6"
+        },
+        {
+          "name": "alreadyGetEmails",
+          "type": "generic",
+          "token": "0x04005be7"
+        },
+        {
+          "name": "alreadyGetRemoteEmailUids",
+          "type": "generic",
+          "token": "0x04005be8"
+        },
+        {
+          "name": "alreadyGetRemoteEmailUniqueIds",
+          "type": "generic",
+          "token": "0x04005be9"
+        },
+        {
+          "name": "remoteEmailRecords",
+          "type": "generic",
+          "token": "0x04005bea"
+        },
+        {
+          "name": "mode2SaveGameIdDic",
+          "type": "generic",
+          "token": "0x04005beb"
+        },
+        {
+          "name": "statementMode2SaveGameIdDic",
+          "type": "generic",
+          "token": "0x04005bec"
+        },
+        {
+          "name": "battleDataSavePlac2SaveGameIdDic",
+          "type": "generic",
+          "token": "0x04005bed"
+        },
+        {
+          "name": "_pass_history_list",
+          "type": "generic",
+          "token": "0x04005bee"
+        },
+        {
+          "name": "PassHistoryMaxCount",
+          "type": "int",
+          "token": "0x04005bef"
+        },
+        {
+          "name": "_multiGameHistoryList",
+          "type": "generic",
+          "token": "0x04005bf0"
+        },
+        {
+          "name": "MultiGameHistoryMaxCount",
+          "type": "int",
+          "token": "0x04005bf1"
+        },
+        {
+          "name": "equippedHonoraryTitles",
+          "type": "szarray",
+          "token": "0x04005bf2"
+        },
+        {
+          "name": "HonoraryTitleSnapshot",
+          "type": "generic",
+          "token": "0x04005bf3"
+        },
+        {
+          "name": "open_checkin",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005bf4"
+        },
+        {
+          "name": "NewbieCheckInStatusKeys",
+          "type": "generic",
+          "token": "0x04005bf5"
+        },
+        {
+          "name": "NewbieCheckInStatusValues",
+          "type": "generic",
+          "token": "0x04005bf6"
+        },
+        {
+          "name": "ReplaceRewards",
+          "type": "generic",
+          "token": "0x04005bf7"
+        },
+        {
+          "name": "hasSentOldCheckInMakeUpMail",
+          "type": "bool",
+          "token": "0x04005bf8"
+        },
+        {
+          "name": "ActivitySchoolTakeTaskKeys",
+          "type": "generic",
+          "token": "0x04005bf9"
+        },
+        {
+          "name": "Activity202508SchoolTakeTaskKeys",
+          "type": "generic",
+          "token": "0x04005bfa"
+        },
+        {
+          "name": "open_new_player_checkin",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005bfb"
+        },
+        {
+          "name": "NewPlayerCheckInStatusKeys",
+          "type": "generic",
+          "token": "0x04005bfc"
+        },
+        {
+          "name": "NewPlayerCheckInStatusValues",
+          "type": "generic",
+          "token": "0x04005bfd"
+        },
+        {
+          "name": "NewPlayerReplaceRewards",
+          "type": "generic",
+          "token": "0x04005bfe"
+        },
+        {
+          "name": "open_veteran_checkin",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005bff"
+        },
+        {
+          "name": "VeteranCheckInStatusKeys",
+          "type": "generic",
+          "token": "0x04005c00"
+        },
+        {
+          "name": "VeteranCheckInStatusValues",
+          "type": "generic",
+          "token": "0x04005c01"
+        },
+        {
+          "name": "VeteranCheckIn2025StatusKeys",
+          "type": "generic",
+          "token": "0x04005c02"
+        },
+        {
+          "name": "restVeteranDay",
+          "type": "int",
+          "token": "0x04005c03"
+        },
+        {
+          "name": "VeteranReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c04"
+        },
+        {
+          "name": "ActivityCheckInOpenTimestamp",
+          "type": "string",
+          "token": "0x04005c05"
+        },
+        {
+          "name": "ActivityCheckInStatusKeys",
+          "type": "generic",
+          "token": "0x04005c06"
+        },
+        {
+          "name": "ActivityCheckInStatusValues",
+          "type": "generic",
+          "token": "0x04005c07"
+        },
+        {
+          "name": "ActivityCheckInReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c08"
+        },
+        {
+          "name": "open_activity_checkin",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c09"
+        },
+        {
+          "name": "ActivityCheckIn2OpenTimestamp",
+          "type": "string",
+          "token": "0x04005c0a"
+        },
+        {
+          "name": "ActivityCheckIn2StatusKeys",
+          "type": "generic",
+          "token": "0x04005c0b"
+        },
+        {
+          "name": "ActivityCheckIn2StatusValues",
+          "type": "generic",
+          "token": "0x04005c0c"
+        },
+        {
+          "name": "ActivityCheckIn2ReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c0d"
+        },
+        {
+          "name": "open_activity_checkin2",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c0e"
+        },
+        {
+          "name": "HalloweenRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c0f"
+        },
+        {
+          "name": "HalloweenRedeemRecords2025",
+          "type": "generic",
+          "token": "0x04005c10"
+        },
+        {
+          "name": "ChristmasRecords",
+          "type": "generic",
+          "token": "0x04005c11"
+        },
+        {
+          "name": "honoraryTitleNeedToShowRedDot",
+          "type": "generic",
+          "token": "0x04005c12"
+        },
+        {
+          "name": "FusionRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c13"
+        },
+        {
+          "name": "ZongziRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c14"
+        },
+        {
+          "name": "BugFeatureRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c15"
+        },
+        {
+          "name": "SchoolRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c16"
+        },
+        {
+          "name": "SchoolRedeemRecords202508",
+          "type": "generic",
+          "token": "0x04005c17"
+        },
+        {
+          "name": "Christmas2024RedeemRecords",
+          "type": "generic",
+          "token": "0x04005c18"
+        },
+        {
+          "name": "NewHalloweenRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c19"
+        },
+        {
+          "name": "FireRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c1a"
+        },
+        {
+          "name": "ActivityRedeemBlueprints",
+          "type": "generic",
+          "token": "0x04005c1b"
+        },
+        {
+          "name": "DreamRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c1c"
+        },
+        {
+          "name": "pop_review",
+          "type": "bool",
+          "token": "0x04005c1d"
+        },
+        {
+          "name": "has_reviewed",
+          "type": "bool",
+          "token": "0x04005c1e"
+        },
+        {
+          "name": "GiveBackStatusKeys",
+          "type": "generic",
+          "token": "0x04005c1f"
+        },
+        {
+          "name": "GiveBackClaimStatus",
+          "type": "generic",
+          "token": "0x04005c20"
+        },
+        {
+          "name": "ActivityNewYear2025CheckInOpenTimestamp",
+          "type": "string",
+          "token": "0x04005c21"
+        },
+        {
+          "name": "ActivityNewYear2025CheckInStatusKeys",
+          "type": "generic",
+          "token": "0x04005c22"
+        },
+        {
+          "name": "ActivityNewYear2025CheckInStatusValues",
+          "type": "generic",
+          "token": "0x04005c23"
+        },
+        {
+          "name": "ActivityNewYear2025CheckInReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c24"
+        },
+        {
+          "name": "open_activity_newyear2025_checkin",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c25"
+        },
+        {
+          "name": "ActivityReturnPlayerCheckInOpenTimestamp",
+          "type": "string",
+          "token": "0x04005c26"
+        },
+        {
+          "name": "ActivityReturnPlayerCheckInStatusKeys",
+          "type": "generic",
+          "token": "0x04005c27"
+        },
+        {
+          "name": "ActivityReturnPlayerCheckInStatusValues",
+          "type": "generic",
+          "token": "0x04005c28"
+        },
+        {
+          "name": "ActivityReturnPlayerCheckInReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c29"
+        },
+        {
+          "name": "open_activity_return_player_checkin",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c2a"
+        },
+        {
+          "name": "ActivityCheckInMonthlyStatusKeys",
+          "type": "generic",
+          "token": "0x04005c2b"
+        },
+        {
+          "name": "ActivityCheckInMonthlyStatusValues",
+          "type": "generic",
+          "token": "0x04005c2c"
+        },
+        {
+          "name": "ActivityCheckInMonthlyReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c2d"
+        },
+        {
+          "name": "open_activity_checkin_monthly",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c2e"
+        },
+        {
+          "name": "ActivityCheckIn9YearStatusKeys",
+          "type": "generic",
+          "token": "0x04005c2f"
+        },
+        {
+          "name": "ActivityCheckIn9YearStatusValues",
+          "type": "generic",
+          "token": "0x04005c30"
+        },
+        {
+          "name": "ActivityCheckIn9YearStackRewardStatusKeys",
+          "type": "generic",
+          "token": "0x04005c31"
+        },
+        {
+          "name": "ActivityCheckIn9YearStackRewardStatusValues",
+          "type": "generic",
+          "token": "0x04005c32"
+        },
+        {
+          "name": "ActivityCheckIn9YearReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c33"
+        },
+        {
+          "name": "open_activity_checkin_9year",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c34"
+        },
+        {
+          "name": "ActivityCheckInSummer2026StatusKeys",
+          "type": "generic",
+          "token": "0x04005c35"
+        },
+        {
+          "name": "CommonCheckinRecords",
+          "type": "generic",
+          "token": "0x04005c36"
+        },
+        {
+          "name": "ActivityCheckInSummer2026StatusValues",
+          "type": "generic",
+          "token": "0x04005c37"
+        },
+        {
+          "name": "ActivityCheckInSummer2026StackRewardStatusKeys",
+          "type": "generic",
+          "token": "0x04005c38"
+        },
+        {
+          "name": "ActivityCheckInSummer2026StackRewardStatusValues",
+          "type": "generic",
+          "token": "0x04005c39"
+        },
+        {
+          "name": "ActivityCheckInSummer2026ReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c3a"
+        },
+        {
+          "name": "open_activity_checkin_summer2026",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c3b"
+        },
+        {
+          "name": "ActivityCheckIn9SprintStatusKeys",
+          "type": "generic",
+          "token": "0x04005c3c"
+        },
+        {
+          "name": "ActivityCheckIn9SprintStatusValues",
+          "type": "generic",
+          "token": "0x04005c3d"
+        },
+        {
+          "name": "ActivityCheckIn9SprintStackRewardStatusKeys",
+          "type": "generic",
+          "token": "0x04005c3e"
+        },
+        {
+          "name": "ActivityCheckIn9SprintStackRewardStatusValues",
+          "type": "generic",
+          "token": "0x04005c3f"
+        },
+        {
+          "name": "ActivityCheckIn9SprintReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c40"
+        },
+        {
+          "name": "open_activity_checkin_9sprint",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c41"
+        },
+        {
+          "name": "ActivityRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c42"
+        },
+        {
+          "name": "ActivityTalentTaskDailyRecords",
+          "type": "generic",
+          "token": "0x04005c43"
+        },
+        {
+          "name": "SelectRewardClaimRecords",
+          "type": "generic",
+          "token": "0x04005c44"
+        },
+        {
+          "name": "RebornEggFollowers",
+          "type": "generic",
+          "token": "0x04005c45"
+        },
+        {
+          "name": "ActivityPlantUnlocked",
+          "type": "generic",
+          "token": "0x04005c46"
+        },
+        {
+          "name": "ActivityPlantShowEnemies",
+          "type": "generic",
+          "token": "0x04005c47"
+        },
+        {
+          "name": "ActivityPlantProgress",
+          "type": "int",
+          "token": "0x04005c48"
+        },
+        {
+          "name": "ActivityFireFactorUnlocked",
+          "type": "generic",
+          "token": "0x04005c49"
+        },
+        {
+          "name": "ActivityHeroBallRuneActived",
+          "type": "generic",
+          "token": "0x04005c4a"
+        },
+        {
+          "name": "_hero_init_weapons",
+          "type": "generic",
+          "token": "0x04005c4b"
+        },
+        {
+          "name": "alreadyGetRemoteEmails",
+          "type": "generic",
+          "token": "0x04005c4c"
+        },
+        {
+          "name": "TodayActivityPlayTime",
+          "type": "int",
+          "token": "0x04005c4d"
+        },
+        {
+          "name": "ToDayActivityPlayCounts",
+          "type": "generic",
+          "token": "0x04005c4e"
+        },
+        {
+          "name": "maxDefenceWave",
+          "type": "int",
+          "token": "0x04005c4f"
+        },
+        {
+          "name": "defenceRemakePass",
+          "type": "int",
+          "token": "0x04005c50"
+        },
+        {
+          "name": "defenceRemakeBadassPass",
+          "type": "int",
+          "token": "0x04005c51"
+        },
+        {
+          "name": "normalMaxDamage",
+          "type": "int",
+          "token": "0x04005c52"
+        },
+        {
+          "name": "GuaranteeDrop",
+          "type": "generic",
+          "token": "0x04005c53"
+        },
+        {
+          "name": "_plantTimes",
+          "type": "generic",
+          "token": "0x04005c54"
+        },
+        {
+          "name": "prequel_task1_finished",
+          "type": "bool",
+          "token": "0x04005c55"
+        },
+        {
+          "name": "prequel_task2_kill_boss_times",
+          "type": "int",
+          "token": "0x04005c56"
+        },
+        {
+          "name": "prequel_task3_finished",
+          "type": "bool",
+          "token": "0x04005c57"
+        },
+        {
+          "name": "promotionGotRewardIds",
+          "type": "generic",
+          "token": "0x04005c58"
+        },
+        {
+          "name": "lastBuyBeginnerPkgId",
+          "type": "int",
+          "token": "0x04005c59"
+        },
+        {
+          "name": "lastRewardBeginnerPkgId",
+          "type": "int",
+          "token": "0x04005c5a"
+        },
+        {
+          "name": "lastBuyReturnPlayerPkgId",
+          "type": "int",
+          "token": "0x04005c5b"
+        },
+        {
+          "name": "lastRewardReturnPlayerPkgId",
+          "type": "int",
+          "token": "0x04005c5c"
+        },
+        {
+          "name": "StatisticLoad",
+          "type": "string",
+          "token": "0x04005c5d"
+        },
+        {
+          "name": "cy",
+          "type": "string",
+          "token": "0x04005c5e"
+        },
+        {
+          "name": "_data",
+          "type": "StatisticData",
+          "token": "0x04005c5f"
+        },
+        {
+          "name": "_autoIncrementSaveIdDic",
+          "type": "generic",
+          "token": "0x04005c60"
+        }
+      ],
+      "token": "0x02000c5a"
+    },
+    {
+      "index": 4045,
+      "name": "RGSaveManager",
+      "fields": [
+        {
+          "name": "_instance",
+          "type": "RGSaveManager",
+          "token": "0x04006e18"
+        },
+        {
+          "name": "_lock",
+          "type": "object",
+          "token": "0x04006e19"
+        },
+        {
+          "name": "_applicationIsQuitting",
+          "type": "bool",
+          "token": "0x04006e1a"
+        },
+        {
+          "name": "char_list",
+          "type": "szarray",
+          "token": "0x04006e1b"
+        },
+        {
+          "name": "pet_list",
+          "type": "szarray",
+          "token": "0x04006e1c"
+        },
+        {
+          "name": "hero_skin_list",
+          "type": "szarray",
+          "token": "0x04006e1d"
+        },
+        {
+          "name": "game_data",
+          "type": "AboGameData",
+          "token": "0x04006e1e"
+        },
+        {
+          "name": "gems_icon",
+          "type": "UnityEngine.Sprite",
+          "token": "0x04006e1f"
+        },
+        {
+          "name": "fish_icon",
+          "type": "UnityEngine.Sprite",
+          "token": "0x04006e20"
+        },
+        {
+          "name": "c_levelup_gems",
+          "type": "szarray",
+          "token": "0x04006e21"
+        },
+        {
+          "name": "store_key",
+          "type": "string",
+          "token": "0x04006e22"
+        },
+        {
+          "name": "_dataTypes",
+          "type": "generic",
+          "token": "0x04006e23"
+        },
+        {
+          "name": "DefaultChillyUidString",
+          "type": "string",
+          "token": "0x04006e24"
+        }
+      ],
+      "token": "0x02000fcc"
+    },
+    {
+      "index": 4542,
+      "name": "LoginApi",
+      "fields": [
+        {
+          "name": "K_Game_Name",
+          "type": "string",
+          "token": "0x04007668"
+        },
+        {
+          "name": "m_loginSvr",
+          "type": "ChillyRoom.RPC.RPCClient",
+          "token": "0x04007669"
+        },
+        {
+          "name": "m_gatewaySvr",
+          "type": "ChillyRoom.RPC.RPCClient",
+          "token": "0x0400766a"
+        },
+        {
+          "name": "m_accountId",
+          "type": "uint",
+          "token": "0x0400766b"
+        },
+        {
+          "name": "m_token",
+          "type": "string",
+          "token": "0x0400766c"
+        },
+        {
+          "name": "<NewToken>k__BackingField",
+          "type": "string",
+          "token": "0x0400766d"
+        },
+        {
+          "name": "<PlayerId>k__BackingField",
+          "type": "long",
+          "token": "0x0400766e"
+        },
+        {
+          "name": "IsLogin",
+          "type": "bool",
+          "token": "0x0400766f"
+        },
+        {
+          "name": "onInvalidAction",
+          "type": "generic",
+          "token": "0x04007670"
+        },
+        {
+          "name": "onInvalidDelayLoginAction",
+          "type": "generic",
+          "token": "0x04007671"
+        },
+        {
+          "name": "onAlreadySendNeedVarifyEmail",
+          "type": "System.Action",
+          "token": "0x04007672"
+        },
+        {
+          "name": "onUnKnownErr",
+          "type": "generic",
+          "token": "0x04007673"
+        },
+        {
+          "name": "state",
+          "type": "State",
+          "token": "0x04007674"
+        },
+        {
+          "name": "IsLogining",
+          "type": "bool",
+          "token": "0x04007675"
+        },
+        {
+          "name": "isRegistering",
+          "type": "bool",
+          "token": "0x04007676"
+        },
+        {
+          "name": "isRegisteChecking",
+          "type": "bool",
+          "token": "0x04007677"
+        },
+        {
+          "name": "_commonHttpClient",
+          "type": "System.Net.Http.HttpClient",
+          "token": "0x04007678"
+        },
+        {
+          "name": "_commonHttpClientWithOutPDNS",
+          "type": "System.Net.Http.HttpClient",
+          "token": "0x04007679"
+        },
+        {
+          "name": "requesetingNewIP",
+          "type": "bool",
+          "token": "0x0400767a"
+        },
+        {
+          "name": "callNewIPCount",
+          "type": "int",
+          "token": "0x0400767b"
+        },
+        {
+          "name": "<IsInit>k__BackingField",
+          "type": "bool",
+          "token": "0x0400767c"
+        },
+        {
+          "name": "changeServerMaxCount",
+          "type": "int",
+          "token": "0x0400767d"
+        },
+        {
+          "name": "Compress_Flag",
+          "type": "uint",
+          "token": "0x0400767e"
+        },
+        {
+          "name": "ReLogin_Flag",
+          "type": "uint",
+          "token": "0x0400767f"
+        },
+        {
+          "name": "maxCostMillSecondsPerSend",
+          "type": "int",
+          "token": "0x04007680"
+        }
+      ],
+      "token": "0x02001190"
+    },
+    {
+      "index": 16235,
+      "name": "RGScript.WeaponEvolution.WeaponEvolutionData",
+      "fields": [
+        {
+          "name": "_data",
+          "type": "RGScript.WeaponEvolution.WeaponEvolutionData",
+          "token": "0x04016568"
+        },
+        {
+          "name": "WeaponEvolutionDataLoad",
+          "type": "string",
+          "token": "0x04016569"
+        },
+        {
+          "name": "weapons",
+          "type": "generic",
+          "token": "0x0401656a"
+        },
+        {
+          "name": "lastOpenMachineHistoryStr0",
+          "type": "string",
+          "token": "0x0401656b"
+        },
+        {
+          "name": "blindBoxOpenCount0",
+          "type": "int",
+          "token": "0x0401656c"
+        },
+        {
+          "name": "favorWeapons",
+          "type": "generic",
+          "token": "0x0401656d"
+        }
+      ],
+      "token": "0x02003f6c"
+    },
+    {
+      "index": 16694,
+      "name": "RGScript.Other.NewCloudSaveAgent",
+      "fields": [
+        {
+          "name": "_hasInit",
+          "type": "bool",
+          "token": "0x04016bf2"
+        },
+        {
+          "name": "<HasFetchData>k__BackingField",
+          "type": "bool",
+          "token": "0x04016bf3"
+        },
+        {
+          "name": "_cloudSaveCanvas",
+          "type": "UnityEngine.Transform",
+          "token": "0x04016bf4"
+        },
+        {
+          "name": "AfterFetchCloudSaveEvent",
+          "type": "generic",
+          "token": "0x04016bf5"
+        },
+        {
+          "name": "BeforeUpLoadGameAction",
+          "type": "System.Action",
+          "token": "0x04016bf6"
+        },
+        {
+          "name": "UpLoadGameAction",
+          "type": "generic",
+          "token": "0x04016bf7"
+        },
+        {
+          "name": "AfterUpLoadGameAction",
+          "type": "generic",
+          "token": "0x04016bf8"
+        },
+        {
+          "name": "BeforeDownloadGameAction",
+          "type": "generic",
+          "token": "0x04016bf9"
+        },
+        {
+          "name": "DownLoadGameAction",
+          "type": "generic",
+          "token": "0x04016bfa"
+        },
+        {
+          "name": "LocalDataChangeAction",
+          "type": "generic",
+          "token": "0x04016bfb"
+        },
+        {
+          "name": "AfterShowView",
+          "type": "System.Action",
+          "token": "0x04016bfc"
+        },
+        {
+          "name": "AfterHideView",
+          "type": "System.Action",
+          "token": "0x04016bfd"
+        },
+        {
+          "name": "SetLoadTextAction",
+          "type": "generic",
+          "token": "0x04016bfe"
+        },
+        {
+          "name": "AfterLegencyLoginSuccessAction",
+          "type": "generic",
+          "token": "0x04016bff"
+        },
+        {
+          "name": "ManualGetUserProfileAction",
+          "type": "System.Action",
+          "token": "0x04016c00"
+        },
+        {
+          "name": "<LoadedGameData>k__BackingField",
+          "type": "CloudSaveGameData",
+          "token": "0x04016c01"
+        },
+        {
+          "name": "<CloudSaveDataState>k__BackingField",
+          "type": "SaveDataState",
+          "token": "0x04016c02"
+        },
+        {
+          "name": "hasGuideBindPhone",
+          "type": "bool",
+          "token": "0x04016c03"
+        },
+        {
+          "name": "savingData",
+          "type": "CloudSaveGameData",
+          "token": "0x04016c04"
+        },
+        {
+          "name": "AfterFetchCloudSaveRpcEvent",
+          "type": "generic",
+          "token": "0x04016c05"
+        },
+        {
+          "name": "UpLoadGameRpcAction",
+          "type": "generic",
+          "token": "0x04016c06"
+        },
+        {
+          "name": "AfterUpLoadGameRpcAction",
+          "type": "generic",
+          "token": "0x04016c07"
+        },
+        {
+          "name": "_isManualGetUserProfile",
+          "type": "bool",
+          "token": "0x04016c08"
+        }
+      ],
+      "token": "0x0200411f"
+    },
+    {
+      "index": 21448,
+      "name": "RGScript.Data.BattlePassSaveData",
+      "fields": [
+        {
+          "name": "seasonData",
+          "type": "generic",
+          "token": "0x0401db82"
+        },
+        {
+          "name": "bpShopOthersPurchaseCounts",
+          "type": "generic",
+          "token": "0x0401db83"
+        },
+        {
+          "name": "bpShopOthersRefreshMonthKey",
+          "type": "int",
+          "token": "0x0401db84"
+        },
+        {
+          "name": "_data",
+          "type": "RGScript.Data.BattlePassSaveData",
+          "token": "0x0401db85"
+        },
+        {
+          "name": "BattlePassSaveDataLoad",
+          "type": "string",
+          "token": "0x0401db86"
+        }
+      ],
+      "token": "0x020053c9"
+    },
+    {
+      "index": 21721,
+      "name": "RGScript.Data.MiscData",
+      "fields": [
+        {
+          "name": "_data",
+          "type": "RGScript.Data.MiscData",
+          "token": "0x0401e23a"
+        },
+        {
+          "name": "MiscDataLoad",
+          "type": "string",
+          "token": "0x0401e23b"
+        },
+        {
+          "name": "returningEventStartTimestamp",
+          "type": "long",
+          "token": "0x0401e23c"
+        },
+        {
+          "name": "returningEventCurrentDay",
+          "type": "int",
+          "token": "0x0401e23d"
+        },
+        {
+          "name": "returningEventLastUnlockDate",
+          "type": "string",
+          "token": "0x0401e23e"
+        },
+        {
+          "name": "isReturnPlayerInit",
+          "type": "bool",
+          "token": "0x0401e23f"
+        },
+        {
+          "name": "returnPlayerTrailHero",
+          "type": "emHero",
+          "token": "0x0401e240"
+        },
+        {
+          "name": "returnPlayerTrailHeroStartTimestamp",
+          "type": "long",
+          "token": "0x0401e241"
+        },
+        {
+          "name": "returnPlayerFactorCount",
+          "type": "int",
+          "token": "0x0401e242"
+        },
+        {
+          "name": "returnPlayerRewardList",
+          "type": "generic",
+          "token": "0x0401e243"
+        },
+        {
+          "name": "returnPlayerRewardList790",
+          "type": "generic",
+          "token": "0x0401e244"
+        },
+        {
+          "name": "returnPlayerSelectSkinName",
+          "type": "string",
+          "token": "0x0401e245"
+        },
+        {
+          "name": "lastCheckInDay",
+          "type": "int",
+          "token": "0x0401e246"
+        },
+        {
+          "name": "lastPopupGameFinishDay",
+          "type": "int",
+          "token": "0x0401e247"
+        },
+        {
+          "name": "currentReturnCount",
+          "type": "int",
+          "token": "0x0401e248"
+        },
+        {
+          "name": "hasGetFactorJuly",
+          "type": "bool",
+          "token": "0x0401e249"
+        },
+        {
+          "name": "hasGetFactorAugust",
+          "type": "bool",
+          "token": "0x0401e24a"
+        },
+        {
+          "name": "unlockedKillEffectIds",
+          "type": "generic",
+          "token": "0x0401e24b"
+        },
+        {
+          "name": "equippedKillEffectIdByScene",
+          "type": "generic",
+          "token": "0x0401e24c"
+        }
+      ],
+      "token": "0x020054da"
+    },
+    {
+      "index": 21736,
+      "name": "RGScript.Data.PvpData",
+      "fields": [
+        {
+          "name": "_data",
+          "type": "RGScript.Data.PvpData",
+          "token": "0x0401e2b4"
+        },
+        {
+          "name": "PvpDataLoad",
+          "type": "string",
+          "token": "0x0401e2b5"
+        },
+        {
+          "name": "isFirstPvpPlay",
+          "type": "bool",
+          "token": "0x0401e2b6"
+        },
+        {
+          "name": "isPvpFirstMatch",
+          "type": "bool",
+          "token": "0x0401e2b7"
+        },
+        {
+          "name": "hasShownChooseCharacterHint",
+          "type": "bool",
+          "token": "0x0401e2b8"
+        },
+        {
+          "name": "pvpLobbyOpenCount",
+          "type": "int",
+          "token": "0x0401e2b9"
+        },
+        {
+          "name": "readPvpModeDescription",
+          "type": "bool",
+          "token": "0x0401e2ba"
+        },
+        {
+          "name": "last_match_mode",
+          "type": "string",
+          "token": "0x0401e2bb"
+        },
+        {
+          "name": "last_match_type",
+          "type": "int",
+          "token": "0x0401e2bc"
+        },
+        {
+          "name": "pvpTaskData",
+          "type": "RGScript.Mode.PVP.TaskSystem.PVPTaskSaveData",
+          "token": "0x0401e2bd"
+        },
+        {
+          "name": "pvpSkinSelectionByHero",
+          "type": "generic",
+          "token": "0x0401e2be"
+        },
+        {
+          "name": "pvpCharacterSelectionByGameName",
+          "type": "generic",
+          "token": "0x0401e2bf"
+        }
+      ],
+      "token": "0x020054e9"
+    },
+    {
+      "index": 21783,
+      "name": "RGScript.Data.TaskDatas",
+      "fields": [
+        {
+          "name": "_data",
+          "type": "RGScript.Data.TaskDatas",
+          "token": "0x0401e37a"
+        },
+        {
+          "name": "NewTaskData",
+          "type": "generic",
+          "token": "0x0401e37b"
+        },
+        {
+          "name": "ActivityTaskData",
+          "type": "generic",
+          "token": "0x0401e37c"
+        },
+        {
+          "name": "ReturnPlayerTaskData",
+          "type": "generic",
+          "token": "0x0401e37d"
+        },
+        {
+          "name": "ReturnPlayerTaskData790",
+          "type": "generic",
+          "token": "0x0401e37e"
+        },
+        {
+          "name": "ReturnPlayerH5TaskData",
+          "type": "generic",
+          "token": "0x0401e37f"
+        },
+        {
+          "name": "NianBeastTaskData",
+          "type": "generic",
+          "token": "0x0401e380"
+        },
+        {
+          "name": "tasks",
+          "type": "generic",
+          "token": "0x0401e381"
+        },
+        {
+          "name": "currentTask",
+          "type": "RGScript.Data.TaskData",
+          "token": "0x0401e382"
+        },
+        {
+          "name": "completedTask",
+          "type": "RGScript.Data.TaskData",
+          "token": "0x0401e383"
+        },
+        {
+          "name": "changeCount",
+          "type": "int",
+          "token": "0x0401e384"
+        },
+        {
+          "name": "weekly_badass_mission_complete_time",
+          "type": "int",
+          "token": "0x0401e385"
+        },
+        {
+          "name": "weekly_mission_complete_time",
+          "type": "int",
+          "token": "0x0401e386"
+        },
+        {
+          "name": "_rg_random",
+          "type": "RGRandom",
+          "token": "0x0401e387"
+        },
+        {
+          "name": "TaskDataLoad",
+          "type": "string",
+          "token": "0x0401e388"
+        },
+        {
+          "name": "rewardGem",
+          "type": "szarray",
+          "token": "0x0401e389"
+        }
+      ],
+      "token": "0x02005516"
+    },
+    {
+      "index": 21925,
+      "name": "RGScript.Data.Mall.MallReloadData",
+      "fields": [
+        {
+          "name": "mallPurchaseCountHistoryIndexed",
+          "type": "generic",
+          "token": "0x0401e65e"
+        },
+        {
+          "name": "mallPurchaseTimeHistoryIndexed",
+          "type": "generic",
+          "token": "0x0401e65f"
+        },
+        {
+          "name": "mallConditionTimestamps",
+          "type": "generic",
+          "token": "0x0401e660"
+        },
+        {
+          "name": "hasConvertGemPackages",
+          "type": "generic",
+          "token": "0x0401e661"
+        },
+        {
+          "name": "hasRestorePackages",
+          "type": "generic",
+          "token": "0x0401e662"
+        },
+        {
+          "name": "blindBoxBuyCountDict",
+          "type": "generic",
+          "token": "0x0401e663"
+        },
+        {
+          "name": "mallGoodStateDict",
+          "type": "generic",
+          "token": "0x0401e664"
+        },
+        {
+          "name": "packageRestoreCountDict",
+          "type": "generic",
+          "token": "0x0401e665"
+        },
+        {
+          "name": "hasDetectUnlockWorkshopWhenFirstEnterGame",
+          "type": "bool",
+          "token": "0x0401e666"
+        },
+        {
+          "name": "hasGetWeeklyBundle",
+          "type": "bool",
+          "token": "0x0401e667"
+        },
+        {
+          "name": "buyGemCount800",
+          "type": "int",
+          "token": "0x0401e668"
+        },
+        {
+          "name": "buyGemCount5000",
+          "type": "int",
+          "token": "0x0401e669"
+        },
+        {
+          "name": "buyGemCount12000",
+          "type": "int",
+          "token": "0x0401e66a"
+        },
+        {
+          "name": "buyGemCount25000",
+          "type": "int",
+          "token": "0x0401e66b"
+        },
+        {
+          "name": "buyGemCount35000",
+          "type": "int",
+          "token": "0x0401e66c"
+        },
+        {
+          "name": "buyGemCount76000",
+          "type": "int",
+          "token": "0x0401e66d"
+        },
+        {
+          "name": "buyGemCount115000",
+          "type": "int",
+          "token": "0x0401e66e"
+        },
+        {
+          "name": "buyFishCount5",
+          "type": "int",
+          "token": "0x0401e66f"
+        },
+        {
+          "name": "buyFishCount10",
+          "type": "int",
+          "token": "0x0401e670"
+        },
+        {
+          "name": "buyFishCount20",
+          "type": "int",
+          "token": "0x0401e671"
+        },
+        {
+          "name": "buyFishCount45",
+          "type": "int",
+          "token": "0x0401e672"
+        },
+        {
+          "name": "buyFishCount68",
+          "type": "int",
+          "token": "0x0401e673"
+        },
+        {
+          "name": "buyFishCount128",
+          "type": "int",
+          "token": "0x0401e674"
+        },
+        {
+          "name": "_data",
+          "type": "RGScript.Data.Mall.MallReloadData",
+          "token": "0x0401e675"
+        },
+        {
+          "name": "MallReloadDataLoad",
+          "type": "string",
+          "token": "0x0401e676"
+        },
+        {
+          "name": "AirbenderSkillBundleFixFlag",
+          "type": "string",
+          "token": "0x0401e677"
+        },
+        {
+          "name": "AirbenderFullSkillBundleGoodId",
+          "type": "int",
+          "token": "0x0401e678"
+        },
+        {
+          "name": "AirbenderSkill1BundleGoodId",
+          "type": "int",
+          "token": "0x0401e679"
+        }
+      ],
+      "token": "0x020055a6"
+    },
+    {
+      "index": 12862,
+      "name": "ModeSeason.Escape.Scripts.EscapeSeasonData",
+      "fields": [
+        {
+          "name": "CurrentVersion",
+          "type": "int",
+          "token": "0x04011cb8"
+        },
+        {
+          "name": "DefaultWarehouseCapacity",
+          "type": "int",
+          "token": "0x04011cb9"
+        },
+        {
+          "name": "EscapeSeasonDataLoad",
+          "type": "string",
+          "token": "0x04011cba"
+        },
+        {
+          "name": "_data",
+          "type": "ModeSeason.Escape.Scripts.EscapeSeasonData",
+          "token": "0x04011cbb"
+        },
+        {
+          "name": "version",
+          "type": "int",
+          "token": "0x04011cbc"
+        },
+        {
+          "name": "maxRaidSessionId",
+          "type": "int",
+          "token": "0x04011cbd"
+        },
+        {
+          "name": "money",
+          "type": "int",
+          "token": "0x04011cbe"
+        },
+        {
+          "name": "playerBag",
+          "type": "ModeSeason.Escape.Scripts.EscapeSavedContainerData",
+          "token": "0x04011cbf"
+        },
+        {
+          "name": "safeSlots",
+          "type": "ModeSeason.Escape.Scripts.EscapeSavedContainerData",
+          "token": "0x04011cc0"
+        },
+        {
+          "name": "weaponSlots",
+          "type": "ModeSeason.Escape.Scripts.EscapeSavedContainerData",
+          "token": "0x04011cc1"
+        },
+        {
+          "name": "consumableSlots",
+          "type": "ModeSeason.Escape.Scripts.EscapeSavedContainerData",
+          "token": "0x04011cc2"
+        },
+        {
+          "name": "bagSlots",
+          "type": "ModeSeason.Escape.Scripts.EscapeSavedContainerData",
+          "token": "0x04011cc3"
+        },
+        {
+          "name": "armorSlots",
+          "type": "ModeSeason.Escape.Scripts.EscapeSavedContainerData",
+          "token": "0x04011cc4"
+        },
+        {
+          "name": "talismanSlots",
+          "type": "ModeSeason.Escape.Scripts.EscapeSavedContainerData",
+          "token": "0x04011cc5"
+        },
+        {
+          "name": "warehouse",
+          "type": "ModeSeason.Escape.Scripts.EscapeSavedContainerData",
+          "token": "0x04011cc6"
+        },
+        {
+          "name": "deathBox",
+          "type": "ModeSeason.Escape.Scripts.EscapeDeathBoxData",
+          "token": "0x04011cc7"
+        },
+        {
+          "name": "buildings",
+          "type": "generic",
+          "token": "0x04011cc8"
+        },
+        {
+          "name": "upgradeBlueprints",
+          "type": "generic",
+          "token": "0x04011cc9"
+        },
+        {
+          "name": "unlockedCraftBlueprintIds",
+          "type": "generic",
+          "token": "0x04011cca"
+        },
+        {
+          "name": "pendingCraftBlueprintItemIds",
+          "type": "generic",
+          "token": "0x04011ccb"
+        },
+        {
+          "name": "unlockedHeroes",
+          "type": "generic",
+          "token": "0x04011ccc"
+        },
+        {
+          "name": "rescuedHeroes",
+          "type": "generic",
+          "token": "0x04011ccd"
+        },
+        {
+          "name": "rescuedNpcIds",
+          "type": "generic",
+          "token": "0x04011cce"
+        },
+        {
+          "name": "achievedNodeKeys",
+          "type": "generic",
+          "token": "0x04011ccf"
+        },
+        {
+          "name": "markedItemIds",
+          "type": "generic",
+          "token": "0x04011cd0"
+        },
+        {
+          "name": "activatedBeacons",
+          "type": "generic",
+          "token": "0x04011cd1"
+        },
+        {
+          "name": "submittedBeacons",
+          "type": "generic",
+          "token": "0x04011cd2"
+        },
+        {
+          "name": "builtBridgeKeys",
+          "type": "generic",
+          "token": "0x04011cd3"
+        },
+        {
+          "name": "visitedEscapeSceneNames",
+          "type": "generic",
+          "token": "0x04011cd4"
+        },
+        {
+          "name": "firstKilledEnemySpawnerKeys",
+          "type": "generic",
+          "token": "0x04011cd5"
+        },
+        {
+          "name": "explorerTreasureMapLastClaimDay",
+          "type": "int",
+          "token": "0x04011cd6"
+        },
+        {
+          "name": "hasEscapedTutorial",
+          "type": "bool",
+          "token": "0x04011cd7"
+        },
+        {
+          "name": "selectedHeroInitialized",
+          "type": "bool",
+          "token": "0x04011cd8"
+        },
+        {
+          "name": "selectedHero",
+          "type": "emHero",
+          "token": "0x04011cd9"
+        },
+        {
+          "name": "selectedSkin",
+          "type": "int",
+          "token": "0x04011cda"
+        },
+        {
+          "name": "selectedSkill",
+          "type": "int",
+          "token": "0x04011cdb"
+        },
+        {
+          "name": "recentSkinByHero",
+          "type": "generic",
+          "token": "0x04011cdc"
+        },
+        {
+          "name": "hasPendingHeroLoss",
+          "type": "bool",
+          "token": "0x04011cdd"
+        },
+        {
+          "name": "pendingHeroLossHero",
+          "type": "emHero",
+          "token": "0x04011cde"
+        },
+        {
+          "name": "totalIronMoneyEarned",
+          "type": "int",
+          "token": "0x04011cdf"
+        },
+        {
+          "name": "escapeGoldCupClaimedRewardLevel",
+          "type": "int",
+          "token": "0x04011ce0"
+        },
+        {
+          "name": "hasPlayedEndScene",
+          "type": "bool",
+          "token": "0x04011ce1"
+        }
+      ],
+      "token": "0x0200323a"
+    }
+  ]
+}

@@ -1,9 +1,10 @@
 """Detección del formato exterior y reconstrucción local del agregado.
 
 Solo se decodifica lo que ya está demostrado: un objeto JSON UTF-8 o un único
-miembro gzip que contiene ese objeto. Los marcadores RPC se clasifican y se
-rechazan con un error tipado; el códec interior del bloque comprimido no está
-resuelto y no se adivina aquí.
+miembro gzip que contiene ese objeto. Los marcadores RPC se clasifican y, por
+defecto, se rechazan con un error tipado. ``rpc_body="gzip_candidate"`` habilita
+un intento experimental de leer el cuerpo como gzip; no se usa en producción y
+no se declara que sea el códec real.
 """
 
 from dataclasses import dataclass, field
@@ -39,6 +40,15 @@ class RpcBodyUnknown(RpcEnvelopeError):
     code = "rpc_codec_unknown"
 
 
+class RpcBodyNotGzip(RpcBodyUnknown):
+    """El cuerpo comprimido no empieza con la firma gzip observable."""
+
+    code = "rpc_body_not_gzip"
+
+
+type RpcBodyPolicy = Literal["reject", "gzip_candidate"]
+
+
 @dataclass(frozen=True)
 class DecodedCopy:
     format: DetectedFormat
@@ -59,7 +69,25 @@ def classify_rpc(payload: bytes) -> RpcFrame:
     return inspect_rpc_frame(payload)
 
 
-def decode_copy(payload: bytes) -> DecodedCopy:
+def decode_rpc_gzip(payload: bytes, frame: RpcFrame | None = None) -> DecodedCopy:
+    """Intenta interpretar el cuerpo RPC como un miembro gzip.
+
+    Es una capacidad experimental: la firma gzip del cuerpo no se ha
+    confirmado con una respuesta real. No se usa por defecto en ``decode_copy``.
+    """
+    frame = frame or inspect_rpc_frame(payload)
+    if frame.kind != "compressed":
+        raise RpcBodyUnknown("El sobre no selecciona la rama comprimida.", frame)
+    body = bytes(frame.body or b"")
+    if not body.startswith(b"\x1f\x8b"):
+        raise RpcBodyNotGzip(
+            "El cuerpo RPC no presenta la firma gzip 1f 8b; no se adivina el códec.",
+            frame,
+        )
+    return DecodedCopy("gzip", reconstruct_cloud_save(body), payload)
+
+
+def decode_copy(payload: bytes, *, rpc_body: RpcBodyPolicy = "reject") -> DecodedCopy:
     if len(payload) > MAX_INPUT_BYTES:
         raise CopyLimitError("La entrada supera el límite permitido.")
     if not payload:
@@ -72,6 +100,8 @@ def decode_copy(payload: bytes) -> DecodedCopy:
             frame,
         )
     if frame.kind == "compressed":
+        if rpc_body == "gzip_candidate":
+            return decode_rpc_gzip(payload, frame)
         raise RpcBodyUnknown(
             "El sobre RPC está comprimido y su códec interior no está demostrado.",
             frame,

@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (pruebas y compilación)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.12.23"
+          python-version: "3.12"
+          enable-cache: true
+      - name: Instalar dependencias bloqueadas
+        run: uv sync --locked
+      - name: Compilar módulos
+        run: uv run --locked python -m compileall -q app
+      - name: Ejecutar pruebas
+        run: uv run --locked pytest -q
+
+  frontend:
+    name: Frontend (TypeScript y Vite)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
+
+  browser:
+    name: Navegador (Playwright Chromium)
+    runs-on: ubuntu-latest
+    needs: frontend
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+
+  hygiene:
+    name: Higiene, formato y secretos
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Espacios y conflictos
+        run: git diff --check HEAD^ HEAD || git diff --check
+      - name: Rechazar artefactos privados rastreados
+        shell: bash
+        run: |
+          if git ls-files | grep -Eq '(^|/)(\.env|cipher\.env)$|\.(apk|xapk|apks|data|sav|save|skdb|playerprefs\.xml)$'; then
+            echo "Hay archivos privados o binarios de partida rastreados." >&2
+            git ls-files | grep -E '(^|/)(\.env|cipher\.env)$|\.(apk|xapk|apks|data|sav|save|skdb|playerprefs\.xml)$' >&2
+            exit 1
+          fi
+      - name: Rechazar credenciales con valor
+        shell: bash
+        run: |
+          if git grep -nE '(SK_ACCESS_TOKEN|SK_SAVE_GENERAL_KEY_HEX|SK_SAVE_STATISTICS_KEY_HEX|SK_SAVE_IV_HEX)=[^[:space:]#]+' -- ':!*.md' ':!*.example'; then
+            echo "Hay una variable con valor en el árbol de trabajo." >&2
+            exit 1
+          fi

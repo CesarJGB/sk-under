@@ -1,0 +1,7122 @@
+{
+  "source": {
+    "apk_sha256": "54bb332be9444596501ec99f745f21adfa55265feea3a15331c735009b517f34",
+    "libil2cpp_arm64_sha256": "4cef1adecda2ed7c523d683df1412a88d43e0704b2c230f5a962b54c569921b9",
+    "global_metadata_sha256": "bc56e0bb9efd9165aa708c4e4c715871d4817f5363e29e425676ccdf7d51ec15",
+    "global_metadata_decrypted_sha256": "dbd07b72cee1f2188810841a4dbb2c11bc931cab4840a49e57baddd5463c48c0",
+    "metadata_version": 31,
+    "type_count": 152692,
+    "type_definition_count": 46649,
+    "method_definition_count": 380122,
+    "field_definition_count": 350248,
+    "note": "Inventario estático del APK 8.8.0. Los campos son los declarados en metadata; no se confirma que una partida real los use."
+  },
+  "types": [
+    {
+      "index": 1070,
+      "name": "ZipHelper",
+      "fields": [],
+      "methods": [
+        {
+          "name": "GZipCompressString",
+          "return": "string",
+          "parameters": 1,
+          "parameter_start": 8204,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06002660"
+        },
+        {
+          "name": "GZipDecompressString",
+          "return": "string",
+          "parameters": 1,
+          "parameter_start": 8205,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06002661"
+        },
+        {
+          "name": "Compress",
+          "return": "szarray",
+          "parameters": 3,
+          "parameter_start": 8206,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06002662"
+        },
+        {
+          "name": "Decompress",
+          "return": "szarray",
+          "parameters": 3,
+          "parameter_start": 8209,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06002663"
+        },
+        {
+          "name": ".ctor",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x1886",
+          "token": "0x06002664"
+        }
+      ],
+      "token": "0x0200042f"
+    },
+    {
+      "index": 15046,
+      "name": "ChillyRoom.Utils.ZipHelper",
+      "fields": [
+        {
+          "name": "zip",
+          "type": "ChillyRoom.Utils.IZip",
+          "token": "0x040146e4"
+        }
+      ],
+      "methods": [
+        {
+          "name": ".ctor",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x1884",
+          "token": "0x0601f029"
+        },
+        {
+          "name": "Compress",
+          "return": "szarray",
+          "parameters": 1,
+          "parameter_start": 80709,
+          "slot": 8,
+          "flags": "0x01c6",
+          "token": "0x0601f02a"
+        },
+        {
+          "name": "Decompress",
+          "return": "szarray",
+          "parameters": 1,
+          "parameter_start": 80710,
+          "slot": 9,
+          "flags": "0x01c6",
+          "token": "0x0601f02b"
+        },
+        {
+          "name": "Decompress",
+          "return": "szarray",
+          "parameters": 3,
+          "parameter_start": 80711,
+          "slot": 7,
+          "flags": "0x01e6",
+          "token": "0x0601f02c"
+        },
+        {
+          "name": "Inject",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 80714,
+          "slot": 4,
+          "flags": "0x01e6",
+          "token": "0x0601f02d"
+        }
+      ],
+      "token": "0x02003ac7"
+    },
+    {
+      "index": 43105,
+      "name": "ChillyRoom.RPC.ByteBuffer",
+      "fields": [
+        {
+          "name": "DEFAULT_BUFF_SIZE",
+          "type": "uint",
+          "token": "0x04000083"
+        },
+        {
+          "name": "__InOut_buf",
+          "type": "szarray",
+          "token": "0x04000084"
+        },
+        {
+          "name": "m_rpos",
+          "type": "uint",
+          "token": "0x04000085"
+        },
+        {
+          "name": "m_wpos",
+          "type": "uint",
+          "token": "0x04000086"
+        },
+        {
+          "name": "m_buff",
+          "type": "szarray",
+          "token": "0x04000087"
+        }
+      ],
+      "methods": [
+        {
+          "name": ".ctor",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331958,
+          "slot": 65535,
+          "flags": "0x1886",
+          "token": "0x06000061"
+        },
+        {
+          "name": ".ctor",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331959,
+          "slot": 65535,
+          "flags": "0x1886",
+          "token": "0x06000062"
+        },
+        {
+          "name": ".ctor",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331960,
+          "slot": 65535,
+          "flags": "0x1886",
+          "token": "0x06000063"
+        },
+        {
+          "name": ".ctor",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 331961,
+          "slot": 65535,
+          "flags": "0x1886",
+          "token": "0x06000064"
+        },
+        {
+          "name": "SetPosRead",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331964,
+          "slot": 65535,
+          "flags": "0x0084",
+          "token": "0x06000065"
+        },
+        {
+          "name": "get_Buffer",
+          "return": "szarray",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06000066"
+        },
+        {
+          "name": "get_LeftBuf",
+          "return": "szarray",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06000067"
+        },
+        {
+          "name": "get_Size",
+          "return": "uint",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06000068"
+        },
+        {
+          "name": "Clear",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331965,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000069"
+        },
+        {
+          "name": "_Resize",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331966,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x0600006a"
+        },
+        {
+          "name": "_Reserve",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331967,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x0600006b"
+        },
+        {
+          "name": "_Write",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 331968,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600006c"
+        },
+        {
+          "name": "_Write",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 331970,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600006d"
+        },
+        {
+          "name": "_Read",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 331973,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600006e"
+        },
+        {
+          "name": "WriteBool",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331975,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600006f"
+        },
+        {
+          "name": "WriteInt8",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331976,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000070"
+        },
+        {
+          "name": "WriteUInt8",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331977,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000071"
+        },
+        {
+          "name": "WriteByte",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331978,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000072"
+        },
+        {
+          "name": "WriteInt16",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331979,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000073"
+        },
+        {
+          "name": "WriteUInt16",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331980,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000074"
+        },
+        {
+          "name": "WriteInt32",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331981,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000075"
+        },
+        {
+          "name": "WriteUInt32",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331982,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000076"
+        },
+        {
+          "name": "WriteInt64",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331983,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000077"
+        },
+        {
+          "name": "WriteUInt64",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331984,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000078"
+        },
+        {
+          "name": "WriteFloat",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331985,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000079"
+        },
+        {
+          "name": "WriteDouble",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331986,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600007a"
+        },
+        {
+          "name": "WriteString",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331987,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600007b"
+        },
+        {
+          "name": "WriteBuf",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 331988,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600007c"
+        },
+        {
+          "name": "ReadInt8",
+          "return": "sbyte",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600007d"
+        },
+        {
+          "name": "ReadBool",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600007e"
+        },
+        {
+          "name": "ReadUInt8",
+          "return": "byte",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600007f"
+        },
+        {
+          "name": "ReadByte",
+          "return": "byte",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000080"
+        },
+        {
+          "name": "ReadBytes",
+          "return": "szarray",
+          "parameters": 1,
+          "parameter_start": 331989,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000081"
+        },
+        {
+          "name": "ReadInt16",
+          "return": "short",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000082"
+        },
+        {
+          "name": "ReadUInt16",
+          "return": "ushort",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000083"
+        },
+        {
+          "name": "ReadInt32",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000084"
+        },
+        {
+          "name": "ReadUInt32",
+          "return": "uint",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000085"
+        },
+        {
+          "name": "ReadInt64",
+          "return": "long",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000086"
+        },
+        {
+          "name": "ReadUInt64",
+          "return": "ulong",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000087"
+        },
+        {
+          "name": "ReadFloat",
+          "return": "float",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000088"
+        },
+        {
+          "name": "ReadDouble",
+          "return": "double",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06000089"
+        },
+        {
+          "name": "ReadString",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600008a"
+        },
+        {
+          "name": "ReadStringZipped",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600008b"
+        },
+        {
+          "name": "ReadByTypeId",
+          "return": "object",
+          "parameters": 1,
+          "parameter_start": 331990,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600008c"
+        },
+        {
+          "name": "SetPos",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 331991,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600008d"
+        },
+        {
+          "name": "GetPos",
+          "return": "uint",
+          "parameters": 1,
+          "parameter_start": 331993,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600008e"
+        }
+      ],
+      "token": "0x0200001a"
+    },
+    {
+      "index": 43104,
+      "name": "ZipHelper",
+      "fields": [],
+      "methods": [
+        {
+          "name": "GZipCompressString",
+          "return": "string",
+          "parameters": 1,
+          "parameter_start": 332024,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x0600009a"
+        },
+        {
+          "name": "GZipDecompressString",
+          "return": "string",
+          "parameters": 1,
+          "parameter_start": 332025,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x0600009b"
+        },
+        {
+          "name": "Compress",
+          "return": "szarray",
+          "parameters": 3,
+          "parameter_start": 332026,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x0600009c"
+        },
+        {
+          "name": "Decompress",
+          "return": "szarray",
+          "parameters": 3,
+          "parameter_start": 332029,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x0600009d"
+        },
+        {
+          "name": ".ctor",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x1886",
+          "token": "0x0600009e"
+        }
+      ],
+      "token": "0x0200001d"
+    },
+    {
+      "index": 3018,
+      "name": "CloudSaveGameData",
+      "fields": [
+        {
+          "name": "serialzedVersion",
+          "type": "int",
+          "token": "0x04005779"
+        },
+        {
+          "name": "cloudSaveId",
+          "type": "string",
+          "token": "0x0400577a"
+        },
+        {
+          "name": "platformId",
+          "type": "string",
+          "token": "0x0400577b"
+        },
+        {
+          "name": "gameData",
+          "type": "AboGameData",
+          "token": "0x0400577c"
+        },
+        {
+          "name": "itemData",
+          "type": "ItemData",
+          "token": "0x0400577d"
+        },
+        {
+          "name": "statisticData",
+          "type": "StatisticData",
+          "token": "0x0400577e"
+        },
+        {
+          "name": "settingData",
+          "type": "SettingData",
+          "token": "0x0400577f"
+        },
+        {
+          "name": "taskData",
+          "type": "RGScript.Data.TaskDatas",
+          "token": "0x04005780"
+        },
+        {
+          "name": "maps",
+          "type": "SandboxMaps",
+          "token": "0x04005781"
+        },
+        {
+          "name": "sandboxConfig",
+          "type": "SandboxConfigData",
+          "token": "0x04005782"
+        },
+        {
+          "name": "seasonData",
+          "type": "SeasonData",
+          "token": "0x04005783"
+        },
+        {
+          "name": "mallReloadData",
+          "type": "RGScript.Data.Mall.MallReloadData",
+          "token": "0x04005784"
+        },
+        {
+          "name": "monsterRiseData",
+          "type": "MonsterRiseData",
+          "token": "0x04005785"
+        },
+        {
+          "name": "weaponEvolutionData",
+          "type": "RGScript.WeaponEvolution.WeaponEvolutionData",
+          "token": "0x04005786"
+        },
+        {
+          "name": "miscData",
+          "type": "RGScript.Data.MiscData",
+          "token": "0x04005787"
+        },
+        {
+          "name": "pvpData",
+          "type": "RGScript.Data.PvpData",
+          "token": "0x04005788"
+        },
+        {
+          "name": "battlePassSaveData",
+          "type": "RGScript.Data.BattlePassSaveData",
+          "token": "0x04005789"
+        },
+        {
+          "name": "escapeSeasonData",
+          "type": "ModeSeason.Escape.Scripts.EscapeSeasonData",
+          "token": "0x0400578a"
+        }
+      ],
+      "methods": [
+        {
+          "name": ".ctor",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x1881",
+          "token": "0x060072d8"
+        },
+        {
+          "name": "CreateFromPlayerPref",
+          "return": "CloudSaveGameData",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060072d9"
+        },
+        {
+          "name": "GetProgressScope",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060072da"
+        },
+        {
+          "name": "CoverPlayerPref",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060072db"
+        },
+        {
+          "name": "MergePaymentHistoryCacheForSameAccount",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x060072dc"
+        },
+        {
+          "name": "FuncForHotFixBeforeCover",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060072dd"
+        },
+        {
+          "name": "FuncForHotFixAfterCover",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060072de"
+        },
+        {
+          "name": "CreateBattlePassRecoveryRestoreRecords",
+          "return": "generic",
+          "parameters": 2,
+          "parameter_start": 18272,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x060072df"
+        },
+        {
+          "name": "TryResumeBattlePassRecoveryCloudRestore",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18274,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060072e0"
+        },
+        {
+          "name": "HasBattlePassRecoveryRestoreCompletion",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18275,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x060072e1"
+        },
+        {
+          "name": "SaveBattlePassRecoveryRestoreCompletion",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18277,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x060072e2"
+        },
+        {
+          "name": "AreBattlePassRecoveryRestoreSeasonsEqual",
+          "return": "bool",
+          "parameters": 3,
+          "parameter_start": 18279,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x060072e3"
+        },
+        {
+          "name": "TryCompleteBattlePassRecoveryCloudRestore",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x060072e4"
+        },
+        {
+          "name": "AreBattlePassRecoverySeasonsEqual",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18282,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x060072e5"
+        },
+        {
+          "name": "CreateNew",
+          "return": "CloudSaveGameData",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060072e6"
+        },
+        {
+          "name": "GetPassCount",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18284,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060072e7"
+        }
+      ],
+      "token": "0x02000bcb"
+    },
+    {
+      "index": 4542,
+      "name": "LoginApi",
+      "fields": [
+        {
+          "name": "K_Game_Name",
+          "type": "string",
+          "token": "0x04007668"
+        },
+        {
+          "name": "m_loginSvr",
+          "type": "ChillyRoom.RPC.RPCClient",
+          "token": "0x04007669"
+        },
+        {
+          "name": "m_gatewaySvr",
+          "type": "ChillyRoom.RPC.RPCClient",
+          "token": "0x0400766a"
+        },
+        {
+          "name": "m_accountId",
+          "type": "uint",
+          "token": "0x0400766b"
+        },
+        {
+          "name": "m_token",
+          "type": "string",
+          "token": "0x0400766c"
+        },
+        {
+          "name": "<NewToken>k__BackingField",
+          "type": "string",
+          "token": "0x0400766d"
+        },
+        {
+          "name": "<PlayerId>k__BackingField",
+          "type": "long",
+          "token": "0x0400766e"
+        },
+        {
+          "name": "IsLogin",
+          "type": "bool",
+          "token": "0x0400766f"
+        },
+        {
+          "name": "onInvalidAction",
+          "type": "generic",
+          "token": "0x04007670"
+        },
+        {
+          "name": "onInvalidDelayLoginAction",
+          "type": "generic",
+          "token": "0x04007671"
+        },
+        {
+          "name": "onAlreadySendNeedVarifyEmail",
+          "type": "System.Action",
+          "token": "0x04007672"
+        },
+        {
+          "name": "onUnKnownErr",
+          "type": "generic",
+          "token": "0x04007673"
+        },
+        {
+          "name": "state",
+          "type": "State",
+          "token": "0x04007674"
+        },
+        {
+          "name": "IsLogining",
+          "type": "bool",
+          "token": "0x04007675"
+        },
+        {
+          "name": "isRegistering",
+          "type": "bool",
+          "token": "0x04007676"
+        },
+        {
+          "name": "isRegisteChecking",
+          "type": "bool",
+          "token": "0x04007677"
+        },
+        {
+          "name": "_commonHttpClient",
+          "type": "System.Net.Http.HttpClient",
+          "token": "0x04007678"
+        },
+        {
+          "name": "_commonHttpClientWithOutPDNS",
+          "type": "System.Net.Http.HttpClient",
+          "token": "0x04007679"
+        },
+        {
+          "name": "requesetingNewIP",
+          "type": "bool",
+          "token": "0x0400767a"
+        },
+        {
+          "name": "callNewIPCount",
+          "type": "int",
+          "token": "0x0400767b"
+        },
+        {
+          "name": "<IsInit>k__BackingField",
+          "type": "bool",
+          "token": "0x0400767c"
+        },
+        {
+          "name": "changeServerMaxCount",
+          "type": "int",
+          "token": "0x0400767d"
+        },
+        {
+          "name": "Compress_Flag",
+          "type": "uint",
+          "token": "0x0400767e"
+        },
+        {
+          "name": "ReLogin_Flag",
+          "type": "uint",
+          "token": "0x0400767f"
+        },
+        {
+          "name": "maxCostMillSecondsPerSend",
+          "type": "int",
+          "token": "0x04007680"
+        }
+      ],
+      "methods": [
+        {
+          "name": "get_NewToken",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06009dce"
+        },
+        {
+          "name": "set_NewToken",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 25330,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06009dcf"
+        },
+        {
+          "name": "get_PlayerId",
+          "return": "long",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06009dd0"
+        },
+        {
+          "name": "set_PlayerId",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 25331,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06009dd1"
+        },
+        {
+          "name": "get_LastGatewaySvrIP_Port",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06009dd2"
+        },
+        {
+          "name": "set_LastGatewaySvrIP_Port",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 25332,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06009dd3"
+        },
+        {
+          "name": "get_LoginAddress",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0881",
+          "token": "0x06009dd4"
+        },
+        {
+          "name": "get_LoginPort",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0881",
+          "token": "0x06009dd5"
+        },
+        {
+          "name": "get_GateWayIP",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06009dd6"
+        },
+        {
+          "name": "get_GateWayPort",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06009dd7"
+        },
+        {
+          "name": "get_CommonHttpClient",
+          "return": "System.Net.Http.HttpClient",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06009dd8"
+        },
+        {
+          "name": "get_CommonHttpClientWithoutPDNS",
+          "return": "System.Net.Http.HttpClient",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06009dd9"
+        },
+        {
+          "name": "GetClient",
+          "return": "ChillyRoom.RPC.RPCClient",
+          "parameters": 3,
+          "parameter_start": 25333,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06009dda"
+        },
+        {
+          "name": "Awake",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06009ddb"
+        },
+        {
+          "name": "SetState",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 25336,
+          "slot": 65535,
+          "flags": "0x0083",
+          "token": "0x06009ddc"
+        },
+        {
+          "name": "GetState",
+          "return": "State",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0083",
+          "token": "0x06009ddd"
+        },
+        {
+          "name": "CallNewIp",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 25337,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009dde"
+        },
+        {
+          "name": "CallBestLoginIP",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 1,
+          "parameter_start": 25338,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06009ddf"
+        },
+        {
+          "name": "get_IsInit",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 5,
+          "flags": "0x09c6",
+          "token": "0x06009de0"
+        },
+        {
+          "name": "set_IsInit",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 25339,
+          "slot": 6,
+          "flags": "0x09c6",
+          "token": "0x06009de1"
+        },
+        {
+          "name": "Init",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 1,
+          "parameter_start": 25340,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009de2"
+        },
+        {
+          "name": "CheckInit",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06009de3"
+        },
+        {
+          "name": "RegAccount",
+          "return": "generic",
+          "parameters": 4,
+          "parameter_start": 25341,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009de4"
+        },
+        {
+          "name": "RegCheck",
+          "return": "generic",
+          "parameters": 3,
+          "parameter_start": 25345,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009de5"
+        },
+        {
+          "name": "ChangePassword",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 3,
+          "parameter_start": 25348,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009de6"
+        },
+        {
+          "name": "CheckIsValidBindInfo",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 2,
+          "parameter_start": 25351,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009de7"
+        },
+        {
+          "name": "SetChangeServerMaxCount",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 25353,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009de8"
+        },
+        {
+          "name": "AccountLogin",
+          "return": "generic",
+          "parameters": 4,
+          "parameter_start": 25354,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009de9"
+        },
+        {
+          "name": "UseGateWay",
+          "return": "generic",
+          "parameters": 2,
+          "parameter_start": 25358,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06009dea"
+        },
+        {
+          "name": "IsSaveServerNull",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009deb"
+        },
+        {
+          "name": "CheckSaveMac",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 25360,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009dec"
+        },
+        {
+          "name": "UnbindMac2",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 25361,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009ded"
+        },
+        {
+          "name": "AccountBindInfo",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 3,
+          "parameter_start": 25362,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009dee"
+        },
+        {
+          "name": "ChangePasswordForce",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 4,
+          "parameter_start": 25365,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009def"
+        },
+        {
+          "name": "ChangingPasswordForce",
+          "return": "System.Collections.IEnumerator",
+          "parameters": 4,
+          "parameter_start": 25369,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06009df0"
+        },
+        {
+          "name": "CallCenterRpc",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 25373,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06009df1"
+        },
+        {
+          "name": "CallGateWayCheckIdentity",
+          "return": "void",
+          "parameters": 4,
+          "parameter_start": 25376,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009df2"
+        },
+        {
+          "name": "CallRpc",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 4,
+          "parameter_start": 25380,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009df3"
+        },
+        {
+          "name": "CallVerfyEmail",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 2,
+          "parameter_start": 25384,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009df4"
+        },
+        {
+          "name": "VerfyEmail",
+          "return": "System.Collections.IEnumerator",
+          "parameters": 2,
+          "parameter_start": 25386,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06009df5"
+        },
+        {
+          "name": "SendSMSCode",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 2,
+          "parameter_start": 25388,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009df6"
+        },
+        {
+          "name": "VerifySMSCode",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 3,
+          "parameter_start": 25390,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009df7"
+        },
+        {
+          "name": "UploadSave",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 25393,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009df8"
+        },
+        {
+          "name": "CheckForbid",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 25396,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009df9"
+        },
+        {
+          "name": "DnloadSave",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 25399,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009dfa"
+        },
+        {
+          "name": "GetSaveTimeInfo",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 25401,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009dfb"
+        },
+        {
+          "name": "SetGameDataJson",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 4,
+          "parameter_start": 25402,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009dfc"
+        },
+        {
+          "name": "GetGameDataJson",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 3,
+          "parameter_start": 25406,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009dfd"
+        },
+        {
+          "name": "get_CanUseGameServer",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06009dfe"
+        },
+        {
+          "name": "GetNetTimeByGameServer",
+          "return": "generic",
+          "parameters": 1,
+          "parameter_start": 25409,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009dff"
+        },
+        {
+          "name": "CallInvoke",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 25410,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009e00"
+        },
+        {
+          "name": "CallInvoke",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 25411,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009e01"
+        },
+        {
+          "name": "CallInvoke",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 25413,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009e02"
+        },
+        {
+          "name": "GetErrCode",
+          "return": "Err",
+          "parameters": 1,
+          "parameter_start": 25416,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06009e03"
+        },
+        {
+          "name": "CallTaskRpc",
+          "return": "generic",
+          "parameters": 5,
+          "parameter_start": 25417,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009e04"
+        },
+        {
+          "name": "RpcPostAsync",
+          "return": "generic",
+          "parameters": 2,
+          "parameter_start": 25422,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009e05"
+        },
+        {
+          "name": "PostAsync",
+          "return": "generic",
+          "parameters": 2,
+          "parameter_start": 25424,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009e06"
+        },
+        {
+          "name": "_Decompress",
+          "return": "ChillyRoom.RPC.NetPack",
+          "parameters": 1,
+          "parameter_start": 25426,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06009e07"
+        },
+        {
+          "name": "CallRpc",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 5,
+          "parameter_start": 25427,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009e08"
+        },
+        {
+          "name": ".ctor",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x1886",
+          "token": "0x06009e09"
+        }
+      ],
+      "token": "0x02001190"
+    },
+    {
+      "index": 16694,
+      "name": "RGScript.Other.NewCloudSaveAgent",
+      "fields": [
+        {
+          "name": "_hasInit",
+          "type": "bool",
+          "token": "0x04016bf2"
+        },
+        {
+          "name": "<HasFetchData>k__BackingField",
+          "type": "bool",
+          "token": "0x04016bf3"
+        },
+        {
+          "name": "_cloudSaveCanvas",
+          "type": "UnityEngine.Transform",
+          "token": "0x04016bf4"
+        },
+        {
+          "name": "AfterFetchCloudSaveEvent",
+          "type": "generic",
+          "token": "0x04016bf5"
+        },
+        {
+          "name": "BeforeUpLoadGameAction",
+          "type": "System.Action",
+          "token": "0x04016bf6"
+        },
+        {
+          "name": "UpLoadGameAction",
+          "type": "generic",
+          "token": "0x04016bf7"
+        },
+        {
+          "name": "AfterUpLoadGameAction",
+          "type": "generic",
+          "token": "0x04016bf8"
+        },
+        {
+          "name": "BeforeDownloadGameAction",
+          "type": "generic",
+          "token": "0x04016bf9"
+        },
+        {
+          "name": "DownLoadGameAction",
+          "type": "generic",
+          "token": "0x04016bfa"
+        },
+        {
+          "name": "LocalDataChangeAction",
+          "type": "generic",
+          "token": "0x04016bfb"
+        },
+        {
+          "name": "AfterShowView",
+          "type": "System.Action",
+          "token": "0x04016bfc"
+        },
+        {
+          "name": "AfterHideView",
+          "type": "System.Action",
+          "token": "0x04016bfd"
+        },
+        {
+          "name": "SetLoadTextAction",
+          "type": "generic",
+          "token": "0x04016bfe"
+        },
+        {
+          "name": "AfterLegencyLoginSuccessAction",
+          "type": "generic",
+          "token": "0x04016bff"
+        },
+        {
+          "name": "ManualGetUserProfileAction",
+          "type": "System.Action",
+          "token": "0x04016c00"
+        },
+        {
+          "name": "<LoadedGameData>k__BackingField",
+          "type": "CloudSaveGameData",
+          "token": "0x04016c01"
+        },
+        {
+          "name": "<CloudSaveDataState>k__BackingField",
+          "type": "SaveDataState",
+          "token": "0x04016c02"
+        },
+        {
+          "name": "hasGuideBindPhone",
+          "type": "bool",
+          "token": "0x04016c03"
+        },
+        {
+          "name": "savingData",
+          "type": "CloudSaveGameData",
+          "token": "0x04016c04"
+        },
+        {
+          "name": "AfterFetchCloudSaveRpcEvent",
+          "type": "generic",
+          "token": "0x04016c05"
+        },
+        {
+          "name": "UpLoadGameRpcAction",
+          "type": "generic",
+          "token": "0x04016c06"
+        },
+        {
+          "name": "AfterUpLoadGameRpcAction",
+          "type": "generic",
+          "token": "0x04016c07"
+        },
+        {
+          "name": "_isManualGetUserProfile",
+          "type": "bool",
+          "token": "0x04016c08"
+        }
+      ],
+      "methods": [
+        {
+          "name": "get_ClickLegencyLoginFailTotalCount",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021bc6"
+        },
+        {
+          "name": "set_ClickLegencyLoginFailTotalCount",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87088,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021bc7"
+        },
+        {
+          "name": "get_HasFetchData",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021bc8"
+        },
+        {
+          "name": "set_HasFetchData",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87089,
+          "slot": 65535,
+          "flags": "0x0891",
+          "token": "0x06021bc9"
+        },
+        {
+          "name": "get_ChillyHasCloudSaveData",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021bca"
+        },
+        {
+          "name": "add_AfterFetchCloudSaveEvent",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87090,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021bcb"
+        },
+        {
+          "name": "remove_AfterFetchCloudSaveEvent",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87091,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021bcc"
+        },
+        {
+          "name": "add_AfterShowView",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87092,
+          "slot": 65535,
+          "flags": "0x0893",
+          "token": "0x06021bcd"
+        },
+        {
+          "name": "remove_AfterShowView",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87093,
+          "slot": 65535,
+          "flags": "0x0893",
+          "token": "0x06021bce"
+        },
+        {
+          "name": "add_AfterHideView",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87094,
+          "slot": 65535,
+          "flags": "0x0893",
+          "token": "0x06021bcf"
+        },
+        {
+          "name": "remove_AfterHideView",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87095,
+          "slot": 65535,
+          "flags": "0x0893",
+          "token": "0x06021bd0"
+        },
+        {
+          "name": "add_SetLoadTextAction",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87096,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021bd1"
+        },
+        {
+          "name": "remove_SetLoadTextAction",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87097,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021bd2"
+        },
+        {
+          "name": "add_AfterLegencyLoginSuccessAction",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87098,
+          "slot": 65535,
+          "flags": "0x0893",
+          "token": "0x06021bd3"
+        },
+        {
+          "name": "remove_AfterLegencyLoginSuccessAction",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87099,
+          "slot": 65535,
+          "flags": "0x0893",
+          "token": "0x06021bd4"
+        },
+        {
+          "name": "get_LoadedGameData",
+          "return": "CloudSaveGameData",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021bd5"
+        },
+        {
+          "name": "set_LoadedGameData",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87100,
+          "slot": 65535,
+          "flags": "0x0891",
+          "token": "0x06021bd6"
+        },
+        {
+          "name": "get_CloudSaveDataState",
+          "return": "SaveDataState",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021bd7"
+        },
+        {
+          "name": "set_CloudSaveDataState",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87101,
+          "slot": 65535,
+          "flags": "0x0891",
+          "token": "0x06021bd8"
+        },
+        {
+          "name": "get_HarmonyLoginType",
+          "return": "HarmonyLoginMethod",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021bd9"
+        },
+        {
+          "name": "set_HarmonyLoginType",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87102,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021bda"
+        },
+        {
+          "name": "get_HarmonyOfficalLogin",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021bdb"
+        },
+        {
+          "name": "set_HarmonyOfficalLogin",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87103,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021bdc"
+        },
+        {
+          "name": "Init",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021bdd"
+        },
+        {
+          "name": "AfterReloadData",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87104,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021bde"
+        },
+        {
+          "name": "DealSceneChange",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87105,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021bdf"
+        },
+        {
+          "name": "InitLanguageSundry",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021be0"
+        },
+        {
+          "name": "DealGPAndIosSendDataToLegencyWhenBinded",
+          "return": "void",
+          "parameters": 4,
+          "parameter_start": 87106,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021be1"
+        },
+        {
+          "name": "DealBindBtnAndCloudSaveDataState",
+          "return": "void",
+          "parameters": 4,
+          "parameter_start": 87110,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021be2"
+        },
+        {
+          "name": "GetLegencyAvailable",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021be3"
+        },
+        {
+          "name": "GetDeviceId",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021be4"
+        },
+        {
+          "name": "GetLocalDataId",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021be5"
+        },
+        {
+          "name": "OnLogoffAction",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 87114,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021be6"
+        },
+        {
+          "name": "HuaWeiOHBindLogout",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87116,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021be7"
+        },
+        {
+          "name": "OnLogoutAction",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87117,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021be8"
+        },
+        {
+          "name": "SignUpResultAction",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87118,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021be9"
+        },
+        {
+          "name": "OnRenewResultAction",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87119,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021bea"
+        },
+        {
+          "name": "OnLoginResultAction",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87120,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021beb"
+        },
+        {
+          "name": "SetAccountLogin",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87121,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021bec"
+        },
+        {
+          "name": "RefreshCredentialForAccountSwitch",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87122,
+          "slot": 65535,
+          "flags": "0x0093",
+          "token": "0x06021bed"
+        },
+        {
+          "name": "AfterLoginError",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021bee"
+        },
+        {
+          "name": "QuitApp",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 87123,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021bef"
+        },
+        {
+          "name": "HideRightBtn",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021bf0"
+        },
+        {
+          "name": "TrackAccessGoogleOrApple",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021bf1"
+        },
+        {
+          "name": "TrackAccessChilly",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021bf2"
+        },
+        {
+          "name": "TrackAccess",
+          "return": "generic",
+          "parameters": 2,
+          "parameter_start": 87126,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021bf3"
+        },
+        {
+          "name": "onSaveFailCallback",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021bf4"
+        },
+        {
+          "name": "FixData",
+          "return": "string",
+          "parameters": 1,
+          "parameter_start": 87128,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021bf5"
+        },
+        {
+          "name": "onLoadGameSuccess",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87129,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021bf6"
+        },
+        {
+          "name": "onLoadGameSuccess",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87130,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021bf7"
+        },
+        {
+          "name": "OnLoadGameTimeOutOrResponseNull",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021bf8"
+        },
+        {
+          "name": "onLoadGameFail",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 87131,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021bf9"
+        },
+        {
+          "name": "ParseErrorCodeToMsg",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 87133,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021bfa"
+        },
+        {
+          "name": "TryGetRebindSeconds",
+          "return": "bool",
+          "parameters": 3,
+          "parameter_start": 87135,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021bfb"
+        },
+        {
+          "name": "ShowView",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021bfc"
+        },
+        {
+          "name": "HideView",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021bfd"
+        },
+        {
+          "name": "UseOldLogic",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021bfe"
+        },
+        {
+          "name": "FetchData",
+          "return": "generic",
+          "parameters": 1,
+          "parameter_start": 87138,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021bff"
+        },
+        {
+          "name": "ParseJsonToCloudSaveGameData",
+          "return": "CloudSaveGameData",
+          "parameters": 1,
+          "parameter_start": 87139,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c00"
+        },
+        {
+          "name": "ShowMsgAfterLoginSuccessUiHide",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87140,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c01"
+        },
+        {
+          "name": "StartDelayShowMsgTimer",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 87141,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c02"
+        },
+        {
+          "name": "DoShowMsg",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87143,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c03"
+        },
+        {
+          "name": "SetUidSundry",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c04"
+        },
+        {
+          "name": "SetPhoneAndEmail",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c05"
+        },
+        {
+          "name": "ShowMessage",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 87144,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c06"
+        },
+        {
+          "name": "SaveGame",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021c07"
+        },
+        {
+          "name": "onSaveGameSuccess",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021c08"
+        },
+        {
+          "name": "onSaveGameFail",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87146,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021c09"
+        },
+        {
+          "name": "get_saveIdValid",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0891",
+          "token": "0x06021c0a"
+        },
+        {
+          "name": "LoadGame",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021c0b"
+        },
+        {
+          "name": "ClearLocalData",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021c0c"
+        },
+        {
+          "name": "ClearLocalDataAsync",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021c0d"
+        },
+        {
+          "name": "ClearLocalDataAsync",
+          "return": "generic",
+          "parameters": 1,
+          "parameter_start": 87147,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c0e"
+        },
+        {
+          "name": "ClearLocalDataBeforeTapTapDownloadAsync",
+          "return": "System.Threading.Tasks.Task",
+          "parameters": 1,
+          "parameter_start": 87148,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c0f"
+        },
+        {
+          "name": "RefreshLocalData",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021c10"
+        },
+        {
+          "name": "OnAfterFetchCloudSave",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 87149,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021c11"
+        },
+        {
+          "name": "SetCanvasOrder",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87152,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021c12"
+        },
+        {
+          "name": "RecordUploadGameCount",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87153,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c13"
+        },
+        {
+          "name": "RecordUploadGameRpcCount",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 87154,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c14"
+        },
+        {
+          "name": "RecordDownloadSaveCount",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 87156,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c15"
+        },
+        {
+          "name": "SdkOnLogin",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 87158,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c16"
+        },
+        {
+          "name": "SdkOnLoginFail",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 87160,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c17"
+        },
+        {
+          "name": "OnConfigurationChanged",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87162,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c18"
+        },
+        {
+          "name": "RefreshFetchDataTag",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021c19"
+        },
+        {
+          "name": "SetLoadedDataToNull",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021c1a"
+        },
+        {
+          "name": "add_AfterFetchCloudSaveRpcEvent",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87163,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021c1b"
+        },
+        {
+          "name": "remove_AfterFetchCloudSaveRpcEvent",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87164,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06021c1c"
+        },
+        {
+          "name": "DealBindBtnAndCloudSaveDataRpcState",
+          "return": "void",
+          "parameters": 4,
+          "parameter_start": 87165,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c1d"
+        },
+        {
+          "name": "DealGPAndIosSendDataToLegencyRpcWhenBinded",
+          "return": "void",
+          "parameters": 4,
+          "parameter_start": 87169,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c1e"
+        },
+        {
+          "name": "onLoadGameRpcSuccess",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87173,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021c1f"
+        },
+        {
+          "name": "onLoadGameRpcSuccess",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 87174,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c20"
+        },
+        {
+          "name": "onLoadGameFail",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 87176,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c21"
+        },
+        {
+          "name": "onLoadGameFail",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 87178,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c22"
+        },
+        {
+          "name": "ForceFetchData",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021c23"
+        },
+        {
+          "name": "DelayedTask",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c24"
+        },
+        {
+          "name": "onCheckSaveMac",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 87181,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06021c25"
+        },
+        {
+          "name": "onCheckSaveMac",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 87183,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c26"
+        },
+        {
+          "name": "FixHuaWeiOHSave",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c27"
+        },
+        {
+          "name": "FuncForHotFixBeforeFetch",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c28"
+        },
+        {
+          "name": "FuncForHotFixAfterFetch",
+          "return": "void",
+          "parameters": 4,
+          "parameter_start": 87186,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c29"
+        },
+        {
+          "name": "FuncForHotFixAfterFetchRpc",
+          "return": "void",
+          "parameters": 4,
+          "parameter_start": 87190,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c2a"
+        },
+        {
+          "name": "FuncForHotFixBeforeDownload",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87194,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c2b"
+        },
+        {
+          "name": "FuncForHotFixAfterDownload",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c2c"
+        },
+        {
+          "name": "FuncForHotFixBeforeUpload",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c2d"
+        },
+        {
+          "name": "FuncForHotFixAfterUpload",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 87195,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c2e"
+        },
+        {
+          "name": "FuncForHotFixAfterUploadRpc",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 87196,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c2f"
+        },
+        {
+          "name": "OnManualGetUserProfileAction",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c30"
+        },
+        {
+          "name": "GetCloudSaveConfig",
+          "return": "cfg.config.CloudSaveConfig",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06021c31"
+        }
+      ],
+      "token": "0x0200411f"
+    },
+    {
+      "index": 4045,
+      "name": "RGSaveManager",
+      "fields": [
+        {
+          "name": "_instance",
+          "type": "RGSaveManager",
+          "token": "0x04006e18"
+        },
+        {
+          "name": "_lock",
+          "type": "object",
+          "token": "0x04006e19"
+        },
+        {
+          "name": "_applicationIsQuitting",
+          "type": "bool",
+          "token": "0x04006e1a"
+        },
+        {
+          "name": "char_list",
+          "type": "szarray",
+          "token": "0x04006e1b"
+        },
+        {
+          "name": "pet_list",
+          "type": "szarray",
+          "token": "0x04006e1c"
+        },
+        {
+          "name": "hero_skin_list",
+          "type": "szarray",
+          "token": "0x04006e1d"
+        },
+        {
+          "name": "game_data",
+          "type": "AboGameData",
+          "token": "0x04006e1e"
+        },
+        {
+          "name": "gems_icon",
+          "type": "UnityEngine.Sprite",
+          "token": "0x04006e1f"
+        },
+        {
+          "name": "fish_icon",
+          "type": "UnityEngine.Sprite",
+          "token": "0x04006e20"
+        },
+        {
+          "name": "c_levelup_gems",
+          "type": "szarray",
+          "token": "0x04006e21"
+        },
+        {
+          "name": "store_key",
+          "type": "string",
+          "token": "0x04006e22"
+        },
+        {
+          "name": "_dataTypes",
+          "type": "generic",
+          "token": "0x04006e23"
+        },
+        {
+          "name": "DefaultChillyUidString",
+          "type": "string",
+          "token": "0x04006e24"
+        }
+      ],
+      "methods": [
+        {
+          "name": "OnApplicationQuit",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 4,
+          "flags": "0x01c4",
+          "token": "0x06009269"
+        },
+        {
+          "name": "get_Inst",
+          "return": "RGSaveManager",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x0600926a"
+        },
+        {
+          "name": "Init",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600926b"
+        },
+        {
+          "name": "InitCloneCharSkinList",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x0600926c"
+        },
+        {
+          "name": "OnLoad",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x0600926d"
+        },
+        {
+          "name": "Start",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x0600926e"
+        },
+        {
+          "name": "Update",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x0600926f"
+        },
+        {
+          "name": "InitSave",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06009270"
+        },
+        {
+          "name": "Save",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06009271"
+        },
+        {
+          "name": "Load",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009272"
+        },
+        {
+          "name": "HotFixFunction",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009273"
+        },
+        {
+          "name": "GetLastPartner",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009274"
+        },
+        {
+          "name": "SetLastPartner",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 23508,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009275"
+        },
+        {
+          "name": "HeroUnLock",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 23510,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009276"
+        },
+        {
+          "name": "HeroSkinUnlock",
+          "return": "bool",
+          "parameters": 3,
+          "parameter_start": 23512,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009277"
+        },
+        {
+          "name": "GetConsumeGem",
+          "return": "int",
+          "parameters": 2,
+          "parameter_start": 23515,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009278"
+        },
+        {
+          "name": "IsHeroSkinUnlock",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 23517,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009279"
+        },
+        {
+          "name": "ForceUnlockHeroSkin",
+          "return": "int",
+          "parameters": 2,
+          "parameter_start": 23519,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600927a"
+        },
+        {
+          "name": "GetReBornCard",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 23521,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600927b"
+        },
+        {
+          "name": "PetUnLock",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 23522,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600927c"
+        },
+        {
+          "name": "HeroLevelUp",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 23523,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600927d"
+        },
+        {
+          "name": "HeroLevelUpDreamActivityCoin",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 23524,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600927e"
+        },
+        {
+          "name": "ConsumeGem",
+          "return": "bool",
+          "parameters": 3,
+          "parameter_start": 23525,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600927f"
+        },
+        {
+          "name": "AddGem",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 23528,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009280"
+        },
+        {
+          "name": "AddGem",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 23529,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009281"
+        },
+        {
+          "name": "LocalAddGem",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 23532,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06009282"
+        },
+        {
+          "name": "GetGem",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009283"
+        },
+        {
+          "name": "GetHeroUISprite",
+          "return": "UnityEngine.Sprite",
+          "parameters": 2,
+          "parameter_start": 23533,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009284"
+        },
+        {
+          "name": "GetPetUISprite",
+          "return": "UnityEngine.Sprite",
+          "parameters": 1,
+          "parameter_start": 23535,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009285"
+        },
+        {
+          "name": "get_Path",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0891",
+          "token": "0x06009286"
+        },
+        {
+          "name": "get_OldPath",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0891",
+          "token": "0x06009287"
+        },
+        {
+          "name": "SaveGameData",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009288"
+        },
+        {
+          "name": "TrySaveGameDataAndVerify",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009289"
+        },
+        {
+          "name": "LoadGameData",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600928a"
+        },
+        {
+          "name": "SetCurrentSkin",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 23536,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600928b"
+        },
+        {
+          "name": "GetCurrentSkin",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 23538,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600928c"
+        },
+        {
+          "name": "GetSkillIndex",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 23539,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600928d"
+        },
+        {
+          "name": "SetSkillIndex",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 23540,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600928e"
+        },
+        {
+          "name": "GetSkillUnlock",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 23542,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600928f"
+        },
+        {
+          "name": "SetSkillUnlock",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 23544,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009290"
+        },
+        {
+          "name": "SetSkillUnlock",
+          "return": "void",
+          "parameters": 5,
+          "parameter_start": 23547,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009291"
+        },
+        {
+          "name": "GetSkillInfo",
+          "return": "SkillInfo",
+          "parameters": 2,
+          "parameter_start": 23552,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009292"
+        },
+        {
+          "name": "GetPetSkillInfo",
+          "return": "PetSkillInfo",
+          "parameters": 2,
+          "parameter_start": 23554,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009293"
+        },
+        {
+          "name": "GetPetCtrl",
+          "return": "RGPetWithSkillController",
+          "parameters": 1,
+          "parameter_start": 23556,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009294"
+        },
+        {
+          "name": "UnlockAllHero",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009295"
+        },
+        {
+          "name": "Reload",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06009296"
+        },
+        {
+          "name": "get_DataTypes",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06009297"
+        },
+        {
+          "name": "PreflightReloadAllData",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06009298"
+        },
+        {
+          "name": "ReloadAllData",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 23557,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06009299"
+        },
+        {
+          "name": "CheckAccountLogoff",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x0600929a"
+        },
+        {
+          "name": "Awake",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x0600929b"
+        },
+        {
+          "name": "UpdateVersion",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x0600929c"
+        },
+        {
+          "name": "UpdateAddition",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x0600929d"
+        },
+        {
+          "name": "Fix43Data",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x0600929e"
+        },
+        {
+          "name": "Fix43DataLocal",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x0600929f"
+        },
+        {
+          "name": "Fix43DataNotUseCloudSave",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x060092a0"
+        },
+        {
+          "name": "Fix43Data",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 23559,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x060092a1"
+        },
+        {
+          "name": "FixData",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 23560,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x060092a2"
+        },
+        {
+          "name": ".ctor",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x1886",
+          "token": "0x060092a3"
+        },
+        {
+          "name": ".cctor",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x1891",
+          "token": "0x060092a4"
+        }
+      ],
+      "token": "0x02000fcc"
+    },
+    {
+      "index": 3070,
+      "name": "ItemData",
+      "fields": [
+        {
+          "name": "_data",
+          "type": "ItemData",
+          "token": "0x040058f3"
+        },
+        {
+          "name": "MagicNames",
+          "type": "szarray",
+          "token": "0x040058f4"
+        },
+        {
+          "name": "AppVersion",
+          "type": "int",
+          "token": "0x040058f5"
+        },
+        {
+          "name": "FertilizeName",
+          "type": "string",
+          "token": "0x040058f6"
+        },
+        {
+          "name": "TryTicketName",
+          "type": "string",
+          "token": "0x040058f7"
+        },
+        {
+          "name": "RebornCard",
+          "type": "string",
+          "token": "0x040058f8"
+        },
+        {
+          "name": "Plantpot_1",
+          "type": "string",
+          "token": "0x040058f9"
+        },
+        {
+          "name": "Plantpot_2",
+          "type": "string",
+          "token": "0x040058fa"
+        },
+        {
+          "name": "Plantpot_3",
+          "type": "string",
+          "token": "0x040058fb"
+        },
+        {
+          "name": "Plantpot_4",
+          "type": "string",
+          "token": "0x040058fc"
+        },
+        {
+          "name": "GemName",
+          "type": "string",
+          "token": "0x040058fd"
+        },
+        {
+          "name": "FishName",
+          "type": "string",
+          "token": "0x040058fe"
+        },
+        {
+          "name": "BpPointName",
+          "type": "string",
+          "token": "0x040058ff"
+        },
+        {
+          "name": "SeasonCoinName",
+          "type": "string",
+          "token": "0x04005900"
+        },
+        {
+          "name": "ComboGunSparkCoinName",
+          "type": "string",
+          "token": "0x04005901"
+        },
+        {
+          "name": "SeasonTreasureBoxName",
+          "type": "string",
+          "token": "0x04005902"
+        },
+        {
+          "name": "SeasonTreasureBoxName1",
+          "type": "string",
+          "token": "0x04005903"
+        },
+        {
+          "name": "SeasonTreasureBoxName2",
+          "type": "string",
+          "token": "0x04005904"
+        },
+        {
+          "name": "SeasonTreasureBoxName3",
+          "type": "string",
+          "token": "0x04005905"
+        },
+        {
+          "name": "SeasonTreasureBoxTicketName2",
+          "type": "string",
+          "token": "0x04005906"
+        },
+        {
+          "name": "WeaponBlueprintFragmentUnidentified",
+          "type": "string",
+          "token": "0x04005907"
+        },
+        {
+          "name": "FeatureMoreSelectSeat",
+          "type": "string",
+          "token": "0x04005908"
+        },
+        {
+          "name": "FeatureMoreBagCapacity",
+          "type": "string",
+          "token": "0x04005909"
+        },
+        {
+          "name": "CellName",
+          "type": "string",
+          "token": "0x0400590a"
+        },
+        {
+          "name": "GearName",
+          "type": "string",
+          "token": "0x0400590b"
+        },
+        {
+          "name": "WoodName",
+          "type": "string",
+          "token": "0x0400590c"
+        },
+        {
+          "name": "IronName",
+          "type": "string",
+          "token": "0x0400590d"
+        },
+        {
+          "name": "BatteryName",
+          "type": "string",
+          "token": "0x0400590e"
+        },
+        {
+          "name": "TokenEquipment",
+          "type": "string",
+          "token": "0x0400590f"
+        },
+        {
+          "name": "TokenHero",
+          "type": "string",
+          "token": "0x04005910"
+        },
+        {
+          "name": "HopperTicket",
+          "type": "string",
+          "token": "0x04005911"
+        },
+        {
+          "name": "PostmanUpgrade",
+          "type": "string",
+          "token": "0x04005912"
+        },
+        {
+          "name": "plants",
+          "type": "generic",
+          "token": "0x04005913"
+        },
+        {
+          "name": "sellerRefreshTime",
+          "type": "int",
+          "token": "0x04005914"
+        },
+        {
+          "name": "sellerWeaponRefreshTime",
+          "type": "int",
+          "token": "0x04005915"
+        },
+        {
+          "name": "cumulativeFishCount",
+          "type": "int",
+          "token": "0x04005916"
+        },
+        {
+          "name": "commodities",
+          "type": "generic",
+          "token": "0x04005917"
+        },
+        {
+          "name": "itemUnlock",
+          "type": "generic",
+          "token": "0x04005918"
+        },
+        {
+          "name": "forgeWeapons",
+          "type": "generic",
+          "token": "0x04005919"
+        },
+        {
+          "name": "forgeWeaponMaterialPayments",
+          "type": "generic",
+          "token": "0x0400591a"
+        },
+        {
+          "name": "skinTrialEntries",
+          "type": "generic",
+          "token": "0x0400591b"
+        },
+        {
+          "name": "_deletingForgeItems",
+          "type": "generic",
+          "token": "0x0400591c"
+        },
+        {
+          "name": "mechInRoom",
+          "type": "string",
+          "token": "0x0400591d"
+        },
+        {
+          "name": "mechInRoomPaymentName",
+          "type": "string",
+          "token": "0x0400591e"
+        },
+        {
+          "name": "mechInRoomPaymentMaterials",
+          "type": "generic",
+          "token": "0x0400591f"
+        },
+        {
+          "name": "mechInRoomProductId",
+          "type": "string",
+          "token": "0x04005920"
+        },
+        {
+          "name": "blueprints",
+          "type": "generic",
+          "token": "0x04005921"
+        },
+        {
+          "name": "seeds",
+          "type": "generic",
+          "token": "0x04005922"
+        },
+        {
+          "name": "materials",
+          "type": "generic",
+          "token": "0x04005923"
+        },
+        {
+          "name": "trainingJourney",
+          "type": "Activities.TrainingJourney.Scripts.TrainingJourneySaveData",
+          "token": "0x04005924"
+        },
+        {
+          "name": "activeShopReceiptMarkers",
+          "type": "generic",
+          "token": "0x04005925"
+        },
+        {
+          "name": "tokenTickets",
+          "type": "generic",
+          "token": "0x04005926"
+        },
+        {
+          "name": "restoreKeys",
+          "type": "generic",
+          "token": "0x04005927"
+        },
+        {
+          "name": "alreadyGetRealNameAward",
+          "type": "bool",
+          "token": "0x04005928"
+        },
+        {
+          "name": "BugFeatureRedeemRecords",
+          "type": "generic",
+          "token": "0x04005929"
+        },
+        {
+          "name": "SchoolRedeemRecords",
+          "type": "generic",
+          "token": "0x0400592a"
+        },
+        {
+          "name": "SchoolRedeemRecords202508",
+          "type": "generic",
+          "token": "0x0400592b"
+        },
+        {
+          "name": "DreamRedeemRecords",
+          "type": "generic",
+          "token": "0x0400592c"
+        },
+        {
+          "name": "Christmas2024RedeemRecords",
+          "type": "generic",
+          "token": "0x0400592d"
+        },
+        {
+          "name": "FireRedeemRecords",
+          "type": "generic",
+          "token": "0x0400592e"
+        },
+        {
+          "name": "ActivityRedeemRecords",
+          "type": "generic",
+          "token": "0x0400592f"
+        },
+        {
+          "name": "SelectRewardClaimRecords",
+          "type": "generic",
+          "token": "0x04005930"
+        },
+        {
+          "name": "jewelryData",
+          "type": "generic",
+          "token": "0x04005931"
+        },
+        {
+          "name": "jewelryBlueprints",
+          "type": "generic",
+          "token": "0x04005932"
+        },
+        {
+          "name": "jewelryPlayerData",
+          "type": "generic",
+          "token": "0x04005933"
+        },
+        {
+          "name": "mythicWeapons",
+          "type": "generic",
+          "token": "0x04005934"
+        },
+        {
+          "name": "lastBuyBeginnerPkgId",
+          "type": "int",
+          "token": "0x04005935"
+        },
+        {
+          "name": "lastRewardBeginnerPkgId",
+          "type": "int",
+          "token": "0x04005936"
+        },
+        {
+          "name": "lastBuyReturnPlayerPkgId",
+          "type": "int",
+          "token": "0x04005937"
+        },
+        {
+          "name": "lastRewardReturnPlayerPkgId",
+          "type": "int",
+          "token": "0x04005938"
+        },
+        {
+          "name": "UnlockNewPackageTime",
+          "type": "long",
+          "token": "0x04005939"
+        },
+        {
+          "name": "_AllMythicWeaponIds",
+          "type": "generic",
+          "token": "0x0400593a"
+        },
+        {
+          "name": "CanNotSaleWeapons",
+          "type": "generic",
+          "token": "0x0400593b"
+        },
+        {
+          "name": "specialTickets",
+          "type": "generic",
+          "token": "0x0400593c"
+        },
+        {
+          "name": "hopperEnteredModes",
+          "type": "generic",
+          "token": "0x0400593d"
+        },
+        {
+          "name": "fishChipConfigId",
+          "type": "string",
+          "token": "0x0400593e"
+        },
+        {
+          "name": "seasonStoreConfigId",
+          "type": "string",
+          "token": "0x0400593f"
+        },
+        {
+          "name": "bossrush_time",
+          "type": "int",
+          "token": "0x04005940"
+        },
+        {
+          "name": "eggMachineUniqueSeed",
+          "type": "int",
+          "token": "0x04005941"
+        },
+        {
+          "name": "eggMachineTimes",
+          "type": "int",
+          "token": "0x04005942"
+        },
+        {
+          "name": "eggMachineUseTimes",
+          "type": "int",
+          "token": "0x04005943"
+        },
+        {
+          "name": "eggMachineMode",
+          "type": "int",
+          "token": "0x04005944"
+        },
+        {
+          "name": "EggMachineGuaranteeRewardTimes",
+          "type": "generic",
+          "token": "0x04005945"
+        },
+        {
+          "name": "easterEggTempPets",
+          "type": "generic",
+          "token": "0x04005946"
+        },
+        {
+          "name": "fusionWeaponPathUnlock",
+          "type": "generic",
+          "token": "0x04005947"
+        },
+        {
+          "name": "todayTriggerActivityNpcCount",
+          "type": "int",
+          "token": "0x04005948"
+        },
+        {
+          "name": "fishChipStorePurchaseHistory",
+          "type": "generic",
+          "token": "0x04005949"
+        },
+        {
+          "name": "fishChipStorePurchaseHistoryIndexed",
+          "type": "generic",
+          "token": "0x0400594a"
+        },
+        {
+          "name": "fishChipStoreAllPurchaseHistoryIndexed",
+          "type": "generic",
+          "token": "0x0400594b"
+        },
+        {
+          "name": "lastFishChipStoreAllPurchaseHistoryIndexed",
+          "type": "generic",
+          "token": "0x0400594c"
+        },
+        {
+          "name": "seasonStorePurchaseHistoryIndexed",
+          "type": "generic",
+          "token": "0x0400594d"
+        },
+        {
+          "name": "seasonStoreAllPurchaseHistoryIndexed",
+          "type": "generic",
+          "token": "0x0400594e"
+        },
+        {
+          "name": "lastSeasonStoreAllPurchaseHistoryIndexed",
+          "type": "generic",
+          "token": "0x0400594f"
+        },
+        {
+          "name": "RandomSeedMap",
+          "type": "generic",
+          "token": "0x04005950"
+        },
+        {
+          "name": "got_bossrush_ticket",
+          "type": "bool",
+          "token": "0x04005951"
+        },
+        {
+          "name": "roomDecorateDic",
+          "type": "generic",
+          "token": "0x04005952"
+        },
+        {
+          "name": "roomDecorateCurSkinDic",
+          "type": "generic",
+          "token": "0x04005953"
+        },
+        {
+          "name": "hasGetAchievementCategoryRewardList",
+          "type": "generic",
+          "token": "0x04005954"
+        },
+        {
+          "name": "hasGetAchievementGroupRewardList",
+          "type": "generic",
+          "token": "0x04005955"
+        },
+        {
+          "name": "TodayStatueTimes",
+          "type": "int",
+          "token": "0x04005956"
+        },
+        {
+          "name": "hasGetRewardQuestionnaireList",
+          "type": "generic",
+          "token": "0x04005957"
+        },
+        {
+          "name": "hasGetH5YearlyStatsReward",
+          "type": "bool",
+          "token": "0x04005958"
+        },
+        {
+          "name": "todayPlantMaterialAdTimes",
+          "type": "int",
+          "token": "0x04005959"
+        },
+        {
+          "name": "todayTvRandomGiftAdTimes",
+          "type": "int",
+          "token": "0x0400595a"
+        },
+        {
+          "name": "tvHasGuarantee",
+          "type": "bool",
+          "token": "0x0400595b"
+        },
+        {
+          "name": "todayEggMachineAdTimes",
+          "type": "int",
+          "token": "0x0400595c"
+        },
+        {
+          "name": "todayTvGoldAdTimes",
+          "type": "int",
+          "token": "0x0400595d"
+        },
+        {
+          "name": "todaySkinTrialAdTimes",
+          "type": "int",
+          "token": "0x0400595e"
+        },
+        {
+          "name": "adMallRandomWeaponFragmentName",
+          "type": "string",
+          "token": "0x0400595f"
+        },
+        {
+          "name": "adMallNextRefreshTime",
+          "type": "long",
+          "token": "0x04005960"
+        },
+        {
+          "name": "magicWellFishedTimes",
+          "type": "int",
+          "token": "0x04005961"
+        },
+        {
+          "name": "evolutionWeaponBossRatesIndex",
+          "type": "int",
+          "token": "0x04005962"
+        },
+        {
+          "name": "todayTalentRerollTimes",
+          "type": "int",
+          "token": "0x04005963"
+        },
+        {
+          "name": "meetWeaponCollectorCount",
+          "type": "int",
+          "token": "0x04005964"
+        },
+        {
+          "name": "windowHeroListShowDrawing",
+          "type": "bool",
+          "token": "0x04005965"
+        },
+        {
+          "name": "handStyleIndexList",
+          "type": "generic",
+          "token": "0x04005966"
+        },
+        {
+          "name": "SeedNameAliasMap",
+          "type": "generic",
+          "token": "0x04005967"
+        },
+        {
+          "name": "ItemLoad",
+          "type": "string",
+          "token": "0x04005968"
+        }
+      ],
+      "methods": [
+        {
+          "name": ".ctor",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x1886",
+          "token": "0x0600731f"
+        },
+        {
+          "name": "get_data",
+          "return": "ItemData",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06007320"
+        },
+        {
+          "name": "set_data",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18304,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06007321"
+        },
+        {
+          "name": "get_fishCount",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06007322"
+        },
+        {
+          "name": "get_bpPointCount",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06007323"
+        },
+        {
+          "name": "StoreDeletingForgeItem",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18305,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007324"
+        },
+        {
+          "name": "ClearDeletingForgeItems",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007325"
+        },
+        {
+          "name": "SetForgeWeaponMaterialPayment",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18307,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007326"
+        },
+        {
+          "name": "GetForgeWeaponMaterialPayment",
+          "return": "generic",
+          "parameters": 2,
+          "parameter_start": 18310,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007327"
+        },
+        {
+          "name": "ClearForgeWeaponMaterialPayment",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18312,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007328"
+        },
+        {
+          "name": "SetMechInRoom",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18313,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007329"
+        },
+        {
+          "name": "SetMechInRoom",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18315,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600732a"
+        },
+        {
+          "name": "GetMechInRoomPayment",
+          "return": "generic",
+          "parameters": 1,
+          "parameter_start": 18318,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600732b"
+        },
+        {
+          "name": "GetMechInRoomProductId",
+          "return": "string",
+          "parameters": 1,
+          "parameter_start": 18319,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600732c"
+        },
+        {
+          "name": "get_jewelryFragments",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x0600732d"
+        },
+        {
+          "name": "SetLastBuyBeginnerPkg",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18320,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600732e"
+        },
+        {
+          "name": "SetLastRewardBeginnerPkg",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18322,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600732f"
+        },
+        {
+          "name": "SetLastBuyReturnPlayerPkg",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18324,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007330"
+        },
+        {
+          "name": "SetLastRewardReturnPlayerPkg",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18326,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007331"
+        },
+        {
+          "name": "get_MythicWeaponIds",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06007332"
+        },
+        {
+          "name": "GetMythicWeaponIds",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007333"
+        },
+        {
+          "name": "AllMythicWeapons",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007334"
+        },
+        {
+          "name": "UnlockMythicWeapon",
+          "return": "MythicWeaponData",
+          "parameters": 2,
+          "parameter_start": 18328,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007335"
+        },
+        {
+          "name": "GetMythicWeapon",
+          "return": "MythicWeaponData",
+          "parameters": 1,
+          "parameter_start": 18330,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007336"
+        },
+        {
+          "name": "GetMythicWeapon",
+          "return": "MythicWeaponData",
+          "parameters": 1,
+          "parameter_start": 18331,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007337"
+        },
+        {
+          "name": "ResetMythicWeapon",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007338"
+        },
+        {
+          "name": "AddEvolutionWeaponBossRatesIndex",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007339"
+        },
+        {
+          "name": "ClearEvolutionWeaponBossRatesIndex",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600733a"
+        },
+        {
+          "name": "AddPickable",
+          "return": "void",
+          "parameters": 6,
+          "parameter_start": 18332,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600733b"
+        },
+        {
+          "name": "AddPickables",
+          "return": "void",
+          "parameters": 4,
+          "parameter_start": 18338,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600733c"
+        },
+        {
+          "name": "AddPickables",
+          "return": "void",
+          "parameters": 4,
+          "parameter_start": 18342,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600733d"
+        },
+        {
+          "name": "AddJewelryBlueprint",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18346,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600733e"
+        },
+        {
+          "name": "AddReward",
+          "return": "void",
+          "parameters": 4,
+          "parameter_start": 18347,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600733f"
+        },
+        {
+          "name": "AddRestoreRoleByKey",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18351,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06007340"
+        },
+        {
+          "name": "ShowGetUI",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18352,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06007341"
+        },
+        {
+          "name": "ShowGetUI",
+          "return": "void",
+          "parameters": 4,
+          "parameter_start": 18353,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007342"
+        },
+        {
+          "name": "ShowGetUI",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18357,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007343"
+        },
+        {
+          "name": "GetMaterialCount",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18360,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007344"
+        },
+        {
+          "name": "AddRestoreInfos",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18361,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007345"
+        },
+        {
+          "name": "AddMaterial",
+          "return": "bool",
+          "parameters": 9,
+          "parameter_start": 18362,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007346"
+        },
+        {
+          "name": "AfterAddMaterial",
+          "return": "bool",
+          "parameters": 4,
+          "parameter_start": 18371,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007347"
+        },
+        {
+          "name": "CheckTapeAchievement",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007348"
+        },
+        {
+          "name": "ConsumeMaterial",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18375,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007349"
+        },
+        {
+          "name": "ConsumeMaterial",
+          "return": "void",
+          "parameters": 6,
+          "parameter_start": 18378,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600734a"
+        },
+        {
+          "name": "GetFishCount",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600734b"
+        },
+        {
+          "name": "AddFishCount",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18384,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600734c"
+        },
+        {
+          "name": "ConsumeFishCount",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18387,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600734d"
+        },
+        {
+          "name": "GetSeedCount",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18390,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600734e"
+        },
+        {
+          "name": "FixSeedNameAliases",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600734f"
+        },
+        {
+          "name": "AddSeed",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18391,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007350"
+        },
+        {
+          "name": "ConsumeSeed",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18394,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007351"
+        },
+        {
+          "name": "GetBlueprint",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18395,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007352"
+        },
+        {
+          "name": "ResearchBlueprint",
+          "return": "void",
+          "parameters": 4,
+          "parameter_start": 18398,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007353"
+        },
+        {
+          "name": "TryGetWeaponNameFromBlueprintId",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18402,
+          "slot": 65535,
+          "flags": "0x0093",
+          "token": "0x06007354"
+        },
+        {
+          "name": "HasBlueprint",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007355"
+        },
+        {
+          "name": "UnlockItem",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18404,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007356"
+        },
+        {
+          "name": "IsItemUnlock",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18405,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007357"
+        },
+        {
+          "name": "GetBluePrintStatus",
+          "return": "emBluePrintStatus",
+          "parameters": 1,
+          "parameter_start": 18406,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007358"
+        },
+        {
+          "name": "UnlockJewelry",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18407,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007359"
+        },
+        {
+          "name": "TryGetJewelryData",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18409,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600735a"
+        },
+        {
+          "name": "AddBossRushTime",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18411,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600735b"
+        },
+        {
+          "name": "AddEggMachineTime",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18413,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600735c"
+        },
+        {
+          "name": "CheckAchievement",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x0600735d"
+        },
+        {
+          "name": "AddEggMachineUseTime",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18415,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600735e"
+        },
+        {
+          "name": "UpdateEggMachineGuaranteeTimes",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18417,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600735f"
+        },
+        {
+          "name": "UpdateAllGuaranteesTimes",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18419,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007360"
+        },
+        {
+          "name": "get__43OldPath",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0891",
+          "token": "0x06007361"
+        },
+        {
+          "name": "get_Path",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0891",
+          "token": "0x06007362"
+        },
+        {
+          "name": "get_RijPath",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0891",
+          "token": "0x06007363"
+        },
+        {
+          "name": "FixData",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18420,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007364"
+        },
+        {
+          "name": "FixDataIfNotExist",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007365"
+        },
+        {
+          "name": "NewData",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06007366"
+        },
+        {
+          "name": "GetDataPathByAccountID",
+          "return": "string",
+          "parameters": 1,
+          "parameter_start": 18421,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007367"
+        },
+        {
+          "name": "GetAccountData",
+          "return": "RGScript.Data.IData",
+          "parameters": 1,
+          "parameter_start": 18422,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007368"
+        },
+        {
+          "name": "SetData",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18423,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007369"
+        },
+        {
+          "name": "Load",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x0600736a"
+        },
+        {
+          "name": "SaveWithResult",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x0600736b"
+        },
+        {
+          "name": "SaveBattlePassPointRecovery",
+          "return": "bool",
+          "parameters": 3,
+          "parameter_start": 18424,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x0600736c"
+        },
+        {
+          "name": "EnsureBattlePassPointRecoverySaved",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18427,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x0600736d"
+        },
+        {
+          "name": "TryConfirmBattlePassRecoveryCloudRestoreSaved",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18428,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x0600736e"
+        },
+        {
+          "name": "IsBattlePassPointRecoverySnapshotPersisted",
+          "return": "bool",
+          "parameters": 3,
+          "parameter_start": 18429,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x0600736f"
+        },
+        {
+          "name": "AreBattlePassPointRecoveryRecordsPersisted",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18432,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06007370"
+        },
+        {
+          "name": "Save",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007371"
+        },
+        {
+          "name": "TryBindTrainingJourney",
+          "return": "bool",
+          "parameters": 3,
+          "parameter_start": 18434,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007372"
+        },
+        {
+          "name": "SaveTrainingJourneyWithResult",
+          "return": "bool",
+          "parameters": 3,
+          "parameter_start": 18437,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007373"
+        },
+        {
+          "name": "HasPersistedActiveShopReceipt",
+          "return": "bool",
+          "parameters": 3,
+          "parameter_start": 18440,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007374"
+        },
+        {
+          "name": "TryApplyActiveShopReceipt",
+          "return": "bool",
+          "parameters": 5,
+          "parameter_start": 18443,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007375"
+        },
+        {
+          "name": "TryApplyActiveShopReceipt",
+          "return": "bool",
+          "parameters": 5,
+          "parameter_start": 18448,
+          "slot": 65535,
+          "flags": "0x0093",
+          "token": "0x06007376"
+        },
+        {
+          "name": "CleanupActiveShopReceiptMarkers",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18453,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007377"
+        },
+        {
+          "name": "HasActiveShopStorageCandidate",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18455,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06007378"
+        },
+        {
+          "name": "LoadActiveShopPrimaryCandidate",
+          "return": "ItemData",
+          "parameters": 1,
+          "parameter_start": 18456,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06007379"
+        },
+        {
+          "name": "VerifyActiveShopReceiptPersisted",
+          "return": "bool",
+          "parameters": 5,
+          "parameter_start": 18457,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x0600737a"
+        },
+        {
+          "name": "VerifyActiveShopTokenReceiptPersisted",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18462,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x0600737b"
+        },
+        {
+          "name": "TryGetActiveShopTokenId",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18464,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x0600737c"
+        },
+        {
+          "name": "TryGetActiveShopMaterialId",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18466,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x0600737d"
+        },
+        {
+          "name": "ApplyActiveShopWeaponFragmentConversions",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18468,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x0600737e"
+        },
+        {
+          "name": "NotifyActiveShopMaterialDelivery",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18470,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x0600737f"
+        },
+        {
+          "name": "NotifyActiveShopWeaponFragmentStats",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18473,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06007380"
+        },
+        {
+          "name": "IsCurrentActiveShopAccount",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18474,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06007381"
+        },
+        {
+          "name": "RestoreActiveShopReceiptMemory",
+          "return": "void",
+          "parameters": 4,
+          "parameter_start": 18475,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06007382"
+        },
+        {
+          "name": "TrySaveActiveShopRollback",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18479,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06007383"
+        },
+        {
+          "name": "ClearData",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18481,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007384"
+        },
+        {
+          "name": "HasEnough",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18482,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007385"
+        },
+        {
+          "name": "HasEnough",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18483,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007386"
+        },
+        {
+          "name": "HasEnough",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18484,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007387"
+        },
+        {
+          "name": "HasEnough",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18486,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007388"
+        },
+        {
+          "name": "HasEnough",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18488,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007389"
+        },
+        {
+          "name": "HasEnoughIgnoreGem",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18489,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600738a"
+        },
+        {
+          "name": "HasEnoughIgnoreGem",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18490,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600738b"
+        },
+        {
+          "name": "HasEnoughIgnoreGem",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18491,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600738c"
+        },
+        {
+          "name": "ConsumeMaterial",
+          "return": "void",
+          "parameters": 5,
+          "parameter_start": 18492,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600738d"
+        },
+        {
+          "name": "ConsumeMaterial",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18497,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600738e"
+        },
+        {
+          "name": "GetTokenTicketCount",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18500,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600738f"
+        },
+        {
+          "name": "AddTokenTicket",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18501,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007390"
+        },
+        {
+          "name": "ConsumeTokenTicket",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18504,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007391"
+        },
+        {
+          "name": "AddSpecialTicket",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18506,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007392"
+        },
+        {
+          "name": "GetSpecialTicket",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18509,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007393"
+        },
+        {
+          "name": "HasEnteredByHopperTicket",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18510,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007394"
+        },
+        {
+          "name": "AddHopperEnterMode",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18511,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007395"
+        },
+        {
+          "name": "AddHasGetAchievementGroupRewardList",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18513,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007396"
+        },
+        {
+          "name": "AddHasGetAchievementCategoryRewardList",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18515,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007397"
+        },
+        {
+          "name": "IsRoomDecorateItemUnlock",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18517,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007398"
+        },
+        {
+          "name": "UnlockRoomDecorateItem",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18518,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007399"
+        },
+        {
+          "name": "RoomDecorateItemCount",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18521,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600739a"
+        },
+        {
+          "name": "GetUnlockRoomDecorate",
+          "return": "generic",
+          "parameters": 1,
+          "parameter_start": 18522,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600739b"
+        },
+        {
+          "name": "GetRoomDecorateSkinIdx",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18523,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600739c"
+        },
+        {
+          "name": "SetRoomDecorateSkinIdx",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18524,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600739d"
+        },
+        {
+          "name": "OldFishChipConvert",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18527,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600739e"
+        },
+        {
+          "name": "GetRandomSeed",
+          "return": "int",
+          "parameters": 2,
+          "parameter_start": 18529,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600739f"
+        },
+        {
+          "name": "AddRandomSeedIndex",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18531,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060073a0"
+        },
+        {
+          "name": "ResetData",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060073a1"
+        },
+        {
+          "name": "GetConsumeGemCount",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18533,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060073a2"
+        },
+        {
+          "name": "Reload",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060073a3"
+        },
+        {
+          "name": "ConsumeForgeWeapon",
+          "return": "bool",
+          "parameters": 3,
+          "parameter_start": 18534,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060073a4"
+        },
+        {
+          "name": "TryConsumeForgeWeapon",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18537,
+          "slot": 65535,
+          "flags": "0x0083",
+          "token": "0x060073a5"
+        },
+        {
+          "name": "TryConsumeForgeWeaponSlot",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18539,
+          "slot": 65535,
+          "flags": "0x0083",
+          "token": "0x060073a6"
+        },
+        {
+          "name": "GetMechaBlueprintName",
+          "return": "string",
+          "parameters": 1,
+          "parameter_start": 18541,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060073a7"
+        },
+        {
+          "name": "IsMechaName",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18542,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060073a8"
+        },
+        {
+          "name": "IsMechaBlueprintUnlock",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18543,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060073a9"
+        },
+        {
+          "name": "UnlockHandCut",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18544,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060073aa"
+        },
+        {
+          "name": ".cctor",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x1891",
+          "token": "0x060073ab"
+        }
+      ],
+      "token": "0x02000bf5"
+    },
+    {
+      "index": 3163,
+      "name": "StatisticData",
+      "fields": [
+        {
+          "name": "HandbookCollectionUserPropertiesRecordedEvent",
+          "type": "string",
+          "token": "0x04005bb6"
+        },
+        {
+          "name": "HandbookSkinGoldenCollectionUserPropertiesRecordedEvent",
+          "type": "string",
+          "token": "0x04005bb7"
+        },
+        {
+          "name": "zongzi2026ActivityData",
+          "type": "Activities.Zongzi2026.Scripts.Zongzi2026ActivityData",
+          "token": "0x04005bb8"
+        },
+        {
+          "name": "StatisticsData",
+          "type": "generic",
+          "token": "0x04005bb9"
+        },
+        {
+          "name": "object2PassLevel",
+          "type": "generic",
+          "token": "0x04005bba"
+        },
+        {
+          "name": "object2PassTime",
+          "type": "generic",
+          "token": "0x04005bbb"
+        },
+        {
+          "name": "hero2PurpleFramePassTime",
+          "type": "generic",
+          "token": "0x04005bbc"
+        },
+        {
+          "name": "skin2PurpleFramePassTime",
+          "type": "generic",
+          "token": "0x04005bbd"
+        },
+        {
+          "name": "weapon2PurpleFramePassTime",
+          "type": "generic",
+          "token": "0x04005bbe"
+        },
+        {
+          "name": "handbookHonoraryTitleTrackedLevels",
+          "type": "generic",
+          "token": "0x04005bbf"
+        },
+        {
+          "name": "handbookEnemyCollectionTrackedLevels",
+          "type": "generic",
+          "token": "0x04005bc0"
+        },
+        {
+          "name": "handbookWeaponCollectionTrackedLevels",
+          "type": "generic",
+          "token": "0x04005bc1"
+        },
+        {
+          "name": "handbookSeasonTitleTrackedLevels",
+          "type": "generic",
+          "token": "0x04005bc2"
+        },
+        {
+          "name": "handbookCollectionUserPropertiesInitialized",
+          "type": "bool",
+          "token": "0x04005bc3"
+        },
+        {
+          "name": "goldframeShopSaveData",
+          "type": "RGScript.Data.GoldframeShopSaveData",
+          "token": "0x04005bc4"
+        },
+        {
+          "name": "KrppVerifiedUsdCents",
+          "type": "long",
+          "token": "0x04005bc5"
+        },
+        {
+          "name": "KrppCountedOrderIds",
+          "type": "generic",
+          "token": "0x04005bc6"
+        },
+        {
+          "name": "_uiOpenTimes",
+          "type": "generic",
+          "token": "0x04005bc7"
+        },
+        {
+          "name": "PaySignInRecords",
+          "type": "generic",
+          "token": "0x04005bc8"
+        },
+        {
+          "name": "_enemyKilledCount",
+          "type": "generic",
+          "token": "0x04005bc9"
+        },
+        {
+          "name": "_usedEmoji",
+          "type": "generic",
+          "token": "0x04005bca"
+        },
+        {
+          "name": "object2ObtainTime",
+          "type": "generic",
+          "token": "0x04005bcb"
+        },
+        {
+          "name": "firePassDifficultyLevel",
+          "type": "generic",
+          "token": "0x04005bcc"
+        },
+        {
+          "name": "fireExtraReplaceHeroSeatCount",
+          "type": "int",
+          "token": "0x04005bcd"
+        },
+        {
+          "name": "firePassDifficultyLevel2",
+          "type": "generic",
+          "token": "0x04005bce"
+        },
+        {
+          "name": "fireExtraReplaceHeroSeatCount2",
+          "type": "int",
+          "token": "0x04005bcf"
+        },
+        {
+          "name": "legendClaimOutBuffs",
+          "type": "generic",
+          "token": "0x04005bd0"
+        },
+        {
+          "name": "legendWing",
+          "type": "generic",
+          "token": "0x04005bd1"
+        },
+        {
+          "name": "legendWingPray",
+          "type": "int",
+          "token": "0x04005bd2"
+        },
+        {
+          "name": "legendKnife",
+          "type": "generic",
+          "token": "0x04005bd3"
+        },
+        {
+          "name": "legendKnifePray",
+          "type": "int",
+          "token": "0x04005bd4"
+        },
+        {
+          "name": "legendLight",
+          "type": "generic",
+          "token": "0x04005bd5"
+        },
+        {
+          "name": "legendLightPray",
+          "type": "int",
+          "token": "0x04005bd6"
+        },
+        {
+          "name": "legendSharedPray",
+          "type": "int",
+          "token": "0x04005bd7"
+        },
+        {
+          "name": "legendMagicReloadCount",
+          "type": "int",
+          "token": "0x04005bd8"
+        },
+        {
+          "name": "event2Count",
+          "type": "generic",
+          "token": "0x04005bd9"
+        },
+        {
+          "name": "recordedEvents",
+          "type": "generic",
+          "token": "0x04005bda"
+        },
+        {
+          "name": "passInfo",
+          "type": "generic",
+          "token": "0x04005bdb"
+        },
+        {
+          "name": "season2Prizes",
+          "type": "generic",
+          "token": "0x04005bdc"
+        },
+        {
+          "name": "c02_skill_times",
+          "type": "int",
+          "token": "0x04005bdd"
+        },
+        {
+          "name": "explode_kill_enemy",
+          "type": "int",
+          "token": "0x04005bde"
+        },
+        {
+          "name": "one_pounch_kill_boss_count",
+          "type": "int",
+          "token": "0x04005bdf"
+        },
+        {
+          "name": "hand_cut_index",
+          "type": "int",
+          "token": "0x04005be0"
+        },
+        {
+          "name": "manual_change_hand_cut_index",
+          "type": "bool",
+          "token": "0x04005be1"
+        },
+        {
+          "name": "buy_good_times",
+          "type": "int",
+          "token": "0x04005be2"
+        },
+        {
+          "name": "achieve_record",
+          "type": "generic",
+          "token": "0x04005be3"
+        },
+        {
+          "name": "googlePlayHistoricalAchievementsSynced",
+          "type": "bool",
+          "token": "0x04005be4"
+        },
+        {
+          "name": "googlePlayEventCounts",
+          "type": "generic",
+          "token": "0x04005be5"
+        },
+        {
+          "name": "googlePlayClearedMaps",
+          "type": "generic",
+          "token": "0x04005be6"
+        },
+        {
+          "name": "alreadyGetEmails",
+          "type": "generic",
+          "token": "0x04005be7"
+        },
+        {
+          "name": "alreadyGetRemoteEmailUids",
+          "type": "generic",
+          "token": "0x04005be8"
+        },
+        {
+          "name": "alreadyGetRemoteEmailUniqueIds",
+          "type": "generic",
+          "token": "0x04005be9"
+        },
+        {
+          "name": "remoteEmailRecords",
+          "type": "generic",
+          "token": "0x04005bea"
+        },
+        {
+          "name": "mode2SaveGameIdDic",
+          "type": "generic",
+          "token": "0x04005beb"
+        },
+        {
+          "name": "statementMode2SaveGameIdDic",
+          "type": "generic",
+          "token": "0x04005bec"
+        },
+        {
+          "name": "battleDataSavePlac2SaveGameIdDic",
+          "type": "generic",
+          "token": "0x04005bed"
+        },
+        {
+          "name": "_pass_history_list",
+          "type": "generic",
+          "token": "0x04005bee"
+        },
+        {
+          "name": "PassHistoryMaxCount",
+          "type": "int",
+          "token": "0x04005bef"
+        },
+        {
+          "name": "_multiGameHistoryList",
+          "type": "generic",
+          "token": "0x04005bf0"
+        },
+        {
+          "name": "MultiGameHistoryMaxCount",
+          "type": "int",
+          "token": "0x04005bf1"
+        },
+        {
+          "name": "equippedHonoraryTitles",
+          "type": "szarray",
+          "token": "0x04005bf2"
+        },
+        {
+          "name": "HonoraryTitleSnapshot",
+          "type": "generic",
+          "token": "0x04005bf3"
+        },
+        {
+          "name": "open_checkin",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005bf4"
+        },
+        {
+          "name": "NewbieCheckInStatusKeys",
+          "type": "generic",
+          "token": "0x04005bf5"
+        },
+        {
+          "name": "NewbieCheckInStatusValues",
+          "type": "generic",
+          "token": "0x04005bf6"
+        },
+        {
+          "name": "ReplaceRewards",
+          "type": "generic",
+          "token": "0x04005bf7"
+        },
+        {
+          "name": "hasSentOldCheckInMakeUpMail",
+          "type": "bool",
+          "token": "0x04005bf8"
+        },
+        {
+          "name": "ActivitySchoolTakeTaskKeys",
+          "type": "generic",
+          "token": "0x04005bf9"
+        },
+        {
+          "name": "Activity202508SchoolTakeTaskKeys",
+          "type": "generic",
+          "token": "0x04005bfa"
+        },
+        {
+          "name": "open_new_player_checkin",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005bfb"
+        },
+        {
+          "name": "NewPlayerCheckInStatusKeys",
+          "type": "generic",
+          "token": "0x04005bfc"
+        },
+        {
+          "name": "NewPlayerCheckInStatusValues",
+          "type": "generic",
+          "token": "0x04005bfd"
+        },
+        {
+          "name": "NewPlayerReplaceRewards",
+          "type": "generic",
+          "token": "0x04005bfe"
+        },
+        {
+          "name": "open_veteran_checkin",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005bff"
+        },
+        {
+          "name": "VeteranCheckInStatusKeys",
+          "type": "generic",
+          "token": "0x04005c00"
+        },
+        {
+          "name": "VeteranCheckInStatusValues",
+          "type": "generic",
+          "token": "0x04005c01"
+        },
+        {
+          "name": "VeteranCheckIn2025StatusKeys",
+          "type": "generic",
+          "token": "0x04005c02"
+        },
+        {
+          "name": "restVeteranDay",
+          "type": "int",
+          "token": "0x04005c03"
+        },
+        {
+          "name": "VeteranReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c04"
+        },
+        {
+          "name": "ActivityCheckInOpenTimestamp",
+          "type": "string",
+          "token": "0x04005c05"
+        },
+        {
+          "name": "ActivityCheckInStatusKeys",
+          "type": "generic",
+          "token": "0x04005c06"
+        },
+        {
+          "name": "ActivityCheckInStatusValues",
+          "type": "generic",
+          "token": "0x04005c07"
+        },
+        {
+          "name": "ActivityCheckInReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c08"
+        },
+        {
+          "name": "open_activity_checkin",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c09"
+        },
+        {
+          "name": "ActivityCheckIn2OpenTimestamp",
+          "type": "string",
+          "token": "0x04005c0a"
+        },
+        {
+          "name": "ActivityCheckIn2StatusKeys",
+          "type": "generic",
+          "token": "0x04005c0b"
+        },
+        {
+          "name": "ActivityCheckIn2StatusValues",
+          "type": "generic",
+          "token": "0x04005c0c"
+        },
+        {
+          "name": "ActivityCheckIn2ReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c0d"
+        },
+        {
+          "name": "open_activity_checkin2",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c0e"
+        },
+        {
+          "name": "HalloweenRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c0f"
+        },
+        {
+          "name": "HalloweenRedeemRecords2025",
+          "type": "generic",
+          "token": "0x04005c10"
+        },
+        {
+          "name": "ChristmasRecords",
+          "type": "generic",
+          "token": "0x04005c11"
+        },
+        {
+          "name": "honoraryTitleNeedToShowRedDot",
+          "type": "generic",
+          "token": "0x04005c12"
+        },
+        {
+          "name": "FusionRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c13"
+        },
+        {
+          "name": "ZongziRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c14"
+        },
+        {
+          "name": "BugFeatureRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c15"
+        },
+        {
+          "name": "SchoolRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c16"
+        },
+        {
+          "name": "SchoolRedeemRecords202508",
+          "type": "generic",
+          "token": "0x04005c17"
+        },
+        {
+          "name": "Christmas2024RedeemRecords",
+          "type": "generic",
+          "token": "0x04005c18"
+        },
+        {
+          "name": "NewHalloweenRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c19"
+        },
+        {
+          "name": "FireRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c1a"
+        },
+        {
+          "name": "ActivityRedeemBlueprints",
+          "type": "generic",
+          "token": "0x04005c1b"
+        },
+        {
+          "name": "DreamRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c1c"
+        },
+        {
+          "name": "pop_review",
+          "type": "bool",
+          "token": "0x04005c1d"
+        },
+        {
+          "name": "has_reviewed",
+          "type": "bool",
+          "token": "0x04005c1e"
+        },
+        {
+          "name": "GiveBackStatusKeys",
+          "type": "generic",
+          "token": "0x04005c1f"
+        },
+        {
+          "name": "GiveBackClaimStatus",
+          "type": "generic",
+          "token": "0x04005c20"
+        },
+        {
+          "name": "ActivityNewYear2025CheckInOpenTimestamp",
+          "type": "string",
+          "token": "0x04005c21"
+        },
+        {
+          "name": "ActivityNewYear2025CheckInStatusKeys",
+          "type": "generic",
+          "token": "0x04005c22"
+        },
+        {
+          "name": "ActivityNewYear2025CheckInStatusValues",
+          "type": "generic",
+          "token": "0x04005c23"
+        },
+        {
+          "name": "ActivityNewYear2025CheckInReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c24"
+        },
+        {
+          "name": "open_activity_newyear2025_checkin",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c25"
+        },
+        {
+          "name": "ActivityReturnPlayerCheckInOpenTimestamp",
+          "type": "string",
+          "token": "0x04005c26"
+        },
+        {
+          "name": "ActivityReturnPlayerCheckInStatusKeys",
+          "type": "generic",
+          "token": "0x04005c27"
+        },
+        {
+          "name": "ActivityReturnPlayerCheckInStatusValues",
+          "type": "generic",
+          "token": "0x04005c28"
+        },
+        {
+          "name": "ActivityReturnPlayerCheckInReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c29"
+        },
+        {
+          "name": "open_activity_return_player_checkin",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c2a"
+        },
+        {
+          "name": "ActivityCheckInMonthlyStatusKeys",
+          "type": "generic",
+          "token": "0x04005c2b"
+        },
+        {
+          "name": "ActivityCheckInMonthlyStatusValues",
+          "type": "generic",
+          "token": "0x04005c2c"
+        },
+        {
+          "name": "ActivityCheckInMonthlyReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c2d"
+        },
+        {
+          "name": "open_activity_checkin_monthly",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c2e"
+        },
+        {
+          "name": "ActivityCheckIn9YearStatusKeys",
+          "type": "generic",
+          "token": "0x04005c2f"
+        },
+        {
+          "name": "ActivityCheckIn9YearStatusValues",
+          "type": "generic",
+          "token": "0x04005c30"
+        },
+        {
+          "name": "ActivityCheckIn9YearStackRewardStatusKeys",
+          "type": "generic",
+          "token": "0x04005c31"
+        },
+        {
+          "name": "ActivityCheckIn9YearStackRewardStatusValues",
+          "type": "generic",
+          "token": "0x04005c32"
+        },
+        {
+          "name": "ActivityCheckIn9YearReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c33"
+        },
+        {
+          "name": "open_activity_checkin_9year",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c34"
+        },
+        {
+          "name": "ActivityCheckInSummer2026StatusKeys",
+          "type": "generic",
+          "token": "0x04005c35"
+        },
+        {
+          "name": "CommonCheckinRecords",
+          "type": "generic",
+          "token": "0x04005c36"
+        },
+        {
+          "name": "ActivityCheckInSummer2026StatusValues",
+          "type": "generic",
+          "token": "0x04005c37"
+        },
+        {
+          "name": "ActivityCheckInSummer2026StackRewardStatusKeys",
+          "type": "generic",
+          "token": "0x04005c38"
+        },
+        {
+          "name": "ActivityCheckInSummer2026StackRewardStatusValues",
+          "type": "generic",
+          "token": "0x04005c39"
+        },
+        {
+          "name": "ActivityCheckInSummer2026ReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c3a"
+        },
+        {
+          "name": "open_activity_checkin_summer2026",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c3b"
+        },
+        {
+          "name": "ActivityCheckIn9SprintStatusKeys",
+          "type": "generic",
+          "token": "0x04005c3c"
+        },
+        {
+          "name": "ActivityCheckIn9SprintStatusValues",
+          "type": "generic",
+          "token": "0x04005c3d"
+        },
+        {
+          "name": "ActivityCheckIn9SprintStackRewardStatusKeys",
+          "type": "generic",
+          "token": "0x04005c3e"
+        },
+        {
+          "name": "ActivityCheckIn9SprintStackRewardStatusValues",
+          "type": "generic",
+          "token": "0x04005c3f"
+        },
+        {
+          "name": "ActivityCheckIn9SprintReplaceRewards",
+          "type": "generic",
+          "token": "0x04005c40"
+        },
+        {
+          "name": "open_activity_checkin_9sprint",
+          "type": "Activities.CheckInOpenStatus",
+          "token": "0x04005c41"
+        },
+        {
+          "name": "ActivityRedeemRecords",
+          "type": "generic",
+          "token": "0x04005c42"
+        },
+        {
+          "name": "ActivityTalentTaskDailyRecords",
+          "type": "generic",
+          "token": "0x04005c43"
+        },
+        {
+          "name": "SelectRewardClaimRecords",
+          "type": "generic",
+          "token": "0x04005c44"
+        },
+        {
+          "name": "RebornEggFollowers",
+          "type": "generic",
+          "token": "0x04005c45"
+        },
+        {
+          "name": "ActivityPlantUnlocked",
+          "type": "generic",
+          "token": "0x04005c46"
+        },
+        {
+          "name": "ActivityPlantShowEnemies",
+          "type": "generic",
+          "token": "0x04005c47"
+        },
+        {
+          "name": "ActivityPlantProgress",
+          "type": "int",
+          "token": "0x04005c48"
+        },
+        {
+          "name": "ActivityFireFactorUnlocked",
+          "type": "generic",
+          "token": "0x04005c49"
+        },
+        {
+          "name": "ActivityHeroBallRuneActived",
+          "type": "generic",
+          "token": "0x04005c4a"
+        },
+        {
+          "name": "_hero_init_weapons",
+          "type": "generic",
+          "token": "0x04005c4b"
+        },
+        {
+          "name": "alreadyGetRemoteEmails",
+          "type": "generic",
+          "token": "0x04005c4c"
+        },
+        {
+          "name": "TodayActivityPlayTime",
+          "type": "int",
+          "token": "0x04005c4d"
+        },
+        {
+          "name": "ToDayActivityPlayCounts",
+          "type": "generic",
+          "token": "0x04005c4e"
+        },
+        {
+          "name": "maxDefenceWave",
+          "type": "int",
+          "token": "0x04005c4f"
+        },
+        {
+          "name": "defenceRemakePass",
+          "type": "int",
+          "token": "0x04005c50"
+        },
+        {
+          "name": "defenceRemakeBadassPass",
+          "type": "int",
+          "token": "0x04005c51"
+        },
+        {
+          "name": "normalMaxDamage",
+          "type": "int",
+          "token": "0x04005c52"
+        },
+        {
+          "name": "GuaranteeDrop",
+          "type": "generic",
+          "token": "0x04005c53"
+        },
+        {
+          "name": "_plantTimes",
+          "type": "generic",
+          "token": "0x04005c54"
+        },
+        {
+          "name": "prequel_task1_finished",
+          "type": "bool",
+          "token": "0x04005c55"
+        },
+        {
+          "name": "prequel_task2_kill_boss_times",
+          "type": "int",
+          "token": "0x04005c56"
+        },
+        {
+          "name": "prequel_task3_finished",
+          "type": "bool",
+          "token": "0x04005c57"
+        },
+        {
+          "name": "promotionGotRewardIds",
+          "type": "generic",
+          "token": "0x04005c58"
+        },
+        {
+          "name": "lastBuyBeginnerPkgId",
+          "type": "int",
+          "token": "0x04005c59"
+        },
+        {
+          "name": "lastRewardBeginnerPkgId",
+          "type": "int",
+          "token": "0x04005c5a"
+        },
+        {
+          "name": "lastBuyReturnPlayerPkgId",
+          "type": "int",
+          "token": "0x04005c5b"
+        },
+        {
+          "name": "lastRewardReturnPlayerPkgId",
+          "type": "int",
+          "token": "0x04005c5c"
+        },
+        {
+          "name": "StatisticLoad",
+          "type": "string",
+          "token": "0x04005c5d"
+        },
+        {
+          "name": "cy",
+          "type": "string",
+          "token": "0x04005c5e"
+        },
+        {
+          "name": "_data",
+          "type": "StatisticData",
+          "token": "0x04005c5f"
+        },
+        {
+          "name": "_autoIncrementSaveIdDic",
+          "type": "generic",
+          "token": "0x04005c60"
+        }
+      ],
+      "methods": [
+        {
+          "name": "AddUIOpenTimes",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18797,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600755f"
+        },
+        {
+          "name": "GetUIOpenTimes",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18799,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007560"
+        },
+        {
+          "name": "AddEnemyKilledCount",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18800,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007561"
+        },
+        {
+          "name": "GetEnemyKilledCount",
+          "return": "int",
+          "parameters": 2,
+          "parameter_start": 18803,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007562"
+        },
+        {
+          "name": "AddEmojiUsedTimes",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18805,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007563"
+        },
+        {
+          "name": "CheckIfUsedAllEmoji",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007564"
+        },
+        {
+          "name": "CalculateEnemyAndBossTotal",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007565"
+        },
+        {
+          "name": "get_pass_history_list",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06007566"
+        },
+        {
+          "name": "get_MultiGameHistoryList",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06007567"
+        },
+        {
+          "name": "GetVeteranCheckInStatusKeys",
+          "return": "generic",
+          "parameters": 1,
+          "parameter_start": 18806,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007568"
+        },
+        {
+          "name": "HasOldVeteranCheckIn",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18807,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x06007569"
+        },
+        {
+          "name": "ConsumeFollower",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18808,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600756a"
+        },
+        {
+          "name": "get_hero_init_weapons",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x0600756b"
+        },
+        {
+          "name": "AddToDayActivityPlayCount",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18810,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600756c"
+        },
+        {
+          "name": "GetToDayActivityPlayCount",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18812,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600756d"
+        },
+        {
+          "name": "get_purchaseCount",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x0600756e"
+        },
+        {
+          "name": "set_purchaseCount",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18813,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x0600756f"
+        },
+        {
+          "name": "get_maxLevelIndex",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06007570"
+        },
+        {
+          "name": "set_maxLevelIndex",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18814,
+          "slot": 65535,
+          "flags": "0x0886",
+          "token": "0x06007571"
+        },
+        {
+          "name": "SetLastBuyBeginnerPkg",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18815,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007572"
+        },
+        {
+          "name": "SetLastRewardBeginnerPkg",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18817,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007573"
+        },
+        {
+          "name": "SetLastBuyReturnPlayerPkg",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18819,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007574"
+        },
+        {
+          "name": "SetLastRewardReturnPlayerPkg",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18821,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007575"
+        },
+        {
+          "name": "get__43OldInternalPersistentPath",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06007576"
+        },
+        {
+          "name": "get_Path",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06007577"
+        },
+        {
+          "name": "get_RijPath",
+          "return": "string",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0891",
+          "token": "0x06007578"
+        },
+        {
+          "name": "get_data",
+          "return": "StatisticData",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x06007579"
+        },
+        {
+          "name": "set_data",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18823,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x0600757a"
+        },
+        {
+          "name": "get_RawData",
+          "return": "StatisticData",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0896",
+          "token": "0x0600757b"
+        },
+        {
+          "name": "FixData",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18824,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x0600757c"
+        },
+        {
+          "name": "FixDataIfNotExist",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x0600757d"
+        },
+        {
+          "name": "SavePassObjects",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18825,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600757e"
+        },
+        {
+          "name": "SavePurpleFrameHero",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18827,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600757f"
+        },
+        {
+          "name": "SavePurpleFrameSkin",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18829,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007580"
+        },
+        {
+          "name": "SavePurpleFrameSkin",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18832,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007581"
+        },
+        {
+          "name": "SavePurpleFrameWeapon",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18834,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007582"
+        },
+        {
+          "name": "HasPurpleFrameHero",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18836,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007583"
+        },
+        {
+          "name": "HasPurpleFrameSkin",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18837,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007584"
+        },
+        {
+          "name": "HasPurpleFrameSkin",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18839,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007585"
+        },
+        {
+          "name": "HasPurpleFrameWeapon",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18840,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007586"
+        },
+        {
+          "name": "GetPurpleFrameHeroPassTime",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18841,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007587"
+        },
+        {
+          "name": "GetPurpleFrameSkinPassTime",
+          "return": "int",
+          "parameters": 2,
+          "parameter_start": 18842,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007588"
+        },
+        {
+          "name": "GetPurpleFrameSkinPassTime",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18844,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007589"
+        },
+        {
+          "name": "GetPurpleFrameWeaponPassTime",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18845,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600758a"
+        },
+        {
+          "name": "GetPurpleFrameHeroUniqueCount",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600758b"
+        },
+        {
+          "name": "GetPurpleFrameSkinUniqueCount",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600758c"
+        },
+        {
+          "name": "GetPurpleFrameWeaponUniqueCount",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600758d"
+        },
+        {
+          "name": "GetPurpleFrameTotalUniqueCount",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600758e"
+        },
+        {
+          "name": "GetSkinPurpleFrameKey",
+          "return": "string",
+          "parameters": 2,
+          "parameter_start": 18846,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x0600758f"
+        },
+        {
+          "name": "SavePurpleFrameRecord",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18848,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06007590"
+        },
+        {
+          "name": "CountPositivePurpleFrameRecords",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18851,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x06007591"
+        },
+        {
+          "name": "EnsurePurpleFrameRecords",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06007592"
+        },
+        {
+          "name": "WeaponPassCheck",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18852,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x06007593"
+        },
+        {
+          "name": "GetPassLevel",
+          "return": "emPassGameLevel",
+          "parameters": 1,
+          "parameter_start": 18853,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007594"
+        },
+        {
+          "name": "GetPassTime",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18854,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007595"
+        },
+        {
+          "name": "GetObtainTime",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18855,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007596"
+        },
+        {
+          "name": "AddObtainTimes",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18856,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007597"
+        },
+        {
+          "name": "DebugResetObtainTimes",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18859,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007598"
+        },
+        {
+          "name": "GetEventCount",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18860,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x06007599"
+        },
+        {
+          "name": "AddEventCount",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18861,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600759a"
+        },
+        {
+          "name": "SetEventCount",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18864,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600759b"
+        },
+        {
+          "name": "RecordEvent",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18867,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600759c"
+        },
+        {
+          "name": "IsEventRecord",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18869,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600759d"
+        },
+        {
+          "name": "RemoveRecordEvent",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18870,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600759e"
+        },
+        {
+          "name": "TryInitHandbookCollectionUserProperties",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x0600759f"
+        },
+        {
+          "name": "TryInitHandbookSkinGoldenCollectionUserProperty",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x060075a0"
+        },
+        {
+          "name": "MarkCurrentHandbookCollectionTracked",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x060075a1"
+        },
+        {
+          "name": "TryMarkHandbookHonoraryTitleTracked",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18872,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075a2"
+        },
+        {
+          "name": "TryTrackHandbookWeaponCollection",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18874,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075a3"
+        },
+        {
+          "name": "TryTrackAllHandbookWeaponCollection",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075a4"
+        },
+        {
+          "name": "TryTrackHandbookCollectionByObtainName",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18875,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x060075a5"
+        },
+        {
+          "name": "TryTrackHandbookEnemyCollection",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18876,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x060075a6"
+        },
+        {
+          "name": "TryMarkHandbookEnemyCollectionTracked",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18877,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x060075a7"
+        },
+        {
+          "name": "TryMarkHandbookWeaponCollectionTracked",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18879,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x060075a8"
+        },
+        {
+          "name": "TryMarkHandbookSeasonTitleTracked",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18881,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x060075a9"
+        },
+        {
+          "name": "UpdatePassInfoStr",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18883,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075aa"
+        },
+        {
+          "name": "GetPassInfoStr",
+          "return": "string",
+          "parameters": 1,
+          "parameter_start": 18886,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075ab"
+        },
+        {
+          "name": "Save",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060075ac"
+        },
+        {
+          "name": "NewData",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x060075ad"
+        },
+        {
+          "name": "GetDataPathByAccountID",
+          "return": "string",
+          "parameters": 1,
+          "parameter_start": 18887,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060075ae"
+        },
+        {
+          "name": "GetAccountData",
+          "return": "RGScript.Data.IData",
+          "parameters": 1,
+          "parameter_start": 18888,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060075af"
+        },
+        {
+          "name": "SetData",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18889,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060075b0"
+        },
+        {
+          "name": "Load",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x060075b1"
+        },
+        {
+          "name": "ClearData",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18890,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060075b2"
+        },
+        {
+          "name": "Merge",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18891,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075b3"
+        },
+        {
+          "name": "MergeActivityTalentTaskDailyRecords",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18892,
+          "slot": 65535,
+          "flags": "0x0081",
+          "token": "0x060075b4"
+        },
+        {
+          "name": "MergeMaxValueDictionary",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18893,
+          "slot": 65535,
+          "flags": "0x0091",
+          "token": "0x060075b5"
+        },
+        {
+          "name": "CopyFromGame",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075b6"
+        },
+        {
+          "name": "CopyAddtionFromGame",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075b7"
+        },
+        {
+          "name": "CopyAddtionFromGame2",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075b8"
+        },
+        {
+          "name": "RestoreWeaponTimes",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075b9"
+        },
+        {
+          "name": "ResetPassTimes",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075ba"
+        },
+        {
+          "name": "UpdateAchievementRecord",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18895,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075bb"
+        },
+        {
+          "name": "GetAchievementRecordById",
+          "return": "AchieveInfo",
+          "parameters": 1,
+          "parameter_start": 18897,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075bc"
+        },
+        {
+          "name": "IsAchievementUnlocked",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18898,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075bd"
+        },
+        {
+          "name": "AchievementGotAward",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18899,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075be"
+        },
+        {
+          "name": "ResetData",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060075bf"
+        },
+        {
+          "name": "AddNewPassHistory",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18901,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075c0"
+        },
+        {
+          "name": "AddNewMultiGameHistory",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18902,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075c1"
+        },
+        {
+          "name": "RecordSaveId",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075c2"
+        },
+        {
+          "name": "RecordStatementSaveId",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18903,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075c3"
+        },
+        {
+          "name": "AlreadyRecordStatementSaveId",
+          "return": "bool",
+          "parameters": 2,
+          "parameter_start": 18905,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075c4"
+        },
+        {
+          "name": "GetSeasonPrize",
+          "return": "SeasonPrize",
+          "parameters": 1,
+          "parameter_start": 18907,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075c5"
+        },
+        {
+          "name": "SetSeasonPrize",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18908,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075c6"
+        },
+        {
+          "name": "UnlockHandSwordAc",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075c7"
+        },
+        {
+          "name": "UnlockHandSwordAc1",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075c8"
+        },
+        {
+          "name": "UnlockHandSwordAc2",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075c9"
+        },
+        {
+          "name": "UnlockHandSwordAc3",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075ca"
+        },
+        {
+          "name": "SetHandSwordIndex",
+          "return": "void",
+          "parameters": 1,
+          "parameter_start": 18911,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075cb"
+        },
+        {
+          "name": "GetUnlockedHandStyles",
+          "return": "generic",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060075cc"
+        },
+        {
+          "name": "IsHandCutUnlocked",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18912,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075cd"
+        },
+        {
+          "name": "GetHandSwordIndex",
+          "return": "int",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075ce"
+        },
+        {
+          "name": "SetGuaranteeDropCount",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18913,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075cf"
+        },
+        {
+          "name": "GetGuaranteeDropCount",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18915,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075d0"
+        },
+        {
+          "name": "AddPlantTimes",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18916,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075d1"
+        },
+        {
+          "name": "GetPlantTimes",
+          "return": "int",
+          "parameters": 1,
+          "parameter_start": 18918,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075d2"
+        },
+        {
+          "name": "HasPlantSeed",
+          "return": "bool",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075d3"
+        },
+        {
+          "name": "GetCurrentSaveId",
+          "return": "ulong",
+          "parameters": 1,
+          "parameter_start": 18919,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075d4"
+        },
+        {
+          "name": "GetCurrentSaveIdWithSavePlace",
+          "return": "ulong",
+          "parameters": 1,
+          "parameter_start": 18920,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075d5"
+        },
+        {
+          "name": "SetCurrentSaveId",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18921,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075d6"
+        },
+        {
+          "name": "SetCurrentSaveIdWithSavePlace",
+          "return": "void",
+          "parameters": 3,
+          "parameter_start": 18924,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075d7"
+        },
+        {
+          "name": "AddActivityRedeemBlueprint",
+          "return": "void",
+          "parameters": 2,
+          "parameter_start": 18927,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075d8"
+        },
+        {
+          "name": "IsBlueprintFromActivity",
+          "return": "bool",
+          "parameters": 1,
+          "parameter_start": 18929,
+          "slot": 65535,
+          "flags": "0x0086",
+          "token": "0x060075d9"
+        },
+        {
+          "name": "Reload",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x0096",
+          "token": "0x060075da"
+        },
+        {
+          "name": ".ctor",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x1886",
+          "token": "0x060075db"
+        },
+        {
+          "name": ".cctor",
+          "return": "void",
+          "parameters": 0,
+          "parameter_start": 4294967295,
+          "slot": 65535,
+          "flags": "0x1891",
+          "token": "0x060075dc"
+        }
+      ],
+      "token": "0x02000c5a"
+    }
+  ]
+}

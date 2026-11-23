@@ -8,9 +8,11 @@ from pathlib import Path
 import pytest
 
 from app.cloud.decoder import (
+    RpcBodyNotGzip,
     RpcBodyUnknown,
     RpcNullMarker,
     decode_copy,
+    decode_rpc_gzip,
     detect_format,
 )
 from app.cloud.importer import CloudImporter, import_from_transport
@@ -28,6 +30,7 @@ from app.cloud_save import (
     AggregateFormatError,
     CopyLimitError,
     MAX_INPUT_BYTES,
+    MAX_JSON_BYTES,
     UnsupportedEncoding,
 )
 
@@ -125,6 +128,50 @@ def test_rpc_markers_are_classified_and_not_guessed() -> None:
         decode_copy(marked)
     assert caught.value.code == "rpc_null_marker"
     assert caught.value.frame.kind == "null_marker"
+
+
+def test_rpc_gzip_candidate_is_opt_in_and_preserves_the_frame() -> None:
+    body = gzip.compress(DOCUMENT.read_bytes(), mtime=0)
+    framed = b"\x00\x00\x00\x80" + body
+
+    with pytest.raises(RpcBodyUnknown):
+        decode_copy(framed)
+
+    decoded = decode_copy(framed, rpc_body="gzip_candidate")
+    assert decoded.format == "gzip"
+    assert decoded.original == framed
+    assert decoded.aggregate.data.serialzed_version == 0
+    assert decoded.aggregate.data.game_data == {}
+
+    direct = decode_rpc_gzip(framed)
+    assert direct.aggregate.source_sha256 == sha256(body).hexdigest()
+
+    validated = validate_payload(framed, rpc_body="gzip_candidate")
+    assert validated.format == "gzip"
+    assert validated.original == framed
+
+
+def test_rpc_gzip_candidate_does_not_guess_other_codecs() -> None:
+    with pytest.raises(RpcBodyNotGzip) as caught:
+        decode_rpc_gzip(b"\x00\x00\x00\x80" + b"cuerpo")
+    assert caught.value.code == "rpc_body_not_gzip"
+
+    with pytest.raises(RpcBodyUnknown):
+        decode_rpc_gzip(b"\x00\x00\x00\x80")
+
+
+def test_rpc_gzip_candidate_rejects_a_truncated_or_trailing_member() -> None:
+    body = gzip.compress(DOCUMENT.read_bytes(), mtime=0)
+    with pytest.raises(AggregateFormatError):
+        decode_rpc_gzip(b"\x00\x00\x00\x80" + body[:-4])
+    with pytest.raises(AggregateFormatError):
+        decode_rpc_gzip(b"\x00\x00\x00\x80" + body + b"x")
+
+
+def test_rpc_gzip_candidate_stops_a_decompression_bomb() -> None:
+    bomb = gzip.compress(b"{" + b" " * (MAX_JSON_BYTES + 1), mtime=0)
+    with pytest.raises(CopyLimitError):
+        decode_rpc_gzip(b"\x00\x00\x00\x80" + bomb)
 
 
 def test_unknown_and_truncated_inputs_are_typed() -> None:

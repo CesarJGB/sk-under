@@ -1,6 +1,6 @@
 # sk-under
 
-**Soul Knight Editor · Fase 3**
+**Soul Knight Editor · Fase 5.5**
 
 Editor web privado para inspeccionar copias locales. La muestra sintética `.skdemo` permite edición y exportación. El adaptador opcional de la Fase 3 lee nueve estructuras `.data` observadas en muestras de Soul Knight 8.6.0 y permite descargar copias intactas. [Configuración y cobertura de la Fase 3](docs/phase3/IMPLEMENTATION.md)
 
@@ -11,6 +11,8 @@ La Fase 5.1 registra las pruebas de ejecución de Soul Knight 8.8.0 y de acceso 
 La Fase 5.3 verificó una ruta condicional de precarga en el panel y reconstruyó las nueve referencias locales 8.6.0 en Linux. El importador acepta agregados suministrados en JSON o gzip. [Informe de Fase 5.3](docs/research/phase5-3/README.md) · [Uso del importador](docs/research/phase5-3/importer.md)
 
 La Fase 5.4 separó el transporte RPC, documentó la máquina de estados de recuperación y añadió un cliente Linux con transporte remoto deshabilitado. La sesión autenticada y la muestra real de 8.8.0 siguen bloqueadas. [Informe de Fase 5.4](docs/research/phase5-4/README.md) · [Prototipo Linux](docs/research/phase5-4/linux-client-prototype.md)
+
+La Fase 5.5 descifró la metadata real de 8.8.0, inventarió `CloudSaveGameData` y sus secciones, comparó los nombres con las nueve muestras 8.6.0 y añadió un laboratorio local de edición y un decodificador RPC gzip experimental. El códec real y la muestra 8.8.0 siguen sin confirmarse. [Informe de Fase 5.5](docs/research/phase5-5/README.md)
 
 ## Arquitectura
 
@@ -224,6 +226,8 @@ El token concede el mismo acceso a quienes lo comparten. Esta solución está pr
 | XML de preferencias y datos históricos de Android documentados en la investigación | Pendientes de verificación con muestras representativas. Se rechazan en esta fase. |
 | Otras variantes de Android e iOS | Compatibilidad pendiente por canal y versión. |
 | Acceso a guardados de ChillyRoom | Se verificó la restauración oficial en Android con una cuenta propia. La copia para el editor y la automatización siguen pendientes. El reconstructor de solo lectura se probó con fixtures sintéticos. [Fase 5](docs/research/phase5/README.md) · [Fase 5.1](docs/research/phase5-experimental/README.md) |
+| Agregado `CloudSaveGameData` 8.8.0 | Modelo identificado en metadata (18 secciones, 46 649 typeDefs). Sin muestra real ni aceptación por el cliente. [Fase 5.5](docs/research/phase5-5/README.md) |
+| Edición local de un agregado | Laboratorio sobre JSON/gzip sintético con conservación de campos desconocidos y diff semántico/binario. No se declara aceptación por el juego. [Laboratorio](docs/research/phase5-5/save-editing-lab.md) |
 
 La investigación local `SHOULXING_RESEARCH`, en particular los informes 03, 06 y 07, describe XML de preferencias y archivos históricos con JSON, Base64 y DES-CBC, así como las limitaciones de ABI y del análisis estático. Se verificó la licencia Apache-2.0 del clon de SHOULXING en el commit de referencia. La implementación del adaptador sintético es propia y el motor funciona de forma independiente de esos componentes. [Referencia histórica de SHOULXING](https://github.com/STE4LPH/SHOULXING/tree/685691e09798aa6d39ae2f44f29e31ad6423b98d)
 
