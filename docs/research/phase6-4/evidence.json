@@ -23,6 +23,15 @@
     "separate_browser_http": 401,
     "viewport_without_horizontal_scroll": true
   },
+  "container_recreation": {
+    "commit": "dff419a",
+    "test_started_at": "2026-11-23T22:13:37.289Z",
+    "gems": 1002,
+    "backup_records": 1,
+    "same_cookie": true,
+    "logout_test_started_at": "2026-11-23T22:13:42.949Z",
+    "revoked_cookie_replay_http": 401
+  },
   "official_client": {
     "version": "8.8.0",
     "version_code": 1080800,

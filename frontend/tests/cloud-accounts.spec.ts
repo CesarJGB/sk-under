@@ -29,6 +29,24 @@ test('informa el bloqueo de ChillyRoom, conserva Android Global y protege el for
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 
+test('impide enviar el formulario cuando el editor se sirve por HTTP', async ({ page }) => {
+  let requests = 0
+  await page.route('**/api/v1/cloud/accounts', (route) => route.fulfill({
+    json: { ...status, password_login_available: true, login_message: '', accounts: [] },
+  }))
+  await page.route('**/api/v1/cloud/accounts/login', async (route) => {
+    requests += 1
+    await route.abort()
+  })
+  await page.goto('/partida')
+  await page.getByLabel('Correo electrónico de ChillyRoom').fill('fixture@example.test')
+  await page.getByLabel('Contraseña').fill('fixture-password')
+  await page.getByRole('button', { name: 'Iniciar sesión' }).click()
+  await expect(page.getByText('El inicio de sesión requiere HTTPS en el editor y en la API.')).toBeVisible()
+  await expect(page.getByLabel('Contraseña')).toHaveValue('')
+  expect(requests).toBe(0)
+})
+
 test('vincula, confirma con cookie y reinicia la vista al cambiar de cuenta', async ({ page }) => {
   let linked = false
   await page.route('**/api/v1/cloud/accounts', (route) => route.fulfill({

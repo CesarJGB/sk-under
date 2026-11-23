@@ -18,6 +18,7 @@ export function CloudAccountsPage() {
   const [selected, setSelected] = useState('')
   const [ticket, setTicket] = useState(() => new URLSearchParams(window.location.hash.slice(1)).get('vincular'))
   const [managing, setManaging] = useState(false)
+  const [authAction, setAuthAction] = useState<'login' | 'logout'>('login')
   const operation = useOperation()
   const authentication = useOperation()
 
@@ -51,6 +52,7 @@ export function CloudAccountsPage() {
     if (!state?.password_login_available) return
     const fields = new FormData(event.currentTarget)
     event.currentTarget.reset()
+    setAuthAction('login')
     void authentication.run(async (signal) => {
       updateAccounts(await cloudAccounts.login(String(fields.get('email')), String(fields.get('password')), signal))
     })
@@ -58,6 +60,7 @@ export function CloudAccountsPage() {
 
   function logout() {
     if (!window.confirm('¿Cerrar sesión? Necesitarás un nuevo enlace para volver a acceder a las cuentas vinculadas.')) return
+    setAuthAction('logout')
     void authentication.run(async (signal) => {
       await cloudAccounts.logout(signal)
       updateAccounts({ accounts: [], session_active: false })
@@ -87,7 +90,9 @@ export function CloudAccountsPage() {
           <button className="button lab-quiet" type="button" onClick={() => setTicket(null)}>Cancelar</button>
         </div>}
         {(state?.session_active ?? Boolean(account)) && <div className="lab-actions">
-          <button className="button lab-quiet" type="button" disabled={pending} onClick={logout}>Cerrar sesión</button>
+          <button className="button lab-quiet" type="button" disabled={pending} onClick={logout}>
+            {authentication.pending && authAction === 'logout' ? 'Cerrando sesión…' : 'Cerrar sesión'}
+          </button>
         </div>}
         {authentication.problem && <Problem problem={authentication.problem} />}
         {account && <>
@@ -144,7 +149,9 @@ export function CloudAccountsPage() {
               <label className="lab-field"><span>Contraseña</span>
                 <input className="lab-input" name="password" type="password" autoComplete="current-password" required />
               </label>
-              <button className="button lab-primary">{authentication.pending && !account ? 'Iniciando sesión…' : 'Iniciar sesión'}</button>
+              <button className="button lab-primary">
+                {authentication.pending && authAction === 'login' ? 'Iniciando sesión…' : 'Iniciar sesión'}
+              </button>
             </fieldset>
             {state?.configured && !state.password_login_available && <p className="lab-hint">
               Si recibiste un enlace privado de vinculación, ábrelo en el navegador donde usarás el editor.

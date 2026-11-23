@@ -271,8 +271,12 @@ export const cloudAccounts = {
   list: (signal: AbortSignal) => accountRequest<CloudAccounts>('', signal),
   claim: (ticket: string, signal: AbortSignal) =>
     accountRequest<CloudAccountSession>('/claim', signal, { ticket }),
-  login: (email: string, password: string, signal: AbortSignal) =>
-    accountRequest<CloudAccountSession>('/login', signal, { platform: 'android-global', email, password }),
+  login(email: string, password: string, signal: AbortSignal) {
+    if (window.location.protocol !== 'https:' || !baseUrl.toLowerCase().startsWith('https://')) {
+      throw new ApiProblem('El inicio de sesión requiere HTTPS en el editor y en la API.')
+    }
+    return accountRequest<CloudAccountSession>('/login', signal, { platform: 'android-global', email, password })
+  },
   logout: (signal: AbortSignal) =>
     request('/cloud/accounts/logout', signal, {}, '', '', 'include'),
   account(id: string) {
