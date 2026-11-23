@@ -10,8 +10,8 @@ from app.formats.demo import DemoAdapter
 
 def test_export_rejects_serialization_that_changes_other_fields(original):
     class FaultyAdapter(DemoAdapter):
-        def serialize(self, document: Document) -> SerializedFile:
-            output = super().serialize(document)
+        def serialize(self, document: Document, original: bytes) -> SerializedFile:
+            output = super().serialize(document, original)
             return replace(output, data=output.data.replace(b"fixture-backend", b"fixture-altered"))
 
     with pytest.raises(EditorError) as caught:

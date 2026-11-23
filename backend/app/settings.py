@@ -1,7 +1,8 @@
+import re
 from typing import Literal
 from urllib.parse import urlsplit
 
-from pydantic import Field, SecretStr, field_validator
+from pydantic import Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 type AccessMode = Literal["local", "token", "disabled"]
@@ -19,6 +20,40 @@ class Settings(BaseSettings):
     access_token: SecretStr | None = None
     allowed_origins: list[str] = Field(default_factory=list)
     max_file_bytes: int = Field(default=1_048_576, ge=1, le=8_388_608)
+
+    save_general_key_hex: SecretStr | None = None
+    save_statistics_key_hex: SecretStr | None = None
+    save_iv_hex: SecretStr | None = None
+
+    @field_validator("save_general_key_hex", "save_statistics_key_hex", "save_iv_hex", mode="before")
+    @classmethod
+    def validate_save_hex(cls, value: object) -> SecretStr | None:
+        secret = value.get_secret_value() if isinstance(value, SecretStr) else value
+        if secret is None or secret == "":
+            return None
+        if not isinstance(secret, str) or not re.fullmatch(r"[0-9a-fA-F]{16}", secret):
+            raise ValueError("Las claves y el IV de guardados requieren 16 dígitos hexadecimales cada uno.")
+        return SecretStr(secret)
+
+    @model_validator(mode="after")
+    def validate_save_config(self) -> "Settings":
+        values = (self.save_general_key_hex, self.save_statistics_key_hex, self.save_iv_hex)
+        if any(values) and not all(values):
+            raise ValueError("Configura las dos claves y el IV de guardados juntos.")
+        return self
+
+    @property
+    def save_cipher(self) -> tuple[bytes, bytes, bytes] | None:
+        general = self.save_general_key_hex
+        statistics = self.save_statistics_key_hex
+        iv = self.save_iv_hex
+        if general and statistics and iv:
+            return (
+                bytes.fromhex(general.get_secret_value()),
+                bytes.fromhex(statistics.get_secret_value()),
+                bytes.fromhex(iv.get_secret_value()),
+            )
+        return None
 
     @field_validator("access_token", mode="before")
     @classmethod

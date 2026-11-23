@@ -1,0 +1,7 @@
+# Límites y siguientes verificaciones
+
+- Las muestras representan una cuenta y un conjunto atribuido a 8.6.0. Faltan variantes de plataforma, canal, cuentas nuevas, exportaciones del cliente y capturas de otras versiones. En archivos con el mismo esquema y sin marcador interno, el motor no puede distinguir la versión del juego.
+- El nivel de análisis cubre nueve documentos locales independientes. El respaldo completo, el almacenamiento de preferencias, la sincronización con la nube y otros formatos quedan fuera de esta cobertura.
+- El formato carece de un mecanismo de autenticación demostrado y el análisis estructural puede pasar por alto corrupción sintácticamente válida. El SHA-256 valida igualdad con la entrada recibida.
+- No se verificó la aceptación por el juego de una partida reconstruida. Una copia intacta supera reimportación y comparación de hashes en el editor. Una copia alterada podría depender de validaciones semánticas, datos cruzados, orden de escritura o estado local ajeno al archivo.
+- Para habilitar una edición, conviene obtener pares de capturas en una cuenta de prueba, cambiando un campo por captura con el cliente, y comparar los JSON descifrados de todos los archivos. Después, verificar el rango y las dependencias del campo mediante una restauración autorizada en un entorno aislado y conservar una copia de recuperación. Hacen falta muestras de control de versiones y canales adyacentes para ampliar detección.

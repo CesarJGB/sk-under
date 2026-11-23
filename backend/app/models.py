@@ -18,7 +18,7 @@ class FormatInfo(BaseModel):
     name: str
     version: str
     extensions: list[str]
-    compatibility: Literal["synthetic", "confirmed"]
+    compatibility: Literal["synthetic", "confirmed", "read_only"]
     description: str
 
 

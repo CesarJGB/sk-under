@@ -20,7 +20,10 @@ def make_client(**options) -> TestClient:
 
 @pytest.fixture
 def client(monkeypatch) -> TestClient:
-    for variable in ("SK_ENV", "SK_ACCESS_TOKEN", "SK_MAX_FILE_BYTES", "SK_ALLOWED_ORIGINS"):
+    for variable in (
+        "SK_ENV", "SK_ACCESS_TOKEN", "SK_MAX_FILE_BYTES", "SK_ALLOWED_ORIGINS",
+        "SK_SAVE_GENERAL_KEY_HEX", "SK_SAVE_STATISTICS_KEY_HEX", "SK_SAVE_IV_HEX",
+    ):
         monkeypatch.delenv(variable, raising=False)
     return make_client(env="development", allowed_origins=[ORIGIN])
 

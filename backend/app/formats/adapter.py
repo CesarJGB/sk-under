@@ -18,12 +18,8 @@ class SerializedFile:
 class FormatAdapter(Protocol):
     info: FormatInfo
 
-    def matches(self, data: bytes) -> bool:
-        """Identifica el formato y la versión inspeccionando los bytes."""
-        ...
-
-    def read(self, data: bytes) -> Document:
-        """Interpreta y valida el contenido completo."""
+    def read_if_matching(self, data: bytes) -> Document | None:
+        """Reconoce el formato y devuelve el documento validado."""
         ...
 
     def fields(self, document: Document) -> list[EditorField]:
@@ -34,6 +30,6 @@ class FormatAdapter(Protocol):
         """Devuelve un documento válido con las ediciones aplicadas a una copia."""
         ...
 
-    def serialize(self, document: Document) -> SerializedFile:
-        """Codifica el documento para descargarlo con un nombre seguro."""
+    def serialize(self, document: Document, original: bytes) -> SerializedFile:
+        """Prepara la descarga con un nombre seguro y acceso al original validado."""
         ...

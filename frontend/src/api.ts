@@ -9,7 +9,7 @@ export type FormatInfo = {
   name: string
   version: string
   extensions: string[]
-  compatibility: 'synthetic' | 'confirmed'
+  compatibility: 'synthetic' | 'confirmed' | 'read_only'
   description: string
 }
 
