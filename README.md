@@ -1,6 +1,6 @@
 # sk-under
 
-**Soul Knight Editor · Fase 5.7**
+**Soul Knight Editor · Fase 6.1**
 
 Editor web privado para inspeccionar copias locales. La muestra sintética `.skdemo` permite edición y exportación. El adaptador opcional de la Fase 3 lee nueve estructuras `.data` observadas en muestras de Soul Knight 8.6.0 y permite descargar copias intactas. [Configuración y cobertura de la Fase 3](docs/phase3/IMPLEMENTATION.md)
 
@@ -18,7 +18,13 @@ La Fase 5.6 obtuvo un perfil local auténtico de Soul Knight 8.8.0 desde el APK 
 
 La Fase 5.7 estabilizó el cliente 8.8.0 en un AVD Android 11 x86_64 con ABI arm64, inició sesión ChillyRoom por email y ejecutó una lectura auténtica de `/Backup/FetchGameData` desde Linux con el token del cliente. La cuenta de laboratorio devolvió un agregado legacy vacío; no se obtuvo `CloudSaveGameData` ni se demostró la aceptación visible de una modificación. [Informe de Fase 5.7](docs/research/phase5-7/README.md) · [Estabilización](docs/research/phase5-7/emulator-stabilization.md) · [Lectura de nube](docs/research/phase5-7/authentic-cloud-read.md)
 
-La Fase 5.8 realizó un guardado y una recuperación oficiales con progreso visible, extrajo del proceso un agregado auténtico no vacío y verificó su relación parcial con archivos locales. La descarga directa del agregado moderno desde Linux sigue pendiente. [Resultados experimentales](docs/research/phase5-8/README.md).
+La Fase 5.8 realizó un guardado y una recuperación oficiales con progreso visible, extrajo del proceso un agregado auténtico no vacío y verificó su relación parcial con archivos locales. [Resultados experimentales](docs/research/phase5-8/README.md).
+
+La Fase 5.9 reprodujo la descarga moderna desde Linux con Android detenido: cuatro lecturas autenticadas devolvieron el mismo agregado de 114.778 bytes, con `gameData.gems=1000`. También preparó un candidato de subida, pero no lo transmitió. [Informe de Fase 5.9](docs/research/phase5-9/README.md).
+
+La Fase 6.0 completó el análisis estático de `UploadAsync`, `JsonPayload.Data`, la compresión y los callbacks de token, y reprodujo el sobre JSON con Json.NET. La escritura remota seguía sin ejecutarse. [Resumen de Fase 6.0](docs/research/phase6-0/summary.md).
+
+La Fase 6.1 ejecutó la primera subida real desde Linux a `/BlobSave/Upload`. El servidor devolvió `200` con `true`; una descarga posterior confirmó la persistencia byte a byte. Después se cambió `gameData.gems` de `1000` a `1001`, se subió, se volvió a descargar con el mismo SHA-256 y el cliente oficial 8.8.0 recuperó la copia, escribió `1001` en `game.data` y abrió el hall con ese valor. [Informe de Fase 6.1](docs/research/phase6-1/README.md) · [Protocolo](docs/research/phase6-1/protocol.md) · [Implementación](docs/research/phase6-1/implementation.md)
 
 ## Arquitectura
 
@@ -137,6 +143,23 @@ Swagger UI está en `http://127.0.0.1:8017/docs` y el esquema generado está en 
 
 Para desarrollo, el backend y Vite leen el `.env` de la raíz. El backend también puede leer `backend/.env`. Las variables del proceso tienen prioridad. Los valores `VITE_*` son públicos y se incorporan al JavaScript durante el build. El propietario introduce el token en el formulario de importación. En producción sin token, las rutas de archivos devuelven `503` y `health` informa `access_mode: "disabled"`. La API rechaza el token ausente o incorrecto con `401` cuando está configurado.
 
+## Escritura experimental de nube (solo laboratorio)
+
+La subida real está implementada en `backend/app/cloud/blob_upload.py` y el ciclo con verificación en `backend/app/cloud/blob_roundtrip.py`. **No existe una ruta HTTP** que la invoque: la API pública solo inspecciona, valida y exporta archivos locales. La escritura permanece desactivada por defecto y exige una sesión de laboratorio ya emitida por el cliente oficial.
+
+```bash
+export SK_CLOUD_SESSION_TOKEN='<sesión de laboratorio>'
+export SK_CLOUD_UNIQUE_ID='<identificador de la instalación>'
+export SK_CLOUD_DISTRO_ID='<distribución>'
+export SK_CLOUD_WRITE_EXPERIMENTAL=1
+
+cd backend
+.venv/bin/python -m app.cloud.blob_roundtrip /ruta/privada/agregado.json \
+  --confirm-experimental-write
+```
+
+El comando sube, vuelve a descargar y solo devuelve éxito si el SHA-256 remoto coincide con el enviado. No imprime credenciales ni contenido de la partida. Un `200` aislado no se considera confirmación de persistencia. Los detalles, límites y evidencia están en el [informe de Fase 6.1](docs/research/phase6-1/README.md).
+
 ## Contratos de API
 
 Todas las rutas de archivos reciben JSON UTF-8 con el archivo original en Base64 estándar y sin compresión. El JSON se limita durante la lectura a `4 × ceil(SK_MAX_FILE_BYTES / 3) + 16384` bytes. Los endpoints de validación y exportación reciben además un objeto `changes`, con hasta 32 entradas. Cada clave debe corresponder a un campo marcado como editable por el adaptador. Por ejemplo, `{"label":"Revisión","sample_count":5}`. Para conservar los valores envía `{}`.
@@ -236,8 +259,8 @@ El token concede el mismo acceso a quienes lo comparten. Esta solución está pr
 | `.skdemo` v1 | Verificado con dos muestras sintéticas. Firma `SK-EDITOR-DEMO/1` seguida de salto de línea y JSON UTF-8. Incluye una etiqueta, un ID de solo lectura y dos enteros de prueba con la regla cantidad ≤ límite. |
 | XML de preferencias y datos históricos de Android documentados en la investigación | Pendientes de verificación con muestras representativas. Se rechazan en esta fase. |
 | Otras variantes de Android e iOS | Compatibilidad pendiente por canal y versión. |
-| Acceso a guardados de ChillyRoom | La Fase 5.1 verificó la restauración oficial en Android con una cuenta propia. La Fase 5.7 inició sesión ChillyRoom en un AVD arm64 y ejecutó `FetchGameData` desde Linux con el token del cliente (`200`, agregado legacy vacío); no obtuvo `CloudSaveGameData` ni una copia no vacía. La copia para el editor y la automatización siguen pendientes. [Fase 5.7](docs/research/phase5-7/cloud-save-acquisition.md) · [Fase 5.1](docs/research/phase5-experimental/README.md) |
-| Agregado `CloudSaveGameData` 8.8.0 | Modelo identificado en metadata (18 secciones, 46 649 typeDefs) y perfil local real de 8.8.0. Falta la copia de nube (`serialzedVersion`, `cloudSaveId`, `platformId`) y la aceptación por el cliente. La Fase 5.7 confirmó rutas y firmas, obtuvo `FetchGameData` (agregado legacy vacío) y no obtuvo el wrapper nuevo: `GetBlobSave` devuelve 500. [Fase 5.7](docs/research/phase5-7/rpc-netpack-capture.md) · [Lectura](docs/research/phase5-7/authentic-cloud-read.md) |
+| Acceso a guardados de ChillyRoom | Fase 5.9: descarga moderna autenticada desde Linux, sin Android, con un agregado de 114.778 bytes. Fase 6.1: subida real a `/BlobSave/Upload`, persistencia verificada por descarga y recuperación por el cliente oficial. La escritura no está expuesta en la API y sigue limitada al laboratorio. [Fase 6.1](docs/research/phase6-1/README.md) · [Fase 5.7](docs/research/phase5-7/cloud-save-acquisition.md) |
+| Agregado `CloudSaveGameData` 8.8.0 | Modelo identificado en metadata (18 secciones, 46 649 typeDefs) y copia moderna real de 114.778 bytes con 17 secciones. Fase 6.1 demostró que el servidor conserva un cambio de un byte y que el cliente 8.8.0 lo recupera y aplica. Falta generalizar a otras cuentas, versiones y campos. [Fase 6.1](docs/research/phase6-1/protocol.md) · [Cliente oficial](docs/research/phase6-1/client-validation.md) |
 | Edición local de un agregado | Laboratorio sobre JSON/gzip sintético y sobre archivos locales 8.8.0 (DES y XOR), con conservación de campos desconocidos y diff semántico/binario. No se declara aceptación por el juego. [Laboratorio 5.5](docs/research/phase5-5/save-editing-lab.md) · [Roundtrip 5.6](docs/research/phase5-6/real-save-roundtrip.md) |
 
 La investigación local `SHOULXING_RESEARCH`, en particular los informes 03, 06 y 07, describe XML de preferencias y archivos históricos con JSON, Base64 y DES-CBC, así como las limitaciones de ABI y del análisis estático. Se verificó la licencia Apache-2.0 del clon de SHOULXING en el commit de referencia. La implementación del adaptador sintético es propia y el motor funciona de forma independiente de esos componentes. [Referencia histórica de SHOULXING](https://github.com/STE4LPH/SHOULXING/tree/685691e09798aa6d39ae2f44f29e31ad6423b98d)

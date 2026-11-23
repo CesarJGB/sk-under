@@ -21,10 +21,11 @@ from typing import Callable
 
 from ..cloud_save import MAX_INPUT_BYTES, MAX_JSON_BYTES, CloudSaveError, CopyLimitError, reconstruct_cloud_save
 from ..parsers.json_document import parse_json
+from .blob_wire import DOWNLOAD_URL, build_blob_headers, is_credential
 from .provider import (AcquiredCloudSave, CloudProviderProtocolError,
                        CloudProviderUnauthenticated, CloudProviderUnavailable, CloudSaveMetadata)
 
-URL = 'https://save.soulknight.chillyroom.com/BlobSave/Download'
+URL = DOWNLOAD_URL
 Fetch = Callable[[str, dict[str, str], float], tuple[int, str, bytes]]
 
 
@@ -75,10 +76,6 @@ def _decode_response(body: bytes, encoding: str) -> bytes:
     return result
 
 
-def _credential(value: object) -> bool:
-    return isinstance(value, str) and bool(value.strip()) and all(33 <= ord(c) <= 126 for c in value)
-
-
 @dataclass(frozen=True)
 class ModernCloudSaveProvider:
     """Proveedor optativo para el contrato observado en la cuenta de laboratorio."""
@@ -90,9 +87,9 @@ class ModernCloudSaveProvider:
     fetch: Fetch = field(default=_fetch, repr=False, compare=False)
 
     def __post_init__(self) -> None:
-        if not _credential(self.session_token):
+        if not is_credential(self.session_token):
             raise CloudProviderUnauthenticated('Falta una sesión autorizada válida.')
-        if not _credential(self.unique_id) or not _credential(self.distro_id):
+        if not is_credential(self.unique_id) or not is_credential(self.distro_id):
             raise CloudProviderProtocolError('Faltan los identificadores de la instalación.')
         if isinstance(self.timeout, bool) or not isinstance(self.timeout, (int, float)) or not 0 < self.timeout <= 60:
             raise CloudProviderProtocolError('Tiempo de espera inválido.')
@@ -100,13 +97,7 @@ class ModernCloudSaveProvider:
     def download(self, limit: int = MAX_INPUT_BYTES) -> AcquiredCloudSave:
         if type(limit) is not int or not 0 < limit <= MAX_INPUT_BYTES:
             raise CopyLimitError('Tamaño de copia fuera de los límites.')
-        headers = {
-            'Authorization': 'Bearer ' + self.session_token, 'x-unique-id': self.unique_id,
-            'x-distro-id': self.distro_id, 'x-game-id': '1', 'x-game': 'Soulknight',
-            'x-app-version': '8.8.0', 'x-game-version': '8.8.0', 'x-platform': 'android',
-            'x-game-lang': 'en', 'x-locale': 'en_US', 'Accept': 'application/json',
-            'Accept-Encoding': 'gzip', 'Content-Type': 'application/json; charset=utf-8',
-        }
+        headers = build_blob_headers(self.session_token, self.unique_id, self.distro_id)
         try:
             status, encoding, wire = self.fetch(URL, headers, self.timeout)
         except (OSError, urllib.error.URLError, http.client.HTTPException):
