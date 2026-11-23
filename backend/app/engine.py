@@ -23,19 +23,18 @@ class Editor:
         return [adapter.info for adapter in self.adapters]
 
     def inspect(self, original: bytes) -> Inspection:
-        adapter = identify(original, self.adapters)
+        adapter, document = identify(original, self.adapters)
         return Inspection(
             format=adapter.info,
             byte_size=len(original),
             sha256=sha256(original).hexdigest(),
-            fields=adapter.fields(adapter.read(original)),
+            fields=adapter.fields(document),
         )
 
     def prepare_export(
         self, original: bytes, changes: dict[str, EditableValue], size_limit: int
     ) -> PreparedExport:
-        adapter = identify(original, self.adapters)
-        document = adapter.read(original)
+        adapter, document = identify(original, self.adapters)
         editable = {field.id: field.value for field in adapter.fields(document) if field.editable}
         if changes.keys() - editable.keys():
             raise EditorError(
@@ -51,12 +50,14 @@ class Editor:
             if value != modified[field_id]
         ]
         output = adapter.serialize(candidate)
-        if candidate == document:
+        if candidate == document and adapter.info.compatibility != "read_only":
             output = replace(output, data=original)
         require_size(output.data, size_limit)
         try:
-            roundtrip = identify(output.data, self.adapters)
-            if roundtrip is not adapter or roundtrip.read(output.data) != candidate:
+            if adapter.info.compatibility == "read_only" and output.data != original:
+                raise ValueError("La copia de solo lectura difiere del original.")
+            roundtrip, reopened = identify(output.data, self.adapters)
+            if roundtrip is not adapter or reopened != candidate:
                 raise ValueError("El documento no coincide después de serializarlo.")
         except (EditorError, ValueError):
             raise EditorError(

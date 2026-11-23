@@ -18,12 +18,8 @@ class SerializedFile:
 class FormatAdapter(Protocol):
     info: FormatInfo
 
-    def matches(self, data: bytes) -> bool:
-        """Identifica el formato y la versión inspeccionando los bytes."""
-        ...
-
-    def read(self, data: bytes) -> Document:
-        """Interpreta y valida el contenido completo."""
+    def read_if_matching(self, data: bytes) -> Document | None:
+        """Reconoce el formato y devuelve el documento validado."""
         ...
 
     def fields(self, document: Document) -> list[EditorField]:

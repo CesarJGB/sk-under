@@ -13,7 +13,11 @@ export function ExportPage({ session, draft, token }: {
 }) {
   return (
     <>
-      <PageTitle title="Exportar copia">Revisa las modificaciones, valida el resultado y descarga una copia.</PageTitle>
+      <PageTitle title="Exportar copia">
+        {session?.inspection.format.compatibility === 'read_only'
+          ? 'Verifica la igualdad de los bytes y descarga una copia intacta.'
+          : 'Revisa las modificaciones, valida el resultado y descarga una copia.'}
+      </PageTitle>
       {session ? <ExportForm session={session} draft={draft} token={token} /> : <NoSession />}
     </>
   )
@@ -21,6 +25,7 @@ export function ExportPage({ session, draft, token }: {
 
 function ExportForm({ session, draft, token }: { session: Session; draft: Draft; token: string }) {
   const { fields, format } = session.inspection
+  const readOnly = format.compatibility === 'read_only'
   const { changes, invalid, summary } = summarize(fields, draft)
   const [validation, setValidation] = useState<Validation | null>(null)
   const [download, setDownload] = useState<{ url: string; name: string } | null>(null)
@@ -58,11 +63,11 @@ function ExportForm({ session, draft, token }: { session: Session; draft: Draft;
         <div className="summary-heading">
           <div className="icon-tile"><FileCheck2 size={21} aria-hidden="true" /></div>
           <div className="min-w-0">
-            <h2 id="summary-title">Resumen de modificaciones</h2>
+            <h2 id="summary-title">{readOnly ? "Copia intacta" : "Resumen de modificaciones"}</h2>
             <p className="wrap-anywhere">{session.name}</p>
           </div>
         </div>
-        {rows.length === 0 && invalid.size === 0 && <p className="summary-empty">La copia conservará todos sus valores originales.</p>}
+        {rows.length === 0 && invalid.size === 0 && <p className="summary-empty">{readOnly ? "La descarga conservará todos los bytes del original." : "La copia conservará todos sus valores originales."}</p>}
         {rows.length > 0 && (
           <ul className="summary-list">
             {rows.map((change) => (
@@ -86,7 +91,7 @@ function ExportForm({ session, draft, token }: { session: Session; draft: Draft;
         </p>
       )}
       <div className="actions editor-actions">
-        <Link className="button quiet" to="/editor">Volver al editor</Link>
+        <Link className="button quiet" to="/editor">{readOnly ? "Volver a la inspección" : "Volver al editor"}</Link>
         {validation ? (
           <button className="button primary" type="button" onClick={exportCopy} disabled={operation.pending}>
             <Download size={18} />Descargar copia

@@ -51,15 +51,15 @@ export function HomePage({ health, formats, loading, retry }: {
                   <h3>{format.name}</h3>
                   <p>{format.description}</p>
                 </div>
-                <span className="format-tag">{format.extensions.join(' · ')} / v{format.version}</span>
+                <span className="format-tag">{format.extensions.join(' · ')} / {format.compatibility === 'synthetic' ? `v${format.version}` : format.version}</span>
               </article>
             ))}
           </div>
         ) : (
           <Notice>{loading ? 'Consultando formatos admitidos…' : 'La lista de formatos no está disponible.'}</Notice>
         )}
-        {!formats.some((format) => format.compatibility === 'confirmed') && (
-          <Notice tone="warning">La compatibilidad con guardados reales de Soul Knight sigue pendiente de verificación.</Notice>
+        {!formats.some((format) => format.compatibility !== 'synthetic') && (
+          <Notice tone="warning">Este servicio solo tiene habilitada la muestra sintética.</Notice>
         )}
       </section>
       <p className="privacy-note home-privacy">

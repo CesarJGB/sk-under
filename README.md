@@ -1,8 +1,8 @@
 # sk-under
 
-**Soul Knight Editor · Fase 2**
+**Soul Knight Editor · Fase 3**
 
-Editor web privado para inspeccionar y editar copias locales. La versión actual admite el formato sintético `.skdemo` para verificar el flujo completo de importación, edición y exportación. La compatibilidad con partidas reales de Soul Knight sigue pendiente por plataforma, versión y canal.
+Editor web privado para inspeccionar copias locales. La muestra sintética `.skdemo` permite edición y exportación. El adaptador opcional de la Fase 3 lee nueve estructuras `.data` observadas en muestras de Soul Knight 8.6.0 y permite descargar copias intactas. [Configuración y cobertura de la Fase 3](docs/phase3/IMPLEMENTATION.md)
 
 ## Arquitectura
 
@@ -209,9 +209,10 @@ El token concede el mismo acceso a quienes lo comparten. Esta solución está pr
 
 | Formato o plataforma | Estado |
 | --- | --- |
+| `.data` con la configuración de la Fase 3 | Nueve estructuras de guardado local observadas en muestras de 8.6.0. Inspección y descarga intacta. [Restricciones](docs/phase3/LIMITATIONS.md) |
 | `.skdemo` v1 | Verificado con dos muestras sintéticas. Firma `SK-EDITOR-DEMO/1` seguida de salto de línea y JSON UTF-8. Incluye una etiqueta, un ID de solo lectura y dos enteros de prueba con la regla cantidad ≤ límite. |
 | XML de preferencias y datos históricos de Android documentados en la investigación | Pendientes de verificación con muestras representativas. Se rechazan en esta fase. |
-| Partidas actuales de Android e iOS | Compatibilidad sin confirmar. |
+| Otras variantes de Android e iOS | Compatibilidad pendiente por canal y versión. |
 | Sincronización con ChillyRoom | Fuera del alcance de este editor de copias locales. |
 
 La investigación local `SHOULXING_RESEARCH`, en particular los informes 03, 06 y 07, describe XML de preferencias y archivos históricos con JSON, Base64 y DES-CBC, así como las limitaciones de ABI y del análisis estático. Se verificó la licencia Apache-2.0 del clon de SHOULXING en el commit de referencia. La implementación del adaptador sintético es propia y el motor funciona de forma independiente de esos componentes. [Referencia histórica de SHOULXING](https://github.com/STE4LPH/SHOULXING/tree/685691e09798aa6d39ae2f44f29e31ad6423b98d)
@@ -220,5 +221,5 @@ Para incorporar un formato real:
 
 1. Define la plataforma, el canal y la versión exacta del juego. Obtén, por una vía autorizada, varias copias propias representativas, incluidas muestras sin cambios y con cambios observables de un solo campo.
 2. Identifica firmas y variantes de estructura. Documenta tipos, rangos y relaciones, las secciones que deben conservarse y cualquier regla de integridad o codificación a partir de evidencia reproducible.
-3. Implementa un adaptador por versión en `backend/app/formats/`, con parser y serializador comprobados. Regístralo en `formats/registry.py` y añade fixtures autorizados o anonimizados, con casos de rechazo, relectura y preservación de datos ajenos a los cambios.
+3. Implementa un adaptador por versión en `backend/app/formats/`, con parser y serializador comprobados. Regístralo en el motor y añade fixtures sintéticos derivados de las estructuras verificadas, con casos de rechazo, relectura y preservación de datos ajenos a los cambios.
 4. Distingue la verificación del motor de la aceptación por el juego. Prueba la importación por un mecanismo autorizado en el cliente objetivo, con recuperaciones ensayadas, antes de anunciar compatibilidad para esa versión.

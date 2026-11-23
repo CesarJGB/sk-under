@@ -17,11 +17,10 @@ class DemoAdapter:
         description="Datos de prueba para recorrer la edición y exportación de una copia sintética.",
     )
 
-    def matches(self, data: bytes) -> bool:
-        return data.startswith(DEMO_SIGNATURE)
-
-    def read(self, data: bytes) -> Document:
-        return read_demo(data).model_dump(mode="json")
+    def read_if_matching(self, data: bytes) -> Document | None:
+        if data.startswith(DEMO_SIGNATURE):
+            return read_demo(data).model_dump(mode="json")
+        return None
 
     def fields(self, document: Document) -> list[EditorField]:
         # El motor solo entrega documentos validados por este adaptador.

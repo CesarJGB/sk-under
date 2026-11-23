@@ -9,9 +9,12 @@ export function EditorPage({ session, draft, update }: {
   draft: Draft
   update: (fieldId?: string, value?: string) => void
 }) {
+  const readOnly = session?.inspection.format.compatibility === 'read_only'
   return (
     <>
-      <PageTitle title="Editar copia">Revisa los valores originales y modifica los campos habilitados.</PageTitle>
+      {readOnly
+        ? <PageTitle title="Inspeccionar copia">Consulta los campos reconocidos en este guardado.</PageTitle>
+        : <PageTitle title="Editar copia">Revisa los valores originales y modifica los campos habilitados.</PageTitle>}
       {session ? <Fields key={session.inspection.sha256} session={session} draft={draft} update={update} /> : <NoSession />}
     </>
   )
@@ -23,6 +26,7 @@ function Fields({ session, draft, update }: {
   update: (fieldId?: string, value?: string) => void
 }) {
   const { format, fields, byte_size } = session.inspection
+  const readOnly = format.compatibility === 'read_only'
   const categories = [...new Set(fields.map((field) => field.category))]
   const [active, setActive] = useState(categories[0])
   const { summary, invalid } = summarize(fields, draft)
@@ -38,7 +42,7 @@ function Fields({ session, draft, update }: {
           <p>{format.name} · {formatSize(byte_size)}</p>
         </div>
         <span className={`edit-count ${count > 0 ? 'has-changes' : ''}`} role="status">
-          {count === 1 ? '1 cambio' : `${count} cambios`}
+          {readOnly ? 'Solo lectura' : count === 1 ? '1 cambio' : `${count} cambios`}
         </span>
       </div>
       {format.compatibility === 'synthetic' && <Notice tone="warning">Estás editando datos sintéticos de demostración.</Notice>}
@@ -92,10 +96,12 @@ function Fields({ session, draft, update }: {
         </div>
       )}
       <div className="actions editor-actions">
-        <button className="button quiet" type="button" disabled={!Object.keys(draft).length} onClick={() => update()}>
-          <RotateCcw size={17} />Revertir todo
-        </button>
-        <Link className="button primary" to="/exportar"><CircleCheck size={18} />Revisar exportación</Link>
+        {!readOnly && (
+          <button className="button quiet" type="button" disabled={!Object.keys(draft).length} onClick={() => update()}>
+            <RotateCcw size={17} />Revertir todo
+          </button>
+        )}
+        <Link className="button primary" to="/exportar"><CircleCheck size={18} />{readOnly ? 'Preparar copia intacta' : 'Revisar exportación'}</Link>
       </div>
     </>
   )
