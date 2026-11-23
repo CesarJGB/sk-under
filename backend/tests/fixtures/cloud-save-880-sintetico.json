@@ -1,0 +1,51 @@
+{
+  "serialzedVersion": 1,
+  "cloudSaveId": "sintetico-880-cuenta",
+  "platformId": "sintetico-880-plataforma",
+  "gameData": {
+    "gameVersion": 80800,
+    "heroes": [],
+    "gems": 0
+  },
+  "itemData": {
+    "materials": {},
+    "seeds": {}
+  },
+  "statisticData": {
+    "StatisticsData": {}
+  },
+  "settingData": null,
+  "taskData": {
+    "NewTaskData": []
+  },
+  "seasonData": {
+    "coin": 0
+  },
+  "monsterRiseData": {
+    "version": 1,
+    "maxClearLevel": 0
+  },
+  "weaponEvolutionData": {
+    "weapons": {}
+  },
+  "miscData": {
+    "unlockedKillEffectIds": []
+  },
+  "pvpData": {
+    "pvpTaskData": {}
+  },
+  "battlePassSaveData": {
+    "seasonData": []
+  },
+  "escapeSeasonData": {},
+  "maps": null,
+  "sandboxConfig": {
+    "enabled": false
+  },
+  "campoSintetico880": {
+    "entero": 9007199254740993
+  },
+  "seccionNuevaSintetica": {
+    "presente": true
+  }
+}

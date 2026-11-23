@@ -10,6 +10,8 @@ La Fase 5.1 registra las pruebas de ejecución de Soul Knight 8.8.0 y de acceso 
 
 La Fase 5.3 verificó una ruta condicional de precarga en el panel y reconstruyó las nueve referencias locales 8.6.0 en Linux. El importador acepta agregados suministrados en JSON o gzip. [Informe de Fase 5.3](docs/research/phase5-3/README.md) · [Uso del importador](docs/research/phase5-3/importer.md)
 
+La Fase 5.4 separó el transporte RPC, documentó la máquina de estados de recuperación y añadió un cliente Linux con transporte remoto deshabilitado. La sesión autenticada y la muestra real de 8.8.0 siguen bloqueadas. [Informe de Fase 5.4](docs/research/phase5-4/README.md) · [Prototipo Linux](docs/research/phase5-4/linux-client-prototype.md)
+
 ## Arquitectura
 
 ```text

@@ -10,6 +10,7 @@ from hashlib import sha256
 from pathlib import Path
 from typing import Protocol
 
+from .cloud.validator import CopyIntegrityError, verify_copy_bytes
 from .cloud_save import (
     MAX_INPUT_BYTES,
     OPTIONAL_SECTIONS,
@@ -19,10 +20,6 @@ from .cloud_save import (
     ReconstructedCloudSave,
     reconstruct_cloud_save,
 )
-
-
-class CopyIntegrityError(CloudSaveError):
-    code = "integrity_mismatch"
 
 
 class CopySourceError(CloudSaveError):
@@ -102,8 +99,7 @@ def import_copy(source: AggregateSource) -> ImportedCopy:
     if type(metadata.size) is not int or not 0 < metadata.size <= MAX_INPUT_BYTES:
         raise CopyLimitError("Tamaño de copia fuera de los límites.")
     payload = source.read(metadata.size)
-    if len(payload) != metadata.size or sha256(payload).hexdigest() != metadata.sha256:
-        raise CopyIntegrityError("Los bytes difieren de los metadatos de la copia.")
+    verify_copy_bytes(payload, metadata)
     return ImportedCopy(payload, reconstruct_cloud_save(payload))
 
 
