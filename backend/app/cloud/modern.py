@@ -8,6 +8,7 @@ huella independiente publicada por el servidor.
 from __future__ import annotations
 
 import argparse
+import http.client
 import json
 import os
 import urllib.error
@@ -40,7 +41,10 @@ def _fetch(url: str, headers: dict[str, str], timeout: float) -> tuple[int, str,
     except urllib.error.HTTPError as exc:
         response = exc
     with response:
-        body = response.read(MAX_JSON_BYTES + 1)
+        try:
+            body = response.read(MAX_JSON_BYTES + 1)
+        except http.client.IncompleteRead:
+            raise CloudProviderProtocolError('Respuesta HTTP incompleta.') from None
         length = response.headers.get('Content-Length')
         if length is not None:
             try:
@@ -105,8 +109,9 @@ class ModernCloudSaveProvider:
         }
         try:
             status, encoding, wire = self.fetch(URL, headers, self.timeout)
-        except (OSError, urllib.error.URLError) as exc:
-            raise CloudProviderUnavailable('No se pudo contactar con el servicio de nube.') from exc
+        except (OSError, urllib.error.URLError, http.client.HTTPException):
+            # No propagar detalles del transporte que podrían contener datos privados.
+            raise CloudProviderUnavailable('No se pudo contactar con el servicio de nube.') from None
         if status in (401, 403):
             raise CloudProviderUnauthenticated('El servicio rechazó la sesión.')
         if status != 200:

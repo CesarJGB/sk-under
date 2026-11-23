@@ -1,0 +1,5 @@
+# Fase 6.0: avance parcial
+
+La descarga Linux se reprodujo dos veces con la cuenta de laboratorio y Android detenido. El contrato exacto de subida sigue sin verificarse: el inventario estático identifica un posible ciclo de token, pero no su comportamiento. El candidato solo se comprobó localmente. No se subió ni modificó una partida; por tanto, no se completó el ciclo bidireccional. Ver [descarga](download.md), [protocolo](upload-protocol.md), [experimentos](upload-experiments.md), [ciclo](roundtrip.md), [modificación](modification.md), [seguridad](security.md) y [evidencia](evidence.md).
+
+Para el editor faltan la observación del cliente oficial, implementación de escritura validada y deshabilitada por defecto, integridad y concurrencia antes de escribir, copia de seguridad y restauración verificadas, confirmación del usuario e integración del flujo con autenticación segura. Android no interviene en la descarga Linux; sigue siendo instrumento de observación y verificación oficial mientras no se demuestre el ciclo.

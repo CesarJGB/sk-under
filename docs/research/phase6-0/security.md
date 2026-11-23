@@ -1,0 +1,3 @@
+# Seguridad
+
+La sesión y los identificadores se extrajeron únicamente de los artefactos privados preexistentes de la instalación autorizada; no se almacenaron en el repositorio. Las copias están fuera del árbol y con permisos restrictivos. No se desactivó TLS ni se eludieron controles. El hash local detecta diferencias, no autentica por sí solo la copia. El acceso del propietario puede cambiar los permisos 0400; se requiere una copia de seguridad independiente y un procedimiento de recuperación probado antes de escribir. No se registran cuerpos de respuesta ni errores de transporte originales en los errores públicos del proveedor. La escritura remota no está implementada ni habilitada.

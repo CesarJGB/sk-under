@@ -1,11 +1,12 @@
 import gzip
+import http.client
 import json
 import os
 from pathlib import Path
 
 import pytest
 
-from app.cloud.modern import ModernCloudSaveProvider, URL
+from app.cloud.modern import ModernCloudSaveProvider, URL, _fetch
 from app.cloud.provider import CloudProviderProtocolError, CloudProviderUnauthenticated, CloudProviderUnavailable
 from app.cloud_save import CopyLimitError, reconstruct_cloud_save
 
@@ -62,6 +63,45 @@ def test_rejects_limits_and_missing_credentials():
         provider(status=400).download()
     with pytest.raises(CloudProviderUnauthenticated):
         provider(status=401).download()
+
+
+def test_truncated_http_response_is_a_protocol_error(monkeypatch):
+    class Response:
+        headers = {'Content-Length': '100'}
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            pass
+
+        def read(self, limit):
+            raise http.client.IncompleteRead(b'partial', 93)
+
+    class Opener:
+        def open(self, request, timeout):
+            return Response()
+
+    monkeypatch.setattr('urllib.request.build_opener', lambda *args: Opener())
+    with pytest.raises(CloudProviderProtocolError, match='incompleta'):
+        _fetch(URL, {}, 10)
+
+
+def test_transport_error_does_not_expose_details():
+    def fetch(*args):
+        raise OSError('synthetic-secret')
+
+    p = ModernCloudSaveProvider('token', 'device', 'distro', fetch=fetch)
+    with pytest.raises(CloudProviderUnavailable) as error:
+        p.download()
+    assert 'synthetic-secret' not in str(error.value)
+    assert error.value.__suppress_context__
+
+
+@pytest.mark.parametrize('status', [401, 403])
+def test_authentication_failure_is_typed(status):
+    with pytest.raises(CloudProviderUnauthenticated):
+        provider(status=status).download()
 
 
 def test_optional_private_service_response():
