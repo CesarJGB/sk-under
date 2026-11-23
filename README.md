@@ -28,6 +28,8 @@ La Fase 6.1 ejecutó la primera subida real desde Linux a `/BlobSave/Upload`. El
 
 La Fase 6.2 convirtió ese protocolo en un editor web de gemas. La página **Partida** descarga la copia auténtica de laboratorio, muestra `gameData.gems`, prepara una copia determinista que solo cambia ese campo, crea un respaldo privado, valida el resultado y permite confirmar la subida con una autorización administrativa del servidor. La persistencia se comprueba con una descarga posterior y el original se puede restaurar desde el respaldo. La escritura sigue deshabilitada por defecto y no se puede activar desde el navegador. [Informe de Fase 6.2](docs/research/phase6-2/README.md)
 
+La [Fase 6.3](docs/research/phase6-3/README.md) documenta la vinculación privada, el editor por cuenta y la prueba real de persistencia en Android Global. El inicio directo con correo y contraseña sigue pendiente.
+
 ## Arquitectura
 
 ```text
@@ -160,7 +162,7 @@ Para desarrollo, el backend y Vite leen el `.env` de la raíz. El backend tambi�
 
 ## Editor web de partida (Fase 6.2)
 
-La página **Partida** usa las rutas `/api/v1/cloud/lab/*`. La lectura descarga la copia auténtica, la preparación crea un respaldo privado y valida que solo cambió `gameData.gems`, y la confirmación exige simultáneamente `SK_CLOUD_WRITE_ENABLED=true`, `SK_CLOUD_ADMIN_TOKEN` configurado y la cabecera `X-SK-Cloud-Admin` correcta. La escritura se comprueba siempre con una descarga posterior; un `200` aislado no se presenta como persistencia.
+El laboratorio administrativo en `/partida/laboratorio` usa las rutas `/api/v1/cloud/lab/*`. La lectura descarga la copia auténtica, la preparación crea un respaldo privado y valida que solo cambió `gameData.gems`, y la confirmación exige simultáneamente `SK_CLOUD_WRITE_ENABLED=true`, `SK_CLOUD_ADMIN_TOKEN` configurado y la cabecera `X-SK-Cloud-Admin` correcta. La escritura se comprueba siempre con una descarga posterior; un `200` aislado no se presenta como persistencia.
 
 La edición es determinista y conserva los bytes ajenos al campo: exige la serialización canónica observada en 8.8.0 (claves ordenadas, separadores `", "` y `": "`, sin indentación) y rechaza cualquier copia que no la reproduzca. El valor aceptado es un entero entre `0` y `2147483647`. Un valor igual al actual genera una operación sin cambios y la confirmación remota se rechaza. La restauración reenvía el original solo si la nube contiene exactamente el candidato confirmado de ese respaldo.
 

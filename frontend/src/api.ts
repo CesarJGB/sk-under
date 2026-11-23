@@ -133,7 +133,7 @@ export type LabVerification = {
 }
 
 export class ApiProblem extends Error {
-  constructor(message: string, readonly issues: Issue[] = []) {
+  constructor(message: string, readonly issues: Issue[] = [], readonly code = '') {
     super(message)
   }
 }
@@ -149,6 +149,7 @@ async function request(
   payload?: object,
   token = '',
   admin = '',
+  credentials: RequestCredentials = 'omit',
 ) {
   if (!baseUrl) throw new ApiProblem('Falta configurar la URL de la API.')
   if (window.location.protocol === 'https:' && !baseUrl.toLowerCase().startsWith('https://')) {
@@ -164,7 +165,7 @@ async function request(
     headers,
     body: payload ? JSON.stringify(payload) : undefined,
     cache: 'no-store',
-    credentials: 'omit',
+    credentials,
     redirect: 'error',
     signal,
   })
@@ -174,6 +175,7 @@ async function request(
     throw new ApiProblem(
       body?.error?.message ?? 'La API no pudo procesar la solicitud.',
       body?.error?.issues ?? [],
+      body?.error?.code,
     )
   }
   return response
@@ -235,6 +237,56 @@ export const api = {
   },
   async labBackups(token: string, signal: AbortSignal): Promise<{ backups: LabBackup[] }> {
     return (await request('/cloud/lab/backups', signal, undefined, token)).json()
+  },
+}
+
+export type CloudAccount = {
+  id: string
+  label: string
+  platform: 'android-global'
+  connected: boolean
+  write_ready: boolean
+}
+export type CloudAccounts = {
+  configured: boolean
+  message: string | null
+  password_login_available: boolean
+  login_message: string
+  min_gems: number
+  max_gems: number
+  accounts: CloudAccount[]
+}
+export type AccountSave = LabSave & { downloaded_at: string }
+export type AccountBackup = LabBackup & { confirmed: boolean }
+
+async function accountRequest<T>(path: string, signal: AbortSignal, payload?: object): Promise<T> {
+  return (await request(`/cloud/accounts${path}`, signal, payload, '', '', 'include')).json()
+}
+
+export const cloudAccounts = {
+  list: (signal: AbortSignal) => accountRequest<CloudAccounts>('', signal),
+  claim: (ticket: string, signal: AbortSignal) =>
+    accountRequest<{ accounts: CloudAccount[] }>('/claim', signal, { ticket }),
+  login: (email: string, password: string, signal: AbortSignal) =>
+    accountRequest<{ accounts: CloudAccount[] }>('/login', signal, { platform: 'android-global', email, password }),
+  account(id: string) {
+    const path = `/${encodeURIComponent(id)}`
+    return {
+      rename: (label: string, signal: AbortSignal) =>
+        accountRequest<{ accounts: CloudAccount[] }>(`${path}/rename`, signal, { label }),
+      unlink: (signal: AbortSignal) =>
+        accountRequest<{ accounts: CloudAccount[] }>(`${path}/unlink`, signal, { confirmation: 'DESVINCULAR' }),
+      save: (signal: AbortSignal) => accountRequest<AccountSave>(`${path}/save`, signal),
+      backups: (signal: AbortSignal) => accountRequest<{ backups: AccountBackup[] }>(`${path}/backups`, signal),
+      prepare: (new_gems: number, source_sha256: string, signal: AbortSignal) =>
+        accountRequest<LabPrepared>(`${path}/prepare`, signal, { new_gems, source_sha256 }),
+      confirm: (backup_id: string, expected_sha256: string, signal: AbortSignal) =>
+        accountRequest<LabWriteResult>(`${path}/confirm`, signal, { backup_id, expected_sha256, confirmation: 'SUBIR' }),
+      restore: (backup_id: string, signal: AbortSignal) =>
+        accountRequest<LabWriteResult>(`${path}/restore`, signal, { backup_id, confirmation: 'RESTAURAR' }),
+      verify: (backup_id: string, signal: AbortSignal) =>
+        accountRequest<LabVerification>(`${path}/verify`, signal, { backup_id }),
+    }
   },
 }
 

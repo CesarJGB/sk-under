@@ -32,6 +32,9 @@ class Settings(BaseSettings):
     cloud_distro_id: SecretStr | None = None
     cloud_admin_token: SecretStr | None = None
     cloud_write_enabled: bool = False
+    cloud_accounts_key: SecretStr | None = None
+    cloud_accounts_origin: str = ""
+    cloud_accounts_dir: Path | None = None
     cloud_backup_dir: Path = Field(
         default_factory=lambda: Path.home() / ".local" / "share" / "sk-under" / "backups"
     )

@@ -341,10 +341,13 @@ h3 { font-weight: 650; letter-spacing: -.02em; }
   .file-strip .edit-count { grid-column: 2; justify-self: start; margin-left: 0; }
 }
 
-@media (max-width: 380px) {
-  .header-note { display: none; }
+@media (max-width: 480px) {
   .nav-link { flex-direction: column; font-size: .8125rem; }
   .nav-link.active::after { inset-inline: 6px; }
+}
+
+@media (max-width: 380px) {
+  .header-note { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -532,4 +535,20 @@ h3 { font-weight: 650; letter-spacing: -.02em; }
   .lab-shell { padding: .7rem; }
   .lab-card { padding: .85rem; }
   .lab-change-preview { gap: .55rem; }
+}
+
+.account-shell { max-width: 46rem; margin-inline: auto; }
+.account-shell h2 { margin: 0; font-size: 1.13rem; }
+.account-shell .lab-card { overflow-wrap: anywhere; }
+.account-shell .lab-field + .button, .account-shell .lab-check + .button { margin-top: .75rem; }
+.account-details { margin-top: .75rem; }
+.account-details > summary { min-height: 44px; padding-block: .7rem; cursor: pointer; color: #d6f8a9; }
+.account-credentials { padding: 0; margin: 0; border: 0; min-width: 0; }
+.account-credentials:disabled input { opacity: .62; }
+.account-preview, .account-management { margin-top: .85rem; padding-top: .85rem; border-top: 1px solid #315944; }
+.account-shell .lab-actions { margin-top: .75rem; }
+
+@media (max-width: 520px) {
+  .account-shell .button { width: 100%; }
+  .account-shell .lab-save { grid-template-columns: 1fr; }
 }

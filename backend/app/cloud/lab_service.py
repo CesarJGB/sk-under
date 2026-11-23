@@ -291,8 +291,10 @@ class CloudLabService:
         except BackupStoreError:
             pass
 
-    def prepare(self, new_gems: object) -> PreparedEdit:
+    def prepare(self, new_gems: object, *, expected_source: str | None = None) -> PreparedEdit:
         save = self.provider.download(self.max_input_bytes)
+        if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
+            raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
         edit = prepare_gems_edit(save.payload, new_gems)
         if edit.original_sha256 != save.metadata.sha256:
             raise LabServiceError("El original preparado no coincide con la descarga.")
@@ -315,7 +317,7 @@ class CloudLabService:
         )
         return PreparedEdit(bundle.record, edit, save.metadata.source)
 
-    def confirm(self, backup_id: str, expected_sha256: str) -> WriteResult:
+    def confirm(self, backup_id: str, expected_sha256: str, *, single_attempt: bool = False) -> WriteResult:
         if not self.write_enabled or self.uploader is None:
             raise LabWriteDisabled("La escritura remota está deshabilitada en el servidor.")
         if not isinstance(expected_sha256, str) or not _SHA256.fullmatch(expected_sha256):
@@ -333,6 +335,8 @@ class CloudLabService:
                 raise LabRemoteChanged(
                     "La partida remota cambió desde la preparación. Vuelve a cargarla antes de escribir."
                 )
+            if single_attempt:
+                self.store.claim_confirmation_attempt(backup_id)
             upload = self.uploader.upload(bundle.candidate)
             remote = self.provider.download(self.max_input_bytes)
             persisted = (

@@ -1,0 +1,41 @@
+{
+  "browser": "Chromium/Pixel 7 (emulación)",
+  "started_at": "2026-11-23T21:31:53.912Z",
+  "cookie_persisted_after_reload": true,
+  "source": {
+    "gems": 1001,
+    "size": 114778,
+    "sha256": "3f4b7617b04da3f1bd3b1b01197c46cf99d6ebd2a048c733d1738657239f492a"
+  },
+  "candidate": {
+    "gems": 1002,
+    "sha256": "d0e019c816921f0d12345bd192c8e0815e0b6bbf418f16d8d5806c5afd2d79ed",
+    "changed_bytes": 1
+  },
+  "result": {
+    "uploaded": true,
+    "accepted": true,
+    "persisted": true,
+    "remote_gems": 1002,
+    "remote_sha256": "d0e019c816921f0d12345bd192c8e0815e0b6bbf418f16d8d5806c5afd2d79ed"
+  },
+  "independent_read": {
+    "gems": 1002,
+    "sha256": "d0e019c816921f0d12345bd192c8e0815e0b6bbf418f16d8d5806c5afd2d79ed"
+  },
+  "completed_at": "2026-11-23T21:32:06.008Z",
+  "official_client": {
+    "version": "8.8.0",
+    "version_code": 1080800,
+    "android_api": 30,
+    "panel_cloud_gems": 1002,
+    "panel_local_before": 1001,
+    "local_after_retrieve": 1002,
+    "game_data_size": 25496,
+    "events": [
+      "CloudSaveGameData:CoverPlayerPref",
+      "CloudSaveRunner:AutoDnloadAsync"
+    ],
+    "retrieve_at": "2026-11-23T21:33:20Z"
+  }
+}

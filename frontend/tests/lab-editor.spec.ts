@@ -89,7 +89,7 @@ test('carga, prepara, confirma y verifica una modificación de gemas', async ({ 
     })
   })
 
-  await page.goto('/partida')
+  await page.goto('/partida/laboratorio')
   await expect(page.getByRole('heading', { name: 'Editor de partida' })).toBeVisible()
   await expect(page.getByText('Laboratorio real · escritura habilitada')).toBeVisible()
 
@@ -123,7 +123,7 @@ test('la vista previa bloquea la escritura cuando el laboratorio es de solo lect
   await mockLab(page, {
     status: { mode: 'read_only', write_enabled: false, write_ready: false },
   })
-  await page.goto('/partida')
+  await page.goto('/partida/laboratorio')
   await page.getByRole('button', { name: 'Cargar partida de laboratorio' }).click()
   await page.locator('#lab-new-gems').fill('1001')
   await page.getByRole('button', { name: 'Preparar modificación y respaldo' }).click()
@@ -136,7 +136,7 @@ test('la vista previa bloquea la escritura cuando el laboratorio es de solo lect
 test('mantiene el editor dentro del ancho móvil', async ({ page }) => {
   await mockLab(page)
   await page.setViewportSize({ width: 320, height: 760 })
-  await page.goto('/partida')
+  await page.goto('/partida/laboratorio')
   await page.getByRole('button', { name: 'Cargar partida de laboratorio' }).click()
   await expect(page.getByTestId('lab-current-gems')).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
@@ -144,7 +144,7 @@ test('mantiene el editor dentro del ancho móvil', async ({ page }) => {
 
 test('no permite confirmar sin frase y sin autorización administrativa', async ({ page }) => {
   await mockLab(page)
-  await page.goto('/partida')
+  await page.goto('/partida/laboratorio')
   await page.getByRole('button', { name: 'Cargar partida de laboratorio' }).click()
   await page.locator('#lab-new-gems').fill('1001')
   await page.getByRole('button', { name: 'Preparar modificación y respaldo' }).click()
@@ -171,7 +171,7 @@ test('pide el token de acceso antes de consultar el laboratorio', async ({ page 
     return route.fulfill({ json: status })
   })
   await page.route('**/api/v1/cloud/lab/backups', (route) => route.fulfill({ json: { backups: [] } }))
-  await page.goto('/partida')
+  await page.goto('/partida/laboratorio')
   await expect(page.locator('#lab-access-token')).toBeVisible()
   expect(statusCalls).toBe(0)
   await page.locator('#lab-access-token').fill('t'.repeat(32))
@@ -196,7 +196,7 @@ test('muestra el laboratorio no configurado sin bloquear el estado', async ({ pa
   await page.route('**/api/v1/cloud/lab/backups', (route) => route.fulfill({
     status: 503, json: { error: { code: 'cloud_lab_not_configured', message: 'Sin configurar.', issues: [] } },
   }))
-  await page.goto('/partida')
+  await page.goto('/partida/laboratorio')
   await expect(page.getByText('Laboratorio no configurado', { exact: true })).toBeVisible()
   await expect(page.getByText('El laboratorio de nube no está configurado en el servidor.')).toBeVisible()
   await expect(page.getByRole('button', { name: 'Cargar partida de laboratorio' })).toBeDisabled()

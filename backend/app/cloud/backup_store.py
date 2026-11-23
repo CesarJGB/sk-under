@@ -133,6 +133,17 @@ class LabBackupStore:
             raise InvalidBackupId("El identificador de respaldo no es válido.")
         return self.root / backup_id
 
+    def claim_confirmation_attempt(self, backup_id: str) -> None:
+        path = self._directory(backup_id) / "upload-attempt"
+        try:
+            self._write_private(path, b"\n")
+        except BackupStoreError:
+            if path.is_file():
+                raise BackupAlreadyConfirmed(
+                    "Ya se intentó subir este candidato. Verifica la partida antes de preparar otra edición."
+                ) from None
+            raise
+
     def _write_private(self, path: Path, data: bytes, *, exclusive: bool = True) -> None:
         flags = os.O_WRONLY | os.O_CREAT | os.O_NOFOLLOW
         flags |= os.O_EXCL if exclusive else os.O_TRUNC

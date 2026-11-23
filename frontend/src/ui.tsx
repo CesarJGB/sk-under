@@ -3,11 +3,11 @@ import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import type { ApiProblem, EditorField } from './api'
 
-export function PageTitle({ title, children }: { title: string; children: ReactNode }) {
+export function PageTitle({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <div className="page-title">
       <h1>{title}</h1>
-      <p>{children}</p>
+      {children && <p>{children}</p>}
     </div>
   )
 }
