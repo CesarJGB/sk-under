@@ -64,7 +64,11 @@ class LocalFileSource:
             raise CopyLimitError("Tamaño de copia fuera de los límites.")
         try:
             # O_NONBLOCK permite rechazar también un FIFO sin esperar a un escritor.
-            with open(self.path, "rb", opener=lambda p, flags: os.open(p, flags | os.O_NONBLOCK)) as stream:
+            with open(
+                self.path,
+                "rb",
+                opener=lambda p, flags: os.open(p, flags | os.O_NONBLOCK | os.O_NOFOLLOW),
+            ) as stream:
                 info = os.fstat(stream.fileno())
                 if not stat.S_ISREG(info.st_mode):
                     raise CopySourceError("Se requiere un archivo regular.")

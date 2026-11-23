@@ -1,7 +1,7 @@
-"""Procesamiento local de una copia ya recibida. Sin red y sin Android.
+"""Procesamiento local de una copia ya recibida y proveedores de adquisición.
 
-El paquete separa transporte, formato, verificación e importación. Su único
-proveedor remoto está deshabilitado de forma explícita: no existe una interfaz
-documentada y autorizada del proveedor. El proveedor simulado lee un archivo
-local y permite integrar el flujo completo en Linux.
+El paquete separa transporte, formato, verificación e importación. El proveedor
+por defecto está deshabilitado. ``provider.py`` añade un fixture local y un
+prototipo HTTP de solo lectura para el gateway oficial; este último exige un
+token de juego y su camino de éxito no se verificó contra el servicio real.
 """

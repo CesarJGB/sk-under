@@ -19,6 +19,13 @@ from hashlib import sha256
 from pathlib import Path
 from typing import Protocol
 
+from .cloud.provider import (
+    AcquiredCloudSave,
+    CloudSaveAcquisitionProvider,
+    CopyMetadataSource,
+)
+from .cloud_import import CopyMetadata, ImportedCopy, import_copy
+from .cloud_save import MAX_INPUT_BYTES
 from .local_save import (
     MAX_LOCAL_FILE_BYTES,
     LocalFormatError,
@@ -260,6 +267,55 @@ class LocalBridge:
         decoded = self.decoder.decode(provider.acquire())
         edited, _ = self.editor.edit(decoded, changes)
         return self.exporter.export(edited, target, overwrite=overwrite)
+
+
+@dataclass(frozen=True)
+class CloudAcquisition:
+    """Resultado de una adquisición ya validada por el importador existente."""
+
+    acquired: AcquiredCloudSave
+    copy: ImportedCopy
+
+    def summary(self) -> dict[str, object]:
+        return {
+            **self.acquired.summary(),
+            **self.copy.aggregate.summary(),
+        }
+
+
+@dataclass(frozen=True)
+class CloudBridge:
+    """Une un proveedor de nube con el importador y el exportador locales.
+
+    No inicia sesión, no escribe en la nube y no acepta credenciales en claro.
+    Un proveedor deshabilitado propaga su error tipado; un fixture local se
+    etiqueta como tal y no se presenta como una descarga.
+    """
+
+    def acquire(self, provider: CloudSaveAcquisitionProvider) -> CloudAcquisition:
+        acquired = provider.download(MAX_INPUT_BYTES)
+        declared = CopyMetadata(acquired.metadata.size, acquired.metadata.sha256)
+        source = CopyMetadataSource(declared, acquired.payload)
+        return CloudAcquisition(acquired, import_copy(source))
+
+    def inspect(self, provider: CloudSaveAcquisitionProvider) -> dict[str, object]:
+        return self.acquire(provider).summary()
+
+    def export(
+        self,
+        provider: CloudSaveAcquisitionProvider,
+        target: Path,
+        *,
+        overwrite: bool = False,
+    ) -> ExportedSave:
+        acquired = provider.download(MAX_INPUT_BYTES)
+        written = write_private_file(target, acquired.payload, overwrite=overwrite)
+        return ExportedSave(
+            target=str(written),
+            bytes=len(acquired.payload),
+            sha256=sha256(acquired.payload).hexdigest(),
+            original_preserved=True,
+        )
 
 
 def build_bridge(settings: Settings) -> LocalBridge:

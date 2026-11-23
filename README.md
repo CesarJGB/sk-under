@@ -1,6 +1,6 @@
 # sk-under
 
-**Soul Knight Editor · Fase 5.6**
+**Soul Knight Editor · Fase 5.7**
 
 Editor web privado para inspeccionar copias locales. La muestra sintética `.skdemo` permite edición y exportación. El adaptador opcional de la Fase 3 lee nueve estructuras `.data` observadas en muestras de Soul Knight 8.6.0 y permite descargar copias intactas. [Configuración y cobertura de la Fase 3](docs/phase3/IMPLEMENTATION.md)
 
@@ -15,6 +15,8 @@ La Fase 5.4 separó el transporte RPC, documentó la máquina de estados de recu
 La Fase 5.5 descifró la metadata real de 8.8.0, inventarió `CloudSaveGameData` y sus secciones, comparó los nombres con las nueve muestras 8.6.0 y añadió un laboratorio local de edición y un decodificador RPC gzip experimental. [Informe de Fase 5.5](docs/research/phase5-5/README.md)
 
 La Fase 5.6 obtuvo un perfil local auténtico de Soul Knight 8.8.0 desde el APK oficial en un emulador propio, decodificó sus 18 archivos de datos (incluido `game.data`), confirmó gzip en el cuerpo de `ZipHelper.Decompress` y añadió un puente local Linux con roundtrip binario exacto. El agregado de nube y la aceptación por el cliente siguen pendientes. [Informe de Fase 5.6](docs/research/phase5-6/README.md)
+
+La Fase 5.7 verificó el portal oficial de cuentas y la superficie del gateway, añadió un proveedor Linux de solo lectura con pruebas sintéticas y documentó el bloqueo del cliente oficial en el AVD. No se obtuvo la partida de nube ni la aceptación de una modificación. [Informe de Fase 5.7](docs/research/phase5-7/README.md)
 
 ## Arquitectura
 
@@ -232,8 +234,8 @@ El token concede el mismo acceso a quienes lo comparten. Esta solución está pr
 | `.skdemo` v1 | Verificado con dos muestras sintéticas. Firma `SK-EDITOR-DEMO/1` seguida de salto de línea y JSON UTF-8. Incluye una etiqueta, un ID de solo lectura y dos enteros de prueba con la regla cantidad ≤ límite. |
 | XML de preferencias y datos históricos de Android documentados en la investigación | Pendientes de verificación con muestras representativas. Se rechazan en esta fase. |
 | Otras variantes de Android e iOS | Compatibilidad pendiente por canal y versión. |
-| Acceso a guardados de ChillyRoom | Se verificó la restauración oficial en Android con una cuenta propia. La copia para el editor y la automatización siguen pendientes. El reconstructor de solo lectura se probó con fixtures sintéticos. [Fase 5](docs/research/phase5/README.md) · [Fase 5.1](docs/research/phase5-experimental/README.md) |
-| Agregado `CloudSaveGameData` 8.8.0 | Modelo identificado en metadata (18 secciones, 46 649 typeDefs) y perfil local real de 8.8.0. Falta la copia de nube (`serialzedVersion`, `cloudSaveId`, `platformId`) y la aceptación por el cliente. [Fase 5.6](docs/research/phase5-6/README.md) |
+| Acceso a guardados de ChillyRoom | La Fase 5.1 verificó la restauración oficial en Android con una cuenta propia. La Fase 5.7 obtuvo una sesión auténtica del portal y caracterizó el gateway, pero no descargó el guardado. La copia para el editor y la automatización siguen pendientes. [Fase 5.7](docs/research/phase5-7/cloud-save-acquisition.md) · [Fase 5.1](docs/research/phase5-experimental/README.md) |
+| Agregado `CloudSaveGameData` 8.8.0 | Modelo identificado en metadata (18 secciones, 46 649 typeDefs) y perfil local real de 8.8.0. Falta la copia de nube (`serialzedVersion`, `cloudSaveId`, `platformId`) y la aceptación por el cliente. La Fase 5.7 confirmó rutas y firmas, no la muestra. [Fase 5.7](docs/research/phase5-7/rpc-netpack-capture.md) |
 | Edición local de un agregado | Laboratorio sobre JSON/gzip sintético y sobre archivos locales 8.8.0 (DES y XOR), con conservación de campos desconocidos y diff semántico/binario. No se declara aceptación por el juego. [Laboratorio 5.5](docs/research/phase5-5/save-editing-lab.md) · [Roundtrip 5.6](docs/research/phase5-6/real-save-roundtrip.md) |
 
 La investigación local `SHOULXING_RESEARCH`, en particular los informes 03, 06 y 07, describe XML de preferencias y archivos históricos con JSON, Base64 y DES-CBC, así como las limitaciones de ABI y del análisis estático. Se verificó la licencia Apache-2.0 del clon de SHOULXING en el commit de referencia. La implementación del adaptador sintético es propia y el motor funciona de forma independiente de esos componentes. [Referencia histórica de SHOULXING](https://github.com/STE4LPH/SHOULXING/tree/685691e09798aa6d39ae2f44f29e31ad6423b98d)
