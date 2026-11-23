@@ -54,5 +54,6 @@ No se reejecutó la comprobación con Soul Knight 8.8.0: `adb devices` no encont
 
 ## Publicación
 
-- Commit final: pendiente de registrar tras el push.
-- GitHub Actions: pendiente de verificar tras el push.
+- Commit de implementación: `4421141` (`feat: editor web de gemas con respaldo y verificación`).
+- GitHub Actions: [run 45267506256](https://github.com/CesarJGB/sk-under/actions/runs/45267506256) completado con éxito. Pasaron Backend (330 pruebas, 16 omitidas), Frontend (TypeScript y Vite), Navegador (10 pruebas Playwright) e Higiene, formato y secretos.
+- El run solo emitió avisos de deprecación de Node.js 20 en acciones de GitHub; no hubo fallos.
