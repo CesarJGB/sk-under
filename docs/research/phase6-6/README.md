@@ -1,5 +1,7 @@
 # Fase 6.6: investigación de autenticación nativa
 
+**Actualización:** consulta la [reapertura experimental](reapertura.md), que sustituye el estado y las pruebas iniciales de este documento.
+
 Estado: investigación parcial; niveles 2–4 no alcanzados. No se obtuvo una sesión nueva desde Linux, no se verificó identidad ni se descargó una partida con una sesión obtenida por la herramienta. No se ejecutó una autenticación real en esta fase. La fase 6.4 sí demostró una descarga Linux con una sesión recién emitida por Android, pero eso no demuestra autonomía. El propietario ha comunicado además la validación de subida y persistencia desde Android físico; no se repitió aquí.
 
 ## Evidencia y experimentos
