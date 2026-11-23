@@ -1,13 +1,15 @@
-# Fase 5.9: lectura moderna de ChillyRoom Cloud
+# Fase 5.9: descarga moderna desde Linux
 
-**Resultado: bloqueado antes de identificar el contrato.** No se consiguió una descarga moderna independiente, ni se ejecutó la etapa de subida. La única referencia moderna sigue siendo un JSON extraído de memoria del cliente oficial en 5.8, no una respuesta de red. En esta revisión se analizó nuevamente la captura de la recuperación y se ejecutaron pruebas con esa muestra y los archivos restaurados, sin repetir la operación oficial ni enviar solicitudes remotas.
+**Resultado de la continuación:** se repitió la recuperación oficial y, después de apagar Android, Linux descargó cuatro veces la copia moderna de la cuenta de laboratorio. Las cuatro lecturas obtuvieron el mismo agregado JSON de 114.778 bytes, con 17 claves de nivel superior y `gameData.gems=1000`. Una lectura usó el proveedor experimental y otra su CLI. La escritura desde Linux sigue sin demostrarse ni habilitarse.
 
 | Evidencia | Estado | Alcance |
 | --- | --- | --- |
-| Recuperación y 1.000 gemas en cliente oficial | Confirmado mediante el cliente oficial en 5.8 | Aplicación local y resumen de nube; sin atribución de respuesta de red |
-| Tráfico en ventana de recuperación | Confirmado en captura; atribución bloqueada | Hay tráfico en puerto 443, pero no se identifica solicitud ni proceso |
-| Métodos y rutas candidatos | Inferidos a partir de metadata | No constituyen contrato ni demuestran transporte moderno |
-| Descarga moderna desde Linux con Android apagado | No demostrado | Las respuestas de 5.8 fueron legacy, 500 y 404 |
-| Subida Linux, conservación y aceptación oficial | Bloqueado | La descarga verificable es condición previa |
+| 5.8: subida y recuperación oficial | Confirmado mediante cliente oficial | La copia en memoria no se atribuyó a respuesta de red |
+| Primera ejecución 5.9: captura antigua | Bloqueado | No identificó la solicitud moderna |
+| Continuación: recuperación oficial | Confirmado mediante cliente oficial | Panel con 1.000 gemas, aplicación de preferencias y cambios en archivos |
+| Continuación: solicitud moderna | Confirmado desde Linux | POST a host de guardados, sesión y dispositivo de laboratorio; respuesta gzip con `data` textual |
+| Continuación: copia y reproducción | Confirmado desde Linux con Android apagado | Cuatro lecturas iguales; identificadores coinciden con muestra 5.8; 36/38 campos comunes de `gameData` coinciden con el archivo local restaurado |
+| Elección de ruta y parámetros del cliente | Inferido del código y correlacionado con tráfico | El cuerpo TLS oficial no fue capturado; la sesión puede variar por versión/canal |
+| Subida Linux y aceptación por juego | No demostrado | Hay un candidato serializado solo localmente; no se transmitió |
 
-No se añadió un proveedor nuevo: faltan el contrato y una respuesta auténtica con la que validarlo. El proveedor experimental existente tampoco tiene una ruta de éxito demostrada. Las escrituras siguen deshabilitadas. Los detalles y las limitaciones están en [protocolo](protocol.md), [descarga](download.md), [subida](upload.md), [ciclo](roundtrip.md) y [evidencia](evidence.md).
+El proveedor es optativo, de solo lectura y no modifica el comportamiento predeterminado. Ver [protocolo](protocol.md), [descarga y uso](download.md), [subida](upload.md), [comparación](roundtrip.md) y [evidencia y pruebas](evidence.md).

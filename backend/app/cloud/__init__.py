@@ -1,7 +1,5 @@
-"""Procesamiento local de una copia ya recibida y proveedores de adquisición.
+"""Procesamiento local y proveedores separados para copias autorizadas.
 
-El paquete separa transporte, formato, verificación e importación. El proveedor
-por defecto está deshabilitado. ``provider.py`` añade un fixture local y un
-prototipo HTTP de solo lectura para el gateway oficial; este último exige un
-token de juego y su camino de éxito no se verificó contra el servicio real.
+El proveedor predeterminado permanece deshabilitado. El lector legacy y el
+proveedor moderno experimental de solo lectura requieren selección explícita.
 """
