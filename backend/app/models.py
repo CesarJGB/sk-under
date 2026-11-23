@@ -98,3 +98,130 @@ class ErrorDetail(BaseModel):
 
 class ErrorResponse(BaseModel):
     error: ErrorDetail
+
+
+class CloudLabStatus(BaseModel):
+    mode: Literal["live", "read_only", "disabled"]
+    read_ready: bool
+    write_enabled: bool
+    write_ready: bool
+    admin_configured: bool
+    admin_required: bool
+    backup_count: int
+    min_gems: int
+    max_gems: int
+    message: str
+
+
+class CloudRemoteInfo(BaseModel):
+    source: str
+    size: int
+    sha256: str
+
+
+class CloudLabSave(BaseModel):
+    remote: CloudRemoteInfo
+    gems: int
+    size: int
+    sha256: str
+    serialzed_version: int
+
+
+class CloudBackupSummary(BaseModel):
+    id: str
+    created_at: str
+    changed: bool
+    original_size: int
+    original_sha256: str
+    original_gems: int
+    candidate_size: int
+    candidate_sha256: str
+    candidate_gems: int
+    remote_source: str
+    remote_size: int
+    remote_sha256: str
+
+
+class CloudByteDiff(BaseModel):
+    original_size: int
+    modified_size: int
+    first_difference: int | None
+    common_prefix: int
+    common_suffix: int
+    changed_original_bytes: int
+    changed_modified_bytes: int
+    original_sha256: str
+    modified_sha256: str
+
+
+class CloudLabValidation(BaseModel):
+    valid: Literal[True] = True
+    structure_valid: Literal[True] = True
+    only_gems_changed: Literal[True] = True
+    message: str
+
+
+class CloudLabPrepared(BaseModel):
+    remote: CloudRemoteInfo
+    backup: CloudBackupSummary
+    original_gems: int
+    new_gems: int
+    changed: bool
+    candidate_size: int
+    candidate_sha256: str
+    byte_diff: CloudByteDiff
+    validation: CloudLabValidation
+
+
+class CloudLabPrepareInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    new_gems: StrictInt
+
+
+class CloudLabConfirmInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    backup_id: StrictStr = Field(min_length=32, max_length=32, pattern=r"^[0-9a-f]{32}$")
+    expected_sha256: StrictStr = Field(min_length=64, max_length=64, pattern=r"^[0-9a-f]{64}$")
+    confirmation: Literal["SUBIR"]
+
+
+class CloudLabRestoreInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    backup_id: StrictStr = Field(min_length=32, max_length=32, pattern=r"^[0-9a-f]{32}$")
+    confirmation: Literal["RESTAURAR"]
+
+
+class CloudLabVerifyInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    backup_id: StrictStr = Field(min_length=32, max_length=32, pattern=r"^[0-9a-f]{32}$")
+
+
+class CloudLabWriteResult(BaseModel):
+    action: Literal["confirm", "restore"]
+    backup_id: str
+    uploaded: bool
+    accepted: bool
+    persisted: bool
+    already_original: bool
+    expected_sha256: str
+    remote_sha256: str | None
+    remote_size: int | None
+    remote_gems: int | None
+    status: int | None
+    message: str
+
+
+class CloudLabVerification(BaseModel):
+    backup_id: str
+    matches_candidate: bool
+    matches_original: bool
+    remote_sha256: str
+    remote_size: int
+    remote_gems: int | None
+    expected_candidate_sha256: str
+    expected_original_sha256: str
+    message: str
+
+
+class CloudLabBackups(BaseModel):
+    backups: list[CloudBackupSummary]

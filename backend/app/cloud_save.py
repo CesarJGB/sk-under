@@ -156,6 +156,17 @@ def _reconstruct(document: bytes) -> CloudSaveGameData:
     )
 
 
+def unpack_cloud_save(source: bytes) -> tuple[Encoding, bytes]:
+    """Expone el JSON interno de una copia ya delimitada.
+
+    La edición de campos concretos necesita el documento exacto para comprobar
+    que la serialización canónica conserva todos los bytes ajenos al cambio.
+    """
+    if len(source) > MAX_INPUT_BYTES:
+        raise CopyLimitError("La entrada supera el límite permitido.")
+    return _unpack(source)
+
+
 def reconstruct_cloud_save(source: bytes) -> ReconstructedCloudSave:
     """Reconstruye una copia en memoria y calcula la huella de los bytes recibidos."""
     if len(source) > MAX_INPUT_BYTES:

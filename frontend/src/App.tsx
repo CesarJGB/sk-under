@@ -1,4 +1,4 @@
-import { Download, FilePenLine, FileUp, House, ScanLine } from 'lucide-react'
+import { Download, FilePenLine, FileUp, Gem, House, ScanLine } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Route, Routes, useLocation, useNavigate } from 'react-router'
 import { api, type FormatInfo, type Health } from './api'
@@ -6,12 +6,14 @@ import { EditorPage } from './pages/EditorPage'
 import { ExportPage } from './pages/ExportPage'
 import { HomePage } from './pages/HomePage'
 import { ImportPage } from './pages/ImportPage'
+import { LabEditorPage } from './pages/LabEditorPage'
 import type { Draft, Session } from './session'
 import { PageTitle } from './ui'
 
 const navigation = [
   { path: '/', label: 'Inicio', icon: House },
   { path: '/importar', label: 'Importar', icon: FileUp },
+  { path: '/partida', label: 'Partida', icon: Gem },
   { path: '/editor', label: 'Editor', icon: FilePenLine },
   { path: '/exportar', label: 'Exportar', icon: Download },
 ]
@@ -56,6 +58,7 @@ export default function App() {
   const main = useRef<HTMLElement>(null)
   const service = useService()
   const [token, setToken] = useState('')
+  const [adminToken, setAdminToken] = useState('')
   const [session, setSession] = useState<Session | null>(null)
   const [draft, setDraft] = useState<Draft>({})
 
@@ -110,6 +113,9 @@ export default function App() {
           <Route path="/importar" element={<ImportPage {...service} token={token} setToken={setToken}
             currentName={session?.name} onImport={importSession} />} />
           <Route path="/editor" element={<EditorPage session={session} draft={draft} update={updateDraft} />} />
+          <Route path="/partida" element={<LabEditorPage token={token} setToken={setToken}
+            adminToken={adminToken} setAdminToken={setAdminToken} health={service.health}
+            loading={service.loading} />} />
           <Route path="/exportar" element={<ExportPage session={session} draft={draft} token={token.trim()} />} />
           <Route path="*" element={<>
             <PageTitle title="Página no encontrada">Usa la navegación para volver al flujo de edición.</PageTitle>

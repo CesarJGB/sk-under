@@ -38,6 +38,100 @@ export type Validation = {
 
 type Issue = { code: string; message: string; field_id: string | null }
 
+export type LabStatus = {
+  mode: 'live' | 'read_only' | 'disabled'
+  read_ready: boolean
+  write_enabled: boolean
+  write_ready: boolean
+  admin_configured: boolean
+  admin_required: boolean
+  backup_count: number
+  min_gems: number
+  max_gems: number
+  message: string
+}
+
+export type LabRemote = { source: string; size: number; sha256: string }
+
+export type LabSave = {
+  remote: LabRemote
+  gems: number
+  size: number
+  sha256: string
+  serialzed_version: number
+}
+
+export type LabBackup = {
+  id: string
+  created_at: string
+  changed: boolean
+  original_size: number
+  original_sha256: string
+  original_gems: number
+  candidate_size: number
+  candidate_sha256: string
+  candidate_gems: number
+  remote_source: string
+  remote_size: number
+  remote_sha256: string
+}
+
+export type LabByteDiff = {
+  original_size: number
+  modified_size: number
+  first_difference: number | null
+  common_prefix: number
+  common_suffix: number
+  changed_original_bytes: number
+  changed_modified_bytes: number
+  original_sha256: string
+  modified_sha256: string
+}
+
+export type LabPrepared = {
+  remote: LabRemote
+  backup: LabBackup
+  original_gems: number
+  new_gems: number
+  changed: boolean
+  candidate_size: number
+  candidate_sha256: string
+  byte_diff: LabByteDiff
+  validation: {
+    valid: true
+    structure_valid: true
+    only_gems_changed: true
+    message: string
+  }
+}
+
+export type LabWriteResult = {
+  action: 'confirm' | 'restore'
+  backup_id: string
+  uploaded: boolean
+  accepted: boolean
+  persisted: boolean
+  already_original: boolean
+  expected_sha256: string
+  remote_sha256: string | null
+  remote_size: number | null
+  remote_gems: number | null
+  status: number | null
+  message: string
+}
+
+export type LabVerification = {
+  backup_id: string
+  matches_candidate: boolean
+  matches_original: boolean
+  remote_sha256: string
+  remote_size: number
+  remote_gems: number | null
+  expected_candidate_sha256: string
+  expected_original_sha256: string
+  message: string
+}
+
 export class ApiProblem extends Error {
   constructor(message: string, readonly issues: Issue[] = []) {
     super(message)
@@ -49,7 +143,13 @@ const baseUrl = (
   (import.meta.env.DEV ? 'http://127.0.0.1:8017' : '')
 ).replace(/\/+$/, '')
 
-async function request(path: string, signal: AbortSignal, payload?: object, token = '') {
+async function request(
+  path: string,
+  signal: AbortSignal,
+  payload?: object,
+  token = '',
+  admin = '',
+) {
   if (!baseUrl) throw new ApiProblem('Falta configurar la URL de la API.')
   if (window.location.protocol === 'https:' && !baseUrl.toLowerCase().startsWith('https://')) {
     throw new ApiProblem('Configura una URL HTTPS para la API.')
@@ -57,6 +157,7 @@ async function request(path: string, signal: AbortSignal, payload?: object, toke
   const headers = new Headers()
   if (payload) headers.set('Content-Type', 'application/json')
   if (token) headers.set('Authorization', `Bearer ${token}`)
+  if (admin) headers.set('X-SK-Cloud-Admin', admin)
 
   const response = await fetch(`${baseUrl}/api/v1${path}`, {
     method: payload ? 'POST' : 'GET',
@@ -95,6 +196,45 @@ export const api = {
     const response = await request('/files/export', signal, { content_base64, changes }, token)
     const name = response.headers.get('Content-Disposition')?.match(/filename="([a-zA-Z0-9_.-]+)"/)?.[1]
     return { blob: await response.blob(), name: name ?? 'copia-editada' }
+  },
+  async labStatus(token: string, signal: AbortSignal): Promise<LabStatus> {
+    return (await request('/cloud/lab/status', signal, undefined, token)).json()
+  },
+  async labSave(token: string, signal: AbortSignal): Promise<LabSave> {
+    return (await request('/cloud/lab/save', signal, undefined, token)).json()
+  },
+  async labPrepare(new_gems: number, token: string, signal: AbortSignal): Promise<LabPrepared> {
+    return (await request('/cloud/lab/prepare', signal, { new_gems }, token)).json()
+  },
+  async labConfirm(
+    backup_id: string,
+    expected_sha256: string,
+    confirmation: 'SUBIR',
+    token: string,
+    admin: string,
+    signal: AbortSignal,
+  ): Promise<LabWriteResult> {
+    return (await request(
+      '/cloud/lab/confirm', signal,
+      { backup_id, expected_sha256, confirmation }, token, admin,
+    )).json()
+  },
+  async labRestore(
+    backup_id: string,
+    confirmation: 'RESTAURAR',
+    token: string,
+    admin: string,
+    signal: AbortSignal,
+  ): Promise<LabWriteResult> {
+    return (await request(
+      '/cloud/lab/restore', signal, { backup_id, confirmation }, token, admin,
+    )).json()
+  },
+  async labVerify(backup_id: string, token: string, signal: AbortSignal): Promise<LabVerification> {
+    return (await request('/cloud/lab/verify', signal, { backup_id }, token)).json()
+  },
+  async labBackups(token: string, signal: AbortSignal): Promise<{ backups: LabBackup[] }> {
+    return (await request('/cloud/lab/backups', signal, undefined, token)).json()
   },
 }
 

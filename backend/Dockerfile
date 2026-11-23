@@ -15,10 +15,15 @@ WORKDIR /app
 ENV PATH="/opt/venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    SK_ENV=production
+    SK_ENV=production \
+    HOME=/home/sk-under \
+    SK_CLOUD_BACKUP_DIR=/var/lib/sk-under/backups
 
 COPY --from=dependencies /opt/venv /opt/venv
 COPY app/ ./app/
+RUN mkdir -p "$HOME" /var/lib/sk-under/backups \
+    && chown -R 10001:10001 "$HOME" /var/lib/sk-under \
+    && chmod 700 /var/lib/sk-under/backups
 USER 10001:10001
 
 EXPOSE 8000

@@ -1,6 +1,6 @@
 # sk-under
 
-**Soul Knight Editor · Fase 6.1**
+**Soul Knight Editor · Fase 6.2**
 
 Editor web privado para inspeccionar copias locales. La muestra sintética `.skdemo` permite edición y exportación. El adaptador opcional de la Fase 3 lee nueve estructuras `.data` observadas en muestras de Soul Knight 8.6.0 y permite descargar copias intactas. [Configuración y cobertura de la Fase 3](docs/phase3/IMPLEMENTATION.md)
 
@@ -25,6 +25,8 @@ La Fase 5.9 reprodujo la descarga moderna desde Linux con Android detenido: cuat
 La Fase 6.0 completó el análisis estático de `UploadAsync`, `JsonPayload.Data`, la compresión y los callbacks de token, y reprodujo el sobre JSON con Json.NET. La escritura remota seguía sin ejecutarse. [Resumen de Fase 6.0](docs/research/phase6-0/summary.md).
 
 La Fase 6.1 ejecutó la primera subida real desde Linux a `/BlobSave/Upload`. El servidor devolvió `200` con `true`; una descarga posterior confirmó la persistencia byte a byte. Después se cambió `gameData.gems` de `1000` a `1001`, se subió, se volvió a descargar con el mismo SHA-256 y el cliente oficial 8.8.0 recuperó la copia, escribió `1001` en `game.data` y abrió el hall con ese valor. [Informe de Fase 6.1](docs/research/phase6-1/README.md) · [Protocolo](docs/research/phase6-1/protocol.md) · [Implementación](docs/research/phase6-1/implementation.md)
+
+La Fase 6.2 convirtió ese protocolo en un editor web de gemas. La página **Partida** descarga la copia auténtica de laboratorio, muestra `gameData.gems`, prepara una copia determinista que solo cambia ese campo, crea un respaldo privado, valida el resultado y permite confirmar la subida con una autorización administrativa del servidor. La persistencia se comprueba con una descarga posterior y el original se puede restaurar desde el respaldo. La escritura sigue deshabilitada por defecto y no se puede activar desde el navegador. [Informe de Fase 6.2](docs/research/phase6-2/README.md)
 
 ## Arquitectura
 
@@ -53,6 +55,7 @@ soul-knight-editor/
 │       └── pages/
 │           ├── HomePage.tsx
 │           ├── ImportPage.tsx
+│           ├── LabEditorPage.tsx
 │           ├── EditorPage.tsx
 │           └── ExportPage.tsx
 └── backend/
@@ -64,8 +67,14 @@ soul-knight-editor/
     │   ├── __init__.py
     │   ├── api/
     │   │   ├── __init__.py
+    │   │   ├── cloud_lab.py
     │   │   ├── routes.py
     │   │   └── uploads.py
+    │   ├── cloud/
+    │   │   ├── backup_store.py
+    │   │   ├── gems_editor.py
+    │   │   ├── lab_service.py
+    │   │   └── ... (protocolo y transporte de fases anteriores)
     │   ├── formats/
     │   │   ├── __init__.py
     │   │   ├── adapter.py
@@ -139,13 +148,27 @@ Swagger UI está en `http://127.0.0.1:8017/docs` y el esquema generado está en 
 | `SK_ACCESS_TOKEN` | Backend | Vacío por defecto. Cuando se configura, se exige en las tres rutas de archivos en cualquier modo. Usa un secreto aleatorio de al menos 32 caracteres ASCII visibles. |
 | `SK_ALLOWED_ORIGINS` | Backend | Arreglo JSON de orígenes exactos, vacío por defecto. Incluye esquema y puerto cuando corresponda. El ejemplo local incluye `http://127.0.0.1:5173` y `http://localhost:5173`. |
 | `SK_MAX_FILE_BYTES` | Backend | `1048576` por defecto. Rango de 1 a 8388608 bytes. Limita el archivo decodificado y la copia de salida. |
+| `SK_CLOUD_SESSION_TOKEN` | Backend | Vacío por defecto. Sesión ya emitida por el cliente oficial para la cuenta de laboratorio. Nunca se envía al navegador. |
+| `SK_CLOUD_UNIQUE_ID` | Backend | Vacío por defecto. Identificador de la instalación de laboratorio. |
+| `SK_CLOUD_DISTRO_ID` | Backend | Vacío por defecto. Distribución observada de la instalación de laboratorio. |
+| `SK_CLOUD_ADMIN_TOKEN` | Backend | Vacío por defecto. Secreto de al menos 32 caracteres ASCII visibles. Se exige en la cabecera `X-SK-Cloud-Admin` para confirmar o restaurar. |
+| `SK_CLOUD_WRITE_ENABLED` | Backend | `false` por defecto. Solo `true` habilita la escritura remota; el frontend no puede cambiarlo. |
+| `SK_CLOUD_BACKUP_DIR` | Backend | Ruta absoluta privada, fuera del repositorio. Por defecto `~/.local/share/sk-under/backups`. Los archivos se crean con modo `0600` y el directorio con `0700`. |
 | `VITE_API_BASE_URL` | Frontend | URL pública de la API, sin `/api/v1`. En desarrollo cae por defecto en `http://127.0.0.1:8017`. Configúrala explícitamente al compilar para otro entorno. |
 
 Para desarrollo, el backend y Vite leen el `.env` de la raíz. El backend también puede leer `backend/.env`. Las variables del proceso tienen prioridad. Los valores `VITE_*` son públicos y se incorporan al JavaScript durante el build. El propietario introduce el token en el formulario de importación. En producción sin token, las rutas de archivos devuelven `503` y `health` informa `access_mode: "disabled"`. La API rechaza el token ausente o incorrecto con `401` cuando está configurado.
 
-## Escritura experimental de nube (solo laboratorio)
+## Editor web de partida (Fase 6.2)
 
-La subida real está implementada en `backend/app/cloud/blob_upload.py` y el ciclo con verificación en `backend/app/cloud/blob_roundtrip.py`. **No existe una ruta HTTP** que la invoque: la API pública solo inspecciona, valida y exporta archivos locales. La escritura permanece desactivada por defecto y exige una sesión de laboratorio ya emitida por el cliente oficial.
+La página **Partida** usa las rutas `/api/v1/cloud/lab/*`. La lectura descarga la copia auténtica, la preparación crea un respaldo privado y valida que solo cambió `gameData.gems`, y la confirmación exige simultáneamente `SK_CLOUD_WRITE_ENABLED=true`, `SK_CLOUD_ADMIN_TOKEN` configurado y la cabecera `X-SK-Cloud-Admin` correcta. La escritura se comprueba siempre con una descarga posterior; un `200` aislado no se presenta como persistencia.
+
+La edición es determinista y conserva los bytes ajenos al campo: exige la serialización canónica observada en 8.8.0 (claves ordenadas, separadores `", "` y `": "`, sin indentación) y rechaza cualquier copia que no la reproduzca. El valor aceptado es un entero entre `0` y `2147483647`. Un valor igual al actual genera una operación sin cambios y la confirmación remota se rechaza. La restauración reenvía el original solo si la nube contiene exactamente el candidato confirmado de ese respaldo.
+
+La API no devuelve el contenido de la partida ni las credenciales: solo gemas, tamaños, SHA-256, metadatos del respaldo y estado de la operación. Los respaldos se guardan fuera del repositorio.
+
+### Escritura experimental por CLI (Fase 6.1)
+
+La subida real también está disponible por CLI en `backend/app/cloud/blob_upload.py` y el ciclo con verificación en `backend/app/cloud/blob_roundtrip.py`. La escritura permanece desactivada por defecto y exige una sesión de laboratorio ya emitida por el cliente oficial.
 
 ```bash
 export SK_CLOUD_SESSION_TOKEN='<sesión de laboratorio>'
@@ -171,8 +194,15 @@ Todas las rutas de archivos reciben JSON UTF-8 con el archivo original en Base64
 | `POST /api/v1/files/inspect` | `content_base64` | Formato, tamaño, SHA-256 del original y campos con tipo, valor y restricciones. |
 | `POST /api/v1/files/validate` | `content_base64`, `changes` | Resultado validado, cambios efectivos, tamaño y SHA-256 de la copia. |
 | `POST /api/v1/files/export` | `content_base64`, `changes` | Bytes de la copia verificada con `Content-Type: application/octet-stream` y nombre en `Content-Disposition`. |
+| `GET /api/v1/cloud/lab/status` | — | Modo del laboratorio, disponibilidad de lectura/escritura, respaldos y rango de gemas. |
+| `GET /api/v1/cloud/lab/save` | — | Gemas actuales, origen, tamaño y SHA-256 de la copia auténtica. No devuelve el contenido. |
+| `POST /api/v1/cloud/lab/prepare` | `new_gems` | Copia candidata verificada, vista previa del cambio y respaldo privado creado. |
+| `POST /api/v1/cloud/lab/confirm` | `backup_id`, `expected_sha256`, `confirmation: "SUBIR"` | Subida autenticada, descarga posterior y resultado `persisted`. Exige `X-SK-Cloud-Admin`. |
+| `POST /api/v1/cloud/lab/verify` | `backup_id` | Comparación de la nube con el original y el candidato del respaldo. |
+| `POST /api/v1/cloud/lab/restore` | `backup_id`, `confirmation: "RESTAURAR"` | Reenvío verificado del original. Exige `X-SK-Cloud-Admin`. |
+| `GET /api/v1/cloud/lab/backups` | — | Resúmenes de respaldos privados, sin contenido de la partida. |
 
-Los errores de las rutas de archivos usan `{"error":{"code":"…","message":"…","issues":[]}}`. Los problemas de un campo pueden incluir `field_id`. Una inspección fallida devuelve el error y omite los campos. Los estados incluyen `400` para un cuerpo malformado, `401` y `403` para acceso, `413` para límites, `415` para formato o contenido no admitido, `422` para datos o cambios inválidos, y `503` cuando falta configurar la protección. Un fallo de verificación devuelve `500` sin entregar un archivo.
+Los errores de las rutas usan `{"error":{"code":"…","message":"…","issues":[]}}`. Los problemas de un campo pueden incluir `field_id`. Una inspección fallida devuelve el error y omite los campos. Los estados incluyen `400` para un cuerpo malformado, `401` y `403` para acceso, `404` para un respaldo inexistente, `409` para una operación sin cambios, una nube que cambió o un respaldo ya confirmado, `413` para límites, `415` para formato o contenido no admitido, `422` para datos o cambios inválidos, `502` para fallos del servicio de nube y `503` cuando falta configurar la protección o la escritura. Un fallo de verificación local devuelve `500` sin entregar un archivo.
 
 En modo protegido, incluye `Authorization: Bearer <token>` en las tres operaciones de archivo. CORS controla el acceso desde navegadores y el token autentica las peticiones. El backend no recibe nombres ni rutas de archivos desde el cliente. El nombre de descarga lo elige el adaptador, y las respuestas de archivos indican `Cache-Control: no-store`. La configuración de Uvicorn que se entrega desactiva los registros de acceso. Al configurar un proxy, mantén fuera de sus registros el cuerpo y la cabecera de autorización.
 
@@ -231,7 +261,7 @@ Para usar un subdominio como `editor.example.com`, abre **Custom domains → Set
 | Dominio de la API | URL HTTPS, por ejemplo `https://api-editor.example.com` |
 | Healthcheck | El de la imagen en `/api/v1/health` |
 
-El puerto `8017` corresponde al desarrollo local. Dentro del contenedor, Uvicorn escucha en `0.0.0.0:8000` como usuario sin privilegios. El Dockerfile se construye usando únicamente el contexto `backend/`. En Coolify, deja desactivado el ajuste de healthcheck del panel para que se utilice el de la imagen. No se requieren volúmenes de datos. [Dockerfile en Coolify](https://coolify.io/docs/applications/builds/dockerfile) · [Healthchecks en Coolify](https://coolify.io/docs/applications/configuration/health-checks)
+El puerto `8017` corresponde al desarrollo local. Dentro del contenedor, Uvicorn escucha en `0.0.0.0:8000` como usuario sin privilegios. El Dockerfile se construye usando únicamente el contexto `backend/`. En Coolify, deja desactivado el ajuste de healthcheck del panel para que se utilice el de la imagen. La inspección y exportación local no requieren volúmenes. El laboratorio de nube usa `/var/lib/sk-under/backups` dentro del contenedor; si vas a habilitar la escritura real, monta ahí un volumen persistente y privado. [Dockerfile en Coolify](https://coolify.io/docs/applications/builds/dockerfile) · [Healthchecks en Coolify](https://coolify.io/docs/applications/configuration/health-checks)
 
 Configura estas variables de runtime antes de habilitar la edición:
 
@@ -241,6 +271,10 @@ Configura estas variables de runtime antes de habilitar la edición:
 | `SK_ACCESS_TOKEN` | Secreto aleatorio de al menos 32 caracteres ASCII visibles, guardado en Coolify como variable de runtime |
 | `SK_ALLOWED_ORIGINS` | Arreglo JSON con los orígenes HTTPS exactos del frontend, por ejemplo `["https://editor.example.com"]` |
 | `SK_MAX_FILE_BYTES` | `1048576` por defecto. Ajústalo solo si cambia el tamaño máximo aceptado. |
+| `SK_CLOUD_SESSION_TOKEN`, `SK_CLOUD_UNIQUE_ID`, `SK_CLOUD_DISTRO_ID` | Solo si se habilitará el laboratorio real. La sesión se obtiene fuera de banda desde el cliente oficial y nunca se publica. |
+| `SK_CLOUD_ADMIN_TOKEN` | Secreto independiente de al menos 32 caracteres ASCII visibles. Se exige en la cabecera `X-SK-Cloud-Admin` para confirmar o restaurar. |
+| `SK_CLOUD_WRITE_ENABLED` | `false` por defecto. Cámbialo a `true` solo durante una operación de laboratorio autorizada. |
+| `SK_CLOUD_BACKUP_DIR` | Ruta absoluta privada y persistente, fuera del repositorio, con permisos restrictivos. |
 
 Comprueba que el dominio HTTPS funcione antes de introducir un token. Puedes generar el secreto con `python3 -c 'import secrets; print(secrets.token_urlsafe(32))'`. Guárdalo en Coolify y en el gestor privado del propietario.
 
@@ -259,8 +293,9 @@ El token concede el mismo acceso a quienes lo comparten. Esta solución está pr
 | `.skdemo` v1 | Verificado con dos muestras sintéticas. Firma `SK-EDITOR-DEMO/1` seguida de salto de línea y JSON UTF-8. Incluye una etiqueta, un ID de solo lectura y dos enteros de prueba con la regla cantidad ≤ límite. |
 | XML de preferencias y datos históricos de Android documentados en la investigación | Pendientes de verificación con muestras representativas. Se rechazan en esta fase. |
 | Otras variantes de Android e iOS | Compatibilidad pendiente por canal y versión. |
-| Acceso a guardados de ChillyRoom | Fase 5.9: descarga moderna autenticada desde Linux, sin Android, con un agregado de 114.778 bytes. Fase 6.1: subida real a `/BlobSave/Upload`, persistencia verificada por descarga y recuperación por el cliente oficial. La escritura no está expuesta en la API y sigue limitada al laboratorio. [Fase 6.1](docs/research/phase6-1/README.md) · [Fase 5.7](docs/research/phase5-7/cloud-save-acquisition.md) |
-| Agregado `CloudSaveGameData` 8.8.0 | Modelo identificado en metadata (18 secciones, 46 649 typeDefs) y copia moderna real de 114.778 bytes con 17 secciones. Fase 6.1 demostró que el servidor conserva un cambio de un byte y que el cliente 8.8.0 lo recupera y aplica. Falta generalizar a otras cuentas, versiones y campos. [Fase 6.1](docs/research/phase6-1/protocol.md) · [Cliente oficial](docs/research/phase6-1/client-validation.md) |
+| Acceso a guardados de ChillyRoom | Fase 5.9: descarga moderna autenticada desde Linux, sin Android, con un agregado de 114.778 bytes. Fase 6.1: subida real a `/BlobSave/Upload`, persistencia verificada por descarga y recuperación por el cliente oficial. Fase 6.2: lectura y preparación desde la web; la escritura sigue limitada al laboratorio y deshabilitada por defecto. [Fase 6.2](docs/research/phase6-2/README.md) · [Fase 6.1](docs/research/phase6-1/README.md) |
+| Agregado `CloudSaveGameData` 8.8.0 | Modelo identificado en metadata (18 secciones, 46 649 typeDefs) y copia moderna real de 114.778 bytes con 17 secciones. Fase 6.1 demostró que el servidor conserva un cambio de un byte y que el cliente 8.8.0 lo recupera y aplica. Fase 6.2 aisló la edición de `gameData.gems` con serialización canónica, respaldo y restauración verificable. Falta generalizar a otras cuentas, versiones y campos. [Fase 6.2](docs/research/phase6-2/README.md) · [Fase 6.1](docs/research/phase6-1/protocol.md) |
+| Edición web de `gameData.gems` | Descarga auténtica, lectura, preparación determinista, respaldo privado, vista previa, confirmación administrativa, verificación por descarga y restauración. La escritura está deshabilitada por defecto. [Fase 6.2](docs/research/phase6-2/README.md) |
 | Edición local de un agregado | Laboratorio sobre JSON/gzip sintético y sobre archivos locales 8.8.0 (DES y XOR), con conservación de campos desconocidos y diff semántico/binario. No se declara aceptación por el juego. [Laboratorio 5.5](docs/research/phase5-5/save-editing-lab.md) · [Roundtrip 5.6](docs/research/phase5-6/real-save-roundtrip.md) |
 
 La investigación local `SHOULXING_RESEARCH`, en particular los informes 03, 06 y 07, describe XML de preferencias y archivos históricos con JSON, Base64 y DES-CBC, así como las limitaciones de ABI y del análisis estático. Se verificó la licencia Apache-2.0 del clon de SHOULXING en el commit de referencia. La implementación del adaptador sintético es propia y el motor funciona de forma independiente de esos componentes. [Referencia histórica de SHOULXING](https://github.com/STE4LPH/SHOULXING/tree/685691e09798aa6d39ae2f44f29e31ad6423b98d)

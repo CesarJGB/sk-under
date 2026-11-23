@@ -1,4 +1,5 @@
 import re
+from pathlib import Path
 from typing import Literal
 from urllib.parse import urlsplit
 
@@ -24,6 +25,16 @@ class Settings(BaseSettings):
     save_general_key_hex: SecretStr | None = None
     save_statistics_key_hex: SecretStr | None = None
     save_iv_hex: SecretStr | None = None
+
+    # Laboratorio de nube. Todo permanece deshabilitado por defecto.
+    cloud_session_token: SecretStr | None = None
+    cloud_unique_id: SecretStr | None = None
+    cloud_distro_id: SecretStr | None = None
+    cloud_admin_token: SecretStr | None = None
+    cloud_write_enabled: bool = False
+    cloud_backup_dir: Path = Field(
+        default_factory=lambda: Path.home() / ".local" / "share" / "sk-under" / "backups"
+    )
 
     @field_validator("save_general_key_hex", "save_statistics_key_hex", "save_iv_hex", mode="before")
     @classmethod
@@ -55,6 +66,30 @@ class Settings(BaseSettings):
             )
         return None
 
+    @field_validator("cloud_session_token", "cloud_unique_id", "cloud_distro_id", mode="before")
+    @classmethod
+    def validate_cloud_credential(cls, value: object) -> SecretStr | None:
+        secret = value.get_secret_value() if isinstance(value, SecretStr) else value
+        if secret is None or secret == "":
+            return None
+        if not isinstance(secret, str) or not all(33 <= ord(char) <= 126 for char in secret):
+            raise ValueError("Las credenciales de nube deben ser texto ASCII visible sin espacios.")
+        return SecretStr(secret)
+
+    @field_validator("cloud_admin_token", mode="before")
+    @classmethod
+    def validate_cloud_admin_token(cls, value: object) -> SecretStr | None:
+        secret = value.get_secret_value() if isinstance(value, SecretStr) else value
+        if secret is None or secret == "":
+            return None
+        if (
+            not isinstance(secret, str)
+            or len(secret) < 32
+            or not all(char.isascii() and 33 <= ord(char) <= 126 for char in secret)
+        ):
+            raise ValueError("SK_CLOUD_ADMIN_TOKEN debe tener al menos 32 caracteres ASCII visibles.")
+        return SecretStr(secret)
+
     @field_validator("access_token", mode="before")
     @classmethod
     def validate_token(cls, value: str | SecretStr | None) -> str | None:
@@ -64,6 +99,18 @@ class Settings(BaseSettings):
         if len(token) < 32 or not all(char.isascii() and 33 <= ord(char) <= 126 for char in token):
             raise ValueError("SK_ACCESS_TOKEN debe tener al menos 32 caracteres ASCII visibles.")
         return token
+
+    @field_validator("cloud_backup_dir", mode="before")
+    @classmethod
+    def validate_cloud_backup_dir(cls, value: object) -> Path:
+        if value is None or value == "":
+            return Path.home() / ".local" / "share" / "sk-under" / "backups"
+        if not isinstance(value, (str, Path)):
+            raise ValueError("SK_CLOUD_BACKUP_DIR debe ser una ruta.")
+        path = Path(value).expanduser()
+        if not path.is_absolute():
+            raise ValueError("SK_CLOUD_BACKUP_DIR debe ser una ruta absoluta.")
+        return path
 
     @field_validator("allowed_origins")
     @classmethod
@@ -89,3 +136,15 @@ class Settings(BaseSettings):
         if self.access_token:
             return "token"
         return "local" if self.env == "development" else "disabled"
+
+    @property
+    def cloud_configured(self) -> bool:
+        return bool(self.cloud_session_token and self.cloud_unique_id and self.cloud_distro_id)
+
+    @property
+    def cloud_admin_configured(self) -> bool:
+        return self.cloud_admin_token is not None
+
+    @property
+    def cloud_write_ready(self) -> bool:
+        return self.cloud_write_enabled and self.cloud_configured and self.cloud_admin_configured

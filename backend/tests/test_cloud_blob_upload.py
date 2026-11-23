@@ -240,7 +240,11 @@ def test_roundtrip_confirms_only_identical_remote_bytes():
     assert result.remote_sha256 != sha256(AGGREGATE).hexdigest()
 
 
-def test_public_api_does_not_expose_the_write_transport():
+def test_public_api_exposes_only_the_guarded_lab_workflow():
     app = create_app(Settings(_env_file=None, env='development', allowed_origins=[]))
-    paths = app.openapi()['paths']
-    assert not any('blob' in path.lower() or 'cloud' in path.lower() for path in paths)
+    schema = app.openapi()
+    paths = schema['paths']
+    assert not any('blob' in path.lower() for path in paths)
+    confirm = paths['/api/v1/cloud/lab/confirm']['post']
+    assert {'CloudAdminToken': []} in confirm['security']
+    assert {'EditorBearer': []} in confirm['security']
