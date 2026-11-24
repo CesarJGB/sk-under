@@ -46,6 +46,17 @@ El backend local de esta rama autenticó una cuenta propia de laboratorio por la
 
 El cliente oficial Android Global 8.8.0, hotfix 8.8.0.11, se ejecutó en un AVD API 30. Tras autenticarse, abrió el panel de nube y recuperó la partida mediante **Retrieve Progress**. La fila remota mostró 1.001. La fila local pasó de 0 a 1.001. `files/game.data` y PlayerPrefs adquirieron la tupla `(1001, 0, 1001, 1000, 0)` en el orden del [registro de gemas](../research/phase6-11/README.md). La captura previa preserva el estado local original del AVD. El diferencial de la edición se calculó entre agregados. Las diferencias de recuperar una partida completa en Android corresponden a una comparación distinta.
 
+| Acción en el cliente oficial | HUD | PlayerPrefs | `game.data` |
+| --- | ---: | --- | --- |
+| Recuperación de la copia editada | 1001 | `(1001, 0, 1001, 1000, 0)` | `(1001, 0, 1001, 1000, 0)` |
+| Recompensa guiada de 500 | 1501 | `(1501, 1001, 500, 1500, 0)` | Conservó la tupla de recuperación hasta el guardado. |
+| Mejora del Caballero por 500 | 1001 | `(1001, 1501, -500, 1500, 500)` | Conservó la tupla de recuperación hasta el guardado. |
+| Vuelta al título, guardado y reinicio del proceso | 1001 antes de cerrar | `(1001, 1501, -500, 1500, 500)` | `(1001, 1501, -500, 1500, 500)` antes y después del reinicio. |
+
+El panel y las preferencias confirmaron que la recompensa se sumó a 1.001 y que luego la mejora cobró 500 sobre 1.501. El cliente guio la recompensa como primera transacción tras la recuperación. Queda por repetir con un perfil que haga un gasto como primera transacción. Después del ensayo se restauraron ambos respaldos en orden inverso con la ruta nativa `restore`. Dos descargas sucesivas verificaron primero el estado conciliado y luego los bytes exactos del original anterior a la prueba.
+
+Las capturas y archivos se conservan en el laboratorio privado de 6.11.1. Los pares de archivos `08-before-retrieve.tar` / `10-after-retrieve.tar`, `16-reward.tar` / `17-upgrade.tar` y `22-saved.tar` / `23-restarted.tar` reproducen recuperación, cargo y reinicio respectivamente.
+
 ## Repetición en Android físico
 
 La verificación adicional en un teléfono propio usa el mismo ciclo de la [guía de captura](../research/phase6-11/capture.md). Abre `/partida` en una instancia de prueba, inicia sesión en Android Global, descarga, prepara el saldo elegido, confirma y verifica la descarga. En el teléfono inicia sesión en el mismo perfil, conserva una copia propia, recupera mediante el panel oficial y haz un gasto normal de precio conocido. Guarda, cierra y vuelve a arrancar antes de comprobar el HUD. Si el dispositivo de laboratorio permite leer el directorio de la app, ejecuta los comandos en cada punto de captura:

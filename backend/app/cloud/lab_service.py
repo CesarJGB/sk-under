@@ -306,7 +306,7 @@ class CloudLabService:
             remote_size=save.metadata.size,
             remote_sha256=save.metadata.sha256,
         )
-        self._event(
+        self.store.append_event(
             bundle.record.id,
             {
                 "action": "prepare",
