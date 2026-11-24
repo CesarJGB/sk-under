@@ -696,6 +696,33 @@
       "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
     },
     {
+      "id": "FishChipKing",
+      "name": {
+        "en": "Fish Chip King",
+        "es": "Rey de las fichas de pez",
+        "zh_cn": "鱼干之王"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 57,
+        "code": "FishChipKing",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_57_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.FishChipKing"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
       "id": "Gugu",
       "name": {
         "en": "Pigeon",
@@ -1555,31 +1582,6 @@
       "save_refs": [
         "gameData.petUnlock.dragon"
       ],
-      "notes": [],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
-    },
-    {
-      "id": "pet_id_57",
-      "name": {
-        "en": "Fish Chip King",
-        "es": "Rey de las fichas de pez",
-        "zh_cn": "鱼干之王"
-      },
-      "category": "pet",
-      "subcategory": "companion",
-      "attributes": {
-        "numeric_id": 57,
-        "code": null,
-        "has_config_name": true,
-        "has_code": false
-      },
-      "relations": {
-        "skills": [
-          "pet_57_skill_0"
-        ]
-      },
-      "save_refs": [],
       "notes": [],
       "evidence": "E1",
       "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"

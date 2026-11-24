@@ -219,12 +219,12 @@ export type LabRebornCard = {
   value: boolean | null
   available: boolean
   path: string
-  experimental: true
+  experimental: boolean
   local_reference: string
   remote_representation: string
   projection: string
   limitation: string
-  evidence_level: 'E2'
+  evidence_level: 'E2' | 'E3'
 }
 
 export type LabBattlePassRecord = {
@@ -249,6 +249,74 @@ export type LabBattlePass = {
   note: string
 }
 
+export type LabPetRow = {
+  id: string
+  numeric_id: number
+  name: { en?: string | null; es?: string | null }
+  unlocked: boolean | null
+  present: boolean
+  value_type: string | null
+  editable: boolean
+  insertable: boolean
+  path: string
+  skins: string[]
+  reason: string | null
+}
+
+export type LabPetSkinRow = {
+  id: string
+  pet_code: string
+  base_pet: string
+  skin_index: number
+  name: { en?: string | null; es?: string | null }
+  unlocked: boolean | null
+  present: boolean
+  value_type: string | null
+  editable: boolean
+  insertable: boolean
+  path: string
+  base_unlocked: boolean | null
+  dependency_note: string
+}
+
+export type LabPetFoodRow = {
+  id: string
+  name: { en?: string | null; es?: string | null }
+  count: number | null
+  value_type: string | null
+  owned: boolean
+  editable: boolean
+  insertable: boolean
+  path: string
+  field: 'itemData.materials'
+  population: 'itemData.materials'
+  reason: string | null
+}
+
+export type LabPetProgressionEntry = {
+  id: string
+  numeric_id: number
+  name: { en?: string | null; es?: string | null }
+  present: boolean
+  intimacy: number | null
+  full: boolean | null
+  action_unlocked: boolean | null
+  value_type: string | null
+  max: number | null
+  max_note: string
+  path: string
+}
+
+export type LabPetProgression = {
+  available: boolean
+  path: string
+  read_only: true
+  global_full_count: number | null
+  full_count_key: string
+  entries: LabPetProgressionEntry[]
+  note: string
+}
+
 export type LabAdvanced = {
   available?: false
   error?: string
@@ -257,14 +325,29 @@ export type LabAdvanced = {
   season_coin: LabSeasonCoin
   reborn_card: LabRebornCard
   battle_pass: LabBattlePass
+  pets: LabPetRow[]
+  pet_skins: LabPetSkinRow[]
+  pet_food: LabPetFoodRow[]
+  pet_progression: LabPetProgression
+  pet_policy: {
+    field: 'pets'
+    experimental: boolean
+    evidence_level: 'E2' | 'E3'
+    path: string
+    skin_note: string
+    food_note: string
+    progression_note: string
+  }
   policy: {
     field: 'advanced'
-    experimental: true
-    evidence_level: 'E2'
+    experimental: boolean
+    evidence_level: 'E2' | 'E3'
     min: number
     max: number
     max_note: string
     material_fish_note: string
+    confirmed_functions?: string[]
+    experimental_functions?: string[]
   }
 }
 
@@ -279,6 +362,8 @@ export type LabAdvancedPlan = {
     cur_exp?: number
     has_buy?: boolean
   } | null
+  pets?: string[]
+  pet_food?: Array<{ id: string; value: number }>
 }
 
 export type LabSave = {
@@ -415,7 +500,7 @@ export type LabAdvancedPrepared = {
   changes: Array<{ path: string; before: unknown; after: unknown }>
   original_value?: number
   new_value?: number
-  experimental: true
+  experimental: boolean
   changed: boolean
   candidate_size: number
   candidate_sha256: string
@@ -425,8 +510,8 @@ export type LabAdvancedPrepared = {
     valid: true
     structure_valid: true
     only_advanced_changed: boolean
-    experimental: true
-    evidence_level: 'E2'
+    experimental: boolean
+    evidence_level: 'E2' | 'E3'
     message: string
   }
 }

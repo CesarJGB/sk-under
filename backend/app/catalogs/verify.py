@@ -6,6 +6,7 @@ import sys
 
 from . import CATALOG_PATH, CharacterCatalogError, load_character_catalog, validate_character_catalog
 from .items import ITEMS_PATH, ItemCatalogError, load_item_catalog, validate_item_catalog
+from .pets import PETS_PATH, PetCatalogError, load_pet_catalog, validate_pet_catalog
 
 
 def main() -> int:
@@ -14,10 +15,15 @@ def main() -> int:
         validate_character_catalog(catalog)
         items = load_item_catalog()
         validate_item_catalog(items)
+        pets = load_pet_catalog()
+        validate_pet_catalog(pets)
     except CharacterCatalogError as exc:
         print(f"ERROR [{exc.code}] {exc}", file=sys.stderr)
         return 1
     except ItemCatalogError as exc:
+        print(f"ERROR [{exc.code}] {exc}", file=sys.stderr)
+        return 1
+    except PetCatalogError as exc:
         print(f"ERROR [{exc.code}] {exc}", file=sys.stderr)
         return 1
     except OSError as exc:
@@ -35,6 +41,11 @@ def main() -> int:
         f"{len(items['material_ids'])} materiales y "
         f"{len(items['seed_ids'])} semillas "
         f"({items['version']}, {ITEMS_PATH})."
+    )
+    print(
+        "Catálogo de mascotas válido: "
+        f"{len(pets['pet_ids'])} mascotas y {len(pets['skin_ids'])} variantes "
+        f"({pets['version']}, {PETS_PATH})."
     )
     return 0
 

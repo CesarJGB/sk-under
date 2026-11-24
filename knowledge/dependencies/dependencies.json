@@ -8,9 +8,10 @@
     "Las relaciones confirmed solo reproducen conclusiones ya documentadas y verificadas en fases anteriores; no se elevaron niveles en esta fase.",
     "Las relaciones observed describen coaparición estructural en muestras propias, sin demostrar causalidad.",
     "Las relaciones hypothesis y negative existen para evitar que futuras fases confundan campos parecidos.",
-    "Las relaciones de la fase 7.1 distinguen la referencia funcional del propietario de la confirmación empírica en dispositivo; ninguna relación se eleva a E3/E4 sin esa prueba."
+    "Las relaciones de la fase 7.1 distinguen la referencia funcional del propietario de la confirmación empírica en dispositivo; ninguna relación se eleva a E3/E4 sin esa prueba.",
+    "La fase 7.2 eleva a E3 las relaciones confirmadas por el propietario en Android físico y mantiene como hipótesis u observación las relativas a mascotas y pase de batalla."
   ],
-  "count": 32,
+  "count": 35,
   "dependencies": [
     {
       "id": "gems-balance-composition",
@@ -548,37 +549,85 @@
       "id": "reborn-card-cloud-local-gap",
       "from": "gameData.rebornCard",
       "to": "playerprefs.reborn_card",
-      "relation": "proyección local no confirmada",
-      "status": "hypothesis",
-      "evidence": "E2",
+      "relation": "gameData.rebornCard = true suficiente para la tarjeta permanente",
+      "status": "confirmed",
+      "evidence": "E3",
       "scope": "8.8.0, gameData.rebornCard / shared_pref:reborn_card",
-      "description": "La guía del propietario identifica shared_pref:reborn_card = 1 como activación local. El agregado contiene gameData.rebornCard booleano y el cliente lee PlayerPrefs; la proyección CoverPlayerPref no está decompilada ni probada.",
+      "description": "El propietario activó gameData.rebornCard = true desde la página desplegada y la tarjeta de renacimiento permanente apareció comprada dentro de Soul Knight en Android físico. No fue necesario editar shared_pref:reborn_card directamente.",
       "sources": [
-        "knowledge/sources/playerprefs-research.md",
-        "docs/research/phase6-20/README.md",
+        "knowledge/sources/owner-confirmations-phase7-2.md",
         "knowledge/sources/owner-guide-phase7-1.md"
       ],
-      "edit_implication": "La fase 7.1 solo activa el booleano de nube existente, marca la función como experimental E2 y no afirma que conceda la tarjeta.",
-      "experiments_required": [
-        "Activar gameData.rebornCard en Android físico, reiniciar y comprobar la tarjeta y shared_pref:reborn_card."
-      ]
+      "edit_implication": "La edición confirmada activa únicamente el booleano existente gameData.rebornCard; no escribe PlayerPrefs ni recibos.",
+      "experiments_required": []
     },
     {
       "id": "cumulative-fish-reward-threshold",
       "from": "itemData.cumulativeFishCount",
       "to": "external.rewards",
-      "relation": "umbral >20 para recompensas acumuladas",
+      "relation": "itemData.cumulativeFishCount habilita el canje de recompensas acumuladas",
+      "status": "confirmed",
+      "evidence": "E3",
+      "scope": "8.8.0, referencia funcional del propietario y editor de la fase 6.20",
+      "description": "El propietario confirmó en Android físico que editar itemData.cumulativeFishCount permite habilitar y canjear correctamente las recompensas acumuladas de pesca.",
+      "sources": [
+        "knowledge/sources/owner-confirmations-phase7-2.md",
+        "knowledge/sources/owner-guide-phase7-1.md"
+      ],
+      "edit_implication": "El editor ajusta el contador; el canje continúa siendo una acción del cliente y no se marcan recompensas como reclamadas.",
+      "experiments_required": []
+    },
+    {
+      "id": "pet-skin-variant-unlock",
+      "from": "gameData.petUnlock.<variante>",
+      "to": "gameData.petUnlock.<mascota base>",
+      "relation": "la variante requiere la mascota base desbloqueada",
       "status": "hypothesis",
       "evidence": "E2",
-      "scope": "8.8.0, referencia funcional del propietario y editor de la fase 6.20",
-      "description": "La guía indica que un valor estrictamente mayor que 20 permite desbloquear todas las recompensas acumuladas, incluida la tarjeta de acceso diario. No se demostró que el cliente marque las recompensas como reclamadas.",
+      "scope": "8.8.0, Cat1..Cat7, Dog1..Dog3, Pig1, Rabbit1",
+      "description": "Las variantes de mascota observadas comparten el mapa gameData.petUnlock. No se encontró un mapa de bloqueo de skins separado; se infiere la dependencia de la mascota base a partir de los códigos y de la UI ChoosePetView. El editor incluye la base al seleccionar una variante.",
       "sources": [
-        "knowledge/sources/owner-guide-phase7-1.md",
-        "docs/research/phase6-20/README.md"
+        "docs/research/phase7-2/README.md",
+        "docs/research/phase6-12/personajes-skins-skills.md"
       ],
-      "edit_implication": "El control rápido ajusta max(actual, 21), conserva valores superiores y no afirma una reclamación automática.",
+      "edit_implication": "Al desbloquear una variante se añade también su mascota base si está pendiente; no se modifica la skin equipada.",
       "experiments_required": [
-        "Ajustar a 21 en Android físico y comprobar la barra, la reclamación y el Mode Hopper Ticket."
+        "Desbloquear una variante en Android físico y comprobar que la skin aparece y puede equiparse sin alterar otras mascotas."
+      ]
+    },
+    {
+      "id": "pet-food-materials",
+      "from": "catalog.materials.material_grain",
+      "to": "itemData.materials",
+      "relation": "el alimento de mascotas se almacena en el inventario de materiales",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, ChoosePetData.grainCount/batteryCount y muestras modificadas",
+      "description": "material_grain (Pet Treats) y material_battery (Battery) son los consumibles de alimentación identificados. Ambos pertenecen a itemData.materials; no se encontró un contador de alimento separado en el agregado de nube.",
+      "sources": [
+        "docs/research/phase7-2/README.md",
+        "docs/research/phase5-5/metadata-880-inventory.json"
+      ],
+      "edit_implication": "El editor de alimento reutiliza el escritor de itemData.materials y rechaza cantidades contradictorias en el mismo lote.",
+      "experiments_required": [
+        "Editar el alimento en Android físico y comprobar que la mascota permite alimentarla."
+      ]
+    },
+    {
+      "id": "pet-intimacy-event2count",
+      "from": "statisticData.event2Count.pet_<ID>_intimacy",
+      "to": "catalog.pets.Cat",
+      "relation": "intimidad actual y marca de máximo por mascota",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, muestra modificada statistic_111_.data",
+      "description": "Las claves pet_<ID>_intimacy, pet_<ID>_full_intimacy y pet_<ID>_action_unlock describen la progresión. Los máximos observados varían (180, 240 y 300) y la configuración completa por mascota no está recuperada; solo full_intimacy = 1 confirma el máximo.",
+      "sources": [
+        "docs/research/phase7-2/README.md"
+      ],
+      "edit_implication": "La progresión es de solo lectura; no se escriben máximos inventados.",
+      "experiments_required": [
+        "Recuperar PetsLevelUpConfig/PetIntimacyConfig y validar una escritura de intimidad en Android físico."
       ]
     }
   ]

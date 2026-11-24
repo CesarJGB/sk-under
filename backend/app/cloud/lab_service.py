@@ -27,6 +27,7 @@ from .advanced_editor import (
     SEEDS_PATH,
     AdvancedEdit,
     prepare_advanced_edit,
+    PETS_PATH,
     read_advanced_source,
     require_advanced_write_compatibility,
 )
@@ -387,13 +388,27 @@ class PreparedAdvancedEdit:
         return self.edit.candidate_sha256
 
     def summary(self) -> dict[str, object]:
-        prefixes = (MATERIALS_PATH + ".", SEEDS_PATH + ".", BATTLE_PASS_PATH + ".")
+        prefixes = (MATERIALS_PATH + ".", SEEDS_PATH + ".", BATTLE_PASS_PATH + ".", PETS_PATH + ".")
         only_advanced = self.edit.changed and all(
             path == SEASON_COIN_PATH
             or path == REBORN_PATH
             or path.startswith(prefixes)
             for path in self.edit.changed_fields
         )
+        plan = self.edit.plan
+        experimental = bool(plan.get("battle_pass") or plan.get("pets") or plan.get("pet_food"))
+        evidence_level = "E2" if experimental else "E3"
+        message = (
+            "Campos modificados: " + ", ".join(self.edit.changed_fields) + ". "
+            "No se modifican gemas, fichas de pesca, recompensas reclamadas ni recibos. "
+            + (
+                "Esta operación incluye mascotas o pase de batalla: son funciones experimentales "
+                "pendientes de prueba en Android físico."
+                if experimental
+                else "Materiales, semillas, moneda de temporada, renacimiento y progreso de pesca "
+                "están confirmados por el propietario en Android físico."
+            )
+        ) if self.edit.changed else "Los valores solicitados ya están en la partida; no hay cambios que subir."
         return {
             "field": ADVANCED_RECORD_FIELD,
             "remote": {
@@ -411,21 +426,14 @@ class PreparedAdvancedEdit:
             "candidate_sha256": self.edit.candidate_sha256,
             "byte_diff": self.edit.binary.as_dict(),
             "changed_fields": list(self.edit.changed_fields),
-            "experimental": True,
+            "experimental": experimental,
             "validation": {
                 "valid": True,
                 "structure_valid": True,
                 "only_advanced_changed": only_advanced,
-                "experimental": True,
-                "evidence_level": "E2",
-                "message": (
-                    "Campos modificados: " + ", ".join(self.edit.changed_fields) + ". "
-                    "No se modifican gemas, fichas de pesca, recompensas reclamadas ni recibos. "
-                    "La referencia del propietario es funcional, pero la persistencia en el cliente "
-                    "todavía requiere prueba en Android físico."
-                    if self.edit.changed
-                    else "Los valores solicitados ya están en la partida; no hay cambios que subir."
-                ),
+                "experimental": experimental,
+                "evidence_level": evidence_level,
+                "message": message,
             },
         }
 
@@ -792,8 +800,8 @@ class CloudLabService:
             return SKIN_PATH
         if field == ADVANCED_RECORD_FIELD:
             return (
-                "itemData.materials, itemData.seeds, seasonData.coin, "
-                "gameData.rebornCard, battlePassSaveData.seasonData"
+                "itemData.materials, itemData.seeds, seasonData.coin, gameData.rebornCard, "
+                "battlePassSaveData.seasonData, gameData.petUnlock, statisticData.event2Count"
             )
         return "gameData.gems"
 
@@ -811,8 +819,8 @@ class CloudLabService:
             return "las skins"
         if field == ADVANCED_RECORD_FIELD:
             return (
-                "los materiales, las semillas, las monedas de temporada, "
-                "la tarjeta de renacimiento y el pase de batalla"
+                "los materiales, las semillas, las monedas de temporada, la tarjeta de "
+                "renacimiento, el pase de batalla y las mascotas"
             )
         return "las gemas"
 
@@ -831,8 +839,9 @@ class CloudLabService:
         if field == ADVANCED_RECORD_FIELD:
             return (
                 f"La descarga posterior coincide con el agregado subido de {label}. "
-                "Esto confirma la persistencia del guardado, no el efecto dentro del cliente ni "
-                "la proyección de PlayerPrefs; falta la prueba del propietario en Android."
+                "Los materiales, semillas, moneda de temporada, renacimiento y progreso de pesca "
+                "fueron confirmados por el propietario en Android físico. El pase de batalla y "
+                "las mascotas siguen como experimentales E2."
             )
         if field == CHARACTER_RECORD_FIELD:
             return (

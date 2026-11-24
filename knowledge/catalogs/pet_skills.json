@@ -1249,13 +1249,13 @@
       "subcategory": "pet_skill",
       "attributes": {
         "pet_numeric_id": 57,
-        "pet_code": null,
+        "pet_code": "FishChipKing",
         "slot": 0,
         "description_en": "Has a cooldown. When attacked, negates the attack and summons a school of fish to circle and protect the character, reflecting regular ranged projectiles for a duration. When hit by a melee attack, the fish knock back the attacker and deal damage.",
         "description_es": "Tiene enfriamiento. Al recibir un ataque, lo anula e invoca un banco de peces que rodea y protege al personaje. Los peces reflejan proyectiles comunes a distancia durante un periodo. Al recibir un ataque cuerpo a cuerpo, los peces empujan al atacante e infligen daño."
       },
       "relations": {
-        "pet": "pet_id_57"
+        "pet": "FishChipKing"
       },
       "save_refs": [],
       "notes": [],

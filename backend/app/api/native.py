@@ -352,6 +352,8 @@ def prepare_advanced(payload: AdvancedPrepareInput, request: Request) -> dict[st
         "season_coin": payload.season_coin,
         "reborn_card": payload.reborn_card,
         "battle_pass": payload.battle_pass.model_dump() if payload.battle_pass else None,
+        "pets": list(payload.pets),
+        "pet_food": [item.model_dump() for item in payload.pet_food],
     }
     return service.prepare_advanced(current, plan, payload.source_sha256)
 

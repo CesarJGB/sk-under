@@ -13,6 +13,7 @@ import { Loading, Notice, PageTitle, Problem } from '../ui'
 import { AdvancedEditorSection } from './AdvancedEditorSection'
 import { CharacterUnlockSection } from './CharacterUnlockSection'
 import { HomePage } from './HomePage'
+import { PetsEditorSection } from './PetsEditorSection'
 import { SkillUnlockSection } from './SkillUnlockSection'
 import { SkinUnlockSection } from './SkinUnlockSection'
 import { QuickUnlockCard } from './QuickUnlockCard'
@@ -642,11 +643,34 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     {downloadButton}
   </section>
 
-  if (editorCategory && !['personajes', 'habilidades', 'skins'].includes(editorCategory)) {
+  if (editorCategory && !['personajes', 'habilidades', 'skins', 'mascotas'].includes(editorCategory)) {
     return <section className="cloud-empty panel">
       <h2>Categoría no encontrada</h2>
       <Link className="button primary" to="/editor">Volver al Editor</Link>
     </section>
+  }
+
+  if (editorCategory === 'mascotas') {
+    return <>
+      <div className="editor-detail-nav">
+        <Link className="cloud-text-link" to="/editor">← Editor</Link>
+        <span>Mascotas y alimento · E2</span>
+      </div>
+      {!save.advanced || save.advanced.available === false ? <section className="cloud-empty panel">
+        <h2>Editor de mascotas no disponible</h2>
+        <p>{save.advanced?.error ?? 'La partida no contiene las estructuras necesarias.'}</p>
+      </section> : <PetsEditorSection
+        key={`pets-${save.sha256}`}
+        saveSha={save.sha256}
+        advanced={save.advanced}
+        writeReady={Boolean(session.write_ready)}
+        disabled={disabled}
+        accountLabel={accountLabel}
+        formatProblem={friendly}
+        onExpired={onExpired}
+        onPrepared={() => void historyOperation.run(refreshHistory)}
+      />}
+    </>
   }
 
   if (editorCategory) {
@@ -954,8 +978,9 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
             )}</dd></div>
         </dl>
         <p className="cloud-note">
-          Se guardó un respaldo cifrado. Este contador es experimental E2 y no modifica
-          el saldo de fichas ni las recompensas ya reclamadas.
+          Se guardó un respaldo cifrado. El propietario confirmó en Android físico que este
+          contador habilita el canje de recompensas acumuladas. No modifica el saldo de fichas
+          ni marca recompensas como reclamadas.
         </p>
         {session.write_ready && !fishProgressResult && <>
           <label className="cloud-check"><input type="checkbox" checked={fishProgressConfirm} disabled={disabled}
@@ -980,7 +1005,7 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
       {fishProgressResult && <div role="status"
         className={`cloud-feedback ${fishProgressResult.persisted ? 'verified' : 'uncertain'}`}>
         {fishProgressResult.persisted
-          ? 'Progreso acumulado subido y verificado en la nube. Falta comprobarlo en Android.'
+          ? 'Progreso acumulado subido y verificado en la nube. El canje fue confirmado por el propietario en Android físico.'
           : 'No se pudo confirmar la subida del progreso. Verifica el estado desde Partida.'}
       </div>}
       {operation.pending && fishProgressAction && <Loading>
@@ -1043,6 +1068,15 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
         selected={selectedCount('skins', pendingSkins)}
         busy={disabled}
         onToggleAll={() => toggleCategory('skins', pendingSkins)} />
+      {save.advanced && save.advanced.available !== false && <QuickUnlockCard title="Mascotas"
+        path="/editor/mascotas"
+        unlocked={save.advanced.pets.filter((pet) => pet.unlocked === true).length}
+        total={save.advanced.pets.length}
+        pending={save.advanced.pets.filter((pet) => pet.editable && pet.unlocked !== true).length}
+        selected={0}
+        busy={disabled}
+        withSelection={false}
+        onToggleAll={() => undefined} />}
     </div>
     <p className="cloud-note">Nada se sube hasta revisarlo y confirmarlo dentro de cada categoría.</p>
   </section>}
@@ -1054,7 +1088,7 @@ function backupFieldLabel(backup: LabBackup) {
   if (backup.field === 'characters') return 'personajes disponibles'
   if (backup.field === 'skills') return 'habilidades'
   if (backup.field === 'skins') return 'skins'
-  if (backup.field === 'advanced') return 'materiales, recursos, beneficios y pase'
+  if (backup.field === 'advanced') return 'materiales, recursos, beneficios, pase y mascotas'
   return 'gemas'
 }
 

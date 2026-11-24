@@ -401,7 +401,7 @@ export function AdvancedEditorSection({
   return <section className="cloud-section panel advanced-section" aria-labelledby="advanced-title">
     <div className="cloud-section-head">
       <div>
-        <span className="cloud-kicker">Experimental E2</span>
+        <span className="cloud-kicker">Confirmado E3 · pase E2</span>
         <h2 id="advanced-title">Materiales, recursos y pase</h2>
         <p className="cloud-state">Un lote atómico con respaldo y confirmación</p>
       </div>
@@ -411,8 +411,9 @@ export function AdvancedEditorSection({
       </div>
     </div>
     <p className="cloud-note">
-      Cambia solo las rutas autorizadas y conserva el resto de la partida. No toca gemas,
-      fichas de pesca, recompensas reclamadas, recibos ni compras. Requiere prueba en Android.
+      Materiales, semillas, moneda de temporada y renacimiento están confirmados por el
+      propietario en Android físico. El pase de batalla sigue experimental. No toca gemas,
+      fichas de pesca, recompensas reclamadas, recibos ni compras.
     </p>
     {!writeReady && <Notice tone="warning">
       Puedes preparar el lote y su respaldo. La subida a la nube está deshabilitada.
@@ -478,7 +479,7 @@ export function AdvancedEditorSection({
               setActivateReborn(event.target.checked)
               clearPreview()
             }} />
-            <span>Solicitar activación experimental de <code>gameData.rebornCard</code> (tarjeta de renacimiento permanente)</span>
+            <span>Activar <code>gameData.rebornCard</code> (tarjeta de renacimiento permanente)</span>
           </label>}
           <p className="cloud-note"><strong>Límite:</strong> {advanced.reborn_card.limitation}</p>
           <p className="cloud-note">
@@ -538,13 +539,15 @@ export function AdvancedEditorSection({
     </div>}
     {result && <div role="status" className={`cloud-feedback ${result.persisted ? 'verified' : 'uncertain'}`}>
       {result.persisted
-        ? 'Lote subido y verificado en la nube. Falta comprobar cada función en el dispositivo Android.'
+        ? candidate?.experimental
+          ? 'Lote subido y verificado en la nube. El pase de batalla sigue pendiente de prueba en Android físico.'
+          : 'Lote subido y verificado en la nube. Las funciones confirmadas ya fueron validadas por el propietario en Android físico.'
         : 'No se pudo confirmar la subida del lote. Verifica el estado desde Partida.'}
     </div>}
     {result?.persisted && <p className="cloud-note">
-      Verificar la subida solo demuestra que los campos llegaron a la nube. No demuestra que el
-      cliente conceda la tarjeta, aplique la temporada ni reclame recompensas. Esas pruebas quedan
-      pendientes en Android.
+      Verificar la subida demuestra que los campos llegaron a la nube. Materiales, semillas,
+      moneda de temporada y renacimiento cuentan además con validación del propietario en Android
+      físico. El pase de batalla sigue pendiente de esa prueba.
     </p>}
   </section>
 }

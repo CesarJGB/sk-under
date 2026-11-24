@@ -1,0 +1,354 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "pet_skins",
+  "title": "Skins de mascota",
+  "description": "Variantes de mascota agrupadas por mascota base; sin mapa de bloqueo separado confirmado.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "needed_data.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 12,
+  "items": [
+    {
+      "id": "Cat1",
+      "name": {
+        "en": "Smokey",
+        "es": "Humito",
+        "zh_cn": "冷喵"
+      },
+      "category": "pet_skin",
+      "subcategory": "pet_variant",
+      "attributes": {
+        "pet_code": "Cat1",
+        "base_pet": "Cat",
+        "skin_index": 1,
+        "numeric_id": 20
+      },
+      "relations": {
+        "pet": "Cat"
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat1"
+      ],
+      "notes": [
+        "Variante de mascota agrupada por prefijo; no se halló un mapa de bloqueo de skins separado.",
+        "El desbloqueo se comparte con gameData.petUnlock.<variante>."
+      ],
+      "evidence": "E2",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Cat2",
+      "name": {
+        "en": "Snow",
+        "es": "Nieve",
+        "zh_cn": "雪诺"
+      },
+      "category": "pet_skin",
+      "subcategory": "pet_variant",
+      "attributes": {
+        "pet_code": "Cat2",
+        "base_pet": "Cat",
+        "skin_index": 2,
+        "numeric_id": 21
+      },
+      "relations": {
+        "pet": "Cat"
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat2"
+      ],
+      "notes": [
+        "Variante de mascota agrupada por prefijo; no se halló un mapa de bloqueo de skins separado.",
+        "El desbloqueo se comparte con gameData.petUnlock.<variante>."
+      ],
+      "evidence": "E2",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Cat3",
+      "name": {
+        "en": "Pudding",
+        "es": "Budín",
+        "zh_cn": "布丁"
+      },
+      "category": "pet_skin",
+      "subcategory": "pet_variant",
+      "attributes": {
+        "pet_code": "Cat3",
+        "base_pet": "Cat",
+        "skin_index": 3,
+        "numeric_id": 29
+      },
+      "relations": {
+        "pet": "Cat"
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat3"
+      ],
+      "notes": [
+        "Variante de mascota agrupada por prefijo; no se halló un mapa de bloqueo de skins separado.",
+        "El desbloqueo se comparte con gameData.petUnlock.<variante>."
+      ],
+      "evidence": "E2",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Cat4",
+      "name": {
+        "en": "Purpur",
+        "es": "Ronrón",
+        "zh_cn": "泡泡"
+      },
+      "category": "pet_skin",
+      "subcategory": "pet_variant",
+      "attributes": {
+        "pet_code": "Cat4",
+        "base_pet": "Cat",
+        "skin_index": 4,
+        "numeric_id": 30
+      },
+      "relations": {
+        "pet": "Cat"
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat4"
+      ],
+      "notes": [
+        "Variante de mascota agrupada por prefijo; no se halló un mapa de bloqueo de skins separado.",
+        "El desbloqueo se comparte con gameData.petUnlock.<variante>."
+      ],
+      "evidence": "E2",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Cat5",
+      "name": {
+        "en": "Pepper",
+        "es": "Pimienta",
+        "zh_cn": "胡椒"
+      },
+      "category": "pet_skin",
+      "subcategory": "pet_variant",
+      "attributes": {
+        "pet_code": "Cat5",
+        "base_pet": "Cat",
+        "skin_index": 5,
+        "numeric_id": 34
+      },
+      "relations": {
+        "pet": "Cat"
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat5"
+      ],
+      "notes": [
+        "Variante de mascota agrupada por prefijo; no se halló un mapa de bloqueo de skins separado.",
+        "El desbloqueo se comparte con gameData.petUnlock.<variante>."
+      ],
+      "evidence": "E2",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Cat6",
+      "name": {
+        "en": "Rosemary Cat",
+        "es": "Gato romero",
+        "zh_cn": "迷迭猫"
+      },
+      "category": "pet_skin",
+      "subcategory": "pet_variant",
+      "attributes": {
+        "pet_code": "Cat6",
+        "base_pet": "Cat",
+        "skin_index": 6,
+        "numeric_id": 35
+      },
+      "relations": {
+        "pet": "Cat"
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat6"
+      ],
+      "notes": [
+        "Variante de mascota agrupada por prefijo; no se halló un mapa de bloqueo de skins separado.",
+        "El desbloqueo se comparte con gameData.petUnlock.<variante>."
+      ],
+      "evidence": "E2",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Cat7",
+      "name": {
+        "en": "Zhaocai",
+        "es": "Zhaocai",
+        "zh_cn": "招财"
+      },
+      "category": "pet_skin",
+      "subcategory": "pet_variant",
+      "attributes": {
+        "pet_code": "Cat7",
+        "base_pet": "Cat",
+        "skin_index": 7,
+        "numeric_id": 39
+      },
+      "relations": {
+        "pet": "Cat"
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat7"
+      ],
+      "notes": [
+        "Variante de mascota agrupada por prefijo; no se halló un mapa de bloqueo de skins separado.",
+        "El desbloqueo se comparte con gameData.petUnlock.<variante>."
+      ],
+      "evidence": "E2",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Dog1",
+      "name": {
+        "en": "Taro",
+        "es": "Taro",
+        "zh_cn": "太郎"
+      },
+      "category": "pet_skin",
+      "subcategory": "pet_variant",
+      "attributes": {
+        "pet_code": "Dog1",
+        "base_pet": "Dog",
+        "skin_index": 1,
+        "numeric_id": 28
+      },
+      "relations": {
+        "pet": "Dog"
+      },
+      "save_refs": [
+        "gameData.petUnlock.Dog1"
+      ],
+      "notes": [
+        "Variante de mascota agrupada por prefijo; no se halló un mapa de bloqueo de skins separado.",
+        "El desbloqueo se comparte con gameData.petUnlock.<variante>."
+      ],
+      "evidence": "E2",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Dog2",
+      "name": {
+        "en": "Pochi",
+        "es": "Pochi",
+        "zh_cn": "波奇"
+      },
+      "category": "pet_skin",
+      "subcategory": "pet_variant",
+      "attributes": {
+        "pet_code": "Dog2",
+        "base_pet": "Dog",
+        "skin_index": 2,
+        "numeric_id": 31
+      },
+      "relations": {
+        "pet": "Dog"
+      },
+      "save_refs": [
+        "gameData.petUnlock.Dog2"
+      ],
+      "notes": [
+        "Variante de mascota agrupada por prefijo; no se halló un mapa de bloqueo de skins separado.",
+        "El desbloqueo se comparte con gameData.petUnlock.<variante>."
+      ],
+      "evidence": "E2",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Dog3",
+      "name": {
+        "en": "Chestnut",
+        "es": "Chestnut",
+        "zh_cn": "栗子"
+      },
+      "category": "pet_skin",
+      "subcategory": "pet_variant",
+      "attributes": {
+        "pet_code": "Dog3",
+        "base_pet": "Dog",
+        "skin_index": 3,
+        "numeric_id": 32
+      },
+      "relations": {
+        "pet": "Dog"
+      },
+      "save_refs": [
+        "gameData.petUnlock.Dog3"
+      ],
+      "notes": [
+        "Variante de mascota agrupada por prefijo; no se halló un mapa de bloqueo de skins separado.",
+        "El desbloqueo se comparte con gameData.petUnlock.<variante>."
+      ],
+      "evidence": "E2",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Pig1",
+      "name": {
+        "en": "Cowboi",
+        "es": "Vaquero",
+        "zh_cn": "牛仔"
+      },
+      "category": "pet_skin",
+      "subcategory": "pet_variant",
+      "attributes": {
+        "pet_code": "Pig1",
+        "base_pet": "Pig",
+        "skin_index": 1,
+        "numeric_id": 23
+      },
+      "relations": {
+        "pet": "Pig"
+      },
+      "save_refs": [
+        "gameData.petUnlock.Pig1"
+      ],
+      "notes": [
+        "Variante de mascota agrupada por prefijo; no se halló un mapa de bloqueo de skins separado.",
+        "El desbloqueo se comparte con gameData.petUnlock.<variante>."
+      ],
+      "evidence": "E2",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Rabbit1",
+      "name": {
+        "en": "Papa",
+        "es": "Papa",
+        "zh_cn": "趴趴"
+      },
+      "category": "pet_skin",
+      "subcategory": "pet_variant",
+      "attributes": {
+        "pet_code": "Rabbit1",
+        "base_pet": "Rabbit",
+        "skin_index": 1,
+        "numeric_id": 22
+      },
+      "relations": {
+        "pet": "Rabbit"
+      },
+      "save_refs": [
+        "gameData.petUnlock.Rabbit1"
+      ],
+      "notes": [
+        "Variante de mascota agrupada por prefijo; no se halló un mapa de bloqueo de skins separado.",
+        "El desbloqueo se comparte con gameData.petUnlock.<variante>."
+      ],
+      "evidence": "E2",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    }
+  ]
+}

@@ -20,7 +20,7 @@ def load_catalog(name):
 def test_all_catalogs_match_the_documented_schema():
     schema = common.load_schema("catalog.schema.json")
     paths = sorted(CATALOGS.glob("*.json"))
-    assert len(paths) == 24
+    assert len(paths) == 25
     total = 0
     for path in paths:
         document = common.read_json(path)
@@ -31,7 +31,7 @@ def test_all_catalogs_match_the_documented_schema():
         assert document["count"] == len(document["items"])
         assert len({item["id"] for item in document["items"]}) == document["count"]
         total += document["count"]
-    assert total == 4286
+    assert total == 4298
 
 
 def test_catalog_relations_resolve_to_known_items():
@@ -90,8 +90,15 @@ def test_pet_identity_gap_is_explicit_and_not_invented():
     assert by_id["Cat"]["name"]["en"] == "Chilly"
     assert by_id["Hide"]["attributes"]["numeric_id"] == 17
     assert by_id["Hide"]["name"] == {"en": None, "es": None, "zh_cn": None}
-    assert by_id["pet_id_57"]["attributes"]["numeric_id"] == 57
-    assert by_id["pet_id_57"]["name"]["en"] == "Fish Chip King"
+    assert by_id["FishChipKing"]["attributes"]["numeric_id"] == 57
+    assert by_id["FishChipKing"]["name"]["en"] == "Fish Chip King"
+    assert by_id["FishChipKing"]["save_refs"] == ["gameData.petUnlock.FishChipKing"]
+
+    skins = {item["id"]: item for item in load_catalog("pet_skins")["items"]}
+    assert len(skins) == 12
+    assert skins["Cat1"]["attributes"]["base_pet"] == "Cat"
+    assert skins["Cat1"]["relations"]["pet"] == "Cat"
+    assert skins["Cat1"]["save_refs"] == ["gameData.petUnlock.Cat1"]
 
 
 def test_weapon_catalog_distinguishes_visible_weapons_from_config_only_rows():

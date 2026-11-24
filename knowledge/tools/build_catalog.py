@@ -255,9 +255,14 @@ def build_pets(
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     pet_names: dict[str, str] = needed.get("pet", {})
     numeric_ids = sorted({int(key) for key in pet_names} | set(range(len(codes))) | {57})
+    # El código 57 no está en pet_code_name.json, pero sí aparece como
+    # ``FishChipKing`` en gameData.petUnlock de guardados y nube reales.
+    code_overrides = {57: "FishChipKing"}
     pets: list[dict[str, Any]] = []
     for numeric_id in numeric_ids:
-        code = codes[numeric_id] if numeric_id < len(codes) else None
+        code = code_overrides.get(numeric_id)
+        if code is None and numeric_id < len(codes):
+            code = codes[numeric_id]
         name = name_from_i2(i2, f"Pet_name_{numeric_id}")
         if not name["en"]:
             name["en"] = pet_names.get(str(numeric_id))
@@ -281,7 +286,10 @@ def build_pets(
                     ]
                 },
                 save_refs=[f"gameData.petUnlock.{code}"] if code else [],
-                source=item_source(commit, "pet_code_name.json"),
+                source=item_source(
+                    commit,
+                    "needed_data.json" if numeric_id == 57 else "pet_code_name.json",
+                ),
                 notes=(
                     ["Identificador numérico sin nombre en needed_data.json."]
                     if not pet_names.get(str(numeric_id))
@@ -298,7 +306,9 @@ def build_pets(
             skill_names[(int(match.group(1)), int(match.group(2)))] = name_from_i2(i2, key)
     for (numeric_id, slot), name in sorted(skill_names.items()):
         description = name_from_i2(i2, f"pet_{numeric_id}_skill_{slot}_desc")
-        code = codes[numeric_id] if numeric_id < len(codes) else None
+        code = "FishChipKing" if numeric_id == 57 else (
+            codes[numeric_id] if numeric_id < len(codes) else None
+        )
         skills.append(
             make_item(
                 f"pet_{numeric_id}_skill_{slot}",
@@ -317,6 +327,52 @@ def build_pets(
             )
         )
     return pets, skills
+
+
+def build_pet_skins(
+    pets: list[dict[str, Any]],
+    i2: dict[str, dict[str, str | None]],
+    commit: str,
+) -> list[dict[str, Any]]:
+    """Variantes de mascota observadas en el mismo mapa petUnlock.
+
+    No se encontró un mapa de bloqueo específico de skins de mascota ni una
+    clave de PlayerPrefs equivalente a ``skinLock``. Las variantes Cat1..Cat7,
+    Dog1..Dog3, Pig1 y Rabbit1 se catalogan como candidatas E2: su desbloqueo
+    se lee y escribe en ``gameData.petUnlock.<variante>``. El catálogo no
+    afirma que sean la única representación posible de una skin.
+    """
+    skins: list[dict[str, Any]] = []
+    for pet in pets:
+        pet_id = pet.get("id")
+        match = re.fullmatch(r"(Cat|Dog|Pig|Rabbit)(\d+)", pet_id or "")
+        if not match:
+            continue
+        base = match.group(1)
+        index = int(match.group(2))
+        skins.append(
+            make_item(
+                pet_id,
+                pet["name"],
+                "pet_skin",
+                subcategory="pet_variant",
+                attributes={
+                    "pet_code": pet_id,
+                    "base_pet": base,
+                    "skin_index": index,
+                    "numeric_id": pet["attributes"].get("numeric_id"),
+                },
+                relations={"pet": base},
+                save_refs=[f"gameData.petUnlock.{pet_id}"],
+                evidence="E2",
+                source=item_source(commit, "needed_data.json"),
+                notes=[
+                    "Variante de mascota agrupada por prefijo; no se halló un mapa de bloqueo de skins separado.",
+                    "El desbloqueo se comparte con gameData.petUnlock.<variante>.",
+                ],
+            )
+        )
+    return skins
 
 
 def build_weapons(
@@ -1170,6 +1226,7 @@ def build_documents(
         codes, needed, i2, highest, commit
     )
     pets, pet_skills = build_pets(pet_codes, needed, i2, commit)
+    pet_skins = build_pet_skins(pets, i2, commit)
     weapons = build_weapons(weapon_full, weapon_csv, i2, commit)
     weapon_skins = build_weapon_skins(needed, i2, commit)
     materials = build_materials(
@@ -1190,6 +1247,7 @@ def build_documents(
         "character_skins": ("Skins de personaje", "Skins indexadas por personaje.", character_skins, ["needed_data.json"], "character_skins"),
         "pets": ("Mascotas", "Códigos, identificadores numéricos y nombres disponibles.", pets, ["pet_code_name.json", "needed_data.json"], "pets"),
         "pet_skills": ("Habilidades de mascota", "Habilidades y descripciones localizadas.", pet_skills, ["I2language.csv"], "pet_skills"),
+        "pet_skins": ("Skins de mascota", "Variantes de mascota agrupadas por mascota base; sin mapa de bloqueo separado confirmado.", pet_skins, ["needed_data.json"], "pet_skins"),
         "weapons": ("Armas y variantes de configuración", "Catálogo de armas, anillos, transformaciones y variantes internas.", weapons, ["weapon_full.json", "weapons.decrypted.csv"], "weapons"),
         "weapon_skins": ("Skins de arma", "Skins indexadas por arma.", weapon_skins, ["needed_data.json"], "weapon_skins"),
         "materials": ("Materiales", "Unión de materiales de item.json y needed_data.json.", materials, ["item.json", "needed_data.json"], "materials"),

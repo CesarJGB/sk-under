@@ -17,6 +17,7 @@ from hashlib import sha256
 from typing import Any, Iterable, Mapping
 
 from ..catalogs.items import load_item_catalog
+from ..catalogs.pets import load_pet_catalog
 from ..cloud_save import (
     MAX_INPUT_BYTES,
     AggregateFormatError,
@@ -34,6 +35,8 @@ SEEDS_PATH = "itemData.seeds"
 SEASON_COIN_PATH = "seasonData.coin"
 REBORN_PATH = "gameData.rebornCard"
 BATTLE_PASS_PATH = "battlePassSaveData.seasonData"
+PETS_PATH = "gameData.petUnlock"
+PET_FOOD_IDS = frozenset({"material_grain", "material_battery"})
 ADVANCED_RECORD_FIELD = "advanced"
 MIN_VALUE = 0
 MAX_VALUE = 2_147_483_647  # Límite estructural int32; no es un tope confirmado del juego.
@@ -41,11 +44,9 @@ MAX_ITEMS = 400
 MAX_CHANGES = 500
 
 REBORN_LIMITATION = (
-    "La guía del propietario identifica shared_pref:reborn_card = 1 (entero local por perfil). "
-    "En la nube solo se ha observado gameData.rebornCard (booleano). CoverPlayerPref reconstruye "
-    "PlayerPrefs durante la recuperación, pero no se ha aislado el origen remoto de cada clave. "
-    "Esta edición activa el booleano del guardado agregado; no se puede garantizar que el cliente "
-    "la proyecte a la preferencia local ni que conceda el derecho permanente."
+    "El propietario confirmó en Android físico que gameData.rebornCard = true basta para que la "
+    "tarjeta de renacimiento permanente aparezca comprada. La preferencia local "
+    "shared_pref:reborn_card = 1 se conserva como referencia de proyección; no se edita directamente."
 )
 
 
@@ -135,7 +136,7 @@ def normalize_advanced_plan(raw: Mapping[str, object]) -> dict[str, object]:
     """Convierte la entrada de la API en un plan determinista y validado."""
     if not isinstance(raw, Mapping):
         raise InvalidAdvancedPlan("El plan debe ser un objeto JSON.")
-    allowed = {"materials", "seeds", "season_coin", "reborn_card", "battle_pass"}
+    allowed = {"materials", "seeds", "season_coin", "reborn_card", "battle_pass", "pets", "pet_food"}
     unknown = set(raw) - allowed
     if unknown:
         raise InvalidAdvancedPlan(f"El plan contiene claves no autorizadas: {sorted(unknown)}.")
@@ -144,6 +145,22 @@ def normalize_advanced_plan(raw: Mapping[str, object]) -> dict[str, object]:
         raise AdvancedEditError("El catálogo de materiales y semillas no está disponible.")
     materials = _plan_map(raw.get("materials"), catalog["material_ids"], "materials")  # type: ignore[arg-type]
     seeds = _plan_map(raw.get("seeds"), catalog["seed_ids"], "seeds")  # type: ignore[arg-type]
+    pet_catalog = load_pet_catalog()
+    if not pet_catalog.get("available"):
+        raise AdvancedEditError("El catálogo de mascotas no está disponible.")
+    pets = _pet_selection(raw.get("pets"), pet_catalog)
+    pet_food = _plan_map(raw.get("pet_food"), catalog["material_ids"], "pet_food")  # type: ignore[arg-type]
+    for item_id in pet_food:
+        if item_id not in PET_FOOD_IDS:
+            raise InvalidAdvancedPlan(f"{item_id} no es un alimento de mascota compatible.")
+    for item_id, value in pet_food.items():
+        if item_id in materials and materials[item_id] != value:
+            raise InvalidAdvancedPlan(
+                f"{item_id} se solicita con cantidades distintas en materials y pet_food."
+            )
+    # El alimento comparte el único escritor de itemData.materials.
+    materials.update(pet_food)
+    materials = dict(sorted(materials.items()))
     season_coin = raw.get("season_coin")
     if season_coin is not None:
         season_coin = _int(season_coin)
@@ -175,11 +192,11 @@ def normalize_advanced_plan(raw: Mapping[str, object]) -> dict[str, object]:
         if len(selected) == 1:
             raise InvalidAdvancedPlan("battle_pass no solicita ningún cambio.")
         battle_pass = selected
-    if not any((materials, seeds, season_coin is not None, reborn_card is True, battle_pass)):
+    if not any((materials, seeds, season_coin is not None, reborn_card is True, battle_pass, pets)):
         raise InvalidAdvancedPlan("El plan no contiene ningún cambio.")
     if len(materials) + len(seeds) + (0 if season_coin is None else 1) + (
         0 if reborn_card is None else 1
-    ) + (0 if battle_pass is None else len(battle_pass) - 1) > MAX_CHANGES:
+    ) + (0 if battle_pass is None else len(battle_pass) - 1) + len(pets) > MAX_CHANGES:
         raise InvalidAdvancedPlan("El plan supera el máximo de cambios.")
     return {
         "materials": materials,
@@ -187,7 +204,38 @@ def normalize_advanced_plan(raw: Mapping[str, object]) -> dict[str, object]:
         "season_coin": season_coin,
         "reborn_card": True if reborn_card is True else None,
         "battle_pass": battle_pass,
+        "pets": pets,
+        "pet_food": pet_food,
     }
+
+
+def _pet_selection(raw: object, catalog: Mapping[str, object]) -> list[str]:
+    if raw is None:
+        return []
+    if not isinstance(raw, list):
+        raise InvalidAdvancedPlan("pets debe ser una lista de códigos.")
+    if len(raw) > 70:
+        raise InvalidAdvancedPlan("pets supera el máximo de códigos admitido.")
+    pet_ids = catalog["pet_ids"]
+    skin_ids = catalog["skin_ids"]
+    skins = catalog["pet_skins"]
+    assert isinstance(pet_ids, frozenset) and isinstance(skin_ids, frozenset)
+    selected: set[str] = set()
+    seen: set[str] = set()
+    for value in raw:
+        if not isinstance(value, str) or not value:
+            raise InvalidAdvancedPlan("pets contiene un código inválido.")
+        if value in seen:
+            raise InvalidAdvancedPlan(f"pets repite el código {value}.")
+        if value not in pet_ids and value not in skin_ids:
+            raise InvalidAdvancedPlan(f"{value} no pertenece al catálogo de mascotas 8.8.0.")
+        seen.add(value)
+        selected.add(value)
+    # Dependencia explícita: una variante seleccionada arrastra su mascota base.
+    for skin_id in sorted(selected & skin_ids):
+        skin = skins[skin_id]  # type: ignore[index]
+        selected.add(str(skin["base_pet"]))  # type: ignore[index]
+    return sorted(selected)
 
 
 def _validated_document(source: bytes) -> tuple[dict[str, Any], int, bytes]:
@@ -385,6 +433,27 @@ def prepare_advanced_edit(source: bytes, plan: Mapping[str, object]) -> Advanced
             game["rebornCard"] = True
             changes.append(AdvancedChange(REBORN_PATH, before, True))
 
+    selected_pets = normalized["pets"]
+    assert isinstance(selected_pets, list)
+    if selected_pets:
+        game = candidate.get("gameData")
+        if not isinstance(game, dict) or not isinstance(game.get("petUnlock"), dict):
+            raise AdvancedFieldMissing("No existe gameData.petUnlock como mapa de desbloqueos.")
+        unlocks = game["petUnlock"]
+        if len(unlocks) + len(selected_pets) > MAX_ITEMS:
+            raise AdvancedFieldIncompatible("gameData.petUnlock tiene demasiados elementos.")
+        for pet_id in selected_pets:
+            before = unlocks.get(pet_id)
+            if pet_id in unlocks and type(before) is not bool:
+                raise AdvancedFieldIncompatible(
+                    f"gameData.petUnlock.{pet_id} no es booleano y no se puede sobrescribir."
+                )
+            if before is True:
+                continue
+            _set_original(originals, f"{PETS_PATH}.{pet_id}", before, pet_id in unlocks)
+            unlocks[pet_id] = True
+            changes.append(AdvancedChange(f"{PETS_PATH}.{pet_id}", before if pet_id in unlocks else None, True))
+
     battle_pass = normalized["battle_pass"]
     if isinstance(battle_pass, dict):
         _, records = _bp_records(candidate)
@@ -497,6 +566,9 @@ def prepare_advanced_edit(source: bytes, plan: Mapping[str, object]) -> Advanced
         raise AdvancedVerificationError("No se conservó seasonData.coin.")
     if normalized["reborn_card"] is True and reopened_root["gameData"]["rebornCard"] is not True:
         raise AdvancedVerificationError("No se conservó gameData.rebornCard.")
+    for pet_id in normalized["pets"]:  # type: ignore[union-attr]
+        if reopened_root["gameData"]["petUnlock"][pet_id] is not True:
+            raise AdvancedVerificationError(f"No se conservó gameData.petUnlock.{pet_id}.")
 
     _restore_originals(reopened_root, originals)
     if serialize_aggregate(reopened_root) != source:
@@ -636,12 +708,12 @@ def read_advanced_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
         "value": reborn if reborn_valid else None,
         "available": "rebornCard" in game and reborn_valid,
         "path": REBORN_PATH,
-        "experimental": True,
+        "experimental": False,
         "local_reference": "shared_pref:reborn_card = 1 (entero, por perfil)",
         "remote_representation": "gameData.rebornCard (booleano)",
         "projection": "CoverPlayerPref / CoverPlayerPrefSafely",
         "limitation": REBORN_LIMITATION,
-        "evidence_level": "E2",
+        "evidence_level": "E3",
     }
 
     try:
@@ -683,12 +755,41 @@ def read_advanced_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
         "note": "Se selecciona el seasonID más alto por defecto; solo se editan registros existentes.",
     }
 
+    pet_catalog = load_pet_catalog()
+    pets, pet_skins, pet_food = _pet_snapshot(
+        game, material_map, materials, pet_catalog
+    )
+    pet_progression = _pet_progression(payload, pet_catalog)
+
     return {
         "materials": materials,
         "seeds": seeds,
         "season_coin": season_coin,
         "reborn_card": reborn_card,
         "battle_pass": battle_pass,
+        "pets": pets,
+        "pet_skins": pet_skins,
+        "pet_food": pet_food,
+        "pet_progression": pet_progression,
+        "pet_policy": {
+            "field": "pets",
+            "experimental": True,
+            "evidence_level": "E2",
+            "path": PETS_PATH,
+            "skin_note": (
+                "No se encontró un mapa de bloqueo de skins separado. Las variantes Cat1..Cat7, "
+                "Dog1..Dog3, Pig1 y Rabbit1 se desbloquean mediante gameData.petUnlock.<variante>; "
+                "seleccionar una variante incluye su mascota base."
+            ),
+            "food_note": (
+                "Los alimentos material_grain y material_battery comparten el escritor de "
+                "itemData.materials; no se crea un escritor paralelo."
+            ),
+            "progression_note": (
+                "La intimidad se muestra en solo lectura. El máximo es específico de cada mascota "
+                "y no se ha recuperado la configuración completa; no se escriben valores especulativos."
+            ),
+        },
         "policy": {
             "field": ADVANCED_RECORD_FIELD,
             "experimental": True,
@@ -697,5 +798,138 @@ def read_advanced_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
             "max": MAX_VALUE,
             "max_note": "Límite estructural int32; no se ha confirmado un tope del juego.",
             "material_fish_note": "material_fish se excluye por ser espejo de gameData.fishChip.",
+            "confirmed_functions": ["materials", "seeds", "season_coin", "reborn_card"],
+            "experimental_functions": ["battle_pass", "pets", "pet_food"],
         },
+    }
+
+
+def _pet_snapshot(
+    game: Mapping[str, Any],
+    material_map: Mapping[str, Any],
+    material_rows: list[dict[str, object]],
+    catalog: Mapping[str, object],
+) -> tuple[list[dict[str, object]], list[dict[str, object]], list[dict[str, object]]]:
+    unlocks = game.get("petUnlock") if isinstance(game, dict) else None
+    available = isinstance(unlocks, dict)
+    unlocks = unlocks if isinstance(unlocks, dict) else {}
+    pet_rows_by_id = catalog["pets"]
+    skin_rows_by_id = catalog["pet_skins"]
+    assert isinstance(pet_rows_by_id, dict) and isinstance(skin_rows_by_id, dict)
+    skins_by_pet: dict[str, list[str]] = {}
+    for skin_id, skin in skin_rows_by_id.items():
+        skins_by_pet.setdefault(str(skin["base_pet"]), []).append(skin_id)  # type: ignore[index]
+    pets: list[dict[str, object]] = []
+    for pet_id in catalog["ordered_pets"]:  # type: ignore[union-attr]
+        row = pet_rows_by_id[pet_id]
+        exists = pet_id in unlocks
+        value = unlocks.get(pet_id)
+        valid = exists and type(value) is bool
+        pets.append({
+            "id": pet_id,
+            "numeric_id": row["numeric_id"],
+            "name": row["name"],
+            "unlocked": True if valid and value is True else False if valid else None,
+            "present": exists,
+            "value_type": type(value).__name__ if exists else None,
+            "editable": available and (not exists or valid),
+            "insertable": available and not exists,
+            "path": f"{PETS_PATH}.{pet_id}",
+            "skins": sorted(skins_by_pet.get(pet_id, [])),
+            "reason": None if available else f"No existe {PETS_PATH} como mapa booleano.",
+        })
+    pet_skins: list[dict[str, object]] = []
+    for skin_id in catalog["ordered_skins"]:  # type: ignore[union-attr]
+        row = skin_rows_by_id[skin_id]
+        exists = skin_id in unlocks
+        value = unlocks.get(skin_id)
+        valid = exists and type(value) is bool
+        base = str(row["base_pet"])  # type: ignore[index]
+        base_value = unlocks.get(base)
+        pet_skins.append({
+            "id": skin_id,
+            "pet_code": row["pet_code"],
+            "base_pet": base,
+            "skin_index": row["skin_index"],
+            "name": row["name"],
+            "unlocked": True if valid and value is True else False if valid else None,
+            "present": exists,
+            "value_type": type(value).__name__ if exists else None,
+            "editable": available and (not exists or valid),
+            "insertable": available and not exists,
+            "path": f"{PETS_PATH}.{skin_id}",
+            "base_unlocked": True if base_value is True else False if type(base_value) is bool else None,
+            "dependency_note": (
+                "Seleccionar esta variante también desbloquea su mascota base si está pendiente."
+            ),
+        })
+    food_rows = []
+    for row in material_rows:
+        if row.get("id") in PET_FOOD_IDS:
+            food_rows.append({
+                "id": row["id"],
+                "name": row["name"],
+                "count": row["count"],
+                "value_type": row["value_type"],
+                "owned": row["owned"],
+                "editable": row["editable"],
+                "insertable": row["insertable"],
+                "path": row["path"],
+                "field": "itemData.materials",
+                "population": "itemData.materials",
+                "reason": row.get("reason"),
+            })
+    return pets, pet_skins, food_rows
+
+
+def _pet_progression(
+    payload: Mapping[str, Any], catalog: Mapping[str, object]
+) -> dict[str, object]:
+    statistic = payload.get("statisticData")
+    counts = statistic.get("event2Count") if isinstance(statistic, dict) else None
+    available = isinstance(counts, dict)
+    counts = counts if isinstance(counts, dict) else {}
+    rows_by_id = catalog["pets"]
+    assert isinstance(rows_by_id, dict)
+    entries: list[dict[str, object]] = []
+    for pet_id in catalog["ordered_pets"]:  # type: ignore[union-attr]
+        row = rows_by_id[pet_id]
+        numeric_id = row["numeric_id"]
+        assert type(numeric_id) is int
+        prefix = f"pet_{numeric_id}_"
+        intimacy = counts.get(f"{prefix}intimacy")
+        full_raw = counts.get(f"{prefix}full_intimacy")
+        action = counts.get(f"{prefix}action_unlock")
+        intimacy_valid = type(intimacy) is int and MIN_VALUE <= intimacy <= MAX_VALUE
+        full_valid = type(full_raw) is int and full_raw in (0, 1)
+        action_valid = type(action) is int and action in (0, 1)
+        present = any(key in counts for key in (f"{prefix}intimacy", f"{prefix}full_intimacy"))
+        entries.append({
+            "id": pet_id,
+            "numeric_id": numeric_id,
+            "name": row["name"],
+            "present": present,
+            "intimacy": intimacy if intimacy_valid else None,
+            "full": bool(full_raw) if full_valid else None,
+            "action_unlocked": bool(action) if action_valid else None,
+            "value_type": None if intimacy_valid else type(intimacy).__name__ if intimacy is not None else None,
+            "max": None,
+            "max_note": (
+                "Máximo específico de la mascota; solo el indicador full_intimacy confirma "
+                "que se alcanzó. No se escribe un máximo inventado."
+            ),
+            "path": f"statisticData.event2Count.{prefix}intimacy",
+        })
+    full_count = counts.get("pet_full_intimacy")
+    return {
+        "available": available,
+        "path": "statisticData.event2Count",
+        "read_only": True,
+        "global_full_count": full_count if type(full_count) is int else None,
+        "full_count_key": "pet_full_intimacy",
+        "entries": entries,
+        "note": (
+            "Progresión observada en statisticData.event2Count. La intimidad actual es legible, "
+            "pero los máximos por mascota no están recuperados y no se ofrecen escrituras."
+        ),
     }

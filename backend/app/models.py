@@ -165,6 +165,8 @@ class CloudLabAdvancedPrepareInput(BaseModel):
     season_coin: StrictInt | None = Field(default=None, ge=0, le=2_147_483_647)
     reborn_card: StrictBool | None = None
     battle_pass: CloudBattlePassChange | None = None
+    pets: list[StrictStr] = Field(default_factory=list, max_length=70)
+    pet_food: list[CloudItemChange] = Field(default_factory=list, max_length=2)
 
 
 class CloudBackupSummary(BaseModel):

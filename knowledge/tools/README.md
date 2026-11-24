@@ -34,6 +34,22 @@ python3 knowledge/tools/build_fields.py --write-legacy
 pruebas exigen que coincida byte a byte con
 `docs/save-research/field-registry.json`.
 
+## `build_backend_items.py` y `build_backend_pets.py`
+
+Generan las proyecciones empaquetadas que consume el backend, sin copiar listas
+manualmente:
+
+```bash
+python3 knowledge/tools/build_backend_items.py
+python3 knowledge/tools/build_backend_items.py --check
+python3 knowledge/tools/build_backend_pets.py
+python3 knowledge/tools/build_backend_pets.py --check
+```
+
+`items-880.json` cubre materiales y semillas; `pets-880.json` cubre las 58
+mascotas y sus 12 variantes de skin. Las pruebas y la construcción fallan si las
+proyecciones se desincronizan de `knowledge/catalogs`.
+
 ## `search_knowledge.py`
 
 ```bash

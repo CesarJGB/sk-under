@@ -22,8 +22,8 @@ juego ni una garantía de que todos los campos sean editables.
 
 ## Cobertura
 
-- 616 campos registrados: 194 en E1, 411 en E2, 5 en E3 y 6 en E4. No hay campos
-  nuevos en E3/E4 en esta fase.
+- 616 campos registrados: 194 en E1, 406 en E2, 10 en E3 y 6 en E4. La fase 7.2
+  elevó cinco funciones a E3 por confirmación del propietario; no se añadió ningún E4.
 - Muchos elementos de catálogo no tienen nombre localizado. Se conserva `null`
   en lugar de inventar un nombre.
 - Los planos, tokens, trofeos, vales y joyería tienen cobertura de identificadores
@@ -50,3 +50,32 @@ juego ni una garantía de que todos los campos sean editables.
   SKDFE ni de red.
 - Las diferencias de versión se generaron con `git show` sobre los commits
   fijados; no se descargaron binarios del juego.
+## Fase 7.2 — mascotas y consolidación
+
+- El propietario confirmó en Android físico la edición de materiales (incluida la
+  masiva), el canje de recompensas acumuladas con `itemData.cumulativeFishCount`,
+  `gameData.rebornCard = true` para la tarjeta permanente y, dentro de la
+  validación general, semillas y moneda de temporada. Esas funciones se elevaron
+  a E3 con política `confirmed_by_owner`.
+- El pase de batalla no se pudo probar porque no había un pase disponible. Sigue
+  experimental E2; esto no se interpreta como un fallo del editor.
+- No se elevó ninguna función a E4: falta una comprobación de persistencia
+  posterior independiente.
+- Las 58 mascotas se identifican en `gameData.petUnlock`. El código 57 es
+  `FishChipKing`, confirmado por guardados y nube reales, aunque no aparezca en
+  `pet_code_name.json` de SKDFE.
+- No se encontró un mapa de bloqueo de skins de mascota separado. Las 12
+  variantes `Cat1..Cat7`, `Dog1..Dog3`, `Pig1` y `Rabbit1` se catalogan como
+  hipótesis E2 y comparten `gameData.petUnlock.<variante>`. El editor incluye la
+  mascota base al seleccionar una variante, pero la relación no está confirmada
+  en dispositivo.
+- La progresión se observa en `statisticData.event2Count` mediante
+  `pet_<ID>_intimacy`, `pet_<ID>_full_intimacy`, `pet_<ID>_action_unlock` y el
+  global `pet_full_intimacy`. Los máximos observados varían (180, 240 y 300) y la
+  configuración por mascota no está recuperada; la progresión es de solo lectura
+  y no se simulan máximos con 999, 9999 ni Int32.MaxValue.
+- `material_grain` (Pet Treats) y `material_battery` (Battery) son los alimentos
+  identificados. Ambos pertenecen a `itemData.materials`; el editor reutiliza ese
+  escritor y rechaza cantidades contradictorias en el mismo lote.
+- Ninguna función de mascotas se declara validada en Soul Knight: las pruebas
+  automatizadas solo verifican estructura, atomicidad y persistencia en la nube.

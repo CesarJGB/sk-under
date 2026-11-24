@@ -17,8 +17,8 @@ def test_fields_document_matches_schema_and_declares_every_aspect():
     assert document["counts_by_validation_level"] == {
         "H": 0,
         "E1": 194,
-        "E2": 411,
-        "E3": 5,
+        "E2": 406,
+        "E3": 10,
         "E4": 6,
     }
     for field in document["fields"]:
@@ -66,3 +66,30 @@ def test_field_ids_are_unique_and_normalized():
     assert len(ids) == len(set(ids))
     for field_id in ids:
         assert field_id == common.normalize_id(field_id), field_id
+
+def test_owner_confirmed_functions_are_e3_and_battle_pass_remains_e2():
+    document = common.read_json(common.FIELDS_DIR / "fields.json")
+    fields = {field["id"]: field for field in document["fields"]}
+    for field_id in (
+        "itemData.materials",
+        "itemData.seeds",
+        "seasonData.coin",
+        "gameData.rebornCard",
+        "itemData.cumulativeFishCount",
+    ):
+        field = fields[field_id]
+        assert field["validation_level"] == "E3"
+        assert "confirmed_by_owner" in field["edit_policy"]
+        assert field["evidence"]["persistence"] == "E3"
+    for field_id in (
+        "battlePassSaveData.seasonData",
+        "battlePassSaveData.seasonData._.Value.curLevel",
+        "battlePassSaveData.seasonData._.Value.curExp",
+        "battlePassSaveData.seasonData._.Value.hasBuy",
+    ):
+        field = fields[field_id]
+        assert field["validation_level"] == "E2"
+        assert "experimental" in field["edit_policy"]
+    pets = fields["gameData.petUnlock"]
+    assert pets["validation_level"] == "E2"
+    assert "experimental" in pets["edit_policy"]

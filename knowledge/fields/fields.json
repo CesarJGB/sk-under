@@ -28,8 +28,8 @@
   "counts_by_validation_level": {
     "H": 0,
     "E1": 194,
-    "E2": 411,
-    "E3": 5,
+    "E2": 406,
+    "E3": 10,
     "E4": 6
   },
   "fields": [
@@ -122,7 +122,7 @@
       "id": "statisticData.event2Count",
       "internal_name": "event2Count",
       "category": "Estadísticas",
-      "description": null,
+      "description": "Contadores de estadísticas y progreso; incluye intimidad de mascotas en claves pet_<ID>_*.",
       "locations": {
         "local": "statistic*.data:event2Count",
         "cloud": "statisticData.event2Count"
@@ -140,18 +140,26 @@
         "resolved": false
       },
       "observed_values": null,
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "pet_<índice>_intimacy contiene la intimidad actual de la mascota con ese identificador numérico.",
+        "pet_<índice>_full_intimacy vale 1 cuando la mascota alcanzó su máximo; es la única confirmación de máximo observada.",
+        "pet_<índice>_action_unlock vale 1 cuando la acción especial está desbloqueada.",
+        "pet_full_intimacy es un contador global de mascotas con intimidad completa."
+      ],
       "initial_values": null,
       "limits": {
         "type": "objeto ID → entero",
         "observed": "No cuantificado en este registro.",
         "functional": "No documentado."
       },
-      "related_ids": [],
-      "associated_catalog": null,
+      "related_ids": [
+        "knowledge.catalogs.pets",
+        "gameData.petUnlock"
+      ],
+      "associated_catalog": "pets",
       "sources": [
-        "discord",
         "docs/research/phase5-5/metadata-880-inventory.json",
+        "knowledge/sources/owner-confirmations-phase7-2.md",
         "propia"
       ],
       "observed_versions": [
@@ -168,15 +176,22 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "H",
+        "semantics": "E2",
         "version_compatibility": "E2",
-        "relations": "H",
+        "relations": "E2",
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
-      "open_questions": [],
+      "edit_policy": "solo lectura: la intimidad se muestra pero no se escribe porque los máximos por mascota no están recuperados.",
+      "constraints": [
+        "No simular máximos con 999, 9999 ni Int32.MaxValue.",
+        "No crear claves pet_<ID>_* si no existen en event2Count.",
+        "Conservar todos los contadores ajenos a mascotas."
+      ],
+      "open_questions": [
+        "Recuperar PetsLevelUpConfig/PetIntimacyConfig para conocer el máximo real de cada mascota.",
+        "Confirmar si la intimidad se puede escribir de forma segura y cómo la valida el cliente."
+      ],
       "experiments_required": [],
       "registry_tier": "legacy",
       "legacy_record": {
@@ -2808,7 +2823,8 @@
       },
       "observed_values": null,
       "known_value_semantics": [
-        "Identificado en FishChipPurchaseController de 8.8.0 como contador de progreso (Fase 6.20, E2)."
+        "Identificado en FishChipPurchaseController de 8.8.0 como contador de progreso (Fase 6.20).",
+        "El propietario confirmó que itemData.cumulativeFishCount permite habilitar y canjear las recompensas acumuladas de pesca en Android físico."
       ],
       "initial_values": null,
       "limits": {
@@ -2821,9 +2837,8 @@
       ],
       "associated_catalog": null,
       "sources": [
-        "discord",
         "docs/research/phase5-5/metadata-880-inventory.json",
-        "propia"
+        "knowledge/sources/owner-confirmations-phase7-2.md"
       ],
       "observed_versions": [
         "8.6.0",
@@ -2841,17 +2856,15 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "E2",
+        "semantics": "E3",
         "version_compatibility": "E2",
-        "relations": "E2",
-        "persistence": "H"
+        "relations": "E3",
+        "persistence": "E3"
       },
-      "validation_level": "E2",
-      "edit_policy": "experimental, edición aislada de itemData.cumulativeFishCount",
+      "validation_level": "E3",
+      "edit_policy": "confirmed_by_owner: edición de itemData.cumulativeFishCount confirmada por el propietario; las recompensas se canjean en el cliente y el editor no las marca como reclamadas.",
       "constraints": [],
-      "open_questions": [
-        "Confirmar qué recompensas consume este contador."
-      ],
+      "open_questions": [],
       "experiments_required": [],
       "registry_tier": "legacy",
       "legacy_record": {
@@ -3161,7 +3174,7 @@
       "id": "itemData.materials",
       "internal_name": "materials",
       "category": "Inventario",
-      "description": "Mapa de material o fragmento a cantidad; editor avanzado por lote de la fase 7.1.",
+      "description": "Mapa de material o fragmento a cantidad; editor por lote confirmado por el propietario (E3).",
       "locations": {
         "local": "item_data*.data:materials",
         "cloud": "itemData.materials"
@@ -3199,7 +3212,7 @@
       "sources": [
         "discord",
         "docs/research/phase5-5/metadata-880-inventory.json",
-        "knowledge/sources/owner-guide-phase7-1.md",
+        "knowledge/sources/owner-confirmations-phase7-2.md",
         "propia",
         "skdfe"
       ],
@@ -3220,22 +3233,20 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "E2",
+        "semantics": "E3",
         "version_compatibility": "E2",
-        "relations": "E2",
-        "persistence": "H"
+        "relations": "E3",
+        "persistence": "E3"
       },
-      "validation_level": "E2",
-      "edit_policy": "experimental E2, edición por lote de cantidades de materiales del catálogo; material_fish excluido",
+      "validation_level": "E3",
+      "edit_policy": "confirmed_by_owner: edición individual y masiva de cantidades de itemData.materials confirmada por el propietario en Android físico; material_fish sigue excluido y se edita desde fichas de pesca.",
       "constraints": [
         "Solo se aceptan IDs presentes en el catálogo empaquetado materials-880.",
         "material_fish no se edita desde este control.",
         "Conservar claves desconocidas y valores no enteros sin modificarlos.",
         "No se inventan cantidades máximas de juego; 2147483647 es solo el límite estructural int32."
       ],
-      "open_questions": [
-        "Confirmar en Android el consumo y la persistencia de cada familia de materiales."
-      ],
+      "open_questions": [],
       "experiments_required": [],
       "registry_tier": "legacy",
       "legacy_record": {
@@ -3369,7 +3380,7 @@
       "id": "itemData.seeds",
       "internal_name": "seeds",
       "category": "Inventario",
-      "description": "Cantidad de semillas poseídas por identificador; editor avanzado por lote de la fase 7.1.",
+      "description": "Cantidad de semillas poseídas por identificador; editor por lote confirmado por el propietario (E3).",
       "locations": {
         "local": "item_data*.data:seeds",
         "cloud": "itemData.seeds"
@@ -3406,7 +3417,7 @@
       "sources": [
         "discord",
         "docs/research/phase5-5/metadata-880-inventory.json",
-        "knowledge/sources/owner-guide-phase7-1.md",
+        "knowledge/sources/owner-confirmations-phase7-2.md",
         "propia",
         "skdfe"
       ],
@@ -3426,13 +3437,13 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "E2",
+        "semantics": "E3",
         "version_compatibility": "E2",
-        "relations": "E2",
-        "persistence": "H"
+        "relations": "E3",
+        "persistence": "E3"
       },
-      "validation_level": "E2",
-      "edit_policy": "experimental E2, edición por lote de cantidades de semillas del catálogo",
+      "validation_level": "E3",
+      "edit_policy": "confirmed_by_owner: edición de cantidades de itemData.seeds confirmada por el propietario en la validación general en Android físico; no modifica el jardín ni los estados de crecimiento.",
       "constraints": [
         "Solo se aceptan IDs presentes en el catálogo empaquetado seeds-880.",
         "Conservar claves desconocidas y valores no enteros sin modificarlos.",
@@ -4979,7 +4990,7 @@
       "id": "gameData.petUnlock",
       "internal_name": "petUnlock",
       "category": "Progreso y acceso",
-      "description": "Mapa de disponibilidad de mascotas por código interno.",
+      "description": "Mapa booleano de desbloqueo de mascotas por código interno; incluye variantes de skin observadas.",
       "locations": {
         "local": "files/game.data:petUnlock",
         "cloud": "gameData.petUnlock",
@@ -4998,7 +5009,11 @@
         "resolved": false
       },
       "observed_values": null,
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "Cada clave es un código de mascota del catálogo; true indica desbloqueo.",
+        "Las variantes Cat1..Cat7, Dog1..Dog3, Pig1 y Rabbit1 usan el mismo mapa; no se halló un mapa de skins separado.",
+        "El propietario no ha validado todavía la edición de mascotas en Android físico."
+      ],
       "initial_values": null,
       "limits": {
         "type": "objeto código → bool, XML string",
@@ -5010,10 +5025,10 @@
       ],
       "associated_catalog": "pets",
       "sources": [
-        "discord",
         "docs/research/phase5-5/metadata-880-inventory.json",
-        "propia",
-        "skdfe"
+        "docs/research/phase6-12/personajes-skins-skills.md",
+        "knowledge/sources/owner-confirmations-phase7-2.md",
+        "propia"
       ],
       "observed_versions": [
         "8.8.0",
@@ -5037,10 +5052,15 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
+      "edit_policy": "experimental E2: activa códigos seleccionados de gameData.petUnlock, conserva los existentes y no escribe progresión ni skins equipadas; pendiente de prueba en Android físico.",
+      "constraints": [
+        "Conservar todos los códigos existentes y sus valores booleanos.",
+        "Insertar un código seleccionado ausente solo si el mapa petUnlock ya existe como objeto.",
+        "No escribir intimidad, experiencia, alimento ni skins equipadas desde este control.",
+        "No tocar recibos, compras ni derechos de servidor."
+      ],
       "open_questions": [
-        "Confirmar la correspondencia entre códigos de petUnlock y los identificadores numéricos de mascota."
+        "Confirmar en Android físico el desbloqueo individual, masivo y de variantes de skin."
       ],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -5078,7 +5098,7 @@
       "id": "gameData.rebornCard",
       "internal_name": "rebornCard",
       "category": "Progreso y acceso",
-      "description": "Bandera booleana de la tarjeta de renacimiento en el agregado de nube; objetivo experimental de la fase 7.1.",
+      "description": "Bandera booleana de la tarjeta de renacimiento; activación confirmada por el propietario (E3).",
       "locations": {
         "local": "files/game.data:rebornCard",
         "cloud": "gameData.rebornCard",
@@ -5098,8 +5118,8 @@
       },
       "observed_values": null,
       "known_value_semantics": [
-        "La guía del propietario identifica shared_pref:reborn_card = 1 como activación local de la tarjeta gratuita permanente.",
-        "El agregado de nube contiene gameData.rebornCard booleano; no se demostró que escribir solo este booleano active la tarjeta."
+        "gameData.rebornCard = true bastó para que la tarjeta de renacimiento permanente apareciera como comprada en la prueba real del propietario en Android físico.",
+        "La guía del propietario identifica shared_pref:reborn_card = 1 como activación local; la edición remota no modifica directamente esa preferencia."
       ],
       "initial_values": null,
       "limits": {
@@ -5115,7 +5135,7 @@
       "sources": [
         "discord",
         "docs/research/phase5-5/metadata-880-inventory.json",
-        "knowledge/sources/owner-guide-phase7-1.md",
+        "knowledge/sources/owner-confirmations-phase7-2.md",
         "propia"
       ],
       "observed_versions": [
@@ -5125,7 +5145,7 @@
         "Android Global 8.8.0.11"
       ],
       "known_dependencies": [
-        "shared_pref:reborn_card (entero por perfil; proyección CoverPlayerPref no confirmada)",
+        "shared_pref:reborn_card (referencia local; no se edita directamente)",
         "DataUtil.GetRebornCardUnlock consulta PlayerPrefs y CPPlayerItemData.GetItemUnlock"
       ],
       "pending_dependencies": [
@@ -5138,23 +5158,19 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "H",
+        "semantics": "E3",
         "version_compatibility": "E2",
-        "relations": "E2",
-        "persistence": "H"
+        "relations": "E3",
+        "persistence": "E3"
       },
-      "validation_level": "E2",
-      "edit_policy": "experimental E2, solo activación de gameData.rebornCard; no modifica shared_pref local",
+      "validation_level": "E3",
+      "edit_policy": "confirmed_by_owner: activación de gameData.rebornCard = true confirmada por el propietario en Android físico; no modifica shared_pref local, recibos ni compras.",
       "constraints": [
         "Solo escribir true cuando gameData.rebornCard exista y sea booleano.",
         "No inventar propiedades, recibos ni comprobantes de compra.",
-        "No afirmar que la tarjeta queda concedida hasta la prueba en Android.",
         "No modifica el PlayerPrefs local ni la proyección CoverPlayerPref."
       ],
-      "open_questions": [
-        "Determinar si el booleano representa derecho permanente, cantidad o estado temporal.",
-        "Confirmar si CoverPlayerPref proyecta gameData.rebornCard al entero de PlayerPrefs."
-      ],
+      "open_questions": [],
       "experiments_required": [],
       "registry_tier": "legacy",
       "legacy_record": {
@@ -5401,7 +5417,7 @@
       "id": "seasonData.coin",
       "internal_name": "coin",
       "category": "Temporada",
-      "description": "Moneda de la temporada; control independiente de monedas y recursos.",
+      "description": "Moneda de la temporada; edición confirmada por el propietario dentro de la validación general (E3).",
       "locations": {
         "local": "season_data*.data:coin",
         "cloud": "seasonData.coin"
@@ -5421,7 +5437,8 @@
       "observed_values": null,
       "known_value_semantics": [
         "Moneda de temporada, distinta de gemas, fichas de pesca, experiencia del pase y monedas de otros modos.",
-        "La guía funcional del propietario confirma season_data:coin y su correspondencia con seasonData.coin."
+        "La guía funcional del propietario confirma season_data:coin y su correspondencia con seasonData.coin.",
+        "El propietario confirmó la edición de monedas de temporada en Android físico como parte de la validación general de la fase 7.1."
       ],
       "initial_values": null,
       "limits": {
@@ -5436,7 +5453,7 @@
       "sources": [
         "discord",
         "docs/research/phase5-5/metadata-880-inventory.json",
-        "knowledge/sources/owner-guide-phase7-1.md",
+        "knowledge/sources/owner-confirmations-phase7-2.md",
         "propia"
       ],
       "observed_versions": [
@@ -5455,20 +5472,18 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "E2",
+        "semantics": "E3",
         "version_compatibility": "E2",
         "relations": "H",
-        "persistence": "H"
+        "persistence": "E3"
       },
-      "validation_level": "E2",
-      "edit_policy": "experimental E2, edición aislada de seasonData.coin",
+      "validation_level": "E3",
+      "edit_policy": "confirmed_by_owner: edición aislada de seasonData.coin confirmada por el propietario en la validación general en Android físico.",
       "constraints": [
         "No crear seasonData.coin si el campo no existe como entero.",
         "No confundir con gameData.gems, gameData.fishChip, itemData.cumulativeFishCount ni curExp."
       ],
-      "open_questions": [
-        "Confirmar en Android si la temporada activa aplica límites adicionales del cliente."
-      ],
+      "open_questions": [],
       "experiments_required": [],
       "registry_tier": "legacy",
       "legacy_record": {

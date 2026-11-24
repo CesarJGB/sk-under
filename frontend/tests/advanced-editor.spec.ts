@@ -61,12 +61,12 @@ const ADVANCED = {
     note: 'Entero estructural; no hay tope de juego confirmado.',
   },
   reborn_card: {
-    value: false, available: true, path: 'gameData.rebornCard', experimental: true,
+    value: false, available: true, path: 'gameData.rebornCard', experimental: false,
     local_reference: 'shared_pref:reborn_card = 1',
     remote_representation: 'gameData.rebornCard (bool)',
     projection: 'CoverPlayerPref',
     limitation: 'La preferencia local no se escribe remotamente; la proyección no está confirmada en dispositivo.',
-    evidence_level: 'E2',
+    evidence_level: 'E3',
   },
   battle_pass: {
     records: [{
@@ -79,10 +79,54 @@ const ADVANCED = {
     selected_season_id: 7, active_season_id: 7, active_matches_selected: true,
     note: 'Se selecciona el seasonID más alto.',
   },
+  pets: [{
+    id: 'Cat', numeric_id: 0, name: { en: 'Chilly', es: 'Fresco' }, unlocked: true, present: true,
+    value_type: 'bool', editable: true, insertable: false, path: 'gameData.petUnlock.Cat',
+    skins: ['Cat1'], reason: null,
+  }, {
+    id: 'Cat1', numeric_id: 20, name: { en: 'Smokey', es: 'Humito' }, unlocked: false, present: true,
+    value_type: 'bool', editable: true, insertable: false, path: 'gameData.petUnlock.Cat1',
+    skins: [], reason: null,
+  }],
+  pet_skins: [{
+    id: 'Cat1', pet_code: 'Cat1', base_pet: 'Cat', skin_index: 1,
+    name: { en: 'Smokey', es: 'Humito' }, unlocked: false, present: true, value_type: 'bool',
+    editable: true, insertable: false, path: 'gameData.petUnlock.Cat1', base_unlocked: true,
+    dependency_note: 'Seleccionar esta variante también desbloquea su mascota base si está pendiente.',
+  }],
+  pet_food: [{
+    id: 'material_grain', name: { en: 'Pet Treats', es: 'Bocadillos de mascotas' }, count: 4,
+    value_type: 'int', owned: true, editable: true, insertable: false,
+    path: 'itemData.materials.material_grain', field: 'itemData.materials',
+    population: 'itemData.materials', reason: null,
+  }, {
+    id: 'material_battery', name: { en: 'Battery', es: 'Batería' }, count: null,
+    value_type: null, owned: false, editable: true, insertable: true,
+    path: 'itemData.materials.material_battery', field: 'itemData.materials',
+    population: 'itemData.materials', reason: null,
+  }],
+  pet_progression: {
+    available: true, path: 'statisticData.event2Count', read_only: true,
+    global_full_count: 1, full_count_key: 'pet_full_intimacy',
+    entries: [{
+      id: 'Cat', numeric_id: 0, name: { en: 'Chilly', es: 'Fresco' }, present: true,
+      intimacy: 240, full: true, action_unlocked: true, value_type: null, max: null,
+      max_note: 'Máximo específico de la mascota.', path: 'statisticData.event2Count.pet_0_intimacy',
+    }],
+    note: 'La intimidad se muestra en solo lectura.',
+  },
+  pet_policy: {
+    field: 'pets', experimental: true, evidence_level: 'E2', path: 'gameData.petUnlock',
+    skin_note: 'No se encontró un mapa de bloqueo de skins separado.',
+    food_note: 'Los alimentos comparten el escritor de itemData.materials.',
+    progression_note: 'La intimidad se muestra en solo lectura.',
+  },
   policy: {
     field: 'advanced', experimental: true, evidence_level: 'E2', min: 0, max: 2_147_483_647,
     max_note: 'int32 estructural, no un tope de juego confirmado.',
     material_fish_note: 'material_fish se edita desde fichas de pesca.',
+    confirmed_functions: ['materials', 'seeds', 'season_coin', 'reborn_card'],
+    experimental_functions: ['battle_pass', 'pets', 'pet_food'],
   },
 }
 const SAVE = {
@@ -197,8 +241,8 @@ test('edita materiales, semillas, monedas, renacimiento y pase en un lote confir
   await expect(page.getByLabel('Monedas de temporada (seasonData.coin)')).toBeVisible()
   await page.getByLabel('Monedas de temporada (seasonData.coin)').fill('100000')
   await page.getByText('Beneficios permanentes', { exact: true }).click()
-  await expect(page.getByLabel(/activación experimental de gameData.rebornCard/)).toBeVisible()
-  await page.getByLabel(/activación experimental de gameData.rebornCard/).check()
+  await expect(page.getByLabel(/Activar gameData.rebornCard/)).toBeVisible()
+  await page.getByLabel(/Activar gameData.rebornCard/).check()
 
   await page.getByText('Pase de batalla', { exact: true }).click()
   const seasonSelect = page.getByRole('combobox', { name: /Temporada/ })
@@ -215,7 +259,7 @@ test('edita materiales, semillas, monedas, renacimiento y pase en un lote confir
   await page.getByLabel(/Confirmo que quiero sobrescribir la partida/).check()
   await page.getByRole('button', { name: 'Subir lote y verificar' }).click()
   await expect(page.getByText('Lote subido y verificado en la nube', { exact: false })).toBeVisible()
-  await expect(page.getByText('Esas pruebas quedan pendientes en Android')).toBeVisible()
+  await expect(page.getByText('El pase de batalla sigue pendiente de esa prueba.')).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 

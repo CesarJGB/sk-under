@@ -46,6 +46,7 @@ def document() -> dict:
     data = json.loads(FIXTURE.read_bytes())
     data["gameData"]["rebornCard"] = False
     data["gameData"]["fishChip"] = 3
+    data["gameData"]["petUnlock"] = {"Cat": True, "Cat1": False, "Dog": True}
     data["itemData"]["materials"] = {
         "material_ticket": 5,
         "material_fish": 3,
@@ -269,6 +270,8 @@ def test_service_prepare_confirm_and_restore_advanced_batch(tmp_path):
         "season_coin": 500,
         "reborn_card": None,
         "battle_pass": {"season_id": 8, "cur_level": 3},
+        "pets": [],
+        "pet_food": {},
     }
     summary = prepared.summary()
     assert summary["field"] == "advanced"
@@ -279,7 +282,7 @@ def test_service_prepare_confirm_and_restore_advanced_batch(tmp_path):
     assert result.persisted is True
     assert result.field == (
         "itemData.materials, itemData.seeds, seasonData.coin, gameData.rebornCard, "
-        "battlePassSaveData.seasonData"
+        "battlePassSaveData.seasonData, gameData.petUnlock, statisticData.event2Count"
     )
     loaded = lab.load()
     assert loaded.advanced["season_coin"]["value"] == 500
@@ -298,3 +301,137 @@ def test_backend_item_projection_matches_knowledge_catalogs():
         capture_output=True,
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+def test_backend_pet_projection_matches_knowledge_catalogs():
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "knowledge" / "tools" / "build_backend_pets.py"), "--check"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_pet_unlock_preserves_existing_and_inserts_missing_variant_dependency():
+    original = payload()
+    before = document()
+    plan = {"pets": ["Cat1", "Rabbit1"], "pet_food": [{"id": "material_grain", "value": 500}]}
+    edit = prepare_advanced_edit(original, plan)
+    assert edit.changed is True
+    assert edit.plan["pets"] == ["Cat", "Cat1", "Rabbit", "Rabbit1"]
+    assert edit.plan["pet_food"] == {"material_grain": 500}
+    assert edit.changed_fields == (
+        "itemData.materials.material_grain",
+        "gameData.petUnlock.Cat1",
+        "gameData.petUnlock.Rabbit",
+        "gameData.petUnlock.Rabbit1",
+    )
+    after = json.loads(edit.candidate)
+    assert after["gameData"]["petUnlock"]["Cat"] is True
+    assert after["gameData"]["petUnlock"]["Dog"] is True
+    assert after["gameData"]["petUnlock"]["Cat1"] is True
+    assert after["gameData"]["petUnlock"]["Rabbit"] is True
+    assert after["gameData"]["petUnlock"]["Rabbit1"] is True
+    assert after["itemData"]["materials"]["material_grain"] == 500
+    assert after["itemData"]["materials"]["custom_unknown_material"] == 77
+    assert before["gameData"]["petUnlock"]["Cat1"] is False
+
+    # La reversión interna ya exige ausencia de cambios colaterales; comprobamos
+    # además que el original no se mutó y que el candidato reabre estable.
+    assert original == payload()
+    reopened = json.loads(edit.candidate)
+    assert serialize_aggregate(reopened) == edit.candidate
+
+
+def test_pet_already_unlocked_and_invalid_ids_are_controlled():
+    original = payload()
+    edit = prepare_advanced_edit(original, {"pets": ["Cat"]})
+    assert edit.changed is False
+    with pytest.raises(InvalidAdvancedPlan):
+        prepare_advanced_edit(original, {"pets": ["NotAPet"]})
+    with pytest.raises(InvalidAdvancedPlan):
+        prepare_advanced_edit(original, {"pets": ["Cat", "Cat"]})
+    with pytest.raises(InvalidAdvancedPlan):
+        prepare_advanced_edit(original, {"pets": ["Cat"], "pet_food": [{"id": "material_ticket", "value": 1}]})
+
+
+def test_pet_food_shares_the_materials_writer_and_rejects_conflicts():
+    original = payload()
+    plan = {
+        "materials": [{"id": "material_grain", "value": 100}],
+        "pet_food": [{"id": "material_grain", "value": 100}],
+    }
+    edit = prepare_advanced_edit(original, plan)
+    assert edit.changed_fields == ("itemData.materials.material_grain",)
+    assert edit.plan["materials"] == {"material_grain": 100}
+    assert edit.plan["pet_food"] == {"material_grain": 100}
+
+    with pytest.raises(InvalidAdvancedPlan):
+        prepare_advanced_edit(original, {
+            "materials": [{"id": "material_battery", "value": 10}],
+            "pet_food": [{"id": "material_battery", "value": 20}],
+        })
+
+
+def test_pet_food_rejects_out_of_range_values():
+    original = payload()
+    for value in (-1, 2_147_483_648):
+        with pytest.raises(InvalidAdvancedPlan):
+            prepare_advanced_edit(original, {"pet_food": [{"id": "material_grain", "value": value}]})
+
+
+def test_pet_progression_is_read_only_and_uses_observed_event2count_keys():
+    data = document()
+    data["statisticData"]["event2Count"] = {
+        "pet_0_intimacy": 240,
+        "pet_0_full_intimacy": 1,
+        "pet_0_action_unlock": 1,
+        "pet_2_intimacy": 180,
+        "pet_2_full_intimacy": 0,
+        "pet_full_intimacy": 1,
+        "unrelated_counter": 9,
+    }
+    snapshot = read_advanced_source(canonical(data))
+    progression = snapshot["pet_progression"]
+    assert progression["available"] is True
+    assert progression["global_full_count"] == 1
+    entries = {entry["id"]: entry for entry in progression["entries"]}
+    assert entries["Cat"]["intimacy"] == 240
+    assert entries["Cat"]["full"] is True
+    assert entries["Pig"]["intimacy"] == 180
+    assert entries["Pig"]["full"] is False
+    assert entries["Cat"]["max"] is None
+    assert snapshot["pets"] and snapshot["pet_skins"] and snapshot["pet_food"]
+    assert {row["id"] for row in snapshot["pet_food"]} == {"material_grain", "material_battery"}
+    assert len(snapshot["pets"]) == 58
+    assert len(snapshot["pet_skins"]) == 12
+    # El snapshot no expone ninguna operación de escritura de intimidad.
+    assert snapshot["pet_policy"]["field"] == "pets"
+
+
+def test_pet_and_confirmed_batch_combination_is_atomic_and_reversible():
+    original = payload()
+    plan = {
+        "materials": [{"id": "material_ticket", "value": 20}],
+        "seeds": [{"id": "plant_banboo_seed", "value": 4}],
+        "season_coin": 1234,
+        "reborn_card": True,
+        "pets": ["Pug"],
+        "pet_food": [{"id": "material_battery", "value": 250}],
+    }
+    edit = prepare_advanced_edit(original, plan)
+    assert edit.changed_fields == (
+        "itemData.materials.material_battery",
+        "itemData.materials.material_ticket",
+        "itemData.seeds.plant_banboo_seed",
+        "seasonData.coin",
+        "gameData.rebornCard",
+        "gameData.petUnlock.Pug",
+    )
+    after = json.loads(edit.candidate)
+    assert after["itemData"]["materials"]["material_battery"] == 250
+    assert after["itemData"]["materials"]["material_ticket"] == 20
+    assert after["itemData"]["materials"]["material_fish"] == 3
+    assert after["gameData"]["petUnlock"]["Pug"] is True
+    assert after["gameData"]["petUnlock"]["Cat"] is True
+    assert after["gameData"]["rebornCard"] is True

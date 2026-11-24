@@ -10,29 +10,29 @@
     "skdfe_8.7.0": "8cfa5d5"
   },
   "counts": {
-    "catalogs": 24,
-    "catalog_items": 4286,
+    "catalogs": 25,
+    "catalog_items": 4298,
     "fields": 616,
     "legacy_fields": 66,
     "declared_fields": 550,
     "fields_by_evidence": {
       "E1": 194,
-      "E2": 411,
-      "E3": 5,
+      "E2": 406,
+      "E3": 10,
       "E4": 6
     },
-    "dependencies": 32,
-    "sources": 16,
-    "translations": 8526,
+    "dependencies": 35,
+    "sources": 17,
+    "translations": 8562,
     "versions_analyzed": 3,
-    "open_questions": 568
+    "open_questions": 565
   },
   "artifacts": [
     {
       "path": "knowledge/README.md",
       "kind": "knowledge",
-      "sha256": "50f9225307cffa49a9ad812c7d2eda79fc01029c7f9d4cd132559cff6a3d3de4",
-      "bytes": 8914,
+      "sha256": "9f64cbb65c2090710a83e4f9d1c9fba53591afa8980e66a112e7c495d5a30845",
+      "bytes": 9128,
       "count": null
     },
     {
@@ -129,15 +129,22 @@
     {
       "path": "knowledge/catalogs/pet_skills.json",
       "kind": "catalogs",
-      "sha256": "18a6f5d165c4f8fed9675f12ef6fd727a9a639487e203eb8c0f11ca39d5ef809",
-      "bytes": 45569,
+      "sha256": "8a15e329ffd87313dffe8c806ec7838e9247ce8b26fc0c741bffdaa42a9ad5c3",
+      "bytes": 45582,
       "count": 57
+    },
+    {
+      "path": "knowledge/catalogs/pet_skins.json",
+      "kind": "catalogs",
+      "sha256": "6455bdb404498df5e100f2326b13602e58727556f9bc3bd5e3854a15e9244c55",
+      "bytes": 9813,
+      "count": 12
     },
     {
       "path": "knowledge/catalogs/pets.json",
       "kind": "catalogs",
-      "sha256": "c87a0a2c1967490997050848542a4e6dd74b116310f42053be8b1202e9e9115e",
-      "bytes": 36860,
+      "sha256": "a20c39cb3f67888b81c03684d61c1de7ccc5812c401dadaf7798919554fddf68",
+      "bytes": 36919,
       "count": 58
     },
     {
@@ -206,9 +213,9 @@
     {
       "path": "knowledge/dependencies/dependencies.json",
       "kind": "dependencies",
-      "sha256": "66931bb2c0de5df66eb20b3b2aecc5cdead77a8d5490986d8bcdc19cf104efa6",
-      "bytes": 27538,
-      "count": 32
+      "sha256": "19784d00dde2d919c84333b193c8ad785927f8635bb5d805958a740b3eefb427",
+      "bytes": 30528,
+      "count": 35
     },
     {
       "path": "knowledge/evidence/data-json-structure.json",
@@ -227,8 +234,8 @@
     {
       "path": "knowledge/evidence/limitations.md",
       "kind": "evidence",
-      "sha256": "96714651d8822a5006b9373981d67fec0d32bcf5351141c5544f37ba75b43ecd",
-      "bytes": 2674,
+      "sha256": "d8c8e2d3813694158f2453353f7ddd50694a5fed852a3e628340eb4bac22507c",
+      "bytes": 4682,
       "count": null
     },
     {
@@ -241,22 +248,22 @@
     {
       "path": "knowledge/fields/fields.json",
       "kind": "fields",
-      "sha256": "250be364193d87fc5ea47c67297bc751f572cffdfc8296767045a89e2bfb80ec",
-      "bytes": 1206012,
+      "sha256": "110996986a7e095fe6ade015f38701690338378ec57048534aa85ec3f3f54fd8",
+      "bytes": 1208461,
       "count": 616
     },
     {
       "path": "knowledge/fields/overrides.json",
       "kind": "fields",
-      "sha256": "6aed54607c80eecc1fb7faeff95db95759a01073c2fc2293e94aeef1eca6854f",
-      "bytes": 28032,
+      "sha256": "d5b501ee07378d0c6d4a84a38d0ae86db81303d9605e6b09ed970f83d33c3240",
+      "bytes": 30834,
       "count": null
     },
     {
       "path": "knowledge/reports/coverage.md",
       "kind": "reports",
-      "sha256": "6988c26df189d5ba24de07579563819439aeee64f1e3385936ed9146193201a7",
-      "bytes": 2314,
+      "sha256": "fe99e9fb1fcf9115ef708a4dd1f8bcb57caf46e1150752b8a7143a598b548348",
+      "bytes": 2348,
       "count": null
     },
     {
@@ -309,6 +316,13 @@
       "count": null
     },
     {
+      "path": "knowledge/sources/owner-confirmations-phase7-2.md",
+      "kind": "sources",
+      "sha256": "707ed560b7b12377a5ad1ed098ed7b9c350a25a3bbdd8883a0b910b2acead515",
+      "bytes": 1600,
+      "count": null
+    },
+    {
       "path": "knowledge/sources/owner-guide-phase7-1.md",
       "kind": "sources",
       "sha256": "4fb8fb212dce0ce101b0125abd30ae2b1e4aa10b4f17c306906ee08a09a5e4c8",
@@ -332,15 +346,15 @@
     {
       "path": "knowledge/sources/sources.json",
       "kind": "sources",
-      "sha256": "41491bd25c602d4ad3da60a81118e202ad10683c5c23c3facd13ee597e9ad215",
-      "bytes": 11073,
-      "count": 16
+      "sha256": "45d68f6435097384d6974c3110707ab8d42b6a9bb69825d25f8a78fabe6a762e",
+      "bytes": 12004,
+      "count": 17
     },
     {
       "path": "knowledge/tools/README.md",
       "kind": "tools",
-      "sha256": "3a1aa145a54a7fcf194932ee6ddbb7b9f1f5f80b2fe961747083297e28893159",
-      "bytes": 3086,
+      "sha256": "f8c465e0a7b4b91cbee571e4859809272fe4c11b376000cb13a5f11158350166",
+      "bytes": 3663,
       "count": null
     },
     {
@@ -351,10 +365,17 @@
       "count": null
     },
     {
+      "path": "knowledge/tools/build_backend_pets.py",
+      "kind": "tools",
+      "sha256": "8c4464ead86d600ca7c9f8509c61b1fa8d0a0674636f5b4029775b95bb405105",
+      "bytes": 5016,
+      "count": null
+    },
+    {
       "path": "knowledge/tools/build_catalog.py",
       "kind": "tools",
-      "sha256": "0f2490d6acafbbc9497a7264131daf971a09c46c16b1eba889f7b75eb2f5ee59",
-      "bytes": 52236,
+      "sha256": "8a88a2789c9127746c4e6e47dcfcc4708d44005592841db93a3594abcbab3521",
+      "bytes": 54642,
       "count": null
     },
     {
@@ -409,8 +430,8 @@
     {
       "path": "knowledge/translations/name-index.json",
       "kind": "translations",
-      "sha256": "db889daad2f9d4fe3f39a8e5d8b22bfe4eb35a9e9d6836675222119619ae670e",
-      "bytes": 1144734,
+      "sha256": "056bdfe661c93e8694e9ecae0b08a09d1382222920a2b5cee7903da0ee314ece",
+      "bytes": 1148940,
       "count": null
     },
     {

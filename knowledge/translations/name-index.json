@@ -1,7 +1,7 @@
 {
   "schema": "sk-knowledge/name-index@1",
   "generated_by": "knowledge/tools/build_catalog.py",
-  "count": 8526,
+  "count": 8562,
   "entries": [
     {
       "text": "\"A I R B E N D R\"",
@@ -2766,6 +2766,12 @@
     {
       "text": "Chestnut",
       "language": "en",
+      "catalog": "pet_skins",
+      "item_id": "Dog3"
+    },
+    {
+      "text": "Chestnut",
+      "language": "en",
       "catalog": "pets",
       "item_id": "Dog3"
     },
@@ -3032,6 +3038,12 @@
       "language": "en",
       "catalog": "lobby",
       "item_id": "room_skin_7"
+    },
+    {
+      "text": "Cowboi",
+      "language": "en",
+      "catalog": "pet_skins",
+      "item_id": "Pig1"
     },
     {
       "text": "Cowboi",
@@ -5185,7 +5197,7 @@
       "text": "Fish Chip King",
       "language": "en",
       "catalog": "pets",
-      "item_id": "pet_id_57"
+      "item_id": "FishChipKing"
     },
     {
       "text": "Fish Tank",
@@ -10614,6 +10626,12 @@
     {
       "text": "Papa",
       "language": "en",
+      "catalog": "pet_skins",
+      "item_id": "Rabbit1"
+    },
+    {
+      "text": "Papa",
+      "language": "en",
       "catalog": "pets",
       "item_id": "Rabbit1"
     },
@@ -10712,6 +10730,12 @@
       "language": "en",
       "catalog": "weapons",
       "item_id": "weapon_init_warlockxx7"
+    },
+    {
+      "text": "Pepper",
+      "language": "en",
+      "catalog": "pet_skins",
+      "item_id": "Cat5"
     },
     {
       "text": "Pepper",
@@ -11016,6 +11040,12 @@
     {
       "text": "Pochi",
       "language": "en",
+      "catalog": "pet_skins",
+      "item_id": "Dog2"
+    },
+    {
+      "text": "Pochi",
+      "language": "en",
       "catalog": "pets",
       "item_id": "Dog2"
     },
@@ -11268,6 +11298,12 @@
     {
       "text": "Pudding",
       "language": "en",
+      "catalog": "pet_skins",
+      "item_id": "Cat3"
+    },
+    {
+      "text": "Pudding",
+      "language": "en",
       "catalog": "pets",
       "item_id": "Cat3"
     },
@@ -11360,6 +11396,12 @@
       "language": "en",
       "catalog": "materials",
       "item_id": "material_weapon_fragment_chest_3"
+    },
+    {
+      "text": "Purpur",
+      "language": "en",
+      "catalog": "pet_skins",
+      "item_id": "Cat4"
     },
     {
       "text": "Purpur",
@@ -12146,6 +12188,12 @@
       "language": "en",
       "catalog": "seeds",
       "item_id": "plant_rosemary_seed"
+    },
+    {
+      "text": "Rosemary Cat",
+      "language": "en",
+      "catalog": "pet_skins",
+      "item_id": "Cat6"
     },
     {
       "text": "Rosemary Cat",
@@ -13236,6 +13284,12 @@
     {
       "text": "Smokey",
       "language": "en",
+      "catalog": "pet_skins",
+      "item_id": "Cat1"
+    },
+    {
+      "text": "Smokey",
+      "language": "en",
       "catalog": "pets",
       "item_id": "Cat1"
     },
@@ -13262,6 +13316,12 @@
       "language": "en",
       "catalog": "weapons",
       "item_id": "weapon_289"
+    },
+    {
+      "text": "Snow",
+      "language": "en",
+      "catalog": "pet_skins",
+      "item_id": "Cat2"
     },
     {
       "text": "Snow",
@@ -14450,6 +14510,12 @@
       "language": "en",
       "catalog": "character_skins",
       "item_id": "c8_skin4"
+    },
+    {
+      "text": "Taro",
+      "language": "en",
+      "catalog": "pet_skins",
+      "item_id": "Dog1"
     },
     {
       "text": "Taro",
@@ -16628,6 +16694,12 @@
       "language": "en",
       "catalog": "character_skins",
       "item_id": "c29_skin1"
+    },
+    {
+      "text": "Zhaocai",
+      "language": "en",
+      "catalog": "pet_skins",
+      "item_id": "Cat7"
     },
     {
       "text": "Zhaocai",
@@ -19554,6 +19626,12 @@
     {
       "text": "Budín",
       "language": "es",
+      "catalog": "pet_skins",
+      "item_id": "Cat3"
+    },
+    {
+      "text": "Budín",
+      "language": "es",
       "catalog": "pets",
       "item_id": "Cat3"
     },
@@ -20594,6 +20672,12 @@
       "language": "es",
       "catalog": "enemies",
       "item_id": "e_chest2"
+    },
+    {
+      "text": "Chestnut",
+      "language": "es",
+      "catalog": "pet_skins",
+      "item_id": "Dog3"
     },
     {
       "text": "Chestnut",
@@ -24174,6 +24258,12 @@
     {
       "text": "Gato romero",
       "language": "es",
+      "catalog": "pet_skins",
+      "item_id": "Cat6"
+    },
+    {
+      "text": "Gato romero",
+      "language": "es",
       "catalog": "pets",
       "item_id": "Cat6"
     },
@@ -25490,6 +25580,12 @@
       "language": "es",
       "catalog": "character_skins",
       "item_id": "c5_skin4"
+    },
+    {
+      "text": "Humito",
+      "language": "es",
+      "catalog": "pet_skins",
+      "item_id": "Cat1"
     },
     {
       "text": "Humito",
@@ -28230,6 +28326,12 @@
     {
       "text": "Nieve",
       "language": "es",
+      "catalog": "pet_skins",
+      "item_id": "Cat2"
+    },
+    {
+      "text": "Nieve",
+      "language": "es",
       "catalog": "pets",
       "item_id": "Cat2"
     },
@@ -28830,6 +28932,12 @@
     {
       "text": "Papa",
       "language": "es",
+      "catalog": "pet_skins",
+      "item_id": "Rabbit1"
+    },
+    {
+      "text": "Papa",
+      "language": "es",
       "catalog": "pets",
       "item_id": "Rabbit1"
     },
@@ -29226,6 +29334,12 @@
     {
       "text": "Pimienta",
       "language": "es",
+      "catalog": "pet_skins",
+      "item_id": "Cat5"
+    },
+    {
+      "text": "Pimienta",
+      "language": "es",
       "catalog": "pets",
       "item_id": "Cat5"
     },
@@ -29606,6 +29720,12 @@
       "language": "es",
       "catalog": "weapons",
       "item_id": "weapon_init_swordmasterxx6"
+    },
+    {
+      "text": "Pochi",
+      "language": "es",
+      "catalog": "pet_skins",
+      "item_id": "Dog2"
     },
     {
       "text": "Pochi",
@@ -30451,7 +30571,7 @@
       "text": "Rey de las fichas de pez",
       "language": "es",
       "catalog": "pets",
-      "item_id": "pet_id_57"
+      "item_id": "FishChipKing"
     },
     {
       "text": "Rey de los ratones",
@@ -30878,6 +30998,12 @@
       "language": "es",
       "catalog": "weapon_skins",
       "item_id": "weapon_250_s_1"
+    },
+    {
+      "text": "Ronrón",
+      "language": "es",
+      "catalog": "pet_skins",
+      "item_id": "Cat4"
     },
     {
       "text": "Ronrón",
@@ -32034,6 +32160,12 @@
     {
       "text": "Taro",
       "language": "es",
+      "catalog": "pet_skins",
+      "item_id": "Dog1"
+    },
+    {
+      "text": "Taro",
+      "language": "es",
       "catalog": "pets",
       "item_id": "Dog1"
     },
@@ -32718,6 +32850,12 @@
     {
       "text": "Vaquero",
       "language": "es",
+      "catalog": "pet_skins",
+      "item_id": "Pig1"
+    },
+    {
+      "text": "Vaquero",
+      "language": "es",
       "catalog": "pets",
       "item_id": "Pig1"
     },
@@ -33266,6 +33404,12 @@
       "language": "es",
       "catalog": "character_skins",
       "item_id": "c29_skin1"
+    },
+    {
+      "text": "Zhaocai",
+      "language": "es",
+      "catalog": "pet_skins",
+      "item_id": "Cat7"
     },
     {
       "text": "Zhaocai",
@@ -36234,6 +36378,12 @@
     {
       "text": "冷喵",
       "language": "zh_cn",
+      "catalog": "pet_skins",
+      "item_id": "Cat1"
+    },
+    {
+      "text": "冷喵",
+      "language": "zh_cn",
       "catalog": "pets",
       "item_id": "Cat1"
     },
@@ -38736,6 +38886,12 @@
     {
       "text": "太郎",
       "language": "zh_cn",
+      "catalog": "pet_skins",
+      "item_id": "Dog1"
+    },
+    {
+      "text": "太郎",
+      "language": "zh_cn",
       "catalog": "pets",
       "item_id": "Dog1"
     },
@@ -39732,6 +39888,12 @@
     {
       "text": "布丁",
       "language": "zh_cn",
+      "catalog": "pet_skins",
+      "item_id": "Cat3"
+    },
+    {
+      "text": "布丁",
+      "language": "zh_cn",
       "catalog": "pets",
       "item_id": "Cat3"
     },
@@ -40646,6 +40808,12 @@
       "language": "zh_cn",
       "catalog": "character_skins",
       "item_id": "c2_skin6"
+    },
+    {
+      "text": "招财",
+      "language": "zh_cn",
+      "catalog": "pet_skins",
+      "item_id": "Cat7"
     },
     {
       "text": "招财",
@@ -41946,6 +42114,12 @@
     {
       "text": "栗子",
       "language": "zh_cn",
+      "catalog": "pet_skins",
+      "item_id": "Dog3"
+    },
+    {
+      "text": "栗子",
+      "language": "zh_cn",
       "catalog": "pets",
       "item_id": "Dog3"
     },
@@ -42744,6 +42918,12 @@
     {
       "text": "泡泡",
       "language": "zh_cn",
+      "catalog": "pet_skins",
+      "item_id": "Cat4"
+    },
+    {
+      "text": "泡泡",
+      "language": "zh_cn",
       "catalog": "pets",
       "item_id": "Cat4"
     },
@@ -42758,6 +42938,12 @@
       "language": "zh_cn",
       "catalog": "character_skins",
       "item_id": "c14_skin10"
+    },
+    {
+      "text": "波奇",
+      "language": "zh_cn",
+      "catalog": "pet_skins",
+      "item_id": "Dog2"
     },
     {
       "text": "波奇",
@@ -43964,6 +44150,12 @@
       "language": "zh_cn",
       "catalog": "character_skins",
       "item_id": "c10_skin25"
+    },
+    {
+      "text": "牛仔",
+      "language": "zh_cn",
+      "catalog": "pet_skins",
+      "item_id": "Pig1"
     },
     {
       "text": "牛仔",
@@ -46812,6 +47004,12 @@
     {
       "text": "胡椒",
       "language": "zh_cn",
+      "catalog": "pet_skins",
+      "item_id": "Cat5"
+    },
+    {
+      "text": "胡椒",
+      "language": "zh_cn",
       "catalog": "pets",
       "item_id": "Cat5"
     },
@@ -48336,6 +48534,12 @@
     {
       "text": "趴趴",
       "language": "zh_cn",
+      "catalog": "pet_skins",
+      "item_id": "Rabbit1"
+    },
+    {
+      "text": "趴趴",
+      "language": "zh_cn",
       "catalog": "pets",
       "item_id": "Rabbit1"
     },
@@ -48566,6 +48770,12 @@
       "language": "zh_cn",
       "catalog": "special_items",
       "item_id": "feature_more_select_seat"
+    },
+    {
+      "text": "迷迭猫",
+      "language": "zh_cn",
+      "catalog": "pet_skins",
+      "item_id": "Cat6"
     },
     {
       "text": "迷迭猫",
@@ -49680,6 +49890,12 @@
     {
       "text": "雪诺",
       "language": "zh_cn",
+      "catalog": "pet_skins",
+      "item_id": "Cat2"
+    },
+    {
+      "text": "雪诺",
+      "language": "zh_cn",
       "catalog": "pets",
       "item_id": "Cat2"
     },
@@ -50677,7 +50893,7 @@
       "text": "鱼干之王",
       "language": "zh_cn",
       "catalog": "pets",
-      "item_id": "pet_id_57"
+      "item_id": "FishChipKing"
     },
     {
       "text": "鱼缸",

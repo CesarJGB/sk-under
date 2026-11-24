@@ -1,0 +1,671 @@
+{
+  "schema": "sk-under/backend-pets@1",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_backend_pets.py",
+  "source_refs": {
+    "pets": "knowledge/catalogs/pets.json",
+    "pet_skins": "knowledge/catalogs/pet_skins.json"
+  },
+  "counts": {
+    "pets": 58,
+    "pet_skins": 12
+  },
+  "pets": [
+    {
+      "id": "Bat",
+      "numeric_id": 14,
+      "name": {
+        "en": "Wayne",
+        "es": "Díaz"
+      },
+      "save_ref": "gameData.petUnlock.Bat"
+    },
+    {
+      "id": "Blagny",
+      "numeric_id": 25,
+      "name": {
+        "en": "Blani",
+        "es": "Blani"
+      },
+      "save_ref": "gameData.petUnlock.Blagny"
+    },
+    {
+      "id": "Bug",
+      "numeric_id": 13,
+      "name": {
+        "en": "Inherited Bug",
+        "es": "Bicho heredado"
+      },
+      "save_ref": "gameData.petUnlock.Bug"
+    },
+    {
+      "id": "CanPig",
+      "numeric_id": 7,
+      "name": {
+        "en": "Can'bellied Pig",
+        "es": "Cerdo enlatado"
+      },
+      "save_ref": "gameData.petUnlock.CanPig"
+    },
+    {
+      "id": "Capybara",
+      "numeric_id": 49,
+      "name": {
+        "en": "Kapikapi",
+        "es": "Kapikapi"
+      },
+      "save_ref": "gameData.petUnlock.Capybara"
+    },
+    {
+      "id": "Cat",
+      "numeric_id": 0,
+      "name": {
+        "en": "Chilly",
+        "es": "Fresco"
+      },
+      "save_ref": "gameData.petUnlock.Cat"
+    },
+    {
+      "id": "Cat1",
+      "numeric_id": 20,
+      "name": {
+        "en": "Smokey",
+        "es": "Humito"
+      },
+      "save_ref": "gameData.petUnlock.Cat1"
+    },
+    {
+      "id": "Cat2",
+      "numeric_id": 21,
+      "name": {
+        "en": "Snow",
+        "es": "Nieve"
+      },
+      "save_ref": "gameData.petUnlock.Cat2"
+    },
+    {
+      "id": "Cat3",
+      "numeric_id": 29,
+      "name": {
+        "en": "Pudding",
+        "es": "Budín"
+      },
+      "save_ref": "gameData.petUnlock.Cat3"
+    },
+    {
+      "id": "Cat4",
+      "numeric_id": 30,
+      "name": {
+        "en": "Purpur",
+        "es": "Ronrón"
+      },
+      "save_ref": "gameData.petUnlock.Cat4"
+    },
+    {
+      "id": "Cat5",
+      "numeric_id": 34,
+      "name": {
+        "en": "Pepper",
+        "es": "Pimienta"
+      },
+      "save_ref": "gameData.petUnlock.Cat5"
+    },
+    {
+      "id": "Cat6",
+      "numeric_id": 35,
+      "name": {
+        "en": "Rosemary Cat",
+        "es": "Gato romero"
+      },
+      "save_ref": "gameData.petUnlock.Cat6"
+    },
+    {
+      "id": "Cat7",
+      "numeric_id": 39,
+      "name": {
+        "en": "Zhaocai",
+        "es": "Zhaocai"
+      },
+      "save_ref": "gameData.petUnlock.Cat7"
+    },
+    {
+      "id": "CatMecha",
+      "numeric_id": 55,
+      "name": {
+        "en": "Mecha Chilly",
+        "es": "Mecafresco"
+      },
+      "save_ref": "gameData.petUnlock.CatMecha"
+    },
+    {
+      "id": "ChillyGo",
+      "numeric_id": 53,
+      "name": {
+        "en": "Chilly Cube",
+        "es": "Frescubo"
+      },
+      "save_ref": "gameData.petUnlock.ChillyGo"
+    },
+    {
+      "id": "CoinPig",
+      "numeric_id": 44,
+      "name": {
+        "en": "",
+        "es": null
+      },
+      "save_ref": "gameData.petUnlock.CoinPig"
+    },
+    {
+      "id": "Corgi",
+      "numeric_id": 19,
+      "name": {
+        "en": "Max",
+        "es": "Max"
+      },
+      "save_ref": "gameData.petUnlock.Corgi"
+    },
+    {
+      "id": "Dog",
+      "numeric_id": 1,
+      "name": {
+        "en": "Buddy",
+        "es": "Colega"
+      },
+      "save_ref": "gameData.petUnlock.Dog"
+    },
+    {
+      "id": "Dog1",
+      "numeric_id": 28,
+      "name": {
+        "en": "Taro",
+        "es": "Taro"
+      },
+      "save_ref": "gameData.petUnlock.Dog1"
+    },
+    {
+      "id": "Dog2",
+      "numeric_id": 31,
+      "name": {
+        "en": "Pochi",
+        "es": "Pochi"
+      },
+      "save_ref": "gameData.petUnlock.Dog2"
+    },
+    {
+      "id": "Dog3",
+      "numeric_id": 32,
+      "name": {
+        "en": "Chestnut",
+        "es": "Chestnut"
+      },
+      "save_ref": "gameData.petUnlock.Dog3"
+    },
+    {
+      "id": "EscapeMonkey",
+      "numeric_id": 56,
+      "name": {
+        "en": "Mad Monki",
+        "es": "Monki Loco"
+      },
+      "save_ref": "gameData.petUnlock.EscapeMonkey"
+    },
+    {
+      "id": "FeatureBug",
+      "numeric_id": 43,
+      "name": {
+        "en": "Glitchy Roachy",
+        "es": "Cucaracha errática\\\\n"
+      },
+      "save_ref": "gameData.petUnlock.FeatureBug"
+    },
+    {
+      "id": "FireCat",
+      "numeric_id": 45,
+      "name": {
+        "en": "Meower",
+        "es": "Michimortal"
+      },
+      "save_ref": "gameData.petUnlock.FireCat"
+    },
+    {
+      "id": "FireSnowman",
+      "numeric_id": 52,
+      "name": {
+        "en": "Toastie",
+        "es": "Tostadito"
+      },
+      "save_ref": "gameData.petUnlock.FireSnowman"
+    },
+    {
+      "id": "FishChipKing",
+      "numeric_id": 57,
+      "name": {
+        "en": "Fish Chip King",
+        "es": "Rey de las fichas de pez"
+      },
+      "save_ref": "gameData.petUnlock.FishChipKing"
+    },
+    {
+      "id": "Gugu",
+      "numeric_id": 10,
+      "name": {
+        "en": "Pigeon",
+        "es": "Paloma"
+      },
+      "save_ref": "gameData.petUnlock.Gugu"
+    },
+    {
+      "id": "Hammer",
+      "numeric_id": 40,
+      "name": {
+        "en": "Hammery",
+        "es": "Martillito"
+      },
+      "save_ref": "gameData.petUnlock.Hammer"
+    },
+    {
+      "id": "Hide",
+      "numeric_id": 17,
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "save_ref": "gameData.petUnlock.Hide"
+    },
+    {
+      "id": "Hippo",
+      "numeric_id": 15,
+      "name": {
+        "en": "Pinko Hippo",
+        "es": "Hipopótamo Rojo"
+      },
+      "save_ref": "gameData.petUnlock.Hippo"
+    },
+    {
+      "id": "JiaoDirector",
+      "numeric_id": 42,
+      "name": {
+        "en": "Director Pepper",
+        "es": "Director Pimienta"
+      },
+      "save_ref": "gameData.petUnlock.JiaoDirector"
+    },
+    {
+      "id": "LiangSir",
+      "numeric_id": 24,
+      "name": {
+        "en": "Officer Chilly",
+        "es": "Oficial Fresco"
+      },
+      "save_ref": "gameData.petUnlock.LiangSir"
+    },
+    {
+      "id": "Mahhmot",
+      "numeric_id": 48,
+      "name": {
+        "en": "Mahhmot",
+        "es": "Marmotaaah"
+      },
+      "save_ref": "gameData.petUnlock.Mahhmot"
+    },
+    {
+      "id": "MiniSlime",
+      "numeric_id": 46,
+      "name": {
+        "en": "Slimy",
+        "es": "Viscoso"
+      },
+      "save_ref": "gameData.petUnlock.MiniSlime"
+    },
+    {
+      "id": "Nian",
+      "numeric_id": 54,
+      "name": {
+        "en": "Lai Cai",
+        "es": "Lai Cai"
+      },
+      "save_ref": "gameData.petUnlock.Nian"
+    },
+    {
+      "id": "Owl",
+      "numeric_id": 11,
+      "name": {
+        "en": "Flutter",
+        "es": "Revoloteador"
+      },
+      "save_ref": "gameData.petUnlock.Owl"
+    },
+    {
+      "id": "Panda",
+      "numeric_id": 5,
+      "name": {
+        "en": "Panda",
+        "es": "Panda"
+      },
+      "save_ref": "gameData.petUnlock.Panda"
+    },
+    {
+      "id": "Pet4399",
+      "numeric_id": 9,
+      "name": {
+        "en": "Douwa",
+        "es": "Douwa"
+      },
+      "save_ref": "gameData.petUnlock.Pet4399"
+    },
+    {
+      "id": "Pig",
+      "numeric_id": 2,
+      "name": {
+        "en": "Hamm",
+        "es": "Jamoncín"
+      },
+      "save_ref": "gameData.petUnlock.Pig"
+    },
+    {
+      "id": "Pig1",
+      "numeric_id": 23,
+      "name": {
+        "en": "Cowboi",
+        "es": "Vaquero"
+      },
+      "save_ref": "gameData.petUnlock.Pig1"
+    },
+    {
+      "id": "Pug",
+      "numeric_id": 18,
+      "name": {
+        "en": "Peanut",
+        "es": "Cacahuete"
+      },
+      "save_ref": "gameData.petUnlock.Pug"
+    },
+    {
+      "id": "Rabbit",
+      "numeric_id": 6,
+      "name": {
+        "en": "BonBon",
+        "es": "Bombón"
+      },
+      "save_ref": "gameData.petUnlock.Rabbit"
+    },
+    {
+      "id": "Rabbit1",
+      "numeric_id": 22,
+      "name": {
+        "en": "Papa",
+        "es": "Papa"
+      },
+      "save_ref": "gameData.petUnlock.Rabbit1"
+    },
+    {
+      "id": "Robot",
+      "numeric_id": 4,
+      "name": {
+        "en": "Robo",
+        "es": "Robo"
+      },
+      "save_ref": "gameData.petUnlock.Robot"
+    },
+    {
+      "id": "RushDuck",
+      "numeric_id": 37,
+      "name": {
+        "en": "Quacky",
+        "es": "Patty"
+      },
+      "save_ref": "gameData.petUnlock.RushDuck"
+    },
+    {
+      "id": "SacaSaca",
+      "numeric_id": 38,
+      "name": {
+        "en": "Sacasaca",
+        "es": "Sacapez"
+      },
+      "save_ref": "gameData.petUnlock.SacaSaca"
+    },
+    {
+      "id": "Seal",
+      "numeric_id": 12,
+      "name": {
+        "en": "Baby Seal",
+        "es": "Foca bebé"
+      },
+      "save_ref": "gameData.petUnlock.Seal"
+    },
+    {
+      "id": "Serenade",
+      "numeric_id": 27,
+      "name": {
+        "en": "Serenade",
+        "es": "Serenata"
+      },
+      "save_ref": "gameData.petUnlock.Serenade"
+    },
+    {
+      "id": "ShanghaiTower",
+      "numeric_id": 50,
+      "name": {
+        "en": "Milktea Monitor Tower",
+        "es": "Torre Guardiana de Té de Burbujas"
+      },
+      "save_ref": "gameData.petUnlock.ShanghaiTower"
+    },
+    {
+      "id": "Slime",
+      "numeric_id": 3,
+      "name": {
+        "en": "Blue",
+        "es": "Azul"
+      },
+      "save_ref": "gameData.petUnlock.Slime"
+    },
+    {
+      "id": "TapTap",
+      "numeric_id": 8,
+      "name": {
+        "en": "Tap",
+        "es": "Tap"
+      },
+      "save_ref": "gameData.petUnlock.TapTap"
+    },
+    {
+      "id": "TenOff",
+      "numeric_id": 36,
+      "name": {
+        "en": "10% Off",
+        "es": "10 % de descuento"
+      },
+      "save_ref": "gameData.petUnlock.TenOff"
+    },
+    {
+      "id": "Tengo",
+      "numeric_id": 16,
+      "name": {
+        "en": "Mini Tengu",
+        "es": "Minitengu"
+      },
+      "save_ref": "gameData.petUnlock.Tengo"
+    },
+    {
+      "id": "Tortoise",
+      "numeric_id": 26,
+      "name": {
+        "en": "Speedy",
+        "es": "Velocista"
+      },
+      "save_ref": "gameData.petUnlock.Tortoise"
+    },
+    {
+      "id": "TrainerRobot",
+      "numeric_id": 51,
+      "name": {
+        "en": "Lil Drillmaster",
+        "es": "Instructorcito"
+      },
+      "save_ref": "gameData.petUnlock.TrainerRobot"
+    },
+    {
+      "id": "Zongzi",
+      "numeric_id": 41,
+      "name": {
+        "en": "Zongzi Junior",
+        "es": "Zongzi Hijo"
+      },
+      "save_ref": "gameData.petUnlock.Zongzi"
+    },
+    {
+      "id": "ZongziBro",
+      "numeric_id": 47,
+      "name": {
+        "en": "Zongzi Bro",
+        "es": "Zongzi Hermano"
+      },
+      "save_ref": "gameData.petUnlock.ZongziBro"
+    },
+    {
+      "id": "dragon",
+      "numeric_id": 33,
+      "name": {
+        "en": "Yanyan",
+        "es": "Yanyan"
+      },
+      "save_ref": "gameData.petUnlock.dragon"
+    }
+  ],
+  "pet_skins": [
+    {
+      "id": "Cat1",
+      "pet_code": "Cat1",
+      "base_pet": "Cat",
+      "skin_index": 1,
+      "name": {
+        "en": "Smokey",
+        "es": "Humito"
+      },
+      "save_ref": "gameData.petUnlock.Cat1"
+    },
+    {
+      "id": "Cat2",
+      "pet_code": "Cat2",
+      "base_pet": "Cat",
+      "skin_index": 2,
+      "name": {
+        "en": "Snow",
+        "es": "Nieve"
+      },
+      "save_ref": "gameData.petUnlock.Cat2"
+    },
+    {
+      "id": "Cat3",
+      "pet_code": "Cat3",
+      "base_pet": "Cat",
+      "skin_index": 3,
+      "name": {
+        "en": "Pudding",
+        "es": "Budín"
+      },
+      "save_ref": "gameData.petUnlock.Cat3"
+    },
+    {
+      "id": "Cat4",
+      "pet_code": "Cat4",
+      "base_pet": "Cat",
+      "skin_index": 4,
+      "name": {
+        "en": "Purpur",
+        "es": "Ronrón"
+      },
+      "save_ref": "gameData.petUnlock.Cat4"
+    },
+    {
+      "id": "Cat5",
+      "pet_code": "Cat5",
+      "base_pet": "Cat",
+      "skin_index": 5,
+      "name": {
+        "en": "Pepper",
+        "es": "Pimienta"
+      },
+      "save_ref": "gameData.petUnlock.Cat5"
+    },
+    {
+      "id": "Cat6",
+      "pet_code": "Cat6",
+      "base_pet": "Cat",
+      "skin_index": 6,
+      "name": {
+        "en": "Rosemary Cat",
+        "es": "Gato romero"
+      },
+      "save_ref": "gameData.petUnlock.Cat6"
+    },
+    {
+      "id": "Cat7",
+      "pet_code": "Cat7",
+      "base_pet": "Cat",
+      "skin_index": 7,
+      "name": {
+        "en": "Zhaocai",
+        "es": "Zhaocai"
+      },
+      "save_ref": "gameData.petUnlock.Cat7"
+    },
+    {
+      "id": "Dog1",
+      "pet_code": "Dog1",
+      "base_pet": "Dog",
+      "skin_index": 1,
+      "name": {
+        "en": "Taro",
+        "es": "Taro"
+      },
+      "save_ref": "gameData.petUnlock.Dog1"
+    },
+    {
+      "id": "Dog2",
+      "pet_code": "Dog2",
+      "base_pet": "Dog",
+      "skin_index": 2,
+      "name": {
+        "en": "Pochi",
+        "es": "Pochi"
+      },
+      "save_ref": "gameData.petUnlock.Dog2"
+    },
+    {
+      "id": "Dog3",
+      "pet_code": "Dog3",
+      "base_pet": "Dog",
+      "skin_index": 3,
+      "name": {
+        "en": "Chestnut",
+        "es": "Chestnut"
+      },
+      "save_ref": "gameData.petUnlock.Dog3"
+    },
+    {
+      "id": "Pig1",
+      "pet_code": "Pig1",
+      "base_pet": "Pig",
+      "skin_index": 1,
+      "name": {
+        "en": "Cowboi",
+        "es": "Vaquero"
+      },
+      "save_ref": "gameData.petUnlock.Pig1"
+    },
+    {
+      "id": "Rabbit1",
+      "pet_code": "Rabbit1",
+      "base_pet": "Rabbit",
+      "skin_index": 1,
+      "name": {
+        "en": "Papa",
+        "es": "Papa"
+      },
+      "save_ref": "gameData.petUnlock.Rabbit1"
+    }
+  ]
+}

@@ -1209,3 +1209,37 @@ h3 { font-weight: 650; letter-spacing: -.02em; }
   .advanced-panel > summary { grid-template-columns: minmax(0, 1fr) auto; }
   .advanced-panel > summary .advanced-count { display: none; }
 }
+
+/* Mascotas (fase 7.2) */
+.pet-food-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+.pet-food-card {
+  display: grid;
+  gap: .5rem;
+  padding: .7rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+}
+.pet-food-card > div:first-child { display: grid; gap: .08rem; }
+.pet-food-card code { color: var(--muted); font-family: var(--font-mono); font-size: .72rem; overflow-wrap: anywhere; }
+.pet-food-card small { color: var(--muted); font-size: .72rem; }
+.pet-food-card .advanced-item-current { justify-items: start; }
+.pet-skin-group {
+  display: grid;
+  gap: .45rem;
+  padding-top: .55rem;
+  border-top: 1px solid var(--border);
+}
+.pet-skin-group:first-of-type { border-top: 0; padding-top: 0; }
+.pet-skin-group-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+}
+.pet-skin-group-head code { color: var(--muted); font-family: var(--font-mono); font-size: .72rem; }
+.advanced-pending.done { color: #3d6d4a; }
+@media (max-width: 640px) {
+  .pet-food-grid { grid-template-columns: minmax(0, 1fr); }
+}

@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 const amountFormat = new Intl.NumberFormat('es-MX')
 
 export function QuickUnlockCard({
-  title, path, unlocked, total, pending, selected, busy, onToggleAll,
+  title, path, unlocked, total, pending, selected, busy, onToggleAll, withSelection = true,
 }: {
   title: string
   path: string
@@ -14,6 +14,7 @@ export function QuickUnlockCard({
   selected: number
   busy: boolean
   onToggleAll: () => void
+  withSelection?: boolean
 }) {
   const allSelected = pending > 0 && selected === pending
   const someSelected = selected > 0 && !allSelected
@@ -31,13 +32,13 @@ export function QuickUnlockCard({
       </div>
       <span className="report-state available">{amountFormat.format(pending)} pendientes</span>
     </div>
-    <label className="quick-unlock-select">
+    {withSelection && <label className="quick-unlock-select">
       <input ref={checkbox} type="checkbox" checked={allSelected} disabled={busy || pending === 0}
         aria-label={`Seleccionar todos: ${title}`} onChange={onToggleAll} />
       <span>{pending === 0
         ? 'Nada pendiente'
         : allSelected ? 'Todo seleccionado' : `${amountFormat.format(selected)} seleccionados`}</span>
-    </label>
+    </label>}
     <Link className="button quiet" to={path}>Revisar {title.toLowerCase()}</Link>
   </article>
 }
