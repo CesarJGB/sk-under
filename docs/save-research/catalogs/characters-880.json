@@ -1,0 +1,4877 @@
+{
+  "version": "8.8.0",
+  "source": "SKDFE 57b9b86335c080caca55e178c8409cb67658ccf6 needed_data.json + char_code_name.json",
+  "characters": [
+    {
+      "index": 0,
+      "code": "Knight",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character0_skill_0_name",
+          "name": "Dual Wield"
+        },
+        {
+          "index": 1,
+          "key": "Character0_skill_1_name",
+          "name": "Superior Fire"
+        },
+        {
+          "index": 2,
+          "key": "Character0_skill_2_name",
+          "name": "Chaotic Strike"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c0_skin0",
+          "name": "Knight"
+        },
+        {
+          "index": 1,
+          "key": "c0_skin1",
+          "name": "Elite Knight"
+        },
+        {
+          "index": 2,
+          "key": "c0_skin2",
+          "name": "Lava Knight"
+        },
+        {
+          "index": 3,
+          "key": "c0_skin3",
+          "name": "Shiba"
+        },
+        {
+          "index": 4,
+          "key": "c0_skin4",
+          "name": "Mr. Popcorn"
+        },
+        {
+          "index": 5,
+          "key": "c0_skin5",
+          "name": "Fusion Core"
+        },
+        {
+          "index": 6,
+          "key": "c0_skin6",
+          "name": "Cyber Knight"
+        },
+        {
+          "index": 7,
+          "key": "c0_skin7",
+          "name": "Panda"
+        },
+        {
+          "index": 8,
+          "key": "c0_skin8",
+          "name": "Dark Grand Knight Skin"
+        },
+        {
+          "index": 9,
+          "key": "c0_skin9",
+          "name": "Glutton Taotie"
+        },
+        {
+          "index": 10,
+          "key": "c0_skin10",
+          "name": "King"
+        },
+        {
+          "index": 11,
+          "key": "c0_skin11",
+          "name": "Zhang Fei"
+        },
+        {
+          "index": 12,
+          "key": "c0_skin12",
+          "name": "Secret Police of Presbyterate"
+        },
+        {
+          "index": 13,
+          "key": "c0_skin13",
+          "name": "Judgment"
+        },
+        {
+          "index": 14,
+          "key": "c0_skin14",
+          "name": "Chief Centurion"
+        },
+        {
+          "index": 15,
+          "key": "c0_skin15",
+          "name": "Paladin, Let's Go!"
+        },
+        {
+          "index": 16,
+          "key": "c0_skin16",
+          "name": "Vermilion"
+        },
+        {
+          "index": 17,
+          "key": "c0_skin17",
+          "name": "P4RT¥ P4RR0T"
+        },
+        {
+          "index": 18,
+          "key": "c0_skin18",
+          "name": "Er-Lang, Paragon of Gallantry"
+        },
+        {
+          "index": 19,
+          "key": "c0_skin19",
+          "name": "\"K N I T E\""
+        },
+        {
+          "index": 20,
+          "key": "c0_skin20",
+          "name": "Musca"
+        },
+        {
+          "index": 21,
+          "key": "c0_skin21",
+          "name": "Soul Knight Strange Tales: Bush Knight"
+        },
+        {
+          "index": 22,
+          "key": "c0_skin22",
+          "name": "Soul Knight Strange Tales: Aaron"
+        },
+        {
+          "index": 23,
+          "key": "c0_skin23",
+          "name": "骑"
+        },
+        {
+          "index": 24,
+          "key": "c0_skin24",
+          "name": "Huang Zhong - Hansheng"
+        },
+        {
+          "index": 25,
+          "key": "c0_skin25",
+          "name": "Yuan Lan"
+        },
+        {
+          "index": 26,
+          "key": "c0_skin26",
+          "name": "Rogeon"
+        },
+        {
+          "index": 27,
+          "key": "c0_skin27",
+          "name": "King Snow Ape Skin"
+        },
+        {
+          "index": 28,
+          "key": "c0_skin28",
+          "name": "Knoght"
+        },
+        {
+          "index": 29,
+          "key": "c0_skin29",
+          "name": "Pyroverdict Geralt"
+        },
+        {
+          "index": 30,
+          "key": "c0_skin30",
+          "name": "Skywrath Saint Salvator"
+        },
+        {
+          "index": 31,
+          "key": "c0_skin31",
+          "name": "Knipybara"
+        },
+        {
+          "index": 32,
+          "key": "c0_skin32",
+          "name": "Gamer Gabby"
+        },
+        {
+          "index": 33,
+          "key": "c0_skin33",
+          "name": "Lionleaper Yunxiao"
+        },
+        {
+          "index": 34,
+          "key": "c0_skin34",
+          "name": "Bad Pistol"
+        },
+        {
+          "index": 35,
+          "key": "c0_skin35",
+          "name": "K□ight"
+        },
+        {
+          "index": 36,
+          "key": "c0_skin36",
+          "name": "Zongzi Knight"
+        },
+        {
+          "index": 37,
+          "key": "c0_skin37",
+          "name": "D01 Gatekeeper"
+        },
+        {
+          "index": 38,
+          "key": "c0_skin38",
+          "name": "Knight Bus"
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "code": "Ranger",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character1_skill_0_name",
+          "name": "Dodge"
+        },
+        {
+          "index": 1,
+          "key": "Character1_skill_1_name",
+          "name": "Iaido"
+        },
+        {
+          "index": 2,
+          "key": "Character1_skill_2_name",
+          "name": "Cartwheel"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c1_skin0",
+          "name": "Rogue"
+        },
+        {
+          "index": 1,
+          "key": "c1_skin1",
+          "name": "Ghost"
+        },
+        {
+          "index": 2,
+          "key": "c1_skin2",
+          "name": "Squirrel"
+        },
+        {
+          "index": 3,
+          "key": "c1_skin3",
+          "name": "Rudolph"
+        },
+        {
+          "index": 4,
+          "key": "c1_skin4",
+          "name": "Bubbles"
+        },
+        {
+          "index": 5,
+          "key": "c1_skin5",
+          "name": "Nightingale"
+        },
+        {
+          "index": 6,
+          "key": "c1_skin6",
+          "name": "Trader"
+        },
+        {
+          "index": 7,
+          "key": "c1_skin7",
+          "name": "Winged Long"
+        },
+        {
+          "index": 8,
+          "key": "c1_skin8",
+          "name": "Cubism"
+        },
+        {
+          "index": 9,
+          "key": "c1_skin9",
+          "name": "Mouse King"
+        },
+        {
+          "index": 10,
+          "key": "c1_skin10",
+          "name": "Multi-faced"
+        },
+        {
+          "index": 11,
+          "key": "c1_skin11",
+          "name": "Aether Cardinal"
+        },
+        {
+          "index": 12,
+          "key": "c1_skin12",
+          "name": "Old Fella"
+        },
+        {
+          "index": 13,
+          "key": "c1_skin13",
+          "name": "King Hammurabi"
+        },
+        {
+          "index": 14,
+          "key": "c1_skin14",
+          "name": "Neon"
+        },
+        {
+          "index": 15,
+          "key": "c1_skin15",
+          "name": "Falcon"
+        },
+        {
+          "index": 16,
+          "key": "c1_skin16",
+          "name": "Yulong, Prince of the Western Sea"
+        },
+        {
+          "index": 17,
+          "key": "c1_skin17",
+          "name": "\"R O U G E\""
+        },
+        {
+          "index": 18,
+          "key": "c1_skin18",
+          "name": "Doodle Doo"
+        },
+        {
+          "index": 19,
+          "key": "c1_skin19",
+          "name": "Gemini"
+        },
+        {
+          "index": 20,
+          "key": "c1_skin20",
+          "name": "Soul Knight Strange Tales: Nightingale"
+        },
+        {
+          "index": 21,
+          "key": "c1_skin21",
+          "name": "侠"
+        },
+        {
+          "index": 22,
+          "key": "c1_skin22",
+          "name": "Liu Bei - Xuande"
+        },
+        {
+          "index": 23,
+          "key": "c1_skin23",
+          "name": "Night Wanderer Skin"
+        },
+        {
+          "index": 24,
+          "key": "c1_skin24",
+          "name": "Demonbane Crayton"
+        },
+        {
+          "index": 25,
+          "key": "c1_skin25",
+          "name": "Oiia Meow"
+        },
+        {
+          "index": 26,
+          "key": "c1_skin26",
+          "name": "Roogue"
+        },
+        {
+          "index": 27,
+          "key": "c1_skin27",
+          "name": "Alein the Knight"
+        },
+        {
+          "index": 28,
+          "key": "c1_skin28",
+          "name": "Rogybara"
+        },
+        {
+          "index": 29,
+          "key": "c1_skin29",
+          "name": "Twinblade Sylvain"
+        },
+        {
+          "index": 30,
+          "key": "c1_skin30",
+          "name": "Hermes, Herald of the Gods"
+        },
+        {
+          "index": 31,
+          "key": "c1_skin31",
+          "name": "Jack and Mary"
+        },
+        {
+          "index": 32,
+          "key": "c1_skin32",
+          "name": "R□g□e"
+        },
+        {
+          "index": 33,
+          "key": "c1_skin33",
+          "name": "Malachite"
+        },
+        {
+          "index": 34,
+          "key": "c1_skin34",
+          "name": "Skater Scott"
+        },
+        {
+          "index": 35,
+          "key": "c1_skin35",
+          "name": "TV Rocycler"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "code": "Mage",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character2_skill_0_name",
+          "name": "Lightning Strike"
+        },
+        {
+          "index": 1,
+          "key": "Character2_skill_1_name",
+          "name": "Piercing Frost"
+        },
+        {
+          "index": 2,
+          "key": "Character2_skill_2_name",
+          "name": "Firestorm"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c2_skin0",
+          "name": "Witch"
+        },
+        {
+          "index": 1,
+          "key": "c2_skin1",
+          "name": "Dark Lady"
+        },
+        {
+          "index": 2,
+          "key": "c2_skin2",
+          "name": "Librarian"
+        },
+        {
+          "index": 3,
+          "key": "c2_skin3",
+          "name": "Apprentice"
+        },
+        {
+          "index": 4,
+          "key": "c2_skin4",
+          "name": "Halloween Witch"
+        },
+        {
+          "index": 5,
+          "key": "c2_skin5",
+          "name": "Chinese New Year"
+        },
+        {
+          "index": 6,
+          "key": "c2_skin6",
+          "name": "Soul Snare"
+        },
+        {
+          "index": 7,
+          "key": "c2_skin7",
+          "name": "Grand Wizard Skin"
+        },
+        {
+          "index": 8,
+          "key": "c2_skin8",
+          "name": "Yo"
+        },
+        {
+          "index": 9,
+          "key": "c2_skin9",
+          "name": "Nine-Tail Fox"
+        },
+        {
+          "index": 10,
+          "key": "c2_skin10",
+          "name": "Li'l Red Riding Hood"
+        },
+        {
+          "index": 11,
+          "key": "c2_skin11",
+          "name": "Heroine Mu Guiying"
+        },
+        {
+          "index": 12,
+          "key": "c2_skin12",
+          "name": "Sacred Aether Pope"
+        },
+        {
+          "index": 13,
+          "key": "c2_skin13",
+          "name": "Aristocrat Mechanic"
+        },
+        {
+          "index": 14,
+          "key": "c2_skin14",
+          "name": "Mikan Ko"
+        },
+        {
+          "index": 15,
+          "key": "c2_skin15",
+          "name": "Mirabella"
+        },
+        {
+          "index": 16,
+          "key": "c2_skin16",
+          "name": "\"W I C H\""
+        },
+        {
+          "index": 17,
+          "key": "c2_skin17",
+          "name": "Peafowl Princess"
+        },
+        {
+          "index": 18,
+          "key": "c2_skin18",
+          "name": "Cassandra"
+        },
+        {
+          "index": 19,
+          "key": "c2_skin19",
+          "name": "Cygnus"
+        },
+        {
+          "index": 20,
+          "key": "c2_skin20",
+          "name": "Soul Knight Strange Tales: Chest Witch"
+        },
+        {
+          "index": 21,
+          "key": "c2_skin21",
+          "name": "法"
+        },
+        {
+          "index": 22,
+          "key": "c2_skin22",
+          "name": "Witch of the Mist Skin"
+        },
+        {
+          "index": 23,
+          "key": "c2_skin23",
+          "name": "Bian Linglong"
+        },
+        {
+          "index": 24,
+          "key": "c2_skin24",
+          "name": "Soulweaver Lunelle"
+        },
+        {
+          "index": 25,
+          "key": "c2_skin25",
+          "name": "Wotch"
+        },
+        {
+          "index": 26,
+          "key": "c2_skin26",
+          "name": "Witybara"
+        },
+        {
+          "index": 27,
+          "key": "c2_skin27",
+          "name": "Idol Isla"
+        },
+        {
+          "index": 28,
+          "key": "c2_skin28",
+          "name": "口it□h"
+        },
+        {
+          "index": 29,
+          "key": "c2_skin29",
+          "name": "Neon Apparition Ada"
+        },
+        {
+          "index": 30,
+          "key": "c2_skin30",
+          "name": "Ashenseer Voojaa"
+        },
+        {
+          "index": 31,
+          "key": "c2_skin31",
+          "name": "The Code"
+        },
+        {
+          "index": 32,
+          "key": "c2_skin32",
+          "name": "Gaia, Goddess of the Earth"
+        },
+        {
+          "index": 33,
+          "key": "c2_skin33",
+          "name": "Labradorite"
+        },
+        {
+          "index": 34,
+          "key": "c2_skin34",
+          "name": "Witch Flavor"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "code": "Assassin",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character3_skill_0_name",
+          "name": "Dark Blade"
+        },
+        {
+          "index": 1,
+          "key": "Character3_skill_1_name",
+          "name": "Doppelgänger"
+        },
+        {
+          "index": 2,
+          "key": "Character3_skill_2_name",
+          "name": "Invisibility"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c3_skin0",
+          "name": "Assassin"
+        },
+        {
+          "index": 1,
+          "key": "c3_skin1",
+          "name": "Death"
+        },
+        {
+          "index": 2,
+          "key": "c3_skin2",
+          "name": "Techno Cat"
+        },
+        {
+          "index": 3,
+          "key": "c3_skin3",
+          "name": "Anbu"
+        },
+        {
+          "index": 4,
+          "key": "c3_skin4",
+          "name": "Gangster"
+        },
+        {
+          "index": 5,
+          "key": "c3_skin5",
+          "name": "Mayan Mask"
+        },
+        {
+          "index": 6,
+          "key": "c3_skin6",
+          "name": "Crimson"
+        },
+        {
+          "index": 7,
+          "key": "c3_skin7",
+          "name": "Skeleton King"
+        },
+        {
+          "index": 8,
+          "key": "c3_skin8",
+          "name": "Zheng Beast"
+        },
+        {
+          "index": 9,
+          "key": "c3_skin9",
+          "name": "Nutcracker"
+        },
+        {
+          "index": 10,
+          "key": "c3_skin10",
+          "name": "King's Hand Wu Zixu"
+        },
+        {
+          "index": 11,
+          "key": "c3_skin11",
+          "name": "Ginzo"
+        },
+        {
+          "index": 12,
+          "key": "c3_skin12",
+          "name": "Treachery"
+        },
+        {
+          "index": 13,
+          "key": "c3_skin13",
+          "name": "Prince of Persia"
+        },
+        {
+          "index": 14,
+          "key": "c3_skin14",
+          "name": "Crux"
+        },
+        {
+          "index": 15,
+          "key": "c3_skin15",
+          "name": "ヾ( ° ∀ ° )ﾉ”"
+        },
+        {
+          "index": 16,
+          "key": "c3_skin16",
+          "name": "Six−Eared Macaque"
+        },
+        {
+          "index": 17,
+          "key": "c3_skin17",
+          "name": "\"A S A S S I N\""
+        },
+        {
+          "index": 18,
+          "key": "c3_skin18",
+          "name": "Kohaku"
+        },
+        {
+          "index": 19,
+          "key": "c3_skin19",
+          "name": "Scorpius"
+        },
+        {
+          "index": 20,
+          "key": "c3_skin20",
+          "name": "Lu Bu - Fengxian"
+        },
+        {
+          "index": 21,
+          "key": "c3_skin21",
+          "name": "Soul Knight Strange Tales: Crimson"
+        },
+        {
+          "index": 22,
+          "key": "c3_skin22",
+          "name": "刺"
+        },
+        {
+          "index": 23,
+          "key": "c3_skin23",
+          "name": "Abyssal Submariner Skin"
+        },
+        {
+          "index": 24,
+          "key": "c3_skin24",
+          "name": "Assossin"
+        },
+        {
+          "index": 25,
+          "key": "c3_skin25",
+          "name": "Assassybara"
+        },
+        {
+          "index": 26,
+          "key": "c3_skin26",
+          "name": "Poseidon, King of the Sea"
+        },
+        {
+          "index": 27,
+          "key": "c3_skin27",
+          "name": "Exultis"
+        },
+        {
+          "index": 28,
+          "key": "c3_skin28",
+          "name": "Blood Blade"
+        },
+        {
+          "index": 29,
+          "key": "c3_skin29",
+          "name": "Ass□ssi□"
+        },
+        {
+          "index": 30,
+          "key": "c3_skin30",
+          "name": "Ashenborn Valerian"
+        },
+        {
+          "index": 31,
+          "key": "c3_skin31",
+          "name": "Assassin Chassis"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "code": "Alchemist",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character4_skill_0_name",
+          "name": "Gas Grenade"
+        },
+        {
+          "index": 1,
+          "key": "Character4_skill_1_name",
+          "name": "Elemental Potions"
+        },
+        {
+          "index": 2,
+          "key": "Character4_skill_2_name",
+          "name": "Concoction"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c4_skin0",
+          "name": "Alchemist"
+        },
+        {
+          "index": 1,
+          "key": "c4_skin1",
+          "name": "DJ"
+        },
+        {
+          "index": 2,
+          "key": "c4_skin2",
+          "name": "Santa Red"
+        },
+        {
+          "index": 3,
+          "key": "c4_skin3",
+          "name": "The Fortune God"
+        },
+        {
+          "index": 4,
+          "key": "c4_skin4",
+          "name": "Doctor Beaky"
+        },
+        {
+          "index": 5,
+          "key": "c4_skin5",
+          "name": "Varkolyn Leader Skin"
+        },
+        {
+          "index": 6,
+          "key": "c4_skin6",
+          "name": "Ogre Aoyin"
+        },
+        {
+          "index": 7,
+          "key": "c4_skin7",
+          "name": "Crew 2202"
+        },
+        {
+          "index": 8,
+          "key": "c4_skin8",
+          "name": "Judge Bao"
+        },
+        {
+          "index": 9,
+          "key": "c4_skin9",
+          "name": "Merman Venom"
+        },
+        {
+          "index": 10,
+          "key": "c4_skin10",
+          "name": "Azteca Priest"
+        },
+        {
+          "index": 11,
+          "key": "c4_skin11",
+          "name": "MoMo"
+        },
+        {
+          "index": 12,
+          "key": "c4_skin12",
+          "name": "Scorpyra"
+        },
+        {
+          "index": 13,
+          "key": "c4_skin13",
+          "name": "\"A L K I M I S T\""
+        },
+        {
+          "index": 14,
+          "key": "c4_skin14",
+          "name": "Crying Lemon"
+        },
+        {
+          "index": 15,
+          "key": "c4_skin15",
+          "name": "Taurus"
+        },
+        {
+          "index": 16,
+          "key": "c4_skin16",
+          "name": "Zuo Ci - Yuanfang"
+        },
+        {
+          "index": 17,
+          "key": "c4_skin17",
+          "name": "金"
+        },
+        {
+          "index": 18,
+          "key": "c4_skin18",
+          "name": "Vicious Witch"
+        },
+        {
+          "index": 19,
+          "key": "c4_skin19",
+          "name": "Experimenter Ellie"
+        },
+        {
+          "index": 20,
+          "key": "c4_skin20",
+          "name": "Alchomost"
+        },
+        {
+          "index": 21,
+          "key": "c4_skin21",
+          "name": "Alchybara"
+        },
+        {
+          "index": 22,
+          "key": "c4_skin22",
+          "name": "Elementaress Lizzmii"
+        },
+        {
+          "index": 23,
+          "key": "c4_skin23",
+          "name": "Bombrewer Hawk"
+        },
+        {
+          "index": 24,
+          "key": "c4_skin24",
+          "name": "Dormant Bubble Machine"
+        },
+        {
+          "index": 25,
+          "key": "c4_skin25",
+          "name": "Grainkeeper Thatch"
+        },
+        {
+          "index": 26,
+          "key": "c4_skin26",
+          "name": "Al□h□mist"
+        },
+        {
+          "index": 27,
+          "key": "c4_skin27",
+          "name": "Serpentine"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "code": "Engineer",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character5_skill_0_name",
+          "name": "Gun Turret"
+        },
+        {
+          "index": 1,
+          "key": "Character5_skill_1_name",
+          "name": "Armor Mount"
+        },
+        {
+          "index": 2,
+          "key": "Character5_skill_2_name",
+          "name": "Interceptor"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c5_skin0",
+          "name": "Engineer"
+        },
+        {
+          "index": 1,
+          "key": "c5_skin1",
+          "name": "Heavily Modded"
+        },
+        {
+          "index": 2,
+          "key": "c5_skin2",
+          "name": "Prototype"
+        },
+        {
+          "index": 3,
+          "key": "c5_skin3",
+          "name": "Sky Lantern"
+        },
+        {
+          "index": 4,
+          "key": "c5_skin4",
+          "name": "Poached Egg"
+        },
+        {
+          "index": 5,
+          "key": "c5_skin5",
+          "name": "Musician"
+        },
+        {
+          "index": 6,
+          "key": "c5_skin6",
+          "name": "HELLO WORLD"
+        },
+        {
+          "index": 7,
+          "key": "c5_skin7",
+          "name": "Floating Laser UFO"
+        },
+        {
+          "index": 8,
+          "key": "c5_skin8",
+          "name": "Ruler Huang Tian"
+        },
+        {
+          "index": 9,
+          "key": "c5_skin9",
+          "name": "Fire God"
+        },
+        {
+          "index": 10,
+          "key": "c5_skin10",
+          "name": "Warlord Xiang Yu"
+        },
+        {
+          "index": 11,
+          "key": "c5_skin11",
+          "name": "Strange Clown"
+        },
+        {
+          "index": 12,
+          "key": "c5_skin12",
+          "name": "Crowned Can"
+        },
+        {
+          "index": 13,
+          "key": "c5_skin13",
+          "name": "Ancient Bronze Smith"
+        },
+        {
+          "index": 14,
+          "key": "c5_skin14",
+          "name": "Impostor"
+        },
+        {
+          "index": 15,
+          "key": "c5_skin15",
+          "name": "Dr. O"
+        },
+        {
+          "index": 16,
+          "key": "c5_skin16",
+          "name": "\"E N G I N E R R\""
+        },
+        {
+          "index": 17,
+          "key": "c5_skin17",
+          "name": "Purple Gold Red Gourd"
+        },
+        {
+          "index": 18,
+          "key": "c5_skin18",
+          "name": "Aquarius"
+        },
+        {
+          "index": 19,
+          "key": "c5_skin19",
+          "name": "Hua Tuo - Yuanhua"
+        },
+        {
+          "index": 20,
+          "key": "c5_skin20",
+          "name": "程"
+        },
+        {
+          "index": 21,
+          "key": "c5_skin21",
+          "name": "Ultra Blue"
+        },
+        {
+          "index": 22,
+          "key": "c5_skin22",
+          "name": "Eggineer"
+        },
+        {
+          "index": 23,
+          "key": "c5_skin23",
+          "name": "Inventor Hunter"
+        },
+        {
+          "index": 24,
+          "key": "c5_skin24",
+          "name": "Engybara"
+        },
+        {
+          "index": 25,
+          "key": "c5_skin25",
+          "name": "Team Tarara"
+        },
+        {
+          "index": 26,
+          "key": "c5_skin26",
+          "name": "Programmer"
+        },
+        {
+          "index": 27,
+          "key": "c5_skin27",
+          "name": "Lonegear Fiero"
+        },
+        {
+          "index": 28,
+          "key": "c5_skin28",
+          "name": "H2O"
+        },
+        {
+          "index": 29,
+          "key": "c5_skin29",
+          "name": "Berry Barry"
+        },
+        {
+          "index": 30,
+          "key": "c5_skin30",
+          "name": "E□gin□□r"
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "code": "Vampire",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character6_skill_0_name",
+          "name": "Bat Swarm"
+        },
+        {
+          "index": 1,
+          "key": "Character6_skill_1_name",
+          "name": "Alien Swirl"
+        },
+        {
+          "index": 2,
+          "key": "Character6_skill_2_name",
+          "name": "Immortal"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c6_skin0",
+          "name": "Vampire"
+        },
+        {
+          "index": 1,
+          "key": "c6_skin1",
+          "name": "Blood Duke"
+        },
+        {
+          "index": 2,
+          "key": "c6_skin2",
+          "name": "Vampire Police"
+        },
+        {
+          "index": 3,
+          "key": "c6_skin3",
+          "name": "Old Breed"
+        },
+        {
+          "index": 4,
+          "key": "c6_skin4",
+          "name": "Jack the Pumpkin"
+        },
+        {
+          "index": 5,
+          "key": "c6_skin5",
+          "name": "Bai Wu Chang"
+        },
+        {
+          "index": 6,
+          "key": "c6_skin6",
+          "name": "Duke Silver"
+        },
+        {
+          "index": 7,
+          "key": "c6_skin7",
+          "name": "Phantom King"
+        },
+        {
+          "index": 8,
+          "key": "c6_skin8",
+          "name": "Firebrand Taowu"
+        },
+        {
+          "index": 9,
+          "key": "c6_skin9",
+          "name": "Soul Escorts"
+        },
+        {
+          "index": 10,
+          "key": "c6_skin10",
+          "name": "Annihilation"
+        },
+        {
+          "index": 11,
+          "key": "c6_skin11",
+          "name": "Night Witch Lilith"
+        },
+        {
+          "index": 12,
+          "key": "c6_skin12",
+          "name": "Bloodred"
+        },
+        {
+          "index": 13,
+          "key": "c6_skin13",
+          "name": "Boneta"
+        },
+        {
+          "index": 14,
+          "key": "c6_skin14",
+          "name": "\"V A M P Y R E\""
+        },
+        {
+          "index": 15,
+          "key": "c6_skin15",
+          "name": "Corvus"
+        },
+        {
+          "index": 16,
+          "key": "c6_skin16",
+          "name": "Sima Yi - Zhongda"
+        },
+        {
+          "index": 17,
+          "key": "c6_skin17",
+          "name": "鬼"
+        },
+        {
+          "index": 18,
+          "key": "c6_skin18",
+          "name": "Shang Zun"
+        },
+        {
+          "index": 19,
+          "key": "c6_skin19",
+          "name": "President Peach"
+        },
+        {
+          "index": 20,
+          "key": "c6_skin20",
+          "name": "Vompire"
+        },
+        {
+          "index": 21,
+          "key": "c6_skin21",
+          "name": "Shadowthane Vane"
+        },
+        {
+          "index": 22,
+          "key": "c6_skin22",
+          "name": "Vampybara"
+        },
+        {
+          "index": 23,
+          "key": "c6_skin23",
+          "name": "Spider Pepper"
+        },
+        {
+          "index": 24,
+          "key": "c6_skin24",
+          "name": "V□mpir□"
+        },
+        {
+          "index": 25,
+          "key": "c6_skin25",
+          "name": "Crimson Wine Glass"
+        },
+        {
+          "index": 26,
+          "key": "c6_skin26",
+          "name": "R07 Nightlock"
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "code": "Paladin",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character7_skill_0_name",
+          "name": "Energy Shield"
+        },
+        {
+          "index": 1,
+          "key": "Character7_skill_1_name",
+          "name": "Holy Warrior"
+        },
+        {
+          "index": 2,
+          "key": "Character7_skill_2_name",
+          "name": "Splash & Bash"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c7_skin0",
+          "name": "Paladin"
+        },
+        {
+          "index": 1,
+          "key": "c7_skin1",
+          "name": "Blood Dragon"
+        },
+        {
+          "index": 2,
+          "key": "c7_skin2",
+          "name": "CH3COOH"
+        },
+        {
+          "index": 3,
+          "key": "c7_skin3",
+          "name": "Santa Green"
+        },
+        {
+          "index": 4,
+          "key": "c7_skin4",
+          "name": "Virudhaka"
+        },
+        {
+          "index": 5,
+          "key": "c7_skin5",
+          "name": "Guardian"
+        },
+        {
+          "index": 6,
+          "key": "c7_skin6",
+          "name": "Silverwing"
+        },
+        {
+          "index": 7,
+          "key": "c7_skin7",
+          "name": "Grand Knight"
+        },
+        {
+          "index": 8,
+          "key": "c7_skin8",
+          "name": "Ku"
+        },
+        {
+          "index": 9,
+          "key": "c7_skin9",
+          "name": "Dijiang Bird"
+        },
+        {
+          "index": 10,
+          "key": "c7_skin10",
+          "name": "Guan Yu"
+        },
+        {
+          "index": 11,
+          "key": "c7_skin11",
+          "name": "Whip of Presbyterate"
+        },
+        {
+          "index": 12,
+          "key": "c7_skin12",
+          "name": "King Triton"
+        },
+        {
+          "index": 13,
+          "key": "c7_skin13",
+          "name": "Eroded Mecha"
+        },
+        {
+          "index": 14,
+          "key": "c7_skin14",
+          "name": "Spartan Warrior"
+        },
+        {
+          "index": 15,
+          "key": "c7_skin15",
+          "name": "Moonsteel"
+        },
+        {
+          "index": 16,
+          "key": "c7_skin16",
+          "name": "Monk Pigsy"
+        },
+        {
+          "index": 17,
+          "key": "c7_skin17",
+          "name": "\"P A L A T I N\""
+        },
+        {
+          "index": 18,
+          "key": "c7_skin18",
+          "name": "Lorenzo"
+        },
+        {
+          "index": 19,
+          "key": "c7_skin19",
+          "name": "Scutum"
+        },
+        {
+          "index": 20,
+          "key": "c7_skin20",
+          "name": "圣"
+        },
+        {
+          "index": 21,
+          "key": "c7_skin21",
+          "name": "Xu Chu - Zhongkang"
+        },
+        {
+          "index": 22,
+          "key": "c7_skin22",
+          "name": "Sisyphos"
+        },
+        {
+          "index": 23,
+          "key": "c7_skin23",
+          "name": "Paladon"
+        },
+        {
+          "index": 24,
+          "key": "c7_skin24",
+          "name": "Hellaxe Gregor"
+        },
+        {
+          "index": 25,
+          "key": "c7_skin25",
+          "name": "Palybara"
+        },
+        {
+          "index": 26,
+          "key": "c7_skin26",
+          "name": "Flametide Sigrid"
+        },
+        {
+          "index": 27,
+          "key": "c7_skin27",
+          "name": "P□l□di□"
+        },
+        {
+          "index": 28,
+          "key": "c7_skin28",
+          "name": "Sacred Flail"
+        },
+        {
+          "index": 29,
+          "key": "c7_skin29",
+          "name": "Apollo, God of the Sun"
+        },
+        {
+          "index": 30,
+          "key": "c7_skin30",
+          "name": "QR Colt"
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "code": "Elves",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character8_skill_0_name",
+          "name": "Focus Fire"
+        },
+        {
+          "index": 1,
+          "key": "Character8_skill_1_name",
+          "name": "Arrow Rain"
+        },
+        {
+          "index": 2,
+          "key": "Character8_skill_2_name",
+          "name": "Guardian Elf"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c8_skin0",
+          "name": "Elf"
+        },
+        {
+          "index": 1,
+          "key": "c8_skin1",
+          "name": "Revive"
+        },
+        {
+          "index": 2,
+          "key": "c8_skin2",
+          "name": "Ice Queen"
+        },
+        {
+          "index": 3,
+          "key": "c8_skin3",
+          "name": "Chang'e"
+        },
+        {
+          "index": 4,
+          "key": "c8_skin4",
+          "name": "TapTap"
+        },
+        {
+          "index": 5,
+          "key": "c8_skin5",
+          "name": "Forest Keeper"
+        },
+        {
+          "index": 6,
+          "key": "c8_skin6",
+          "name": "Devil's Snare"
+        },
+        {
+          "index": 7,
+          "key": "c8_skin7",
+          "name": "Bifang Bird"
+        },
+        {
+          "index": 8,
+          "key": "c8_skin8",
+          "name": "Sugar Plum Fairy"
+        },
+        {
+          "index": 9,
+          "key": "c8_skin9",
+          "name": "Gallant Huang Zhong"
+        },
+        {
+          "index": 10,
+          "key": "c8_skin10",
+          "name": "Princess Mermaid"
+        },
+        {
+          "index": 11,
+          "key": "c8_skin11",
+          "name": "Moonlight of Mount Olympus"
+        },
+        {
+          "index": 12,
+          "key": "c8_skin12",
+          "name": "Flashback"
+        },
+        {
+          "index": 13,
+          "key": "c8_skin13",
+          "name": "Apricot Fairy"
+        },
+        {
+          "index": 14,
+          "key": "c8_skin14",
+          "name": "'E I F\""
+        },
+        {
+          "index": 15,
+          "key": "c8_skin15",
+          "name": "Sagittarius"
+        },
+        {
+          "index": 16,
+          "key": "c8_skin16",
+          "name": "精"
+        },
+        {
+          "index": 17,
+          "key": "c8_skin17",
+          "name": "Hoshina"
+        },
+        {
+          "index": 18,
+          "key": "c8_skin18",
+          "name": "Bu Lianshi"
+        },
+        {
+          "index": 19,
+          "key": "c8_skin19",
+          "name": "Athlete Ayuki"
+        },
+        {
+          "index": 20,
+          "key": "c8_skin20",
+          "name": "Olf"
+        },
+        {
+          "index": 21,
+          "key": "c8_skin21",
+          "name": "Apsara Veluriya"
+        },
+        {
+          "index": 22,
+          "key": "c8_skin22",
+          "name": "Elfybara"
+        },
+        {
+          "index": 23,
+          "key": "c8_skin23",
+          "name": "Artemis, Goddess of the Moon"
+        },
+        {
+          "index": 24,
+          "key": "c8_skin24",
+          "name": "Tidewhisper Ondine"
+        },
+        {
+          "index": 25,
+          "key": "c8_skin25",
+          "name": "日lf"
+        },
+        {
+          "index": 26,
+          "key": "c8_skin26",
+          "name": "Ancient Bow"
+        },
+        {
+          "index": 27,
+          "key": "c8_skin27",
+          "name": "Armament Array: Aeris"
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "code": "Werewolf",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character9_skill_0_name",
+          "name": "Berserk"
+        },
+        {
+          "index": 1,
+          "key": "Character9_skill_1_name",
+          "name": "Blood Thirst"
+        },
+        {
+          "index": 2,
+          "key": "Character9_skill_2_name",
+          "name": "Devour"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c9_skin0",
+          "name": "Werewolf"
+        },
+        {
+          "index": 1,
+          "key": "c9_skin1",
+          "name": "Wolverine"
+        },
+        {
+          "index": 2,
+          "key": "c9_skin2",
+          "name": "Werebear"
+        },
+        {
+          "index": 3,
+          "key": "c9_skin3",
+          "name": "Monkey King"
+        },
+        {
+          "index": 4,
+          "key": "c9_skin4",
+          "name": "Living Dead"
+        },
+        {
+          "index": 5,
+          "key": "c9_skin5",
+          "name": "Tiger Cub"
+        },
+        {
+          "index": 6,
+          "key": "c9_skin6",
+          "name": "Easter Egg"
+        },
+        {
+          "index": 7,
+          "key": "c9_skin7",
+          "name": "Leopard"
+        },
+        {
+          "index": 8,
+          "key": "c9_skin8",
+          "name": "Hellpact"
+        },
+        {
+          "index": 9,
+          "key": "c9_skin9",
+          "name": "Giant Crystal Crab"
+        },
+        {
+          "index": 10,
+          "key": "c9_skin10",
+          "name": "Winged Tiger"
+        },
+        {
+          "index": 11,
+          "key": "c9_skin11",
+          "name": "Douwa"
+        },
+        {
+          "index": 12,
+          "key": "c9_skin12",
+          "name": "Granny"
+        },
+        {
+          "index": 13,
+          "key": "c9_skin13",
+          "name": "Li'l Rascal Nezha"
+        },
+        {
+          "index": 14,
+          "key": "c9_skin14",
+          "name": "Sirius"
+        },
+        {
+          "index": 15,
+          "key": "c9_skin15",
+          "name": "Boreas Bear Spirit"
+        },
+        {
+          "index": 16,
+          "key": "c9_skin16",
+          "name": "Horror"
+        },
+        {
+          "index": 17,
+          "key": "c9_skin17",
+          "name": "Bull Demon King"
+        },
+        {
+          "index": 18,
+          "key": "c9_skin18",
+          "name": "\"W H E R E W O L F\""
+        },
+        {
+          "index": 19,
+          "key": "c9_skin19",
+          "name": "Cancer"
+        },
+        {
+          "index": 20,
+          "key": "c9_skin20",
+          "name": "Zhang Fei - Yide"
+        },
+        {
+          "index": 21,
+          "key": "c9_skin21",
+          "name": "狼"
+        },
+        {
+          "index": 22,
+          "key": "c9_skin22",
+          "name": "Wereroach"
+        },
+        {
+          "index": 23,
+          "key": "c9_skin23",
+          "name": "Beefy Reindeer"
+        },
+        {
+          "index": 24,
+          "key": "c9_skin24",
+          "name": "Grimreaper Grayson"
+        },
+        {
+          "index": 25,
+          "key": "c9_skin25",
+          "name": "Woowolf"
+        },
+        {
+          "index": 26,
+          "key": "c9_skin26",
+          "name": "Werepybara"
+        },
+        {
+          "index": 27,
+          "key": "c9_skin27",
+          "name": "Spooky Bear"
+        },
+        {
+          "index": 28,
+          "key": "c9_skin28",
+          "name": "Greedfang Warwolf Skin"
+        },
+        {
+          "index": 29,
+          "key": "c9_skin29",
+          "name": "Posh Penguin"
+        },
+        {
+          "index": 30,
+          "key": "c9_skin30",
+          "name": "W□r□w□lf"
+        },
+        {
+          "index": 31,
+          "key": "c9_skin31",
+          "name": "Flaring Claw"
+        },
+        {
+          "index": 32,
+          "key": "c9_skin32",
+          "name": "Frostreign Gale"
+        },
+        {
+          "index": 33,
+          "key": "c9_skin33",
+          "name": "Chef Chelik"
+        },
+        {
+          "index": 34,
+          "key": "c9_skin34",
+          "name": "A10 Riftclaw"
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "code": "Priest",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character10_skill_0_name",
+          "name": "Regeneration Pact"
+        },
+        {
+          "index": 1,
+          "key": "Character10_skill_1_name",
+          "name": "Pray"
+        },
+        {
+          "index": 2,
+          "key": "Character10_skill_2_name",
+          "name": "Moon Shadow"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c10_skin0",
+          "name": "Priestess"
+        },
+        {
+          "index": 1,
+          "key": "c10_skin1",
+          "name": "Holy Sister"
+        },
+        {
+          "index": 2,
+          "key": "c10_skin2",
+          "name": "Red Bishop"
+        },
+        {
+          "index": 3,
+          "key": "c10_skin3",
+          "name": "Bunny"
+        },
+        {
+          "index": 4,
+          "key": "c10_skin4",
+          "name": "Sound of Paradise"
+        },
+        {
+          "index": 5,
+          "key": "c10_skin5",
+          "name": "Anubis"
+        },
+        {
+          "index": 6,
+          "key": "c10_skin6",
+          "name": "Ro"
+        },
+        {
+          "index": 7,
+          "key": "c10_skin7",
+          "name": "Boyi the Valor"
+        },
+        {
+          "index": 8,
+          "key": "c10_skin8",
+          "name": "Nurse"
+        },
+        {
+          "index": 9,
+          "key": "c10_skin9",
+          "name": "Alice"
+        },
+        {
+          "index": 10,
+          "key": "c10_skin10",
+          "name": "White Snake"
+        },
+        {
+          "index": 11,
+          "key": "c10_skin11",
+          "name": "Solar Eclipse"
+        },
+        {
+          "index": 12,
+          "key": "c10_skin12",
+          "name": "Fei Tian"
+        },
+        {
+          "index": 13,
+          "key": "c10_skin13",
+          "name": "Neko Chan"
+        },
+        {
+          "index": 14,
+          "key": "c10_skin14",
+          "name": "Sanctity"
+        },
+        {
+          "index": 15,
+          "key": "c10_skin15",
+          "name": "Golden Cicada"
+        },
+        {
+          "index": 16,
+          "key": "c10_skin16",
+          "name": "\"P R E I S T E Z\""
+        },
+        {
+          "index": 17,
+          "key": "c10_skin17",
+          "name": "Virgo"
+        },
+        {
+          "index": 18,
+          "key": "c10_skin18",
+          "name": "牧"
+        },
+        {
+          "index": 19,
+          "key": "c10_skin19",
+          "name": "Cai Wenji"
+        },
+        {
+          "index": 20,
+          "key": "c10_skin20",
+          "name": "Stellar Envoy Elizabeth"
+        },
+        {
+          "index": 21,
+          "key": "c10_skin21",
+          "name": "Priestoss"
+        },
+        {
+          "index": 22,
+          "key": "c10_skin22",
+          "name": "Fragrans Felora"
+        },
+        {
+          "index": 23,
+          "key": "c10_skin23",
+          "name": "Pripybara"
+        },
+        {
+          "index": 24,
+          "key": "c10_skin24",
+          "name": "Clinic Cloudia"
+        },
+        {
+          "index": 25,
+          "key": "c10_skin25",
+          "name": "Aphrodite, Goddess of Love"
+        },
+        {
+          "index": 26,
+          "key": "c10_skin26",
+          "name": "Rotweaver Ravena"
+        },
+        {
+          "index": 27,
+          "key": "c10_skin27",
+          "name": "Pri□st□ss"
+        },
+        {
+          "index": 28,
+          "key": "c10_skin28",
+          "name": "Wooden Cross"
+        },
+        {
+          "index": 29,
+          "key": "c10_skin29",
+          "name": "Evermoon"
+        },
+        {
+          "index": 30,
+          "key": "c10_skin30",
+          "name": "Seacurer Thalassia"
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "code": "Druid",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character11_skill_0_name",
+          "name": "Frostfire Wolves"
+        },
+        {
+          "index": 1,
+          "key": "Character11_skill_1_name",
+          "name": "Venom Vines"
+        },
+        {
+          "index": 2,
+          "key": "Character11_skill_2_name",
+          "name": "Fuzzy Bear"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c11_skin0",
+          "name": "Druid"
+        },
+        {
+          "index": 1,
+          "key": "c11_skin1",
+          "name": "Farseer"
+        },
+        {
+          "index": 2,
+          "key": "c11_skin2",
+          "name": "Workaholic"
+        },
+        {
+          "index": 3,
+          "key": "c11_skin3",
+          "name": "Reindeer"
+        },
+        {
+          "index": 4,
+          "key": "c11_skin4",
+          "name": "Dragon King"
+        },
+        {
+          "index": 5,
+          "key": "c11_skin5",
+          "name": "Frostash"
+        },
+        {
+          "index": 6,
+          "key": "c11_skin6",
+          "name": "Nian"
+        },
+        {
+          "index": 7,
+          "key": "c11_skin7",
+          "name": "Baize the Wise"
+        },
+        {
+          "index": 8,
+          "key": "c11_skin8",
+          "name": "Zhuge Liang"
+        },
+        {
+          "index": 9,
+          "key": "c11_skin9",
+          "name": "Scary Beast Tamer"
+        },
+        {
+          "index": 10,
+          "key": "c11_skin10",
+          "name": "Great Inventor"
+        },
+        {
+          "index": 11,
+          "key": "c11_skin11",
+          "name": "Sacred Deer"
+        },
+        {
+          "index": 12,
+          "key": "c11_skin12",
+          "name": "Paradox"
+        },
+        {
+          "index": 13,
+          "key": "c11_skin13",
+          "name": "I Am Not Druid"
+        },
+        {
+          "index": 14,
+          "key": "c11_skin14",
+          "name": "Buck Man"
+        },
+        {
+          "index": 15,
+          "key": "c11_skin15",
+          "name": "\"D R I U D\""
+        },
+        {
+          "index": 16,
+          "key": "c11_skin16",
+          "name": "Capricornus"
+        },
+        {
+          "index": 17,
+          "key": "c11_skin17",
+          "name": "Sister Zhurong"
+        },
+        {
+          "index": 18,
+          "key": "c11_skin18",
+          "name": "德"
+        },
+        {
+          "index": 19,
+          "key": "c11_skin19",
+          "name": "Tang Yin"
+        },
+        {
+          "index": 20,
+          "key": "c11_skin20",
+          "name": "Justice Alice"
+        },
+        {
+          "index": 21,
+          "key": "c11_skin21",
+          "name": "Drood"
+        },
+        {
+          "index": 22,
+          "key": "c11_skin22",
+          "name": "Butterflette Lofeyra"
+        },
+        {
+          "index": 23,
+          "key": "c11_skin23",
+          "name": "Drupybara"
+        },
+        {
+          "index": 24,
+          "key": "c11_skin24",
+          "name": "Blightherald Gorth"
+        },
+        {
+          "index": 25,
+          "key": "c11_skin25",
+          "name": "口r□id"
+        },
+        {
+          "index": 26,
+          "key": "c11_skin26",
+          "name": "Pan, God of the Wild"
+        },
+        {
+          "index": 27,
+          "key": "c11_skin27",
+          "name": "Dendroid King Skin"
+        },
+        {
+          "index": 28,
+          "key": "c11_skin28",
+          "name": "Crispy Bone"
+        },
+        {
+          "index": 29,
+          "key": "c11_skin29",
+          "name": "Seasong Selia"
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "code": "Robot",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character12_skill_0_name",
+          "name": "Electric Overload"
+        },
+        {
+          "index": 1,
+          "key": "Character12_skill_1_name",
+          "name": "Drone Swarm"
+        },
+        {
+          "index": 2,
+          "key": "Character12_skill_2_name",
+          "name": "EMP"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c12_skin0",
+          "name": "Robot"
+        },
+        {
+          "index": 1,
+          "key": "c12_skin1",
+          "name": "Cowbot"
+        },
+        {
+          "index": 2,
+          "key": "c12_skin2",
+          "name": "Simple Calculation Specialist Robot"
+        },
+        {
+          "index": 3,
+          "key": "c12_skin3",
+          "name": "Doom Corp."
+        },
+        {
+          "index": 4,
+          "key": "c12_skin4",
+          "name": "Zulan The Colossus Skin"
+        },
+        {
+          "index": 5,
+          "key": "c12_skin5",
+          "name": "Police 9102"
+        },
+        {
+          "index": 6,
+          "key": "c12_skin6",
+          "name": "Goddess Nüwa"
+        },
+        {
+          "index": 7,
+          "key": "c12_skin7",
+          "name": "Thunder God"
+        },
+        {
+          "index": 8,
+          "key": "c12_skin8",
+          "name": "Musician"
+        },
+        {
+          "index": 9,
+          "key": "c12_skin9",
+          "name": "Consort Yu"
+        },
+        {
+          "index": 10,
+          "key": "c12_skin10",
+          "name": "Squeaky Marionette"
+        },
+        {
+          "index": 11,
+          "key": "c12_skin11",
+          "name": "Genie in the Jar"
+        },
+        {
+          "index": 12,
+          "key": "c12_skin12",
+          "name": "Moai"
+        },
+        {
+          "index": 13,
+          "key": "c12_skin13",
+          "name": "Crimebuster"
+        },
+        {
+          "index": 14,
+          "key": "c12_skin14",
+          "name": "Ben-Bor-Ba"
+        },
+        {
+          "index": 15,
+          "key": "c12_skin15",
+          "name": "\"R B O O K\""
+        },
+        {
+          "index": 16,
+          "key": "c12_skin16",
+          "name": "Telescopium"
+        },
+        {
+          "index": 17,
+          "key": "c12_skin17",
+          "name": "Soul Knight Strange Tales: Self-Explosion Robot"
+        },
+        {
+          "index": 18,
+          "key": "c12_skin18",
+          "name": "器"
+        },
+        {
+          "index": 19,
+          "key": "c12_skin19",
+          "name": "Pang Tong - Shiyuan"
+        },
+        {
+          "index": 20,
+          "key": "c12_skin20",
+          "name": "Roboto"
+        },
+        {
+          "index": 21,
+          "key": "c12_skin21",
+          "name": "Superstudent Soultama"
+        },
+        {
+          "index": 22,
+          "key": "c12_skin22",
+          "name": "Robybara"
+        },
+        {
+          "index": 23,
+          "key": "c12_skin23",
+          "name": "Silent Semi-proto X"
+        },
+        {
+          "index": 24,
+          "key": "c12_skin24",
+          "name": "Satellite Floating Gun"
+        },
+        {
+          "index": 25,
+          "key": "c12_skin25",
+          "name": "R□b□t"
+        },
+        {
+          "index": 26,
+          "key": "c12_skin26",
+          "name": "Talos, the Bronze Giant"
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "code": "Viking",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character13_skill_0_name",
+          "name": "Rage"
+        },
+        {
+          "index": 1,
+          "key": "Character13_skill_1_name",
+          "name": "Free Style"
+        },
+        {
+          "index": 2,
+          "key": "Character13_skill_2_name",
+          "name": "Leap"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c13_skin0",
+          "name": "Berserker"
+        },
+        {
+          "index": 1,
+          "key": "c13_skin1",
+          "name": "Wrestler"
+        },
+        {
+          "index": 2,
+          "key": "c13_skin2",
+          "name": "Gladiator"
+        },
+        {
+          "index": 3,
+          "key": "c13_skin3",
+          "name": "Zombie"
+        },
+        {
+          "index": 4,
+          "key": "c13_skin4",
+          "name": "Headless Knight Skin"
+        },
+        {
+          "index": 5,
+          "key": "c13_skin5",
+          "name": "Bruce Lee"
+        },
+        {
+          "index": 6,
+          "key": "c13_skin6",
+          "name": "Shi"
+        },
+        {
+          "index": 7,
+          "key": "c13_skin7",
+          "name": "Unicorn Huanshu"
+        },
+        {
+          "index": 8,
+          "key": "c13_skin8",
+          "name": "Unit 1202"
+        },
+        {
+          "index": 9,
+          "key": "c13_skin9",
+          "name": "Quan Huying"
+        },
+        {
+          "index": 10,
+          "key": "c13_skin10",
+          "name": "Emperor's New Clothes"
+        },
+        {
+          "index": 11,
+          "key": "c13_skin11",
+          "name": "Fighter Wu Song"
+        },
+        {
+          "index": 12,
+          "key": "c13_skin12",
+          "name": "Seahorse Fighter"
+        },
+        {
+          "index": 13,
+          "key": "c13_skin13",
+          "name": "Iron Boiler"
+        },
+        {
+          "index": 14,
+          "key": "c13_skin14",
+          "name": "King Viking"
+        },
+        {
+          "index": 15,
+          "key": "c13_skin15",
+          "name": "Thunderstorm"
+        },
+        {
+          "index": 16,
+          "key": "c13_skin16",
+          "name": "Alpha Claw"
+        },
+        {
+          "index": 17,
+          "key": "c13_skin17",
+          "name": "\"B E R S E R K R\""
+        },
+        {
+          "index": 18,
+          "key": "c13_skin18",
+          "name": "Golden-Winged Great Peng"
+        },
+        {
+          "index": 19,
+          "key": "c13_skin19",
+          "name": "Ancestor Skin"
+        },
+        {
+          "index": 20,
+          "key": "c13_skin20",
+          "name": "Leo"
+        },
+        {
+          "index": 21,
+          "key": "c13_skin21",
+          "name": "狂"
+        },
+        {
+          "index": 22,
+          "key": "c13_skin22",
+          "name": "Guan Yu - Yunchang"
+        },
+        {
+          "index": 23,
+          "key": "c13_skin23",
+          "name": "Sunchaser Acon"
+        },
+        {
+          "index": 24,
+          "key": "c13_skin24",
+          "name": "Borserker"
+        },
+        {
+          "index": 25,
+          "key": "c13_skin25",
+          "name": "Bersybara"
+        },
+        {
+          "index": 26,
+          "key": "c13_skin26",
+          "name": "Surfer Sean"
+        },
+        {
+          "index": 27,
+          "key": "c13_skin27",
+          "name": "Achilles, Hero of the Greeks"
+        },
+        {
+          "index": 28,
+          "key": "c13_skin28",
+          "name": "日□rs□rk□r"
+        },
+        {
+          "index": 29,
+          "key": "c13_skin29",
+          "name": "Boxing Gloves"
+        },
+        {
+          "index": 30,
+          "key": "c13_skin30",
+          "name": "Paragon Aureon"
+        },
+        {
+          "index": 31,
+          "key": "c13_skin31",
+          "name": "Hookhand Baro"
+        },
+        {
+          "index": 32,
+          "key": "c13_skin32",
+          "name": "MooMoo"
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "code": "Necromancer",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character14_skill_0_name",
+          "name": "Nightmare"
+        },
+        {
+          "index": 1,
+          "key": "Character14_skill_1_name",
+          "name": "Omen Stone"
+        },
+        {
+          "index": 2,
+          "key": "Character14_skill_2_name",
+          "name": "Souls Resurrect"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c14_skin0",
+          "name": "Necromancer"
+        },
+        {
+          "index": 1,
+          "key": "c14_skin1",
+          "name": "Bunny Lady"
+        },
+        {
+          "index": 2,
+          "key": "c14_skin2",
+          "name": "The Devout"
+        },
+        {
+          "index": 3,
+          "key": "c14_skin3",
+          "name": "Stunt Actor"
+        },
+        {
+          "index": 4,
+          "key": "c14_skin4",
+          "name": "Guardian Lu Wu"
+        },
+        {
+          "index": 5,
+          "key": "c14_skin5",
+          "name": "Green Snake"
+        },
+        {
+          "index": 6,
+          "key": "c14_skin6",
+          "name": "New Moon"
+        },
+        {
+          "index": 7,
+          "key": "c14_skin7",
+          "name": "Bastet"
+        },
+        {
+          "index": 8,
+          "key": "c14_skin8",
+          "name": "Aurora"
+        },
+        {
+          "index": 9,
+          "key": "c14_skin9",
+          "name": "Dead Luna"
+        },
+        {
+          "index": 10,
+          "key": "c14_skin10",
+          "name": "Silk Weaver"
+        },
+        {
+          "index": 11,
+          "key": "c14_skin11",
+          "name": "\"N E C R O M A N C R\""
+        },
+        {
+          "index": 12,
+          "key": "c14_skin12",
+          "name": "Cassiopeia"
+        },
+        {
+          "index": 13,
+          "key": "c14_skin13",
+          "name": "Ghostie"
+        },
+        {
+          "index": 14,
+          "key": "c14_skin14",
+          "name": "Diao Chan"
+        },
+        {
+          "index": 15,
+          "key": "c14_skin15",
+          "name": "灵"
+        },
+        {
+          "index": 16,
+          "key": "c14_skin16",
+          "name": "Saki"
+        },
+        {
+          "index": 17,
+          "key": "c14_skin17",
+          "name": "Mobile Maven Meng"
+        },
+        {
+          "index": 18,
+          "key": "c14_skin18",
+          "name": "Necromoncer"
+        },
+        {
+          "index": 19,
+          "key": "c14_skin19",
+          "name": "Necrybara"
+        },
+        {
+          "index": 20,
+          "key": "c14_skin20",
+          "name": "Miraculous Sonatia"
+        },
+        {
+          "index": 21,
+          "key": "c14_skin21",
+          "name": "Embergaze Vera​"
+        },
+        {
+          "index": 22,
+          "key": "c14_skin22",
+          "name": "口ecr□m□ncer"
+        },
+        {
+          "index": 23,
+          "key": "c14_skin23",
+          "name": "Pearlbloom Perrine"
+        },
+        {
+          "index": 24,
+          "key": "c14_skin24",
+          "name": "Staff of Plague"
+        },
+        {
+          "index": 25,
+          "key": "c14_skin25",
+          "name": "Jadesheen Celestin"
+        },
+        {
+          "index": 26,
+          "key": "c14_skin26",
+          "name": "Ruby"
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "code": "Officer",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character15_skill_0_name",
+          "name": "Gun Spin"
+        },
+        {
+          "index": 1,
+          "key": "Character15_skill_1_name",
+          "name": "Bounty Tag"
+        },
+        {
+          "index": 2,
+          "key": "Character15_skill_2_name",
+          "name": "Close Air Support"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c15_skin0",
+          "name": "Officer"
+        },
+        {
+          "index": 1,
+          "key": "c15_skin1",
+          "name": "Detective Rock"
+        },
+        {
+          "index": 2,
+          "key": "c15_skin2",
+          "name": "Jin Yi Wei"
+        },
+        {
+          "index": 3,
+          "key": "c15_skin3",
+          "name": "Vampire Hunter"
+        },
+        {
+          "index": 4,
+          "key": "c15_skin4",
+          "name": "Ghost Catcher Zhong Kui"
+        },
+        {
+          "index": 5,
+          "key": "c15_skin5",
+          "name": "Gold Mask"
+        },
+        {
+          "index": 6,
+          "key": "c15_skin6",
+          "name": "Captain Specter"
+        },
+        {
+          "index": 7,
+          "key": "c15_skin7",
+          "name": "Aristocrat Lieutenant"
+        },
+        {
+          "index": 8,
+          "key": "c15_skin8",
+          "name": "Pharaoh"
+        },
+        {
+          "index": 9,
+          "key": "c15_skin9",
+          "name": "Justicebringer"
+        },
+        {
+          "index": 10,
+          "key": "c15_skin10",
+          "name": "\"O F F I C E\""
+        },
+        {
+          "index": 11,
+          "key": "c15_skin11",
+          "name": "Pagoda-Bearing Heavenly King"
+        },
+        {
+          "index": 12,
+          "key": "c15_skin12",
+          "name": "Olpaca"
+        },
+        {
+          "index": 13,
+          "key": "c15_skin13",
+          "name": "Libra"
+        },
+        {
+          "index": 14,
+          "key": "c15_skin14",
+          "name": "Ma Chao - Mengqi"
+        },
+        {
+          "index": 15,
+          "key": "c15_skin15",
+          "name": "警"
+        },
+        {
+          "index": 16,
+          "key": "c15_skin16",
+          "name": "Ultra Red"
+        },
+        {
+          "index": 17,
+          "key": "c15_skin17",
+          "name": "Bloodlord Lyon"
+        },
+        {
+          "index": 18,
+          "key": "c15_skin18",
+          "name": "Offocer"
+        },
+        {
+          "index": 19,
+          "key": "c15_skin19",
+          "name": "Offybara"
+        },
+        {
+          "index": 20,
+          "key": "c15_skin20",
+          "name": "Abyssadmiral Dylan"
+        },
+        {
+          "index": 21,
+          "key": "c15_skin21",
+          "name": "Baseball Brady"
+        },
+        {
+          "index": 22,
+          "key": "c15_skin22",
+          "name": "Nemesis of Villains"
+        },
+        {
+          "index": 23,
+          "key": "c15_skin23",
+          "name": "口fficer"
+        },
+        {
+          "index": 24,
+          "key": "c15_skin24",
+          "name": "Zeus, King of the Gods"
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "code": "Taoist",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character16_skill_0_name",
+          "name": "Genesis of Swords"
+        },
+        {
+          "index": 1,
+          "key": "Character16_skill_1_name",
+          "name": "Bagua"
+        },
+        {
+          "index": 2,
+          "key": "Character16_skill_2_name",
+          "name": "Sword Fly"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c16_skin0",
+          "name": "Taoist"
+        },
+        {
+          "index": 1,
+          "key": "c16_skin1",
+          "name": "TF 0202"
+        },
+        {
+          "index": 2,
+          "key": "c16_skin2",
+          "name": "Exorcist"
+        },
+        {
+          "index": 3,
+          "key": "c16_skin3",
+          "name": "Sky Ruler"
+        },
+        {
+          "index": 4,
+          "key": "c16_skin4",
+          "name": "Sage of Taoism"
+        },
+        {
+          "index": 5,
+          "key": "c16_skin5",
+          "name": "Goblin Priest"
+        },
+        {
+          "index": 6,
+          "key": "c16_skin6",
+          "name": "Sneaky Magician"
+        },
+        {
+          "index": 7,
+          "key": "c16_skin7",
+          "name": "Thunderstorm"
+        },
+        {
+          "index": 8,
+          "key": "c16_skin8",
+          "name": "Steam Runemaster"
+        },
+        {
+          "index": 9,
+          "key": "c16_skin9",
+          "name": "Ink Wash - Miao Xian Lang"
+        },
+        {
+          "index": 10,
+          "key": "c16_skin10",
+          "name": "Eventide Angel"
+        },
+        {
+          "index": 11,
+          "key": "c16_skin11",
+          "name": "Jade Emperor the Great: Most Honored of All-Embracing Sublime Spontaneous Existence of the Golden Towers of the Ever-Radiant Realms"
+        },
+        {
+          "index": 12,
+          "key": "c16_skin12",
+          "name": "\"T A O Y I S T\""
+        },
+        {
+          "index": 13,
+          "key": "c16_skin13",
+          "name": "Pisces"
+        },
+        {
+          "index": 14,
+          "key": "c16_skin14",
+          "name": "Bozi"
+        },
+        {
+          "index": 15,
+          "key": "c16_skin15",
+          "name": "道"
+        },
+        {
+          "index": 16,
+          "key": "c16_skin16",
+          "name": "Lu Xun - Boyan"
+        },
+        {
+          "index": 17,
+          "key": "c16_skin17",
+          "name": "Wait, What?"
+        },
+        {
+          "index": 18,
+          "key": "c16_skin18",
+          "name": "Straight-A Sichen"
+        },
+        {
+          "index": 19,
+          "key": "c16_skin19",
+          "name": "Taoost"
+        },
+        {
+          "index": 20,
+          "key": "c16_skin20",
+          "name": "Dominus Faustus"
+        },
+        {
+          "index": 21,
+          "key": "c16_skin21",
+          "name": "Taopybara"
+        },
+        {
+          "index": 22,
+          "key": "c16_skin22",
+          "name": "Sharkchef Brucello"
+        },
+        {
+          "index": 23,
+          "key": "c16_skin23",
+          "name": "Tao Sword"
+        },
+        {
+          "index": 24,
+          "key": "c16_skin24",
+          "name": "Ta□ist"
+        },
+        {
+          "index": 25,
+          "key": "c16_skin25",
+          "name": "Sheathed Savile"
+        },
+        {
+          "index": 26,
+          "key": "c16_skin26",
+          "name": "Jadeite"
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "code": "Transcendent",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character17_skill_0_name",
+          "name": "Dimension Jumping"
+        },
+        {
+          "index": 1,
+          "key": "Character17_skill_1_name",
+          "name": "Blackhole Refract / Blackhole Burst"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c17_skin0",
+          "name": "Inter-dimension Traveler"
+        },
+        {
+          "index": 1,
+          "key": "c17_skin1",
+          "name": "Hades, King of the Underworld"
+        },
+        {
+          "index": 2,
+          "key": "c17_skin2",
+          "name": "Intor-domension Troveler"
+        },
+        {
+          "index": 3,
+          "key": "c17_skin3",
+          "name": "Inter-dimension Travara"
+        },
+        {
+          "index": 4,
+          "key": "c17_skin4",
+          "name": "Dimensional Grip"
+        },
+        {
+          "index": 5,
+          "key": "c17_skin5",
+          "name": "Serenith"
+        },
+        {
+          "index": 6,
+          "key": "c17_skin6",
+          "name": "Int□r-dimensi□n Tr□veler"
+        }
+      ]
+    },
+    {
+      "index": 18,
+      "code": "Envoy",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character18_skill_0_name",
+          "name": "Elemental Affinity"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c18_skin0",
+          "name": "Element Envoy"
+        },
+        {
+          "index": 1,
+          "key": "c18_skin1",
+          "name": "Amethyne Sirena"
+        },
+        {
+          "index": 2,
+          "key": "c18_skin2",
+          "name": "Olement Onvoy"
+        },
+        {
+          "index": 3,
+          "key": "c18_skin3",
+          "name": "Visage of Elemental Power"
+        },
+        {
+          "index": 4,
+          "key": "c18_skin4",
+          "name": "El□ment Env□y"
+        },
+        {
+          "index": 5,
+          "key": "c18_skin5",
+          "name": "C19 Seal"
+        }
+      ]
+    },
+    {
+      "index": 19,
+      "code": "Beheaded",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character19_skill_0_name",
+          "name": "Spartan Sandals"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c19_skin0",
+          "name": "The Beheaded"
+        }
+      ]
+    },
+    {
+      "index": 20,
+      "code": "Ninja",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character20_skill_0_name",
+          "name": "Time-space Shuriken"
+        },
+        {
+          "index": 1,
+          "key": "Character20_skill_1_name",
+          "name": "Chrono Hunt"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c20_skin0",
+          "name": "Time Traveling Ninja"
+        },
+        {
+          "index": 1,
+          "key": "c20_skin1",
+          "name": "Skyveil Sylph"
+        },
+        {
+          "index": 2,
+          "key": "c20_skin2",
+          "name": "Tome Troveling Ninjo"
+        },
+        {
+          "index": 3,
+          "key": "c20_skin3",
+          "name": "Time Traveling Nara"
+        },
+        {
+          "index": 4,
+          "key": "c20_skin4",
+          "name": "Sandspecter Shahya"
+        },
+        {
+          "index": 5,
+          "key": "c20_skin5",
+          "name": "Molecule Ichimonji"
+        },
+        {
+          "index": 6,
+          "key": "c20_skin6",
+          "name": "Ireva"
+        },
+        {
+          "index": 7,
+          "key": "c20_skin7",
+          "name": "Tim□ Tr□veling N□nja"
+        }
+      ]
+    },
+    {
+      "index": 21,
+      "code": "SpecialForces",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character21_skill_0_name",
+          "name": "Special Operation"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c21_skin0",
+          "name": "Special Forces"
+        },
+        {
+          "index": 1,
+          "key": "c21_skin1",
+          "name": "Sp□cial F□rces"
+        },
+        {
+          "index": 2,
+          "key": "c21_skin2",
+          "name": "S.O. Firearm"
+        },
+        {
+          "index": 3,
+          "key": "c21_skin3",
+          "name": "Erinyes, Goddesses of Vengeance"
+        }
+      ]
+    },
+    {
+      "index": 22,
+      "code": "Airbender",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character22_skill_0_name",
+          "name": "Pulsating Blow"
+        },
+        {
+          "index": 1,
+          "key": "Character22_skill_1_name",
+          "name": "Orbiting Stars"
+        },
+        {
+          "index": 2,
+          "key": "Character22_skill_2_name",
+          "name": "Meridian Sword"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c22_skin0",
+          "name": "Airbender"
+        },
+        {
+          "index": 1,
+          "key": "c22_skin1",
+          "name": "Devildom Magnate"
+        },
+        {
+          "index": 2,
+          "key": "c22_skin2",
+          "name": "Abo"
+        },
+        {
+          "index": 3,
+          "key": "c22_skin3",
+          "name": "Sunyata"
+        },
+        {
+          "index": 4,
+          "key": "c22_skin4",
+          "name": "\"A I R B E N D R\""
+        },
+        {
+          "index": 5,
+          "key": "c22_skin5",
+          "name": "Pyxis"
+        },
+        {
+          "index": 6,
+          "key": "c22_skin6",
+          "name": "气"
+        },
+        {
+          "index": 7,
+          "key": "c22_skin7",
+          "name": "King Skin"
+        },
+        {
+          "index": 8,
+          "key": "c22_skin8",
+          "name": "Xiahou Dun - Yuanrang"
+        },
+        {
+          "index": 9,
+          "key": "c22_skin9",
+          "name": "Airbonder"
+        },
+        {
+          "index": 10,
+          "key": "c22_skin10",
+          "name": "Martialist Lee"
+        },
+        {
+          "index": 11,
+          "key": "c22_skin11",
+          "name": "Stormcrest Falco"
+        },
+        {
+          "index": 12,
+          "key": "c22_skin12",
+          "name": "Airbybara"
+        },
+        {
+          "index": 13,
+          "key": "c22_skin13",
+          "name": "Silverdawn Ayther"
+        },
+        {
+          "index": 14,
+          "key": "c22_skin14",
+          "name": "Qian-kun Punch"
+        },
+        {
+          "index": 15,
+          "key": "c22_skin15",
+          "name": "Airb□nd□r"
+        },
+        {
+          "index": 16,
+          "key": "c22_skin16",
+          "name": "Furyx"
+        },
+        {
+          "index": 17,
+          "key": "c22_skin17",
+          "name": "Duskfist Cohen"
+        }
+      ]
+    },
+    {
+      "index": 23,
+      "code": "Warlock",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character23_skill_0_name",
+          "name": "Amii's Burning Body"
+        },
+        {
+          "index": 1,
+          "key": "Character23_skill_1_name",
+          "name": "Helping Hand: Eligos"
+        },
+        {
+          "index": 2,
+          "key": "Character23_skill_2_name",
+          "name": "Amon's Protection"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c23_skin0",
+          "name": "Demonmancer"
+        },
+        {
+          "index": 1,
+          "key": "c23_skin1",
+          "name": "How I Reincarnated as a Girl and Learned to Practice Devilish Spells in the Netherworld"
+        },
+        {
+          "index": 2,
+          "key": "c23_skin2",
+          "name": "Chewbat"
+        },
+        {
+          "index": 3,
+          "key": "c23_skin3",
+          "name": "Possessed Girl"
+        },
+        {
+          "index": 4,
+          "key": "c23_skin4",
+          "name": "\"DIS R ME\""
+        },
+        {
+          "index": 5,
+          "key": "c23_skin5",
+          "name": "Red Boy"
+        },
+        {
+          "index": 6,
+          "key": "c23_skin6",
+          "name": "Ursa Minor & Major"
+        },
+        {
+          "index": 7,
+          "key": "c23_skin7",
+          "name": "魔"
+        },
+        {
+          "index": 8,
+          "key": "c23_skin8",
+          "name": "Xiao Qiao"
+        },
+        {
+          "index": 9,
+          "key": "c23_skin9",
+          "name": "Voidlord Eclipsa"
+        },
+        {
+          "index": 10,
+          "key": "c23_skin10",
+          "name": "Demonmoncer"
+        },
+        {
+          "index": 11,
+          "key": "c23_skin11",
+          "name": "Demybara"
+        },
+        {
+          "index": 12,
+          "key": "c23_skin12",
+          "name": "Gardener Gwen"
+        },
+        {
+          "index": 13,
+          "key": "c23_skin13",
+          "name": "Aqualune Marina"
+        },
+        {
+          "index": 14,
+          "key": "c23_skin14",
+          "name": "口em□nm□ncer"
+        },
+        {
+          "index": 15,
+          "key": "c23_skin15",
+          "name": "Key of the Faint Star"
+        },
+        {
+          "index": 16,
+          "key": "c23_skin16",
+          "name": "Lamentra"
+        },
+        {
+          "index": 17,
+          "key": "c23_skin17",
+          "name": "Demantoid"
+        },
+        {
+          "index": 18,
+          "key": "c23_skin18",
+          "name": "Unfledged Ravenlet"
+        }
+      ]
+    },
+    {
+      "index": 24,
+      "code": "Miner",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character24_skill_0_name",
+          "name": "Underground Operations"
+        },
+        {
+          "index": 1,
+          "key": "Character24_skill_1_name",
+          "name": "Cart Delivery"
+        },
+        {
+          "index": 2,
+          "key": "Character24_skill_2_name",
+          "name": "Sandworm Storm"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c24_skin0",
+          "name": "Miner"
+        },
+        {
+          "index": 1,
+          "key": "c24_skin1",
+          "name": "Moon Rabbit"
+        },
+        {
+          "index": 2,
+          "key": "c24_skin2",
+          "name": "\"M I N A\""
+        },
+        {
+          "index": 3,
+          "key": "c24_skin3",
+          "name": "Chi Chi"
+        },
+        {
+          "index": 4,
+          "key": "c24_skin4",
+          "name": "Cetus"
+        },
+        {
+          "index": 5,
+          "key": "c24_skin5",
+          "name": "Nugget Rider"
+        },
+        {
+          "index": 6,
+          "key": "c24_skin6",
+          "name": "Da Qiao"
+        },
+        {
+          "index": 7,
+          "key": "c24_skin7",
+          "name": "矿"
+        },
+        {
+          "index": 8,
+          "key": "c24_skin8",
+          "name": "Honeybee"
+        },
+        {
+          "index": 9,
+          "key": "c24_skin9",
+          "name": "Ultra Pink"
+        },
+        {
+          "index": 10,
+          "key": "c24_skin10",
+          "name": "Volcanic Sandworm Skin"
+        },
+        {
+          "index": 11,
+          "key": "c24_skin11",
+          "name": "Sugarheart Princess Angelica"
+        },
+        {
+          "index": 12,
+          "key": "c24_skin12",
+          "name": "Moner"
+        },
+        {
+          "index": 13,
+          "key": "c24_skin13",
+          "name": "Minybara"
+        },
+        {
+          "index": 14,
+          "key": "c24_skin14",
+          "name": "Seabreeze Sylvie"
+        },
+        {
+          "index": 15,
+          "key": "c24_skin15",
+          "name": "Cyclist Cleo"
+        },
+        {
+          "index": 16,
+          "key": "c24_skin16",
+          "name": "Wavechant Nerissa"
+        },
+        {
+          "index": 17,
+          "key": "c24_skin17",
+          "name": "Pickaxe"
+        },
+        {
+          "index": 18,
+          "key": "c24_skin18",
+          "name": "Min□r"
+        },
+        {
+          "index": 19,
+          "key": "c24_skin19",
+          "name": "M25 Pebble"
+        }
+      ]
+    },
+    {
+      "index": 25,
+      "code": "TrapMaster",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character25_skill_0_name",
+          "name": "Telecontrolled Bomb"
+        },
+        {
+          "index": 1,
+          "key": "Character25_skill_1_name",
+          "name": "Master's Trick"
+        },
+        {
+          "index": 2,
+          "key": "Character25_skill_2_name",
+          "name": "Hat Trick"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c25_skin0",
+          "name": "Trap Master"
+        },
+        {
+          "index": 1,
+          "key": "c25_skin1",
+          "name": "Yama Raja"
+        },
+        {
+          "index": 2,
+          "key": "c25_skin2",
+          "name": "\"TRAP MASTAH\""
+        },
+        {
+          "index": 3,
+          "key": "c25_skin3",
+          "name": "Aries"
+        },
+        {
+          "index": 4,
+          "key": "c25_skin4",
+          "name": "Holy"
+        },
+        {
+          "index": 5,
+          "key": "c25_skin5",
+          "name": "陷"
+        },
+        {
+          "index": 6,
+          "key": "c25_skin6",
+          "name": "Astral Oracle"
+        },
+        {
+          "index": 7,
+          "key": "c25_skin7",
+          "name": "Sun Quan - Zhongmou"
+        },
+        {
+          "index": 8,
+          "key": "c25_skin8",
+          "name": "Trop Moster"
+        },
+        {
+          "index": 9,
+          "key": "c25_skin9",
+          "name": "Jack of All Tricks"
+        },
+        {
+          "index": 10,
+          "key": "c25_skin10",
+          "name": "Trapy Mara"
+        },
+        {
+          "index": 11,
+          "key": "c25_skin11",
+          "name": "Biologist Bogg"
+        },
+        {
+          "index": 12,
+          "key": "c25_skin12",
+          "name": "Tr□p M□st□r"
+        },
+        {
+          "index": 13,
+          "key": "c25_skin13",
+          "name": "Grappling Gun"
+        }
+      ]
+    },
+    {
+      "index": 26,
+      "code": "CostumePrince",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character26_skill_0_name",
+          "name": "Transform! Slime King!"
+        },
+        {
+          "index": 1,
+          "key": "Character26_skill_1_name",
+          "name": "Forward! Crystal Crab King!"
+        },
+        {
+          "index": 2,
+          "key": "Character26_skill_2_name",
+          "name": "Manifest! King Violet!"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c26_skin0",
+          "name": "Costume Prince"
+        },
+        {
+          "index": 1,
+          "key": "c26_skin1",
+          "name": "Dr. O's Rocket (Knock-off)"
+        },
+        {
+          "index": 2,
+          "key": "c26_skin2",
+          "name": "Apple Meow"
+        },
+        {
+          "index": 3,
+          "key": "c26_skin3",
+          "name": "Monk Sha"
+        },
+        {
+          "index": 4,
+          "key": "c26_skin4",
+          "name": "\"COSTUME PRICE\""
+        },
+        {
+          "index": 5,
+          "key": "c26_skin5",
+          "name": "皮"
+        },
+        {
+          "index": 6,
+          "key": "c26_skin6",
+          "name": "We Happy Lady"
+        },
+        {
+          "index": 7,
+          "key": "c26_skin7",
+          "name": "Duke of Pumpkin"
+        },
+        {
+          "index": 8,
+          "key": "c26_skin8",
+          "name": "Chamaeleon"
+        },
+        {
+          "index": 9,
+          "key": "c26_skin9",
+          "name": "Costome Prince"
+        },
+        {
+          "index": 10,
+          "key": "c26_skin10",
+          "name": "Noah the King"
+        },
+        {
+          "index": 11,
+          "key": "c26_skin11",
+          "name": "Painter Preston"
+        },
+        {
+          "index": 12,
+          "key": "c26_skin12",
+          "name": "Co Pybara"
+        },
+        {
+          "index": 13,
+          "key": "c26_skin13",
+          "name": "Eidolonwaker Loiseth"
+        },
+        {
+          "index": 14,
+          "key": "c26_skin14",
+          "name": "Plastic Mucus Gun"
+        },
+        {
+          "index": 15,
+          "key": "c26_skin15",
+          "name": "Mechtrix Stellan"
+        },
+        {
+          "index": 16,
+          "key": "c26_skin16",
+          "name": "C□stum□ Pri□ce"
+        }
+      ]
+    },
+    {
+      "index": 27,
+      "code": "Doctor",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character27_skill_0_name",
+          "name": "EM Field Device"
+        },
+        {
+          "index": 1,
+          "key": "Character27_skill_1_name",
+          "name": "HE Electric Orb"
+        },
+        {
+          "index": 2,
+          "key": "Character27_skill_2_name",
+          "name": "Quantum Translocator"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c27_skin0",
+          "name": "Physicist"
+        },
+        {
+          "index": 1,
+          "key": "c27_skin1",
+          "name": "Senior Commander"
+        },
+        {
+          "index": 2,
+          "key": "c27_skin2",
+          "name": "\"P H Y S I O C R A T\""
+        },
+        {
+          "index": 3,
+          "key": "c27_skin3",
+          "name": "博"
+        },
+        {
+          "index": 4,
+          "key": "c27_skin4",
+          "name": "Rakshasi"
+        },
+        {
+          "index": 5,
+          "key": "c27_skin5",
+          "name": "Lady Zhen"
+        },
+        {
+          "index": 6,
+          "key": "c27_skin6",
+          "name": "Hana"
+        },
+        {
+          "index": 7,
+          "key": "c27_skin7",
+          "name": "Physocist"
+        },
+        {
+          "index": 8,
+          "key": "c27_skin8",
+          "name": "Nyxcrown Camilla"
+        },
+        {
+          "index": 9,
+          "key": "c27_skin9",
+          "name": "Physybara"
+        },
+        {
+          "index": 10,
+          "key": "c27_skin10",
+          "name": "Athena, Goddess of Wisdom"
+        },
+        {
+          "index": 11,
+          "key": "c27_skin11",
+          "name": "Ion Excitator"
+        },
+        {
+          "index": 12,
+          "key": "c27_skin12",
+          "name": "Placidine"
+        },
+        {
+          "index": 13,
+          "key": "c27_skin13",
+          "name": "Ph□sic□st"
+        }
+      ]
+    },
+    {
+      "index": 28,
+      "code": "SwordMaster",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character28_skill_0_name",
+          "name": "Tempest Blade"
+        },
+        {
+          "index": 1,
+          "key": "Character28_skill_1_name",
+          "name": "Wisps of Clouds"
+        },
+        {
+          "index": 2,
+          "key": "Character28_skill_2_name",
+          "name": "Blinkblade Codex"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c28_skin0",
+          "name": "Sword Master"
+        },
+        {
+          "index": 1,
+          "key": "c28_skin1",
+          "name": "Sun Shangxiang"
+        },
+        {
+          "index": 2,
+          "key": "c28_skin2",
+          "name": "\"SWORD MUSTER\""
+        },
+        {
+          "index": 3,
+          "key": "c28_skin3",
+          "name": "剑"
+        },
+        {
+          "index": 4,
+          "key": "c28_skin4",
+          "name": "Rinne"
+        },
+        {
+          "index": 5,
+          "key": "c28_skin5",
+          "name": "Jade Blade"
+        },
+        {
+          "index": 6,
+          "key": "c28_skin6",
+          "name": "Sword Moster"
+        },
+        {
+          "index": 7,
+          "key": "c28_skin7",
+          "name": "Rosadame Evelyn"
+        },
+        {
+          "index": 8,
+          "key": "c28_skin8",
+          "name": "Swordy Mara"
+        },
+        {
+          "index": 9,
+          "key": "c28_skin9",
+          "name": "Hellbelle Lorna"
+        },
+        {
+          "index": 10,
+          "key": "c28_skin10",
+          "name": "Sw□rd M□st□r"
+        },
+        {
+          "index": 11,
+          "key": "c28_skin11",
+          "name": "Moonveil"
+        },
+        {
+          "index": 12,
+          "key": "c28_skin12",
+          "name": "Breeze"
+        },
+        {
+          "index": 13,
+          "key": "c28_skin13",
+          "name": "Fencer Faye"
+        }
+      ]
+    },
+    {
+      "index": 29,
+      "code": "Lancer",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character29_skill_0_name",
+          "name": "Dragon Lance"
+        },
+        {
+          "index": 1,
+          "key": "Character29_skill_1_name",
+          "name": "Thunder Presence"
+        },
+        {
+          "index": 2,
+          "key": "Character29_skill_2_name",
+          "name": "Lance Doctrine"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c29_skin0",
+          "name": "Lancer"
+        },
+        {
+          "index": 1,
+          "key": "c29_skin1",
+          "name": "Zhao Yun - Zilong"
+        },
+        {
+          "index": 2,
+          "key": "c29_skin2",
+          "name": "\"L A C E R\""
+        },
+        {
+          "index": 3,
+          "key": "c29_skin3",
+          "name": "枪"
+        },
+        {
+          "index": 4,
+          "key": "c29_skin4",
+          "name": "Morley Skin"
+        },
+        {
+          "index": 5,
+          "key": "c29_skin5",
+          "name": "Fallen Star"
+        },
+        {
+          "index": 6,
+          "key": "c29_skin6",
+          "name": "Ming Xiao"
+        },
+        {
+          "index": 7,
+          "key": "c29_skin7",
+          "name": "Loncer"
+        },
+        {
+          "index": 8,
+          "key": "c29_skin8",
+          "name": "Gigachad"
+        },
+        {
+          "index": 9,
+          "key": "c29_skin9",
+          "name": "Lancybara"
+        },
+        {
+          "index": 10,
+          "key": "c29_skin10",
+          "name": "Ares, God of War"
+        },
+        {
+          "index": 11,
+          "key": "c29_skin11",
+          "name": "La□c□r"
+        },
+        {
+          "index": 12,
+          "key": "c29_skin12",
+          "name": "Starshade"
+        },
+        {
+          "index": 13,
+          "key": "c29_skin13",
+          "name": "Dragon Fang"
+        },
+        {
+          "index": 14,
+          "key": "c29_skin14",
+          "name": "Javelinist Jaxon"
+        }
+      ]
+    },
+    {
+      "index": 30,
+      "code": "Warliege",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character30_skill_0_name",
+          "name": "Battle Storm"
+        },
+        {
+          "index": 1,
+          "key": "Character30_skill_1_name",
+          "name": "Resolute Rush"
+        },
+        {
+          "index": 2,
+          "key": "Character30_skill_2_name",
+          "name": "Dark Sovereign"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c30_skin0",
+          "name": "Warliege"
+        },
+        {
+          "index": 1,
+          "key": "c30_skin1",
+          "name": "Cao Cao - Mengde"
+        },
+        {
+          "index": 2,
+          "key": "c30_skin2",
+          "name": "\"W O W L I E G E\""
+        },
+        {
+          "index": 3,
+          "key": "c30_skin3",
+          "name": "领"
+        },
+        {
+          "index": 4,
+          "key": "c30_skin4",
+          "name": "Shadowmoon"
+        },
+        {
+          "index": 5,
+          "key": "c30_skin5",
+          "name": "General Yin"
+        },
+        {
+          "index": 6,
+          "key": "c30_skin6",
+          "name": "Armsmaster Augustus"
+        },
+        {
+          "index": 7,
+          "key": "c30_skin7",
+          "name": "Worliege"
+        },
+        {
+          "index": 8,
+          "key": "c30_skin8",
+          "name": "Rockstar Zock"
+        },
+        {
+          "index": 9,
+          "key": "c30_skin9",
+          "name": "Warlybara"
+        },
+        {
+          "index": 10,
+          "key": "c30_skin10",
+          "name": "Oathbound Gaddon"
+        },
+        {
+          "index": 11,
+          "key": "c30_skin11",
+          "name": "W□rli□ge"
+        },
+        {
+          "index": 12,
+          "key": "c30_skin12",
+          "name": "Dolorion"
+        },
+        {
+          "index": 13,
+          "key": "c30_skin13",
+          "name": "WTDD"
+        }
+      ]
+    },
+    {
+      "index": 31,
+      "code": "ArcaneKnight",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character31_skill_0_name",
+          "name": "Power Burst"
+        },
+        {
+          "index": 1,
+          "key": "Character31_skill_1_name",
+          "name": "Aegis Circle"
+        },
+        {
+          "index": 2,
+          "key": "Character31_skill_2_name",
+          "name": "Arcane Missile"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c31_skin0",
+          "name": "Arcane Knight"
+        },
+        {
+          "index": 1,
+          "key": "c31_skin1",
+          "name": "Zhou Yu - Gongjin"
+        },
+        {
+          "index": 2,
+          "key": "c31_skin2",
+          "name": "咒"
+        },
+        {
+          "index": 3,
+          "key": "c31_skin3",
+          "name": "Ultra Black"
+        },
+        {
+          "index": 4,
+          "key": "c31_skin4",
+          "name": "Princess Iron Fan"
+        },
+        {
+          "index": 5,
+          "key": "c31_skin5",
+          "name": "Arcone Knoght"
+        },
+        {
+          "index": 6,
+          "key": "c31_skin6",
+          "name": "Ravenloom Woodoom"
+        },
+        {
+          "index": 7,
+          "key": "c31_skin7",
+          "name": "Arcany Kara"
+        },
+        {
+          "index": 8,
+          "key": "c31_skin8",
+          "name": "Detective Doyle"
+        },
+        {
+          "index": 9,
+          "key": "c31_skin9",
+          "name": "Arc□ne K□ight"
+        },
+        {
+          "index": 10,
+          "key": "c31_skin10",
+          "name": "Violetta"
+        },
+        {
+          "index": 11,
+          "key": "c31_skin11",
+          "name": "Flareplume: Vermilion Bird"
+        }
+      ]
+    },
+    {
+      "index": 32,
+      "code": "Astrologist",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character32_skill_0_name",
+          "name": "Starfall Surge"
+        },
+        {
+          "index": 1,
+          "key": "Character32_skill_1_name",
+          "name": "Rota Fortunae"
+        },
+        {
+          "index": 2,
+          "key": "Character32_skill_2_name",
+          "name": "Stellar Streak"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c32_skin0",
+          "name": "Astromancer"
+        },
+        {
+          "index": 1,
+          "key": "c32_skin1",
+          "name": "Zhuge Liang - Kongming"
+        },
+        {
+          "index": 2,
+          "key": "c32_skin2",
+          "name": "星"
+        },
+        {
+          "index": 3,
+          "key": "c32_skin3",
+          "name": "Aurora Cavalier"
+        },
+        {
+          "index": 4,
+          "key": "c32_skin4",
+          "name": "Astromoncer"
+        },
+        {
+          "index": 5,
+          "key": "c32_skin5",
+          "name": "UFO-Chaser Urian"
+        },
+        {
+          "index": 6,
+          "key": "c32_skin6",
+          "name": "Astropybara"
+        },
+        {
+          "index": 7,
+          "key": "c32_skin7",
+          "name": "Tentacled Samuel"
+        },
+        {
+          "index": 8,
+          "key": "c32_skin8",
+          "name": "Astraltide Aster"
+        },
+        {
+          "index": 9,
+          "key": "c32_skin9",
+          "name": "Astr□m□nc□r"
+        },
+        {
+          "index": 10,
+          "key": "c32_skin10",
+          "name": "Arcade Ace Lorr"
+        }
+      ]
+    },
+    {
+      "index": 33,
+      "code": "Fighter",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character33_skill_0_name",
+          "name": "Tiger Punch"
+        },
+        {
+          "index": 1,
+          "key": "Character33_skill_1_name",
+          "name": "Whirlwind Kick"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c33_skin0",
+          "name": "Fighter"
+        },
+        {
+          "index": 1,
+          "key": "c33_skin1",
+          "name": "Guan Yinping"
+        },
+        {
+          "index": 2,
+          "key": "c33_skin2",
+          "name": "武"
+        },
+        {
+          "index": 3,
+          "key": "c33_skin3",
+          "name": "Jade-Faced Princess"
+        },
+        {
+          "index": 4,
+          "key": "c33_skin4",
+          "name": "Snowflake Sugarena"
+        },
+        {
+          "index": 5,
+          "key": "c33_skin5",
+          "name": "Foghter"
+        },
+        {
+          "index": 6,
+          "key": "c33_skin6",
+          "name": "Journalist Junie"
+        },
+        {
+          "index": 7,
+          "key": "c33_skin7",
+          "name": "Fightybara"
+        },
+        {
+          "index": 8,
+          "key": "c33_skin8",
+          "name": "Pyropact Ignis"
+        },
+        {
+          "index": 9,
+          "key": "c33_skin9",
+          "name": "Bladeplume Lark"
+        },
+        {
+          "index": 10,
+          "key": "c33_skin10",
+          "name": "Fi□ht□r"
+        },
+        {
+          "index": 11,
+          "key": "c33_skin11",
+          "name": "Qi Punch"
+        },
+        {
+          "index": 12,
+          "key": "c33_skin12",
+          "name": "Tiger's Eye"
+        }
+      ]
+    },
+    {
+      "index": 34,
+      "code": "Joker",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character34_skill_0_name",
+          "name": "Shadow Crescendo"
+        },
+        {
+          "index": 1,
+          "key": "Character34_skill_1_name",
+          "name": "Mirage Masque"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c34_skin0",
+          "name": "Trickster"
+        },
+        {
+          "index": 1,
+          "key": "c34_skin1",
+          "name": ""
+        },
+        {
+          "index": 2,
+          "key": "c34_skin2",
+          "name": "戏"
+        },
+        {
+          "index": 3,
+          "key": "c34_skin3",
+          "name": "Trockster"
+        },
+        {
+          "index": 4,
+          "key": "c34_skin4",
+          "name": "Maid Mayu"
+        },
+        {
+          "index": 5,
+          "key": "c34_skin5",
+          "name": "Crown of Clone"
+        },
+        {
+          "index": 6,
+          "key": "c34_skin6",
+          "name": "Trickybara"
+        },
+        {
+          "index": 7,
+          "key": "c34_skin7",
+          "name": "Euphoryn"
+        },
+        {
+          "index": 8,
+          "key": "c34_skin8",
+          "name": "Tri□kst□r"
+        },
+        {
+          "index": 9,
+          "key": "c34_skin9",
+          "name": "Ametrine"
+        },
+        {
+          "index": 10,
+          "key": "c34_skin10",
+          "name": "Phantom Blade"
+        }
+      ]
+    },
+    {
+      "index": 35,
+      "code": "Bard",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character35_skill_0_name",
+          "name": "Melodic Pulse"
+        },
+        {
+          "index": 1,
+          "key": "Character35_skill_1_name",
+          "name": "Resonant Symphony"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c35_skin0",
+          "name": "Bard"
+        },
+        {
+          "index": 1,
+          "key": "c35_skin1",
+          "name": "Feline Songstress Nefriti"
+        },
+        {
+          "index": 2,
+          "key": "c35_skin2",
+          "name": "诗"
+        },
+        {
+          "index": 3,
+          "key": "c35_skin3",
+          "name": "Bord"
+        },
+        {
+          "index": 4,
+          "key": "c35_skin4",
+          "name": "Cheerleader Clara"
+        },
+        {
+          "index": 5,
+          "key": "c35_skin5",
+          "name": "Bardybara"
+        },
+        {
+          "index": 6,
+          "key": "c35_skin6",
+          "name": "Maroonglow Maplelyn"
+        },
+        {
+          "index": 7,
+          "key": "c35_skin7",
+          "name": "Purgatory Pyrelia"
+        },
+        {
+          "index": 8,
+          "key": "c35_skin8",
+          "name": "日□rd"
+        },
+        {
+          "index": 9,
+          "key": "c35_skin9",
+          "name": "Calliope, Muse of Epic Poetry"
+        },
+        {
+          "index": 10,
+          "key": "c35_skin10",
+          "name": "Forest Melody"
+        },
+        {
+          "index": 11,
+          "key": "c35_skin11",
+          "name": "Zhuluan the Threadweaver"
+        }
+      ]
+    },
+    {
+      "index": 36,
+      "code": "Shooter",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character36_skill_0_name",
+          "name": "Marksman's Mastery"
+        },
+        {
+          "index": 1,
+          "key": "Character36_skill_1_name",
+          "name": "Deadeye Domain"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c36_skin0",
+          "name": "Gunner"
+        },
+        {
+          "index": 1,
+          "key": "c36_skin1",
+          "name": "Renegade Lucian"
+        },
+        {
+          "index": 2,
+          "key": "c36_skin2",
+          "name": "手"
+        },
+        {
+          "index": 3,
+          "key": "c36_skin3",
+          "name": "Gonner"
+        },
+        {
+          "index": 4,
+          "key": "c36_skin4",
+          "name": "Gunnybara"
+        },
+        {
+          "index": 5,
+          "key": "c36_skin5",
+          "name": "Theophil the Bishop"
+        },
+        {
+          "index": 6,
+          "key": "c36_skin6",
+          "name": "Sharpshooter Syrus"
+        },
+        {
+          "index": 7,
+          "key": "c36_skin7",
+          "name": "Blackout"
+        },
+        {
+          "index": 8,
+          "key": "c36_skin8",
+          "name": "Jackdaw"
+        },
+        {
+          "index": 9,
+          "key": "c36_skin9",
+          "name": "G□nn□r"
+        }
+      ]
+    },
+    {
+      "index": 37,
+      "code": "AiGirl",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character37_skill_0_name",
+          "name": "Iridescent Resonance"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c37_skin0",
+          "name": "Machina"
+        },
+        {
+          "index": 1,
+          "key": "c37_skin1",
+          "name": "Hexagon"
+        },
+        {
+          "index": 2,
+          "key": "c37_skin2",
+          "name": "Lostpearl Lazura"
+        },
+        {
+          "index": 3,
+          "key": "c37_skin3",
+          "name": "Mochino"
+        },
+        {
+          "index": 4,
+          "key": "c37_skin4",
+          "name": "Machybara"
+        },
+        {
+          "index": 5,
+          "key": "c37_skin5",
+          "name": "Caissa the Queen"
+        },
+        {
+          "index": 6,
+          "key": "c37_skin6",
+          "name": "Rustbud Vita"
+        },
+        {
+          "index": 7,
+          "key": "c37_skin7",
+          "name": "M□chin□"
+        },
+        {
+          "index": 8,
+          "key": "c37_skin8",
+          "name": "Cryptidist Curiosa"
+        },
+        {
+          "index": 9,
+          "key": "c37_skin9",
+          "name": "Sparking Gemini"
+        }
+      ]
+    },
+    {
+      "index": 38,
+      "code": "Captain",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character38_skill_0_name",
+          "name": "Barrel Blowout"
+        },
+        {
+          "index": 1,
+          "key": "Character38_skill_1_name",
+          "name": "Onward, Wavecutter!"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c38_skin0",
+          "name": "Captain"
+        },
+        {
+          "index": 1,
+          "key": "c38_skin1",
+          "name": "Dreadwake Stryke"
+        },
+        {
+          "index": 2,
+          "key": "c38_skin2",
+          "name": "Coptain"
+        },
+        {
+          "index": 3,
+          "key": "c38_skin3",
+          "name": "Deepsea 001"
+        },
+        {
+          "index": 4,
+          "key": "c38_skin4",
+          "name": "Captybara"
+        },
+        {
+          "index": 5,
+          "key": "c38_skin5",
+          "name": "Diver Dave"
+        },
+        {
+          "index": 6,
+          "key": "c38_skin6",
+          "name": "Vector"
+        },
+        {
+          "index": 7,
+          "key": "c38_skin7",
+          "name": "Iron Pirate King Level Skin"
+        },
+        {
+          "index": 8,
+          "key": "c38_skin8",
+          "name": "Apatite"
+        },
+        {
+          "index": 9,
+          "key": "c38_skin9",
+          "name": "Cutlass & Flintlock"
+        },
+        {
+          "index": 10,
+          "key": "c38_skin10",
+          "name": "C□ptain"
+        },
+        {
+          "index": 11,
+          "key": "c38_skin11",
+          "name": "Lightrack Leon"
+        },
+        {
+          "index": 12,
+          "key": "c38_skin12",
+          "name": "Odysseus"
+        }
+      ]
+    },
+    {
+      "index": 39,
+      "code": "YinYang",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character39_skill_0_name",
+          "name": "Duskbell Talisman / Dawnflare Fist"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c39_skin0",
+          "name": "Yin-Yang Adept"
+        },
+        {
+          "index": 1,
+          "key": "c39_skin1",
+          "name": "Draconess Glacinder"
+        },
+        {
+          "index": 2,
+          "key": "c39_skin2",
+          "name": "Yon-Yong Adept"
+        },
+        {
+          "index": 3,
+          "key": "c39_skin3",
+          "name": "Persephone, Goddess of Spring"
+        },
+        {
+          "index": 4,
+          "key": "c39_skin4",
+          "name": "Yin & Yang"
+        },
+        {
+          "index": 5,
+          "key": "c39_skin5",
+          "name": "Y□n-Y□ng Ad□pt"
+        }
+      ]
+    },
+    {
+      "index": 40,
+      "code": "GunsExpert",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character40_skill_0_name",
+          "name": "Call to Arms"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c40_skin0",
+          "name": "Arms Expert"
+        },
+        {
+          "index": 1,
+          "key": "c40_skin1",
+          "name": "Dollkeeper Perly"
+        },
+        {
+          "index": 2,
+          "key": "c40_skin2",
+          "name": "Orms Oxpert"
+        },
+        {
+          "index": 3,
+          "key": "c40_skin3",
+          "name": "Armament Array: Scintilla"
+        },
+        {
+          "index": 4,
+          "key": "c40_skin4",
+          "name": "Arms-041"
+        },
+        {
+          "index": 5,
+          "key": "c40_skin5",
+          "name": "A□ms Exp□rt"
+        },
+        {
+          "index": 6,
+          "key": "c40_skin6",
+          "name": "C41 Blazon"
+        }
+      ]
+    },
+    {
+      "index": 41,
+      "code": "LadyChef",
+      "skills": [
+        {
+          "index": 0,
+          "key": "Character41_skill_0_name",
+          "name": "Mystic Stewpot"
+        }
+      ],
+      "skins": [
+        {
+          "index": 0,
+          "key": "c41_skin0",
+          "name": "Lady Chef"
+        },
+        {
+          "index": 1,
+          "key": "c41_skin1",
+          "name": "Spatula"
+        },
+        {
+          "index": 2,
+          "key": "c41_skin2",
+          "name": "Fuchsia"
+        },
+        {
+          "index": 3,
+          "key": "c41_skin3",
+          "name": "L□dy Ch□f"
+        }
+      ]
+    }
+  ]
+}

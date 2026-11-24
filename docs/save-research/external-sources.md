@@ -7,6 +7,8 @@
 | Wiki pública | [Sitio](https://bweab.id.vn/wiki.html#/) · [Implementación fijada](https://github.com/aznoobnam/skdfe/blob/57b9b86335c080caca55e178c8409cb67658ccf6/wiki.html) | El sitio HTTP 200 descarga el `wiki.html` de `main` en GitHub y reemplaza el documento. El análisis se fijó al commit de SKDFE. |
 | SK-Under | [Fase 5.6](../research/phase5-6/README.md), [6.1](../research/phase6-1/client-validation.md) y [6.11](../research/phase6-11/README.md) | Comparaciones propias de Android Global 8.6.0, 8.8.0 y hotfix 8.8.0.11. |
 
+La fase 6.12 conserva una extracción saneada en [catalogs/characters-880.json](catalogs/characters-880.json): 42 códigos ordenados, 105 habilidades y 802 skins, sin valores de cuenta ni estados de posesión. Procede de `char_code_name.json` y `needed_data.json` del commit fijado. El archivo permite resolver índices y nombres; no se usa para decidir desbloqueos ni para escribir un guardado.
+
 Se clonó SKDFE fuera de SK-Under y se inspeccionaron sus archivos como texto. El árbol de ese commit carece de un archivo de licencia o aviso de copia y su README solo identifica el proyecto. Esta fase usa los datos como referencia y conserva los enlaces, el commit y los resultados de verificaciones propias.
 
 ## Inventario reproducido

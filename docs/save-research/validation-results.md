@@ -1,4 +1,4 @@
-# Validación de la fase 6.11.1
+# Validación de las fases 6.11.1 y 6.12
 
 ## Regresión reproducida
 
@@ -12,8 +12,8 @@ La confirmación reproduce el plan a partir del original y comprueba los bytes d
 
 | Alcance | Comprobación | Resultado local |
 | --- | --- | --- |
-| Backend, unitarias e integración HTTP con proveedores falsos | Rangos, valores positivos y negativos de variación, dependencias ausentes, tipos, versiones, confirmaciones simultáneas, huella y cambios de partida entre operaciones, restauración antigua y actual, aislamiento de cuentas y cifrado. | **472 aprobadas** en toda la suite con muestras privadas. |
-| Archivos y respuesta auténticos archivados | Exportación y reapertura 8.6.0 / 8.8.0, copia de nube y archivo restaurado, respuesta de red archivada y decodificación. | Incluidas en las 472. La respuesta archivada se reproduce localmente. |
+| Backend, unitarias e integración HTTP con proveedores falsos | Rangos, valores positivos y negativos de variación, dependencias ausentes, tipos, versiones, confirmaciones simultáneas, huella y cambios de partida entre operaciones, restauración antigua y actual, aislamiento de cuentas y cifrado. Incluye las pruebas nuevas de análisis estructural. | **482 aprobadas** en toda la suite con muestras privadas. |
+| Archivos y respuesta auténticos archivados | Exportación y reapertura 8.6.0 / 8.8.0, copia de nube y archivo restaurado, respuesta de red archivada y decodificación. | Incluidas en las 482. La respuesta archivada se reproduce localmente. |
 | Frontend | `npm run build` y Playwright en Chromium con API simulada. Confirmación de la vista previa y mensajes diferenciados. | Compilación aprobada, **33 aprobadas**. |
 
 ```bash
@@ -34,6 +34,14 @@ npm run test:browser
 ```
 
 `CIPHER_ENV` apunta al archivo privado del códec. Las otras variables son rutas a archivos de laboratorio. `CAPTURED_RESPONSE` apunta a una respuesta exitosa de 5.9 con 1.000 gemas. En el laboratorio se utilizó `linux-response-2.bin`. Sin esas variables, pytest excluye deliberadamente los casos privados.
+
+## Fase 6.12
+
+La suite completa con las muestras privadas terminó con **482 pruebas aprobadas**. Diez de ellas son nuevas y cubren `backend/app/save_analysis.py`: distinción entre `bool` e `int`, agregación de formas con listas, ausencia de muestras por defecto, lectura de rutas, diferencias por índice, cambios de tipo, prefijos ignorados, separación de contadores de fichas y cruce de catálogo de personajes. La compilación de `app` terminó sin errores. El frontend compiló con `tsc --noEmit` y Vite, y las **33 pruebas de Chromium** siguieron aprobadas.
+
+La CLI `docs/research/phase6-12/tools/analyze_save.py` se ejecutó sobre el agregado 8.8.0, las secciones locales 8.6.0, el perfil local 8.8.0 y capturas tar de 6.11. Inventarió secciones, buscó campos, comparó dos capturas e imprimió informes de fichas y personajes. Las pruebas con `head` produjeron un cierre de tubería esperado y no un fallo del analizador. No se añadió ninguna ruta de escritura, confirmación ni control de edición.
+
+El registro se validó como JSON y conserva 65 entradas con nombres únicos. Las pruebas privadas se habilitaron con las rutas de laboratorio descritas abajo; el repositorio no contiene esas rutas, valores de cuenta ni capturas.
 
 ## ChillyRoom y cliente oficial
 

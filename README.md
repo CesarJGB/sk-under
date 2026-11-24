@@ -1,6 +1,6 @@
 # sk-under
 
-**Soul Knight Editor · Fase 6.9**
+**Soul Knight Editor · Fase 6.12**
 
 Editor web privado para inspeccionar copias locales y, con autorización expresa, autenticar una cuenta propia de ChillyRoom y editar sus gemas desde el navegador. La muestra sintética `.skdemo` permite edición y exportación. El adaptador opcional de la Fase 3 lee nueve estructuras `.data` observadas en muestras de Soul Knight 8.6.0 y permite descargar copias intactas. [Configuración y cobertura de la Fase 3](docs/phase3/IMPLEMENTATION.md)
 
@@ -35,6 +35,10 @@ La [Fase 6.7](docs/research/phase6-7/README.md) obtuvo una sesión nueva desde L
 La [Fase 6.8](docs/research/phase6-8/README.md) (rama `feature/phase6-8-web-native-auth`, commit `f87d63f`) integra ese cliente en el backend y añade acceso web con sesiones aisladas por cuenta: formulario con distribución, correo y contraseña; verificación de identidad; perfiles de instalación cifrados; descarga, edición, respaldo y verificación de gemas. Solo Android Global está habilitada; las demás distribuciones aparecen deshabilitadas. La escritura sigue apagada por defecto.
 
 La [Fase 6.9](docs/research/phase6-9/README.md) elimina el aprovisionamiento manual del flujo normal. El backend consulta el portal oficial de cuentas, recupera el distro del jugador de Soul Knight, genera un código de instalación nuevo, lo cifra y lo conserva, y descarga la partida con una sesión aislada. La prueba real con la cuenta de laboratorio completó portal → login → descarga de 114.779 bytes con 99.999 gemas → edición y respaldo cifrado → reinicio del proceso → descarga y re-login. Las tres cuentas facilitadas no autenticaron con la contraseña indicada (rechazo del gateway y del portal); la validación multicuenta queda pendiente de esas credenciales. También se añadieron cifrado de respaldos en reposo, CSP, límite de intentos atómico, IP real tras proxies confiables y sesiones persistentes. [Identificadores](docs/research/phase6-9/identifiers.md) · [Experimentos](docs/research/phase6-9/experiments.md) · [Seguridad](docs/research/phase6-9/security.md) · [Despliegue](docs/research/phase6-9/deployment.md)
+
+La [Fase 6.11](docs/research/phase6-11/README.md) documentó la conciliación de gemas del cliente 8.8.0, las transacciones legítimas del tutorial y la recuperación de una copia editada. La corrección de 6.11.1 bloquea las escrituras de un solo campo que romperían `gems = lastGems + varGems` y conserva la preparación coherente y la restauración de respaldos.
+
+La [Fase 6.12](docs/research/phase6-12/README.md) inventarió todas las secciones del agregado de nube y las familias de archivos locales, añadió un módulo y una CLI de análisis estructural de solo lectura, y amplió el [registro de campos](docs/save-research/field-registry.json) a 65 entradas. La investigación cubre la representación de las fichas de pesca, el cruce de los 42 personajes, 105 habilidades y 802 skins, los recursos de inventario y las dependencias entre archivos. El catálogo saneado de personajes se usa solo para resolver nombres. Las fichas de pesca, los estados de compra y los desbloqueos permanecen de solo lectura.
 
 ## Arquitectura
 
