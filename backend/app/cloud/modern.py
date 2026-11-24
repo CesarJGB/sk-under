@@ -22,7 +22,8 @@ from typing import Callable
 from ..cloud_save import MAX_INPUT_BYTES, MAX_JSON_BYTES, CloudSaveError, CopyLimitError, reconstruct_cloud_save
 from ..parsers.json_document import parse_json
 from .blob_wire import DOWNLOAD_URL, build_blob_headers, is_credential
-from .provider import (AcquiredCloudSave, CloudProviderProtocolError,
+from .provider import (AcquiredCloudSave, CloudProviderDeviceBindingThrottled,
+                       CloudProviderDeviceRejected, CloudProviderProtocolError,
                        CloudProviderUnauthenticated, CloudProviderUnavailable, CloudSaveMetadata)
 
 URL = DOWNLOAD_URL
@@ -76,6 +77,53 @@ def _decode_response(body: bytes, encoding: str) -> bytes:
     return result
 
 
+def _raise_remote_error(status: int, wire: bytes, encoding: str) -> None:
+    """Traduce el error del servicio sin conservar su cuerpo ni sus mensajes.
+
+    BlobSave devuelve JSON con ``error`` y ``errordetails``. El código
+    ``100509`` indica que la cuenta ya vinculó un dispositivo nuevo hace poco;
+    el campo ``bindDeviceWaitSeconds`` o ``timeWait`` fija la espera. No se
+    reintenta y no se expone el texto remoto, que puede contener datos.
+    """
+
+    try:
+        document = _decode_response(wire, encoding)
+    except CloudSaveError:
+        document = b''
+    error_code: int | None = None
+    details: dict[str, object] = {}
+    if document:
+        try:
+            parsed = parse_json(document)
+        except (ValueError, RecursionError):
+            parsed = None
+        if isinstance(parsed, dict):
+            candidate = parsed.get('error', parsed.get('errorCode'))
+            if type(candidate) is int:
+                error_code = candidate
+            raw_details = parsed.get('errordetails', parsed.get('errorDetails'))
+            if isinstance(raw_details, dict):
+                details = raw_details
+    if error_code == 100509:
+        wait: int | None = None
+        for key in ('bindDeviceWaitSeconds', 'timeWait', 'waitSeconds'):
+            value = details.get(key)
+            if type(value) is int:
+                wait = value
+                break
+            if isinstance(value, str) and value.isascii() and value.isdigit():
+                wait = int(value)
+                break
+        raise CloudProviderDeviceBindingThrottled(wait or 86400)
+    if error_code == 100505:
+        raise CloudProviderDeviceRejected(
+            'El servicio rechazó el identificador de instalación generado.'
+        )
+    raise CloudProviderUnavailable(
+        f'El servicio respondió con estado {status}.', provider_code=error_code
+    )
+
+
 @dataclass(frozen=True)
 class ModernCloudSaveProvider:
     """Proveedor optativo para el contrato observado en la cuenta de laboratorio."""
@@ -106,7 +154,7 @@ class ModernCloudSaveProvider:
         if status in (401, 403):
             raise CloudProviderUnauthenticated('El servicio rechazó la sesión.')
         if status != 200:
-            raise CloudProviderUnavailable(f'El servicio respondió con estado {status}.')
+            _raise_remote_error(status, wire, encoding)
         document = _decode_response(wire, encoding)
         try:
             envelope = parse_json(document)

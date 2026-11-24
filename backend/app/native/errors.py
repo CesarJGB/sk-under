@@ -129,6 +129,47 @@ class NativeLoginThrottled(NativeError):
         self.retry_after = retry_after
 
 
+class NativePortalRejected(NativeError):
+    code = "native_portal_rejected"
+    status = 401
+
+
+class NativePortalIdentityMismatch(NativeError):
+    code = "native_portal_identity_mismatch"
+    status = 409
+
+
+class NativePortalChallengeRequired(NativeError):
+    code = "native_portal_challenge_required"
+    status = 409
+
+
+class NativePortalUnavailable(NativeError):
+    code = "native_portal_unavailable"
+    status = 502
+
+
+class NativeNoCloudSave(NativeError):
+    code = "native_no_cloud_save"
+    status = 404
+
+
+class NativeDeviceBindingThrottled(NativeError):
+    """La cuenta está en espera para vincular un dispositivo nuevo.
+
+    No es un fallo de credenciales ni de la instalación: el proveedor limita
+    cuántas instalaciones nuevas se vinculan en una ventana. El par generado
+    se conserva y se reutiliza; no se regenera para saltar la espera.
+    """
+
+    code = "native_device_binding_throttled"
+    status = 429
+
+    def __init__(self, message: str, *, retry_after: int) -> None:
+        self.retry_after = max(60, min(int(retry_after), 7 * 86400))
+        super().__init__(message)
+
+
 class NativeWriteDisabled(NativeError):
     code = "native_write_disabled"
     status = 503

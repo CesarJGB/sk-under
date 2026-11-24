@@ -44,6 +44,27 @@ _COOKIE = re.compile(r"^[A-Za-z0-9_-]{43}$")
 _PROFILE = re.compile(r"^[0-9a-f]{32}$")
 _DISTRO = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
 _SUBJECT = re.compile(r"^[0-9a-f]{64}$")
+_EMAIL_HASH = re.compile(r"^[0-9a-f]{64}$")
+_ATTEMPT_OUTCOMES = frozenset(
+    {
+        "ok",
+        "pending",
+        "native_credentials_rejected",
+        "native_identity_mismatch",
+        "native_profile_identity_mismatch",
+        "native_distribution_rejected",
+        "native_auth_unavailable",
+        "native_auth_protocol",
+        "native_login_throttled",
+        "native_session_rejected",
+        "native_installation_invalid",
+        "native_device_binding_throttled",
+        "native_save_identity_mismatch",
+        "native_profile_invalid",
+        "native_profile_not_found",
+        "other",
+    }
+)
 
 
 def _credential(value: object) -> bool:
@@ -63,6 +84,10 @@ class Profile:
     allow_write: bool
     created_at: int
     bound_at: int | None
+    email_hash: str | None = field(default=None, repr=False)
+    auto_generated: bool = False
+    binding_wait_until: int | None = None
+    last_save_error: str | None = None
 
     @property
     def installation_ready(self) -> bool:
@@ -72,6 +97,10 @@ class Profile:
     def bound(self) -> bool:
         return self.subject is not None
 
+    @property
+    def binding_pending(self) -> bool:
+        return self.binding_wait_until is not None
+
     def public(self) -> dict[str, object]:
         return {
             "id": self.id,
@@ -80,6 +109,10 @@ class Profile:
             "installation_ready": self.installation_ready,
             "bound": self.bound,
             "write_allowed": self.allow_write,
+            "auto_generated": self.auto_generated,
+            "binding_pending": self.binding_pending,
+            "binding_wait_until": self.binding_wait_until,
+            "last_save_error": self.last_save_error,
         }
 
 
@@ -156,6 +189,10 @@ class NativeStore:
                         allow_write INTEGER NOT NULL DEFAULT 0,
                         created_at INTEGER NOT NULL,
                         bound_at INTEGER,
+                        email_hash TEXT,
+                        auto_generated INTEGER NOT NULL DEFAULT 0,
+                        binding_wait_until INTEGER,
+                        last_save_error TEXT,
                         UNIQUE (label, distribution)
                     );
                     CREATE UNIQUE INDEX IF NOT EXISTS profiles_subject
@@ -201,6 +238,11 @@ class NativeStore:
                     );
                     """
                 )
+                self._migrate_profiles(db)
+                db.execute(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS profiles_email "
+                    "ON profiles(email_hash, distribution) WHERE email_hash IS NOT NULL"
+                )
                 verifier = hmac_new(self.key, b"sk-under/native-store", sha256).digest()
                 db.execute("INSERT OR IGNORE INTO encryption VALUES (1, ?)", (verifier,))
                 saved = db.execute("SELECT verifier FROM encryption WHERE id = 1").fetchone()
@@ -214,6 +256,28 @@ class NativeStore:
             raise NativeStoreUnavailable(
                 "El servidor no puede abrir el almacén privado de sesiones nativas."
             ) from None
+
+    @staticmethod
+    def _migrate_profiles(db: sqlite3.Connection) -> None:
+        """Añade las columnas de la Fase 6.9 a un almacén de la Fase 6.8.
+
+        ``CREATE TABLE IF NOT EXISTS`` no modifica una tabla existente. La
+        migración es idempotente y solo añade columnas; no reescribe perfiles,
+        sesiones ni identificadores cifrados.
+        """
+
+        columns = {
+            row["name"] for row in db.execute("PRAGMA table_info(profiles)").fetchall()
+        }
+        additions = (
+            ("email_hash", "TEXT"),
+            ("auto_generated", "INTEGER NOT NULL DEFAULT 0"),
+            ("binding_wait_until", "INTEGER"),
+            ("last_save_error", "TEXT"),
+        )
+        for name, declaration in additions:
+            if name not in columns:
+                db.execute(f"ALTER TABLE profiles ADD COLUMN {name} {declaration}")
 
     def connect(self) -> sqlite3.Connection:
         db = sqlite3.connect(self.database.as_uri() + "?mode=rw", uri=True, timeout=5)
@@ -299,6 +363,10 @@ class NativeStore:
             allow_write=bool(row["allow_write"]),
             created_at=row["created_at"],
             bound_at=row["bound_at"],
+            email_hash=row["email_hash"],
+            auto_generated=bool(row["auto_generated"]),
+            binding_wait_until=row["binding_wait_until"],
+            last_save_error=row["last_save_error"],
         )
 
     def create_profile(
@@ -309,6 +377,8 @@ class NativeStore:
         distro_id: str,
         unique_id: str | None = None,
         allow_write: bool = False,
+        email_hash: str | None = None,
+        auto_generated: bool = False,
     ) -> Profile:
         label = label.strip() if isinstance(label, str) else ""
         if not 1 <= len(label) <= 80 or not label.isprintable():
@@ -322,18 +392,41 @@ class NativeStore:
             raise NativeInstallationInvalid("El identificador de distribución no tiene un formato válido.")
         if unique_id is not None and not _credential(unique_id):
             raise NativeInstallationInvalid("El identificador de instalación no tiene un formato válido.")
+        if email_hash is not None and not _EMAIL_HASH.fullmatch(email_hash):
+            raise NativeProfileInvalid("El hash de correo del perfil no es válido.")
+        if not isinstance(auto_generated, bool):
+            raise NativeProfileInvalid("El indicador de perfil automático no es válido.")
         profile_id = uuid4().hex
         sealed = self._seal("profile:" + profile_id, {"distro": distro_id, "unique": unique_id})
         try:
             with closing(self.connect()) as db, db:
                 db.execute(
-                    "INSERT INTO profiles (id, label, distribution, sealed, subject, allow_write, created_at) "
-                    "VALUES (?, ?, ?, ?, NULL, ?, ?)",
-                    (profile_id, label, distribution.id, sealed, int(bool(allow_write)), int(self.now())),
+                    "INSERT INTO profiles (id, label, distribution, sealed, subject, allow_write, created_at, "
+                    "email_hash, auto_generated) VALUES (?, ?, ?, ?, NULL, ?, ?, ?, ?)",
+                    (
+                        profile_id, label, distribution.id, sealed, int(bool(allow_write)),
+                        int(self.now()), email_hash, int(auto_generated),
+                    ),
                 )
         except sqlite3.IntegrityError:
+            if email_hash is not None:
+                raise NativeProfileIdentityMismatch(
+                    "Esta cuenta ya tiene un perfil de instalación en esta distribución."
+                ) from None
             raise NativeProfileExists("Ya existe un perfil con esa etiqueta para la distribución.") from None
         return self.profile(profile_id)
+
+    def profile_by_email_hash(self, email_hash: str, distribution_id: str) -> Profile | None:
+        if not isinstance(email_hash, str) or not _EMAIL_HASH.fullmatch(email_hash):
+            raise NativeProfileInvalid("El hash de correo del perfil no es válido.")
+        if not isinstance(distribution_id, str) or not distribution_id:
+            raise NativeProfileInvalid("La distribución del perfil no es válida.")
+        with closing(self.connect()) as db:
+            row = db.execute(
+                "SELECT * FROM profiles WHERE email_hash = ? AND distribution = ?",
+                (email_hash, distribution_id),
+            ).fetchone()
+        return self._profile(row) if row else None
 
     def profile(self, profile_id: str) -> Profile:
         if not isinstance(profile_id, str) or not _PROFILE.fullmatch(profile_id):
@@ -363,19 +456,30 @@ class NativeStore:
                 ).fetchall()
         return [self._profile(row) for row in rows]
 
-    def bind(self, profile_id: str, subject: str) -> Profile:
+    def bind(self, profile_id: str, subject: str, *, email_hash: str | None = None) -> Profile:
         if not isinstance(subject, str) or not _SUBJECT.fullmatch(subject):
             raise NativeStoreMisconfigured("La identidad derivada no es válida.")
+        if email_hash is not None and not _EMAIL_HASH.fullmatch(email_hash):
+            raise NativeProfileInvalid("El hash de correo del perfil no es válido.")
         with closing(self.connect()) as db, db:
             db.execute("BEGIN IMMEDIATE")
             row = db.execute("SELECT * FROM profiles WHERE id = ?", (profile_id,)).fetchone()
             if row is None:
                 raise NativeProfileNotFound("El perfil de instalación no existe.")
+            stored_email = row["email_hash"]
+            if stored_email is not None and email_hash is not None and not compare_digest(
+                stored_email, email_hash
+            ):
+                raise NativeProfileIdentityMismatch(
+                    "Este perfil de instalación ya está vinculado a otra cuenta. "
+                    "No se reutilizan identificadores entre cuentas."
+                )
             if row["subject"] is None:
                 try:
                     db.execute(
-                        "UPDATE profiles SET subject = ?, bound_at = ? WHERE id = ? AND subject IS NULL",
-                        (subject, int(self.now()), profile_id),
+                        "UPDATE profiles SET subject = ?, bound_at = ?, "
+                        "email_hash = COALESCE(email_hash, ?) WHERE id = ? AND subject IS NULL",
+                        (subject, int(self.now()), email_hash, profile_id),
                     )
                 except sqlite3.IntegrityError:
                     raise NativeProfileIdentityMismatch(
@@ -388,6 +492,51 @@ class NativeStore:
                     "No se reutilizan identificadores entre cuentas."
                 )
         return self._profile(row)
+
+    def set_binding_wait(self, profile_id: str, until: int, code: str) -> Profile:
+        if type(until) is not int or until <= int(self.now()):
+            raise NativeProfileInvalid("La espera de vinculación no es válida.")
+        if not isinstance(code, str) or not code or len(code) > 64:
+            raise NativeProfileInvalid("El código de vinculación no es válido.")
+        with closing(self.connect()) as db, db:
+            db.execute(
+                "UPDATE profiles SET binding_wait_until = ?, last_save_error = ? WHERE id = ?",
+                (until, code, profile_id),
+            )
+            row = db.execute("SELECT * FROM profiles WHERE id = ?", (profile_id,)).fetchone()
+        if row is None:
+            raise NativeProfileNotFound("El perfil de instalación no existe.")
+        return self._profile(row)
+
+    def clear_binding_wait(self, profile_id: str) -> Profile:
+        with closing(self.connect()) as db, db:
+            db.execute(
+                "UPDATE profiles SET binding_wait_until = NULL, last_save_error = NULL WHERE id = ?",
+                (profile_id,),
+            )
+            row = db.execute("SELECT * FROM profiles WHERE id = ?", (profile_id,)).fetchone()
+        if row is None:
+            raise NativeProfileNotFound("El perfil de instalación no existe.")
+        return self._profile(row)
+
+    def set_save_error(self, profile_id: str, code: str | None) -> Profile:
+        if code is not None and (not isinstance(code, str) or not code or len(code) > 64):
+            raise NativeProfileInvalid("El código de guardado no es válido.")
+        with closing(self.connect()) as db, db:
+            db.execute("UPDATE profiles SET last_save_error = ? WHERE id = ?", (code, profile_id))
+            row = db.execute("SELECT * FROM profiles WHERE id = ?", (profile_id,)).fetchone()
+        if row is None:
+            raise NativeProfileNotFound("El perfil de instalación no existe.")
+        return self._profile(row)
+
+    def delete_unbound_profile(self, profile_id: str) -> None:
+        """Elimina un perfil automático que no llegó a vincularse a una cuenta."""
+
+        with closing(self.connect()) as db, db:
+            db.execute(
+                "DELETE FROM profiles WHERE id = ? AND subject IS NULL AND auto_generated = 1",
+                (profile_id,),
+            )
 
     def set_installation(self, profile_id: str, unique_id: str, subject: str) -> Profile:
         if not _credential(unique_id):
@@ -511,7 +660,61 @@ class NativeStore:
 
     # Límite de intentos -----------------------------------------------------
 
+    def reserve_login_attempt(self, ip_hash: str, email_hash: str) -> int:
+        """Reserva un intento antes de autenticar, de forma atómica.
+
+        La comprobación y la inserción ocurren en la misma transacción
+        ``BEGIN IMMEDIATE``. Un intento en curso cuenta como no exitoso, de
+        modo que dos solicitudes concurrentes no pueden superar el límite
+        leyendo un contador obsoleto.
+        """
+
+        if not _SUBJECT.fullmatch(ip_hash) or not _SUBJECT.fullmatch(email_hash):
+            raise NativeStoreMisconfigured("La clave del límite de intentos no es válida.")
+        now = int(self.now())
+        window_start = now - self.login_window_seconds
+        with closing(self.connect()) as db, db:
+            db.execute("BEGIN IMMEDIATE")
+            db.execute("DELETE FROM attempts WHERE at < ?", (now - 86400,))
+            ip_row = db.execute(
+                "SELECT COUNT(*) AS total, MIN(at) AS oldest FROM attempts "
+                "WHERE ip_hash = ? AND at >= ? AND outcome != 'ok'",
+                (ip_hash, window_start),
+            ).fetchone()
+            email_row = db.execute(
+                "SELECT COUNT(*) AS total, MIN(at) AS oldest FROM attempts "
+                "WHERE email_hash = ? AND at >= ? AND outcome != 'ok'",
+                (email_hash, window_start),
+            ).fetchone()
+            limit = max(int(ip_row["total"]), int(email_row["total"]))
+            if limit >= self.login_attempts:
+                oldest = min(
+                    value for value in (ip_row["oldest"], email_row["oldest"]) if value is not None
+                )
+                retry_after = max(1, int(oldest) + self.login_window_seconds - now)
+                raise NativeLoginThrottled(
+                    "Demasiados intentos de acceso en esta ventana. Espera antes de reintentar.",
+                    retry_after=retry_after,
+                )
+            cursor = db.execute(
+                "INSERT INTO attempts (at, ip_hash, email_hash, outcome) VALUES (?, ?, ?, 'pending')",
+                (now, ip_hash, email_hash),
+            )
+            return int(cursor.lastrowid)
+
+    def finish_login_attempt(self, attempt_id: int, outcome: str) -> None:
+        if type(attempt_id) is not int or attempt_id <= 0:
+            return
+        safe_outcome = outcome if outcome in _ATTEMPT_OUTCOMES else "other"
+        with closing(self.connect()) as db, db:
+            db.execute(
+                "UPDATE attempts SET outcome = ? WHERE id = ?",
+                (safe_outcome, attempt_id),
+            )
+
     def check_login_rate(self, ip_hash: str, email_hash: str) -> None:
+        """Comprobación de solo lectura; el servicio usa la reserva atómica."""
+
         now = int(self.now())
         window_start = now - self.login_window_seconds
         with closing(self.connect()) as db, db:
@@ -539,16 +742,33 @@ class NativeStore:
                 )
 
     def record_attempt(self, ip_hash: str, email_hash: str, outcome: str) -> None:
-        safe_outcome = outcome if outcome in {
-            "ok", "native_credentials_rejected", "native_identity_mismatch",
-            "native_profile_identity_mismatch", "native_distribution_rejected",
-            "native_auth_unavailable", "native_auth_protocol", "native_login_throttled",
-            "native_session_rejected", "native_installation_invalid",
-        } else "other"
+        """Registra un intento ya resuelto (compatibilidad y diagnóstico)."""
+
+        safe_outcome = outcome if outcome in _ATTEMPT_OUTCOMES else "other"
         with closing(self.connect()) as db, db:
             db.execute(
                 "INSERT INTO attempts (at, ip_hash, email_hash, outcome) VALUES (?, ?, ?, ?)",
                 (int(self.now()), ip_hash, email_hash, safe_outcome),
+            )
+
+    def cleanup(self, *, unbound_profile_age: int = 7 * 86400) -> None:
+        """Elimina sesiones caducadas, intentos viejos y perfiles no vinculados.
+
+        Se ejecuta al arrancar el servicio. No toca perfiles vinculados,
+        respaldos ni identificadores de instalación válidos.
+        """
+
+        now = int(self.now())
+        with closing(self.connect()) as db, db:
+            db.execute(
+                "DELETE FROM sessions WHERE session_expires <= ? OR revoked = 1",
+                (now - 86400,),
+            )
+            db.execute("DELETE FROM attempts WHERE at < ?", (now - 7 * 86400,))
+            db.execute(
+                "DELETE FROM profiles WHERE subject IS NULL AND auto_generated = 1 "
+                "AND created_at < ?",
+                (now - unbound_profile_age,),
             )
 
     # Identidad de guardado y auditoría -------------------------------------

@@ -49,9 +49,40 @@ class CloudProviderUnauthenticated(CloudProviderError):
 class CloudProviderUnavailable(CloudProviderError):
     code = "cloud_provider_unavailable"
 
+    def __init__(self, message: str, *, provider_code: int | None = None) -> None:
+        super().__init__(message)
+        self.provider_code = provider_code
+
 
 class CloudProviderProtocolError(CloudProviderError):
     code = "cloud_provider_protocol"
+
+
+class CloudProviderDeviceRejected(CloudProviderUnavailable):
+    """BlobSave rechazó el código de instalación presentado."""
+
+    code = "cloud_device_rejected"
+
+
+class CloudProviderDeviceBindingThrottled(CloudProviderUnavailable):
+    """El proveedor limita la vinculación de dispositivos nuevos.
+
+    ``retry_after`` son los segundos indicados por el servicio. No se reintenta
+    automáticamente: el perfil conserva la espera y el usuario decide cuándo
+    volver a comprobar.
+    """
+
+    code = "cloud_device_binding_throttled"
+
+    def __init__(self, retry_after: int, provider_code: int | None = 100509) -> None:
+        if isinstance(retry_after, bool) or not isinstance(retry_after, int):
+            retry_after = 86400
+        self.retry_after = max(60, min(retry_after, 7 * 86400))
+        super().__init__(
+            "El proveedor limita la vinculación de dispositivos nuevos para esta cuenta. "
+            "La identificación generada se conserva; vuelve a intentarlo cuando termine la espera.",
+            provider_code=provider_code,
+        )
 
 
 @dataclass(frozen=True)

@@ -176,17 +176,19 @@ def _as_text(value: object, name: str) -> str:
     return value
 
 
-def build_login_headers(distribution: Distribution) -> dict[str, str]:
+def build_login_headers(distribution: Distribution, unique_id: str | None = None) -> dict[str, str]:
     """Cabeceras observadas para Android Global 8.8.0.
 
-    ``x-unique-id`` no se envía en el login: la Fase 6.7 comprobó que no es
-    necesaria. ``x-distro-id`` sí es obligatoria y la valida el gateway.
+    La Fase 6.7 comprobó que ``x-unique-id`` no es obligatoria para el login;
+    el cliente oficial la envía. La Fase 6.9 la incluye cuando el perfil ya
+    tiene una identificación generada, porque el servicio de guardado vincula
+    ese código a la cuenta. ``x-distro-id`` sigue siendo obligatoria.
     """
     if not distribution.enabled or not distribution.validated or distribution.platform is None:
         from .errors import NativeDistributionDisabled
 
         raise NativeDistributionDisabled("La distribución no está validada.")
-    return {
+    headers = {
         "Content-Type": "application/json; charset=utf-8",
         "Accept": "application/json",
         "Accept-Encoding": "gzip",
@@ -199,6 +201,15 @@ def build_login_headers(distribution: Distribution) -> dict[str, str]:
         "x-game-lang": "en",
         "x-locale": "en_US",
     }
+    if unique_id is not None:
+        if not isinstance(unique_id, str) or not unique_id or len(unique_id) > 512 or any(
+            not 33 <= ord(char) <= 126 for char in unique_id
+        ):
+            from .errors import NativeInstallationInvalid
+
+            raise NativeInstallationInvalid("El identificador de instalación no es válido.")
+        headers["x-unique-id"] = unique_id
+    return headers
 
 
 def build_login_body(email: str, password: str) -> bytes:
@@ -244,11 +255,12 @@ class NativeAuthClient:
         *,
         distribution: Distribution,
         distro_id: str,
+        unique_id: str | None = None,
     ) -> GatewaySession:
         if not isinstance(distro_id, str) or not _DISTRO.fullmatch(distro_id):
             raise NativeDistributionRejected("El identificador de distribución no tiene un formato válido.")
         body = build_login_body(email, password)
-        headers = build_login_headers(distribution) | {"x-distro-id": distro_id}
+        headers = build_login_headers(distribution, unique_id) | {"x-distro-id": distro_id}
 
         try:
             status, encoding, raw = self.transport(LOGIN_URL, body, headers, self.timeout)

@@ -7,7 +7,13 @@ from pathlib import Path
 import pytest
 
 from app.cloud.modern import ModernCloudSaveProvider, URL, _fetch
-from app.cloud.provider import CloudProviderProtocolError, CloudProviderUnauthenticated, CloudProviderUnavailable
+from app.cloud.provider import (
+    CloudProviderDeviceBindingThrottled,
+    CloudProviderDeviceRejected,
+    CloudProviderProtocolError,
+    CloudProviderUnauthenticated,
+    CloudProviderUnavailable,
+)
 from app.cloud_save import CopyLimitError, reconstruct_cloud_save
 
 DOCUMENT = {'serialzedVersion': 1, 'cloudSaveId': 'synthetic-id', 'platformId': 'android',
@@ -113,3 +119,36 @@ def test_optional_private_service_response():
     save = reconstruct_cloud_save(acquired.payload)
     assert save.data.game_data.get('gems') == 1000
     assert len(json.loads(acquired.payload)) == 17
+
+
+def _error_provider(code, details=None, encoding='gzip'):
+    body = json.dumps({"error": code, "msg": "texto remoto privado", "errordetails": details or {}}).encode()
+    wire = gzip.compress(body, mtime=0) if encoding == 'gzip' else body
+    return provider(status=400, encoding=encoding, body=wire)
+
+
+def test_new_device_binding_limit_is_typed_and_keeps_wait():
+    p = _error_provider(100509, {"bindDeviceWaitSeconds": "81970", "timeWait": "81970"})
+    with pytest.raises(CloudProviderDeviceBindingThrottled) as error:
+        p.download()
+    assert error.value.retry_after == 81970
+    assert error.value.provider_code == 100509
+    assert 'texto remoto' not in str(error.value)
+
+
+def test_new_device_binding_limit_defaults_safely_without_details():
+    with pytest.raises(CloudProviderDeviceBindingThrottled) as error:
+        _error_provider(100509).download()
+    assert 60 <= error.value.retry_after <= 7 * 86400
+
+
+def test_invalid_device_code_is_typed_without_echoing_remote_text():
+    with pytest.raises(CloudProviderDeviceRejected) as error:
+        _error_provider(100505).download()
+    assert 'texto remoto' not in str(error.value)
+
+
+def test_other_blob_save_errors_do_not_expose_the_remote_body():
+    with pytest.raises(CloudProviderUnavailable) as error:
+        _error_provider(999999, encoding='').download()
+    assert 'texto remoto' not in str(error.value)

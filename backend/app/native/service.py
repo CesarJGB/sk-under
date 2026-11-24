@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import fcntl
 import os
+import threading
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
@@ -25,18 +26,30 @@ from ..cloud.gems_editor import MAX_GEMS, MIN_GEMS, read_gems
 from ..cloud.lab_service import CloudLabService
 from ..cloud.provider import (
     AcquiredCloudSave,
+    CloudProviderDeviceBindingThrottled,
     CloudProviderUnauthenticated,
+    CloudProviderUnavailable,
     CloudSaveMetadata,
 )
 from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError
 from ..settings import Settings
-from .client import NativeAuthClient
+from .client import (
+    GatewaySession,
+    NativeAuthClient,
+    NativeAuthRejected,
+    NativeDistributionRejected,
+)
 from .distributions import DISTRIBUTIONS, Distribution, get_distribution, require_enabled
 from .errors import (
+    NativeDeviceBindingThrottled,
     NativeError,
     NativeIdentityMismatch,
     NativeInstallationRequired,
     NativeMisconfigured,
+    NativeNoCloudSave,
+    NativePortalIdentityMismatch,
+    NativeProfileIdentityMismatch,
+    NativeProfileInvalid,
     NativeProfileMissing,
     NativeProfileNotFound,
     NativeProfileRequired,
@@ -46,6 +59,13 @@ from .errors import (
     NativeSessionRequired,
     NativeWriteDenied,
     NativeWriteDisabled,
+)
+from .portal import PortalClient, PortalPlayer
+from .identity import (
+    GeneratedIdentity,
+    generate_identity,
+    is_generated_distro,
+    is_generated_unique,
 )
 from .store import NativeSessionRecord, NativeStore, Profile
 
@@ -82,6 +102,19 @@ class LoginResult:
 
 
 @dataclass(frozen=True)
+class _Candidate:
+    """Resultado de probar un jugador del portal antes de crear el perfil."""
+
+    distro_id: str = field(repr=False)
+    unique_id: str = field(repr=False)
+    session: GatewaySession
+    subject: str = field(repr=False)
+    save: dict[str, object] | None
+    save_error: str | None
+    retry_after: int | None = None
+
+
+@dataclass(frozen=True)
 class NativeRuntime:
     service: "NativeAuthService | None"
     problem: NativeError | None
@@ -102,8 +135,15 @@ class NativeAuthService:
         uploader_factory: Callable[[str, str, str], object],
         min_gems: int = MIN_GEMS,
         max_gems: int = MAX_GEMS,
+        auto_identity: bool = True,
+        auto_allow_write: bool = False,
+        portal_client: PortalClient | None = None,
+        backup_key: bytes | None = None,
+        identity_factory: Callable[[], GeneratedIdentity] = generate_identity,
         now: Callable[[], float] = time,
     ) -> None:
+        if backup_key is not None and (not isinstance(backup_key, bytes) or len(backup_key) != 32):
+            raise ValueError("La clave de respaldos nativos no tiene 32 bytes.")
         self.store = store
         self.client = client
         self.origin = origin
@@ -114,6 +154,12 @@ class NativeAuthService:
         self.uploader_factory = uploader_factory
         self.min_gems = min_gems
         self.max_gems = max_gems
+        self.auto_identity = bool(auto_identity)
+        self.auto_allow_write = bool(auto_allow_write)
+        self.portal_client = portal_client
+        self._discovery_lock = threading.Lock()
+        self.backup_key = backup_key
+        self.identity_factory = identity_factory
         self.now = now
         self.cookie_name = "__Host-sk_native" if secure else "sk_native_dev"
 
@@ -127,15 +173,19 @@ class NativeAuthService:
                 for profile in self.store.list_profiles()
                 if get_distribution(profile.distribution).enabled
             ]
+        login_available = self.auto_identity or bool(profiles)
         return {
             "available": True,
             "configured": True,
-            "native_auth_ready": bool(profiles),
+            "native_auth_ready": login_available,
             "write_enabled": self.write_enabled,
             "secure": self.secure,
             "min_gems": self.min_gems,
             "max_gems": self.max_gems,
-            "login_available": bool(profiles),
+            "login_available": login_available,
+            "auto_identity": self.auto_identity,
+            "portal_enabled": self.portal_client is not None,
+            "requires_profile_selection": (not self.auto_identity and len(profiles) > 1),
             "profiles": profiles,
             "distributions": [distribution.public() for distribution in DISTRIBUTIONS],
             "session": self.session_state(cookie),
@@ -177,6 +227,9 @@ class NativeAuthService:
             "session_expires_at": _iso(expires_at),
             "idle_expires_at": _iso(idle_expires_at),
             "installation_ready": installation_ready,
+            "auto_identity": profile.auto_generated,
+            "binding_wait_until": _iso(profile.binding_wait_until) if profile.binding_wait_until else None,
+            "save_error": profile.last_save_error,
             "write_enabled": self.write_enabled,
             "write_ready": self.write_enabled and profile.allow_write and installation_ready,
             "min_gems": self.min_gems,
@@ -196,35 +249,60 @@ class NativeAuthService:
         existing_cookie: str = "",
     ) -> LoginResult:
         distribution = require_enabled(distribution_id)
-        profile = self._resolve_profile(distribution, profile_id)
         ip_hash = self.store.hash_ip(ip)
         email_hash = self.store.hash_email(email)
-        self.store.check_login_rate(ip_hash, email_hash)
+        attempt_id = self.store.reserve_login_attempt(ip_hash, email_hash)
 
+        profile: Profile | None = None
+        created = False
         outcome = "other"
         try:
-            session = self.client.authenticate(
-                email,
-                password,
-                distribution=distribution,
-                distro_id=profile.distro_id,
-            )
-            if session.email.strip().casefold() != email.strip().casefold():
-                raise NativeIdentityMismatch("El correo de la sesión no coincide con la cuenta solicitada.")
-            if session.distro_id != profile.distro_id:
-                raise NativeIdentityMismatch("La sesión no corresponde al perfil de instalación.")
-            subject = self.store.identity_subject(
-                email=session.email, uid=session.uid, player_id=session.player_id
-            )
-            profile = self.store.bind(profile.id, subject)
+            if profile_id:
+                profile = self._resolve_profile(distribution, profile_id)
+                if profile.email_hash is not None and profile.email_hash != email_hash:
+                    raise NativeProfileIdentityMismatch(
+                        "Ese perfil de instalación pertenece a otra cuenta y no se reutiliza."
+                    )
+                session, subject, save, save_error = self._login_known_profile(
+                    profile, email, password, distribution, email_hash
+                )
+            elif self.auto_identity:
+                existing = self.store.profile_by_email_hash(email_hash, distribution.id)
+                if existing is not None:
+                    profile = existing
+                    session, subject, save, save_error = self._login_known_profile(
+                        profile, email, password, distribution, email_hash
+                    )
+                else:
+                    # Serializa la primera resolución de una cuenta: el portal
+                    # y la vinculación son costosos y no deben duplicarse si dos
+                    # pestañas inician sesión a la vez.
+                    with self._discovery_lock:
+                        existing = self.store.profile_by_email_hash(email_hash, distribution.id)
+                        if existing is not None:
+                            profile = existing
+                            session, subject, save, save_error = self._login_known_profile(
+                                profile, email, password, distribution, email_hash
+                            )
+                        else:
+                            profile, session, subject, save, save_error, created = self._discover_profile(
+                                email, password, distribution, email_hash
+                            )
+            else:
+                profile = self._resolve_profile(distribution, None)
+                session, subject, save, save_error = self._login_known_profile(
+                    profile, email, password, distribution, email_hash
+                )
             outcome = "ok"
         except NativeError as exc:
             outcome = exc.code
+            if created and profile is not None:
+                self._discard_unbound_auto(profile.id)
             self._event("login", "rejected", code=exc.code)
             raise
         finally:
             try:
-                self.store.record_attempt(ip_hash, email_hash, outcome)
+                self.store.finish_login_attempt(attempt_id, outcome)
             except Exception:
                 # Un fallo del diario no debe ocultar el resultado del login.
                 pass
@@ -232,30 +310,9 @@ class NativeAuthService:
         if existing_cookie:
             self.store.revoke(existing_cookie)
 
-        save: dict[str, object] | None = None
-        save_error: str | None = None
-        if profile.unique_id is not None:
-            try:
-                save = self._verify_save(profile, session.token, subject)
-            except NativeSaveIdentityMismatch:
-                # Una partida de otra cuenta es un fallo de identidad, no un
-                # aviso: no se crea sesión para esa copia.
-                self._event("login", "rejected", code="native_save_identity_mismatch", subject=subject)
-                raise
-            except CloudProviderUnauthenticated:
-                # El gateway aceptó las credenciales, pero BlobSave rechazó el
-                # token. No se crea una sesión que no puede operar.
-                self._event("login", "rejected", code="native_session_rejected", subject=subject)
-                raise NativeSessionRejected(
-                    "ChillyRoom rechazó la sesión emitida para el servicio de guardado. "
-                    "No se creó ninguna sesión web."
-                ) from None
-            except NativeError as exc:
-                save_error = exc.code
-            except CloudSaveError as exc:
-                save_error = exc.code
-        else:
-            save_error = "native_installation_required"
+        if profile is None:
+            raise NativeProfileNotFound("No se pudo resolver el perfil de instalación.")
+        profile = self.store.profile(profile.id)
 
         cookie = token_urlsafe(32)
         expires_at = self.store.create_session(
@@ -336,7 +393,7 @@ class NativeAuthService:
         return self._operate(session, lambda: self._lab(session).verify(backup_id).summary())
 
     def backups(self, session: NativeSessionRecord) -> list[dict[str, object]]:
-        store = LabBackupStore(self.backup_root / session.subject)
+        store = LabBackupStore(self.backup_root / session.subject, cipher_key=self.backup_key)
         return [
             record.summary() | {"confirmed": store.confirmation(record.id) is not None}
             for record in store.list()
@@ -370,6 +427,297 @@ class NativeAuthService:
 
     # Internos ---------------------------------------------------------------
 
+    def _login_known_profile(
+        self,
+        profile: Profile,
+        email: str,
+        password: str,
+        distribution: Distribution,
+        email_hash: str,
+    ) -> tuple[GatewaySession, str, dict[str, object] | None, str | None]:
+        session = self.client.authenticate(
+            email,
+            password,
+            distribution=distribution,
+            distro_id=profile.distro_id,
+            unique_id=profile.unique_id,
+        )
+        if session.email.strip().casefold() != email.strip().casefold():
+            raise NativeIdentityMismatch("El correo de la sesión no coincide con la cuenta solicitada.")
+        if session.distro_id != profile.distro_id:
+            raise NativeIdentityMismatch("La sesión no corresponde al perfil de instalación.")
+        subject = self.store.identity_subject(
+            email=session.email, uid=session.uid, player_id=session.player_id
+        )
+        self.store.bind(profile.id, subject, email_hash=email_hash)
+        save, save_error = self._save_or_error(profile, session.token, subject)
+        return session, subject, save, save_error
+
+    def _save_or_error(
+        self,
+        profile: Profile,
+        token: str,
+        subject: str,
+    ) -> tuple[dict[str, object] | None, str | None]:
+        if profile.unique_id is None:
+            return None, "native_installation_required"
+        try:
+            return self._verify_save(profile, token, subject), None
+        except NativeSaveIdentityMismatch:
+            raise
+        except CloudProviderUnauthenticated:
+            raise NativeSessionRejected(
+                "ChillyRoom rechazó la sesión emitida para el servicio de guardado. "
+                "No se creó ninguna sesión web."
+            ) from None
+        except (NativeError, CloudSaveError) as exc:
+            return None, exc.code
+
+    def _discover_profile(
+        self,
+        email: str,
+        password: str,
+        distribution: Distribution,
+        email_hash: str,
+    ) -> tuple[Profile, GatewaySession, str, dict[str, object] | None, str | None, bool]:
+        """Resuelve el jugador con el portal y crea el perfil autónomo.
+
+        El portal es la fuente autorizada del distro del jugador. Si la cuenta
+        no tiene jugadores, se genera una instalación nueva. Si el portal falla,
+        no se inventa un distro: se devuelve el error para no crear un jugador
+        vacío que no corresponde a la partida del titular.
+        """
+
+        identity = self.identity_factory()
+        if not is_generated_distro(identity.distro_id) or not is_generated_unique(identity.unique_id):
+            raise NativeProfileInvalid(
+                "El generador de identidad produjo un par que no cumple el formato observado."
+            )
+        players: tuple[PortalPlayer, ...] = ()
+        if self.portal_client is not None:
+            portal = self.portal_client.profile(email, password)
+            players = portal.soulknight_players()
+        if players:
+            candidate = self._select_portal_candidate(
+                email, password, distribution, identity.unique_id, players
+            )
+        else:
+            candidate = self._probe_candidate(
+                email,
+                password,
+                distribution,
+                distro_id=identity.distro_id,
+                unique_id=identity.unique_id,
+                portal_pid=None,
+            )
+        profile = self._create_auto_profile(distribution, email_hash, candidate)
+        return (
+            profile,
+            candidate.session,
+            candidate.subject,
+            candidate.save,
+            candidate.save_error,
+            True,
+        )
+
+    def _select_portal_candidate(
+        self,
+        email: str,
+        password: str,
+        distribution: Distribution,
+        unique_id: str,
+        players: tuple[PortalPlayer, ...],
+    ) -> _Candidate:
+        first: _Candidate | None = None
+        mismatch = False
+        for player in players[:8]:
+            try:
+                candidate = self._probe_candidate(
+                    email,
+                    password,
+                    distribution,
+                    distro_id=player.distro_id,
+                    unique_id=unique_id,
+                    portal_pid=player.pid,
+                )
+            except NativePortalIdentityMismatch:
+                mismatch = True
+                continue
+            except NativeAuthRejected:
+                raise
+            except NativeDistributionRejected:
+                continue
+            if first is None:
+                first = candidate
+            if candidate.save is not None:
+                return candidate
+            if candidate.save_error == "native_device_binding_throttled":
+                return candidate
+            if candidate.save_error not in (None, "native_no_cloud_save"):
+                return candidate
+        if first is None:
+            if mismatch:
+                raise NativePortalIdentityMismatch(
+                    "El portal devolvió jugadores que no corresponden a la cuenta del gateway."
+                )
+            raise NativePortalUnavailable(
+                "El portal no devolvió un jugador de Soul Knight utilizable."
+            )
+        return first
+
+    def _probe_candidate(
+        self,
+        email: str,
+        password: str,
+        distribution: Distribution,
+        *,
+        distro_id: str,
+        unique_id: str,
+        portal_pid: int | None,
+    ) -> _Candidate:
+        session = self.client.authenticate(
+            email,
+            password,
+            distribution=distribution,
+            distro_id=distro_id,
+            unique_id=unique_id,
+        )
+        if session.email.strip().casefold() != email.strip().casefold():
+            raise NativeIdentityMismatch("El correo de la sesión no coincide con la cuenta solicitada.")
+        if session.distro_id != distro_id:
+            raise NativeIdentityMismatch("La sesión no corresponde al jugador del portal.")
+        if portal_pid is not None and session.player_id != portal_pid:
+            raise NativePortalIdentityMismatch(
+                "El distro del portal no corresponde al jugador devuelto por el gateway."
+            )
+        subject = self.store.identity_subject(
+            email=session.email, uid=session.uid, player_id=session.player_id
+        )
+        try:
+            save = self._candidate_save(
+                session.token, unique_id, distro_id, distribution, subject
+            )
+            return _Candidate(distro_id, unique_id, session, subject, save, None)
+        except CloudProviderDeviceBindingThrottled as exc:
+            return _Candidate(
+                distro_id, unique_id, session, subject, None,
+                "native_device_binding_throttled", exc.retry_after,
+            )
+        except CloudProviderUnauthenticated:
+            raise NativeSessionRejected(
+                "ChillyRoom rechazó la sesión emitida para el servicio de guardado."
+            ) from None
+        except CloudProviderUnavailable as exc:
+            if getattr(exc, "provider_code", None) == 100504:
+                return _Candidate(
+                    distro_id, unique_id, session, subject, None, "native_no_cloud_save"
+                )
+            return _Candidate(distro_id, unique_id, session, subject, None, exc.code)
+        except (NativeError, CloudSaveError) as exc:
+            return _Candidate(distro_id, unique_id, session, subject, None, exc.code)
+
+    def _candidate_save(
+        self,
+        token: str,
+        unique_id: str,
+        distro_id: str,
+        distribution: Distribution,
+        subject: str,
+    ) -> dict[str, object]:
+        provider = NativeSaveProvider(
+            self.provider_factory(token, unique_id, distro_id),
+            self.store,
+            subject,
+            distribution.id,
+        )
+        save = provider.download()
+        gems = read_gems(save.payload)
+        return {
+            "verified": True,
+            "bytes": save.metadata.size,
+            "sha256": save.metadata.sha256,
+            "gems": gems.gems,
+            "sections": None,
+            "remote_source": save.metadata.source,
+        }
+
+    def _create_auto_profile(
+        self,
+        distribution: Distribution,
+        email_hash: str,
+        candidate: _Candidate,
+    ) -> Profile:
+        try:
+            profile = self.store.create_profile(
+                label=self._auto_label(email_hash),
+                distribution_id=distribution.id,
+                distro_id=candidate.distro_id,
+                unique_id=candidate.unique_id,
+                allow_write=self.auto_allow_write,
+                email_hash=email_hash,
+                auto_generated=True,
+            )
+        except NativeProfileIdentityMismatch:
+            raise NativeProfileIdentityMismatch(
+                "Otra solicitud creó el perfil de esta cuenta al mismo tiempo. Reintenta el acceso."
+            ) from None
+        try:
+            self.store.bind(profile.id, candidate.subject, email_hash=email_hash)
+        except NativeError:
+            self._discard_unbound_auto(profile.id)
+            raise
+        if candidate.retry_after is not None:
+            self.store.set_binding_wait(
+                profile.id,
+                int(self.now()) + candidate.retry_after,
+                "native_device_binding_throttled",
+            )
+        elif candidate.save_error is not None:
+            self.store.set_save_error(profile.id, candidate.save_error)
+        else:
+            self.store.clear_binding_wait(profile.id)
+        return self.store.profile(profile.id)
+
+    @staticmethod
+    def _auto_label(email_hash: str) -> str:
+        return "Cuenta " + email_hash[:12]
+
+    def _discard_unbound_auto(self, profile_id: str) -> None:
+        try:
+            profile = self.store.profile(profile_id)
+        except NativeError:
+            return
+        if profile.subject is None and profile.auto_generated:
+            try:
+                self.store.delete_unbound_profile(profile_id)
+            except (NativeError, OSError, ValueError):
+                pass
+
+    @staticmethod
+    def _binding_message(seconds: int) -> str:
+        seconds = max(60, int(seconds))
+        hours, remainder = divmod(seconds, 3600)
+        minutes = max(1, remainder // 60)
+        if hours:
+            wait = f"{hours} h {minutes} min"
+        else:
+            wait = f"{minutes} min"
+        return (
+            "ChillyRoom limita la vinculación de dispositivos nuevos para esta cuenta. "
+            f"La identificación generada se conserva; vuelve a intentarlo en aproximadamente {wait}."
+        )
+
+    def _require_binding_ready(self, profile: Profile) -> None:
+        until = profile.binding_wait_until
+        if until is None:
+            return
+        remaining = until - int(self.now())
+        if remaining > 0:
+            raise NativeDeviceBindingThrottled(
+                self._binding_message(remaining), retry_after=remaining
+            )
+        self.store.clear_binding_wait(profile.id)
+
     def _resolve_profile(self, distribution: Distribution, profile_id: str | None) -> Profile:
         profiles = [
             profile for profile in self.store.list_profiles(distribution.id)
@@ -392,13 +740,38 @@ class NativeAuthService:
     def _verify_save(self, profile: Profile, token: str, subject: str) -> dict[str, object]:
         if profile.unique_id is None:
             raise NativeInstallationRequired("Completa el identificador de instalación para descargar la partida.")
+        self._require_binding_ready(profile)
         provider = NativeSaveProvider(
             self.provider_factory(token, profile.unique_id, profile.distro_id),
             self.store,
             subject,
             profile.distribution,
         )
-        save = provider.download()
+        try:
+            save = provider.download()
+        except CloudProviderDeviceBindingThrottled as exc:
+            until = int(self.now()) + exc.retry_after
+            self.store.set_binding_wait(profile.id, until, "native_device_binding_throttled")
+            self._event("save_verify", "throttled", code="native_device_binding_throttled", subject=subject)
+            raise NativeDeviceBindingThrottled(
+                self._binding_message(exc.retry_after), retry_after=exc.retry_after
+            ) from None
+        except CloudProviderUnauthenticated:
+            self.store.set_save_error(profile.id, "native_session_rejected")
+            raise
+        except CloudProviderUnavailable as exc:
+            if getattr(exc, "provider_code", None) == 100504:
+                self.store.set_save_error(profile.id, "native_no_cloud_save")
+                raise NativeNoCloudSave(
+                    "La cuenta no tiene una partida en la nube para este jugador. "
+                    "No se creó ni se sobrescribió ninguna copia."
+                ) from None
+            self.store.set_save_error(profile.id, exc.code)
+            raise
+        except (NativeError, CloudSaveError):
+            self.store.set_save_error(profile.id, "native_save_error")
+            raise
+        self.store.clear_binding_wait(profile.id)
         gems = read_gems(save.payload)
         self._event("save_verify", "ok", subject=subject)
         return {
@@ -415,6 +788,7 @@ class NativeAuthService:
             raise NativeInstallationRequired(
                 "Completa el identificador de instalación para acceder a la partida."
             )
+        self._require_binding_ready(session.profile)
         write = self.write_enabled and session.profile.allow_write
         provider = NativeSaveProvider(
             self.provider_factory(session.token, session.unique_id, session.profile.distro_id),
@@ -428,7 +802,7 @@ class NativeAuthService:
         )
         return CloudLabService(
             provider,
-            LabBackupStore(self.backup_root / session.subject),
+            LabBackupStore(self.backup_root / session.subject, cipher_key=self.backup_key),
             uploader=uploader,
             write_enabled=write,
             admin_configured=True,
@@ -453,6 +827,24 @@ class NativeAuthService:
             raise NativeSessionExpired(
                 "ChillyRoom rechazó la sesión. Vuelve a iniciar sesión."
             ) from None
+        except CloudProviderDeviceBindingThrottled as exc:
+            until = int(self.now()) + exc.retry_after
+            self.store.set_binding_wait(
+                session.profile.id, until, "native_device_binding_throttled"
+            )
+            self._event(
+                "session", "throttled", code="native_device_binding_throttled", subject=session.subject
+            )
+            raise NativeDeviceBindingThrottled(
+                self._binding_message(exc.retry_after), retry_after=exc.retry_after
+            ) from None
+        except CloudProviderUnavailable as exc:
+            if getattr(exc, "provider_code", None) == 100504:
+                self.store.set_save_error(session.profile.id, "native_no_cloud_save")
+                raise NativeNoCloudSave(
+                    "La cuenta no tiene una partida en la nube para este jugador."
+                ) from None
+            raise
 
     @contextmanager
     def _subject_lock(self, subject: str):
@@ -535,6 +927,14 @@ def build_native(settings: Settings) -> NativeRuntime:
             backup_root=backup_dir,
             provider_factory=_default_provider,
             uploader_factory=_default_uploader,
+            auto_identity=settings.native_auto_identity,
+            auto_allow_write=settings.native_auto_allow_write,
+            portal_client=(
+                PortalClient()
+                if settings.native_auto_identity and settings.native_portal_enabled
+                else None
+            ),
+            backup_key=settings.native_backup_key_bytes(),
         )
         distro = settings.native_distro_id.get_secret_value() if settings.native_distro_id else ""
         unique = settings.native_unique_id.get_secret_value() if settings.native_unique_id else None
@@ -548,6 +948,7 @@ def build_native(settings: Settings) -> NativeRuntime:
                     unique_id=unique,
                     allow_write=settings.native_profile_allow_write,
                 )
+        store.cleanup()
         return NativeRuntime(service, None, True)
     except NativeError as exc:
         return NativeRuntime(None, exc, True)

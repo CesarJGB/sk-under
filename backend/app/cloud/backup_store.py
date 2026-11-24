@@ -20,12 +20,16 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
+from Crypto.Cipher import AES
+
 from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError, reconstruct_cloud_save
 from ..parsers.json_document import parse_json
 from .gems_editor import GemsEdit, prepare_gems_edit, read_gems
 
 _ID = re.compile(r"^[0-9a-f]{32}$")
 _RECORD_LIMIT = 64 * 1024
+_SEAL_MAGIC = b"SKB1"
+_SEAL_TAG = 16
 
 
 class BackupStoreError(CloudSaveError):
@@ -112,11 +116,45 @@ def _require_text(value: object, name: str) -> str:
 class LabBackupStore:
     """Almacén de respaldos creado explícitamente sobre un directorio privado."""
 
-    def __init__(self, root: Path, *, limit: int = MAX_INPUT_BYTES) -> None:
+    def __init__(
+        self,
+        root: Path,
+        *,
+        limit: int = MAX_INPUT_BYTES,
+        cipher_key: bytes | None = None,
+    ) -> None:
         if isinstance(limit, bool) or not isinstance(limit, int) or not 0 < limit <= MAX_INPUT_BYTES:
             raise BackupStoreError("Límite de respaldo inválido.")
+        if cipher_key is not None and (not isinstance(cipher_key, bytes) or len(cipher_key) != 32):
+            raise BackupStoreError("La clave de cifrado de respaldos no tiene 32 bytes.")
         self.root = Path(root).expanduser().absolute()
         self.limit = limit
+        self.cipher_key = cipher_key
+
+    def _context(self, path: Path) -> bytes:
+        return b"sk-under/backup\x00" + path.parent.name.encode("ascii") + b"\x00" + path.name.encode("ascii")
+
+    def _seal(self, path: Path, data: bytes) -> bytes:
+        if self.cipher_key is None:
+            return data
+        cipher = AES.new(self.cipher_key, AES.MODE_SIV)
+        cipher.update(self._context(path))
+        encrypted, tag = cipher.encrypt_and_digest(data)
+        return _SEAL_MAGIC + tag + encrypted
+
+    def _open(self, path: Path, data: bytes) -> bytes:
+        if self.cipher_key is None:
+            return data
+        if not data.startswith(_SEAL_MAGIC) or len(data) < len(_SEAL_MAGIC) + _SEAL_TAG:
+            raise BackupIntegrityError(
+                "El respaldo no está cifrado con la clave actual. Migra los respaldos antes de continuar."
+            )
+        cipher = AES.new(self.cipher_key, AES.MODE_SIV)
+        cipher.update(self._context(path))
+        try:
+            return cipher.decrypt_and_verify(data[len(_SEAL_MAGIC) + _SEAL_TAG:], data[len(_SEAL_MAGIC):len(_SEAL_MAGIC) + _SEAL_TAG])
+        except (ValueError, KeyError):
+            raise BackupIntegrityError("El respaldo no se pudo descifrar o fue alterado.") from None
 
     def _ensure_root(self) -> None:
         try:
@@ -145,6 +183,7 @@ class LabBackupStore:
             raise
 
     def _write_private(self, path: Path, data: bytes, *, exclusive: bool = True) -> None:
+        payload = self._seal(path, data)
         flags = os.O_WRONLY | os.O_CREAT | os.O_NOFOLLOW
         flags |= os.O_EXCL if exclusive else os.O_TRUNC
         try:
@@ -152,7 +191,7 @@ class LabBackupStore:
         except OSError:
             raise BackupStoreError("No se pudo crear un archivo privado de respaldo.") from None
         try:
-            view = memoryview(data)
+            view = memoryview(payload)
             while view:
                 written = os.write(descriptor, view)
                 view = view[written:]
@@ -169,7 +208,8 @@ class LabBackupStore:
             raise BackupNotFound("No se encontró el respaldo solicitado.") from None
         try:
             info = os.fstat(descriptor)
-            if not stat.S_ISREG(info.st_mode) or info.st_size > limit:
+            wire_limit = limit + len(_SEAL_MAGIC) + _SEAL_TAG if self.cipher_key is not None else limit
+            if not stat.S_ISREG(info.st_mode) or info.st_size > wire_limit:
                 raise BackupIntegrityError("El archivo de respaldo no es válido.")
             chunks: list[bytes] = []
             remaining = info.st_size
@@ -179,11 +219,13 @@ class LabBackupStore:
                     raise BackupIntegrityError("El archivo de respaldo está truncado.")
                 chunks.append(chunk)
                 remaining -= len(chunk)
-            data = b"".join(chunks)
+            data = self._open(path, b"".join(chunks))
         except OSError:
             raise BackupNotFound("No se pudo leer el respaldo solicitado.") from None
         finally:
             os.close(descriptor)
+        if len(data) > limit:
+            raise BackupIntegrityError("El archivo de respaldo supera el límite.")
         return data
 
     def save(
@@ -237,6 +279,77 @@ class LabBackupStore:
                 pass
             raise
         return BackupBundle(record, edit.original, edit.candidate)
+
+    def migrate_legacy(self) -> int:
+        """Cifra respaldos de la Fase 6.8 que todavía están en claro.
+
+        Es una operación administrativa explícita: recorre los directorios de
+        respaldo, cifra los archivos conocidos y los reemplaza de forma atómica.
+        No modifica los bytes originales de la partida ni sus huellas. Devuelve
+        el número de archivos migrados.
+        """
+
+        if self.cipher_key is None:
+            raise BackupStoreError("Configura una clave de respaldos para migrar.")
+        if not self.root.exists():
+            return 0
+        migrated = 0
+        for entry in self.root.iterdir():
+            if not _ID.fullmatch(entry.name) or entry.is_symlink() or not entry.is_dir():
+                continue
+            for name in ("original.json", "candidate.json", "record.json", "confirmation.json", "events.jsonl"):
+                path = entry / name
+                if not path.is_file() or path.is_symlink():
+                    continue
+                raw = self._read_plain(path, self.limit + _RECORD_LIMIT)
+                if raw.startswith(_SEAL_MAGIC):
+                    continue
+                if name == "events.jsonl":
+                    lines = [line for line in raw.splitlines() if line]
+                    payload = b"".join(self._seal(path, line) + b"\n" for line in lines)
+                else:
+                    payload = self._seal(path, raw)
+                temp = path.with_name(path.name + ".migrating")
+                flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
+                try:
+                    descriptor = os.open(temp, flags, 0o600)
+                    try:
+                        view = memoryview(payload)
+                        while view:
+                            written = os.write(descriptor, view)
+                            view = view[written:]
+                        os.fsync(descriptor)
+                    finally:
+                        os.close(descriptor)
+                    os.replace(temp, path)
+                except OSError:
+                    try:
+                        temp.unlink(missing_ok=True)
+                    except OSError:
+                        pass
+                    raise BackupStoreError("No se pudo migrar un respaldo.") from None
+                migrated += 1
+        return migrated
+
+    @staticmethod
+    def _read_plain(path: Path, limit: int) -> bytes:
+        try:
+            descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+        except OSError:
+            raise BackupNotFound("No se encontró el respaldo solicitado.") from None
+        try:
+            info = os.fstat(descriptor)
+            if not stat.S_ISREG(info.st_mode) or info.st_size > limit:
+                raise BackupIntegrityError("El archivo de respaldo no es válido.")
+            data = b""
+            while len(data) < info.st_size:
+                chunk = os.read(descriptor, min(info.st_size - len(data), 64 * 1024))
+                if not chunk:
+                    raise BackupIntegrityError("El archivo de respaldo está truncado.")
+                data += chunk
+            return data
+        finally:
+            os.close(descriptor)
 
     def _read_record(self, backup_id: str) -> BackupRecord:
         raw = self._read_private(self._directory(backup_id) / "record.json", _RECORD_LIMIT)
@@ -320,15 +433,16 @@ class LabBackupStore:
         if not directory.is_dir():
             raise BackupNotFound("No se encontró el respaldo solicitado.")
         payload = {"at": _now(), **event}
-        encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8") + b"\n"
+        encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
         path = directory / "events.jsonl"
+        line = self._seal(path, encoded) + b"\n"
         flags = os.O_WRONLY | os.O_CREAT | os.O_APPEND | os.O_NOFOLLOW
         try:
             descriptor = os.open(path, flags, 0o600)
         except OSError:
             raise BackupStoreError("No se pudo abrir el diario del respaldo.") from None
         try:
-            view = memoryview(encoded)
+            view = memoryview(line)
             while view:
                 written = os.write(descriptor, view)
                 view = view[written:]

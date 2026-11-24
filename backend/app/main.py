@@ -13,6 +13,7 @@ from .formats.game_data import GameDataAdapter
 from .formats.real_save import RealSaveAdapter
 from .formats.registry import ADAPTERS
 from .native.service import build_native
+from .security_headers import install_security_headers
 from .settings import Settings
 
 
@@ -39,6 +40,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     except AccountError as exc:
         app.state.cloud_accounts_problem = exc
     install_error_handlers(app)
+    install_security_headers(app)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.allowed_origins,

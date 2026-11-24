@@ -43,9 +43,13 @@ class Settings(BaseSettings):
     native_auth_enabled: bool = False
     native_write_enabled: bool = False
     native_store_key: SecretStr | None = None
+    native_backup_key: SecretStr | None = None
     native_store_dir: Path | None = None
     native_backup_dir: Path | None = None
     native_origin: str = ""
+    native_auto_identity: bool = True
+    native_auto_allow_write: bool = False
+    native_portal_enabled: bool = True
     native_distro_id: SecretStr | None = None
     native_unique_id: SecretStr | None = None
     native_profile_label: str = "Instalación Android Global"
@@ -54,6 +58,7 @@ class Settings(BaseSettings):
     native_absolute_seconds: int = Field(default=7 * 86400, ge=3600, le=30 * 86400)
     native_login_attempts: int = Field(default=5, ge=1, le=50)
     native_login_window_seconds: int = Field(default=900, ge=60, le=86400)
+    native_trusted_proxies: list[str] = Field(default_factory=list)
 
     @field_validator("save_general_key_hex", "save_statistics_key_hex", "save_iv_hex", mode="before")
     @classmethod
@@ -150,15 +155,40 @@ class Settings(BaseSettings):
             _ = parsed.port
         return values
 
-    @field_validator("native_store_key", mode="before")
+    @field_validator("native_store_key", "native_backup_key", mode="before")
     @classmethod
     def validate_native_store_key(cls, value: object) -> SecretStr | None:
         secret = value.get_secret_value() if isinstance(value, SecretStr) else value
         if secret is None or secret == "":
             return None
         if not isinstance(secret, str) or not re.fullmatch(r"[0-9a-fA-F]{64}", secret):
-            raise ValueError("SK_NATIVE_STORE_KEY requiere 32 bytes aleatorios en 64 dígitos hexadecimales.")
+            raise ValueError(
+                "SK_NATIVE_STORE_KEY y SK_NATIVE_BACKUP_KEY requieren 32 bytes aleatorios "
+                "en 64 dígitos hexadecimales."
+            )
         return SecretStr(secret)
+
+    @field_validator("native_trusted_proxies", mode="before")
+    @classmethod
+    def validate_trusted_proxies(cls, value: object) -> list[str]:
+        if value is None or value == "":
+            return []
+        if isinstance(value, str):
+            value = [part.strip() for part in value.split(",") if part.strip()]
+        if not isinstance(value, (list, tuple)):
+            raise ValueError("SK_NATIVE_TRUSTED_PROXIES debe ser una lista de IP o CIDR.")
+        import ipaddress
+
+        result: list[str] = []
+        for item in value:
+            if not isinstance(item, str) or not item.strip():
+                raise ValueError("Cada proxy confiable debe ser una IP o un CIDR.")
+            try:
+                network = ipaddress.ip_network(item.strip(), strict=False)
+            except ValueError:
+                raise ValueError("SK_NATIVE_TRUSTED_PROXIES contiene una IP o CIDR inválido.") from None
+            result.append(str(network))
+        return result
 
     @field_validator("native_distro_id", "native_unique_id", mode="before")
     @classmethod
@@ -246,3 +276,24 @@ class Settings(BaseSettings):
     @property
     def native_configured(self) -> bool:
         return self.native_auth_enabled and self.native_store_key is not None
+
+    def native_backup_key_bytes(self) -> bytes | None:
+        """Clave de respaldos: explícita o derivada de la del almacén.
+
+        La derivación usa HMAC-SHA-256 con un dominio distinto para no reutilizar
+        la misma clave en dos propósitos. Cambiar la clave del almacén invalida
+        los respaldos antiguos; el runbook exige conservar la anterior o migrar.
+        """
+
+        if self.native_backup_key is not None:
+            return bytes.fromhex(self.native_backup_key.get_secret_value())
+        if self.native_store_key is None:
+            return None
+        import hashlib
+        import hmac
+
+        return hmac.new(
+            bytes.fromhex(self.native_store_key.get_secret_value()),
+            b"sk-under/native-backups",
+            hashlib.sha256,
+        ).digest()

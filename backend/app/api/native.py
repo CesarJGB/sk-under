@@ -28,6 +28,7 @@ from ..models import (
     CloudLabRestoreInput,
     CloudLabVerifyInput,
 )
+from ..net import client_ip
 from ..native.distributions import DISTRIBUTIONS
 from ..native.errors import (
     NativeDisabled,
@@ -179,6 +180,8 @@ def _disabled_config(settings) -> dict[str, object]:
         "min_gems": MIN_GEMS,
         "max_gems": MAX_GEMS,
         "login_available": False,
+        "auto_identity": False,
+        "requires_profile_selection": False,
         "profiles": [],
         "distributions": [distribution.public() for distribution in DISTRIBUTIONS],
         "session": {"active": False, "reason": "disabled"},
@@ -224,7 +227,8 @@ def session(request: Request) -> dict[str, object]:
 @router.post("/login", summary="Autenticar con ChillyRoom y crear una sesión aislada")
 def login(payload: LoginInput, request: Request, response: Response) -> dict[str, object]:
     service = _require_service(request)
-    client = request.client.host if request.client else "unknown"
+    settings = request.app.state.settings
+    client = client_ip(request, settings.native_trusted_proxies)
     result = service.login(
         email=payload.email,
         password=payload.password,

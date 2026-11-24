@@ -37,7 +37,7 @@ class FakeAuth:
         self.calls: list[tuple[str, str]] = []
         self.override: dict[str, GatewaySession] = {}
 
-    def authenticate(self, email, password, *, distribution, distro_id):
+    def authenticate(self, email, password, *, distribution, distro_id, unique_id=None):
         self.calls.append((email, distro_id))
         account = self.accounts.get(email)
         if account is None or password != account["password"]:
@@ -70,6 +70,7 @@ def make_native(tmp_path, *, write=False, allow_write=True, unique_a="unique-a",
         native_distro_id="distro-a",
         native_unique_id=unique_a,
         native_profile_allow_write=allow_write,
+        native_auto_identity=False,
         native_login_attempts=attempts,
         native_login_window_seconds=300,
     )
@@ -494,6 +495,7 @@ def test_secure_cookie_and_https_origin(tmp_path):
         native_store_dir=tmp_path / "native",
         native_backup_dir=tmp_path / "native-backups",
         native_origin=origin,
+        native_auto_identity=False,
         native_distro_id="distro-a",
         native_unique_id="unique-a",
     )

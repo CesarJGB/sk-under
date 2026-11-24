@@ -1,6 +1,10 @@
+import hashlib
+import hmac
 import json
+import os
 import sqlite3
 import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
@@ -63,6 +67,8 @@ def test_profile_and_session_are_encrypted_and_bind_identity(tmp_path):
     assert item.public() == {
         "id": item.id, "label": "Cuenta A", "distribution": "android-global",
         "installation_ready": True, "bound": False, "write_allowed": True,
+        "auto_generated": False, "binding_pending": False,
+        "binding_wait_until": None, "last_save_error": None,
     }
     subject = store.identity_subject(email="holder@example.test", uid=42, player_id=77)
     bound = store.bind(item.id, subject)
@@ -174,3 +180,100 @@ def test_distribution_registry_only_enables_validated_global():
 
     with pytest.raises(NativeDistributionDisabled):
         require_enabled("ios-global")
+
+
+def test_email_hash_maps_one_profile_per_account_and_distribution(tmp_path):
+    store = make_store(tmp_path)
+    email_hash = store.hash_email("holder@example.test")
+    created = store.create_profile(
+        label="Cuenta automática", distribution_id="android-global",
+        distro_id="44444444-4444-4444-8444-444444444444",
+        unique_id="xiaomioutseas_" + "a" * 16,
+        email_hash=email_hash, auto_generated=True,
+    )
+    assert store.profile_by_email_hash(email_hash, "android-global").id == created.id
+    assert store.profile_by_email_hash(store.hash_email("other@example.test"), "android-global") is None
+    subject = store.identity_subject(email="holder@example.test", uid=42, player_id=77)
+    bound = store.bind(created.id, subject, email_hash=email_hash)
+    assert bound.email_hash == email_hash
+    with pytest.raises(NativeProfileIdentityMismatch):
+        store.bind(created.id, subject, email_hash=store.hash_email("other@example.test"))
+    with pytest.raises(NativeProfileIdentityMismatch):
+        store.create_profile(
+            label="Otra", distribution_id="android-global", distro_id=DISTRO,
+            unique_id=UNIQUE, email_hash=email_hash, auto_generated=True,
+        )
+
+
+def test_old_profile_table_is_migrated_without_rewriting_sealed_values(tmp_path):
+    root = tmp_path / "native"
+    root.mkdir(mode=0o700)
+    db = sqlite3.connect(root / "native.sqlite3")
+    db.executescript(
+        """
+        CREATE TABLE encryption (id INTEGER PRIMARY KEY CHECK (id = 1), verifier BLOB NOT NULL);
+        CREATE TABLE profiles (
+            id TEXT PRIMARY KEY, label TEXT NOT NULL, distribution TEXT NOT NULL,
+            sealed BLOB NOT NULL, subject TEXT, allow_write INTEGER NOT NULL DEFAULT 0,
+            created_at INTEGER NOT NULL, bound_at INTEGER,
+            UNIQUE (label, distribution)
+        );
+        """
+    )
+    verifier = hmac.new(KEY, b"sk-under/native-store", hashlib.sha256).digest()
+    db.execute("INSERT INTO encryption VALUES (1, ?)", (verifier,))
+    db.commit()
+    db.close()
+    os.chmod(root / "native.sqlite3", 0o600)
+    store = NativeStore(root, KEY)
+    created = store.create_profile(
+        label="Migrada", distribution_id="android-global", distro_id=DISTRO,
+        unique_id=UNIQUE, email_hash="f" * 64, auto_generated=True,
+    )
+    assert created.auto_generated is True
+    assert created.email_hash == "f" * 64
+    assert store.profile_by_email_hash("f" * 64, "android-global").id == created.id
+
+
+def test_atomic_reservation_counts_concurrent_pending_attempts(tmp_path):
+    store = make_store(tmp_path, login_attempts=3, login_window_seconds=600)
+    ip = store.hash_ip("127.0.0.1")
+    email = store.hash_email("holder@example.test")
+
+    def reserve(_):
+        try:
+            return ("ok", store.reserve_login_attempt(ip, email))
+        except NativeLoginThrottled:
+            return ("blocked", None)
+
+    with ThreadPoolExecutor(max_workers=10) as pool:
+        results = list(pool.map(reserve, range(10)))
+    accepted = [item for item in results if item[0] == "ok"]
+    blocked = [item for item in results if item[0] == "blocked"]
+    assert len(accepted) == 3
+    assert len(blocked) == 7
+    # Al resolver los intentos como fallidos, sigue bloqueado hasta la ventana.
+    for _, attempt_id in accepted:
+        store.finish_login_attempt(attempt_id, "native_credentials_rejected")
+    with pytest.raises(NativeLoginThrottled):
+        store.reserve_login_attempt(ip, email)
+
+
+def test_cleanup_removes_only_old_unbound_auto_profiles(tmp_path):
+    now = [1_800_000_000]
+    store = make_store(tmp_path, now=lambda: now[0])
+    old = store.create_profile(
+        label="Vieja", distribution_id="android-global", distro_id=DISTRO,
+        unique_id=UNIQUE, email_hash="a" * 64, auto_generated=True,
+    )
+    bound = store.create_profile(
+        label="Vinculada", distribution_id="android-global", distro_id=DISTRO,
+        unique_id=UNIQUE, email_hash="b" * 64, auto_generated=True,
+    )
+    subject = store.identity_subject(email="holder@example.test", uid=1, player_id=2)
+    store.bind(bound.id, subject, email_hash="b" * 64)
+    now[0] += 8 * 86400
+    store.cleanup()
+    remaining = {item.id for item in store.list_profiles()}
+    assert old.id not in remaining
+    assert bound.id in remaining
