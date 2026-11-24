@@ -53,12 +53,111 @@ export type LabStatus = {
 
 export type LabRemote = { source: string; size: number; sha256: string }
 
+export type SaveFishChipField = {
+  path: string
+  type: string
+  value?: number | string
+  entries?: number | null
+  role?: string
+  evidence?: string
+}
+
+export type SaveFishChips = {
+  balance_path: string | null
+  balance: number | null
+  balance_is_integer: boolean
+  server_authority: 'unknown'
+  status: 'read_only'
+  evidence: string
+  transaction_validated: false
+  missing_proof: string
+  fields: SaveFishChipField[]
+  distinct_collections: Record<string, { type: string; entries: number | null }>
+}
+
+export type SaveSkill = { key: number; unlocked: boolean | null; name: string | null }
+export type SaveSkillOption = { index: number; name: string }
+export type SaveSkin = { key: number; state: number | null; name: string | null }
+export type SaveCharacter = {
+  code: string
+  name: string
+  catalog_index: number | null
+  unlocked: boolean | '<missing>'
+  level: number | '<missing>'
+  level_max: null
+  level_status: 'not_validated'
+  selected_skill: number | '<missing>'
+  skills: SaveSkill[]
+  skill_options: SaveSkillOption[]
+  selected_skin: number | '<missing>'
+  equipped_skin: SaveSkin | null
+  skins_recorded: number
+  skins_status: 'not_validated'
+}
+
+export type SaveCharacterReport = {
+  items: SaveCharacter[]
+  counts: { characters: number; unlocked: number; selected_skins: number }
+  level_status: 'not_validated'
+  skins_status: 'not_validated'
+  catalog: { version: string | null; source: string | null; characters: number }
+  notes: string[]
+  status: 'read_only'
+}
+
+export type SaveResourceItem = {
+  id?: string
+  count?: number
+  type?: string
+  text_length?: number
+  plant?: string | null
+  state?: number | string | null
+  fertilized?: boolean | null
+  watered?: boolean | null
+  name?: string | null
+  value?: number | string
+}
+
+export type SaveResourceGroup = {
+  id: string
+  label: string
+  path: string
+  state: 'present' | 'missing' | 'null'
+  type: string
+  entries: number
+  status: 'read_only'
+  evidence: string
+  note: string
+  items?: SaveResourceItem[]
+  truncated?: boolean
+  item_types?: Record<string, number>
+  list_length?: number
+  value?: number | string
+}
+
+export type SaveReport = {
+  version: number
+  game_version: number | null
+  serialzed_version?: number
+  encoding?: 'json' | 'gzip'
+  fish_chips: SaveFishChips
+  characters: SaveCharacterReport
+  resources: {
+    groups: SaveResourceGroup[]
+    counts: Record<string, number>
+    status: 'read_only'
+    notes: string[]
+  }
+  limitations: string[]
+}
+
 export type LabSave = {
   remote: LabRemote
   gems: number
   size: number
   sha256: string
   serialzed_version: number
+  report?: SaveReport | null
 }
 
 export type LabBackup = {
@@ -336,6 +435,7 @@ export type NativeSaveSummary = {
   gems: number
   sections: number | null
   remote_source: string
+  report?: SaveReport | null
 }
 
 export type NativeSession = {

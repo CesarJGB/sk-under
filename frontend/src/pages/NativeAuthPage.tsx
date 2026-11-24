@@ -11,6 +11,7 @@ import {
 import { formatSize } from '../session'
 import { Loading, Notice, PageTitle, Problem } from '../ui'
 import { HomePage } from './HomePage'
+import { SaveReportSections } from './SaveReportSections'
 import { useOperation } from '../useOperation'
 
 const gemFormat = new Intl.NumberFormat('es-MX')
@@ -486,7 +487,8 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     {downloadButton}
   </section>
 
-  return <section className="cloud-section panel cloud-editor" aria-labelledby="edit-gems-title">
+  return <>
+  <section className="cloud-section panel cloud-editor" aria-labelledby="edit-gems-title">
     <div className="cloud-section-head">
       <div><h2 id="edit-gems-title">Gemas</h2><p className="cloud-state">{accountLabel}</p></div>
       <div className="editor-current">
@@ -555,7 +557,15 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
       ? 'No se pudo confirmar la subida. Verifica el estado desde Partida.'
       : 'No se pudo preparar la edición. Vuelve a intentarlo.')} />}
   </section>
-}
+  {save.report ? <SaveReportSections report={save.report} /> : <section className="cloud-section panel cloud-empty" aria-labelledby="report-pending-title">
+    <h2 id="report-pending-title">Recursos y personajes</h2>
+    <p>Descarga la partida de nuevo para generar el informe de solo lectura.</p>
+    <button className="button quiet" disabled={disabled} onClick={download}>
+      {downloading ? 'Descargando…' : 'Actualizar informe'}
+    </button>
+    {downloadFeedback}
+  </section>}
+</>}
 
 function backupMessage(result: LabWriteResult | LabVerification) {
   if ('persisted' in result) {

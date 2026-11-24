@@ -1,4 +1,4 @@
-from typing import Annotated, Literal
+from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 
@@ -125,6 +125,7 @@ class CloudLabSave(BaseModel):
     size: int
     sha256: str
     serialzed_version: int
+    report: dict[str, Any] | None = None
 
 
 class CloudBackupSummary(BaseModel):

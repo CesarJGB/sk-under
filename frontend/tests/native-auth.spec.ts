@@ -44,6 +44,43 @@ const BACKUP = {
   candidate_size: 505, candidate_sha256: CANDIDATE, candidate_gems: 1002,
   remote_source: 'modern-cloud', remote_size: 505, remote_sha256: SHA,
 }
+const REPORT = {
+  version: 1, game_version: 80800, serialzed_version: 1, encoding: 'json',
+  fish_chips: {
+    balance_path: 'gameData.fishChip', balance: 3, balance_is_integer: true,
+    server_authority: 'unknown', status: 'read_only', evidence: 'E2',
+    transaction_validated: false, missing_proof: 'Falta una transacción legítima con saldo positivo.',
+    fields: [], distinct_collections: {},
+  },
+  characters: {
+    items: [{
+      code: 'Knight', name: 'Knight', catalog_index: 0, unlocked: true, level: 2,
+      level_max: null, level_status: 'not_validated', selected_skill: 0,
+      skills: [{ key: 0, unlocked: true, name: 'Dual Wield' }],
+      skill_options: [{ index: 0, name: 'Dual Wield' }, { index: 1, name: 'Superior Fire' }],
+      selected_skin: 0, equipped_skin: { key: 0, state: 1, name: 'Knight' },
+      skins_recorded: 2, skins_status: 'not_validated',
+    }],
+    counts: { characters: 42, unlocked: 1, selected_skins: 1 },
+    level_status: 'not_validated', skins_status: 'not_validated',
+    catalog: { version: '8.8.0', source: 'SKDFE', characters: 42 },
+    notes: ['El nivel se muestra tal como aparece en la partida; no hay máximo validado.'],
+    status: 'read_only',
+  },
+  resources: {
+    groups: [{
+      id: 'materials', label: 'Materiales', path: 'itemData.materials', state: 'present',
+      type: 'object', entries: 1, status: 'read_only', evidence: 'E2',
+      note: 'Identificadores observados.', items: [{ id: 'wood', count: 4 }], truncated: false,
+    }, {
+      id: 'plants', label: 'Plantas', path: 'itemData.plants', state: 'present',
+      type: 'list', entries: 0, status: 'read_only', evidence: 'E2',
+      note: 'Estado observado por planta.', items: [], truncated: false,
+    }],
+    counts: { materials: 1, plants: 0 }, status: 'read_only', notes: [],
+  },
+  limitations: ['No se habilita la escritura de recursos.'],
+}
 const PREPARED = {
   remote: { source: 'modern-cloud', size: 505, sha256: SHA }, backup: BACKUP,
   original_gems: 1001, new_gems: 1002, changed: true,
@@ -342,6 +379,23 @@ test('navega por el flujo de nube y mantiene el borrador solo para la cuenta act
   await page.getByRole('link', { name: 'Abrir Editor' }).click()
   await expect(page.getByLabel('Nueva cantidad de gemas')).toHaveValue('42')
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(320)
+})
+
+test('muestra fichas, recursos y personajes del informe en solo lectura', async ({ page }) => {
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/partida')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await expect(page.getByTestId('fish-chip-balance')).toHaveText('3')
+  await expect(page.getByText('Falta una transacción legítima con saldo positivo.')).toBeVisible()
+  await expect(page.getByTestId('resource-group-materials')).toContainText('wood × 4')
+  await expect(page.getByTestId('character-row-Knight')).toContainText('Disponible')
+  await expect(page.getByTestId('character-level-Knight')).toHaveText('2')
+  await expect(page.getByTestId('character-row-Knight')).toContainText('Dual Wield')
+  await expect(page.getByTestId('character-row-Knight')).toContainText('Knight')
+  await expect(page.getByLabel('Nueva cantidad de gemas')).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 
 test('las rutas antiguas llevan a Partida y no permiten cargar un archivo local', async ({ page }) => {

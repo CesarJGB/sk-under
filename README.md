@@ -1,6 +1,6 @@
 # sk-under
 
-**Soul Knight Editor · Fase 6.12**
+**Soul Knight Editor · Fase 6.13**
 
 Editor web privado para inspeccionar copias locales y, con autorización expresa, autenticar una cuenta propia de ChillyRoom y editar sus gemas desde el navegador. La muestra sintética `.skdemo` permite edición y exportación. El adaptador opcional de la Fase 3 lee nueve estructuras `.data` observadas en muestras de Soul Knight 8.6.0 y permite descargar copias intactas. [Configuración y cobertura de la Fase 3](docs/phase3/IMPLEMENTATION.md)
 
@@ -39,6 +39,8 @@ La [Fase 6.9](docs/research/phase6-9/README.md) elimina el aprovisionamiento man
 La [Fase 6.11](docs/research/phase6-11/README.md) documentó la conciliación de gemas del cliente 8.8.0, las transacciones legítimas del tutorial y la recuperación de una copia editada. La corrección de 6.11.1 bloquea las escrituras de un solo campo que romperían `gems = lastGems + varGems` y conserva la preparación coherente y la restauración de respaldos.
 
 La [Fase 6.12](docs/research/phase6-12/README.md) inventarió todas las secciones del agregado de nube y las familias de archivos locales, añadió un módulo y una CLI de análisis estructural de solo lectura, y amplió el [registro de campos](docs/save-research/field-registry.json) a 65 entradas. La investigación cubre la representación de las fichas de pesca, el cruce de los 42 personajes, 105 habilidades y 802 skins, los recursos de inventario y las dependencias entre archivos. El catálogo saneado de personajes se usa solo para resolver nombres. Las fichas de pesca, los estados de compra y los desbloqueos permanecen de solo lectura.
+
+La [Fase 6.13](docs/research/phase6-13/README.md) añade un informe saneado a la descarga autenticada. El editor muestra el saldo candidato de fichas de pesca, los 42 personajes con su estado y nivel observados, la habilidad seleccionada, la skin equipada y los recursos identificados. Los campos nuevos son de solo consulta: no se habilitó la escritura de fichas, niveles, habilidades, skins ni recursos. La [propuesta 6.14](docs/research/phase6-13/propuesta-6.14.md) prioriza una transacción legítima de fichas y nuevas pruebas de persistencia antes de evaluar cualquier edición.
 
 ## Arquitectura
 
@@ -215,7 +217,7 @@ Si el proveedor limita la vinculación de un dispositivo nuevo (`error 100509`),
 | `GET /api/v1/cloud/native/session` | cookie | estado de la sesión del navegador. |
 | `POST /api/v1/cloud/native/logout` | cookie + origen | revoca la sesión local y borra la cookie. |
 | `POST /api/v1/cloud/native/installation` | cookie + origen | vía administrativa para completar un `unique_id` en un perfil migrado; el flujo normal no la usa. |
-| `GET /api/v1/cloud/native/save` | cookie | gemas, tamaño y SHA-256 de la partida. |
+| `GET /api/v1/cloud/native/save` | cookie | gemas, tamaño, SHA-256 y el informe saneado de fichas, personajes y recursos. |
 | `POST /api/v1/cloud/native/{prepare,confirm,restore,verify}` | cookie + origen | mismas validaciones que el laboratorio, por cuenta. |
 | `GET /api/v1/cloud/native/backups` | cookie | respaldos del subject autenticado. |
 | `GET /api/v1/cloud/native/diagnostics` | cookie o Bearer existente | conteos y eventos saneados. |
@@ -230,7 +232,7 @@ El laboratorio administrativo en `/partida/laboratorio` usa las rutas `/api/v1/c
 
 La edición es determinista y conserva los bytes ajenos al campo: exige la serialización canónica observada en 8.8.0 (claves ordenadas, separadores `", "` y `": "`, sin indentación) y rechaza cualquier copia que no la reproduzca. El valor aceptado es un entero entre `0` y `2147483647`. Un valor igual al actual genera una operación sin cambios y la confirmación remota se rechaza. La restauración reenvía el original solo si la nube contiene exactamente el candidato confirmado de ese respaldo.
 
-La API no devuelve el contenido de la partida ni las credenciales: solo gemas, tamaños, SHA-256, metadatos del respaldo y estado de la operación. Los respaldos se guardan fuera del repositorio.
+La API no devuelve el agregado completo ni las credenciales: solo gemas, el informe saneado de fichas, personajes y recursos, tamaños, SHA-256, metadatos del respaldo y estado de la operación. Los respaldos se guardan fuera del repositorio.
 
 ### Escritura experimental por CLI (Fase 6.1)
 
@@ -261,7 +263,7 @@ Todas las rutas de archivos reciben JSON UTF-8 con el archivo original en Base64
 | `POST /api/v1/files/validate` | `content_base64`, `changes` | Resultado validado, cambios efectivos, tamaño y SHA-256 de la copia. |
 | `POST /api/v1/files/export` | `content_base64`, `changes` | Bytes de la copia verificada con `Content-Type: application/octet-stream` y nombre en `Content-Disposition`. |
 | `GET /api/v1/cloud/lab/status` | — | Modo del laboratorio, disponibilidad de lectura/escritura, respaldos y rango de gemas. |
-| `GET /api/v1/cloud/lab/save` | — | Gemas actuales, origen, tamaño y SHA-256 de la copia auténtica. No devuelve el contenido. |
+| `GET /api/v1/cloud/lab/save` | — | Gemas actuales, origen, tamaño, SHA-256 y el informe saneado. No devuelve el agregado completo. |
 | `POST /api/v1/cloud/lab/prepare` | `new_gems` | Copia candidata verificada, vista previa del cambio y respaldo privado creado. |
 | `POST /api/v1/cloud/lab/confirm` | `backup_id`, `expected_sha256`, `confirmation: "SUBIR"` | Subida autenticada, descarga posterior y resultado `persisted`. Exige `X-SK-Cloud-Admin`. |
 | `POST /api/v1/cloud/lab/verify` | `backup_id` | Comparación de la nube con el original y el candidato del respaldo. |

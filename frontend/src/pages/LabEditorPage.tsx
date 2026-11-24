@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { api, type Health, type LabBackup, type LabPrepared, type LabSave, type LabStatus, type LabVerification, type LabWriteResult } from '../api'
 import { formatSize } from '../session'
 import { Notice, PageTitle, Problem } from '../ui'
+import { SaveReportSections } from './SaveReportSections'
 import { useOperation } from '../useOperation'
 
 const TEST_VALUE = 1001
@@ -251,7 +252,7 @@ export function LabEditorPage({ token, setToken, adminToken, setAdminToken, heal
                 <div><dt>Rango de gemas</dt><dd className="lab-mono">{status.min_gems} – {status.max_gems}</dd></div>
                 <div><dt>Respaldo</dt><dd>Privado en el servidor</dd></div>
                 <div><dt>Verificación</dt><dd>Descarga posterior por SHA-256</dd></div>
-                <div><dt>Contenido expuesto</dt><dd>Solo gemas y huellas</dd></div>
+                <div><dt>Contenido expuesto</dt><dd>Gemas, informe saneado y huellas</dd></div>
               </dl>
             </article>
           </section>
@@ -294,6 +295,8 @@ export function LabEditorPage({ token, setToken, adminToken, setAdminToken, heal
             </div>
           )}
         </section>
+
+        {loaded?.report && <SaveReportSections report={loaded.report} />}
 
         {loaded && (
           <section className="lab-grid" aria-label="Edición y vista previa">
@@ -500,7 +503,7 @@ export function LabEditorPage({ token, setToken, adminToken, setAdminToken, heal
 
         <p className="lab-footnote">
           <LockKeyhole size={17} aria-hidden="true" />
-          Esta sección no muestra el contenido privado de la partida ni credenciales de nube. El navegador solo recibe gemas, hashes y metadatos del respaldo.
+          Esta sección no muestra el contenido privado de la partida ni credenciales de nube. El navegador recibe gemas, el informe saneado de recursos y personajes, hashes y metadatos del respaldo.
         </p>
       </div>
     </>

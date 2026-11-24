@@ -15,6 +15,7 @@ from hmac import compare_digest
 from typing import Literal, Protocol
 
 from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError, CopyLimitError
+from ..save_report import read_save_report
 from .backup_store import BackupRecord, BackupStoreError, LabBackupStore
 from .blob_upload import UploadResult
 from .gems_editor import (
@@ -98,6 +99,7 @@ class LoadedSave:
     size: int
     sha256: str = field(repr=False)
     serialzed_version: int
+    report: dict[str, object]
 
     def summary(self) -> dict[str, object]:
         return {
@@ -110,6 +112,7 @@ class LoadedSave:
             "size": self.size,
             "sha256": self.sha256,
             "serialzed_version": self.serialzed_version,
+            "report": self.report,
         }
 
 
@@ -284,6 +287,7 @@ class CloudLabService:
             size=snapshot.size,
             sha256=snapshot.sha256,
             serialzed_version=snapshot.serialzed_version,
+            report=read_save_report(save.payload),
         )
 
     def _event(self, backup_id: str, event: dict[str, object]) -> None:

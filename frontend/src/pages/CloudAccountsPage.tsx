@@ -8,6 +8,7 @@ import {
 } from '../api'
 import { formatSize } from '../session'
 import { Notice, PageTitle, Problem } from '../ui'
+import { SaveReportSections } from './SaveReportSections'
 import { useOperation } from '../useOperation'
 
 const gemFormat = new Intl.NumberFormat('es-MX')
@@ -299,6 +300,8 @@ function AccountEditor({ account, limits, serverWriteEnabled, onExpired }: {
       {operation.pending && <p role="status">Operación en curso…</p>}
       {operation.problem && <Problem problem={accountProblem(operation.problem, 'No se pudo completar la operación de la partida.')} />}
     </section>
+
+    {save?.report && <SaveReportSections report={save.report} />}
 
     <section className="lab-card" aria-labelledby="backups-title">
       <div className="lab-card-head">

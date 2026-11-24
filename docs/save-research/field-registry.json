@@ -11,7 +11,8 @@
     "propia": "save-file-mapping.md",
     "discord": "community-reference.txt",
     "skdfe": "external-sources.md",
-    "phase6-12": "../research/phase6-12/README.md"
+    "phase6-12": "../research/phase6-12/README.md",
+    "phase6-13": "../research/phase6-13/README.md"
   },
   "fields": [
     {
@@ -455,7 +456,7 @@
       ],
       "validation_level": "E2",
       "edit_policy": "solo lectura; sin edición hasta demostrar semántica y persistencia",
-      "experimental_evidence": "34 ocurrencias de fishChip con valor 0 en 221 archivos JSON privados; ninguna positiva. La preferencia aparece con 0 tras recuperar. No se observó una transacción legítima."
+      "experimental_evidence": "34 ocurrencias de fishChip con valor 0 en 221 archivos JSON privados; ninguna positiva. La preferencia aparece con 0 tras recuperar. No se observó una transacción legítima. La Fase 6.13 lo muestra en el informe saneado de solo lectura y mantiene la escritura deshabilitada."
     },
     {
       "internal_name": "fishChipConfigId",
@@ -825,7 +826,7 @@
       ],
       "validation_level": "E2",
       "edit_policy": "solo lectura",
-      "experimental_evidence": "En 8.6.0 hay 275 claves con valores como Researched. La nube 8.8.0 inspeccionada está vacía. Los valores no se convierten a enteros sin una prueba."
+      "experimental_evidence": "En 8.6.0 hay 275 claves con valores como Researched. La nube 8.8.0 inspeccionada está vacía. Los valores no se convierten a enteros sin una prueba. El informe de la Fase 6.13 solo muestra tipo y longitud del texto, nunca el contenido."
     },
     {
       "internal_name": "commodities",
@@ -987,7 +988,7 @@
       ],
       "validation_level": "E2",
       "edit_policy": "solo lectura",
-      "experimental_evidence": "Mapa de cantidades. En 8.6.0 tiene 139 claves, incluidas material_fish, material_fertilize y fragmentos; la nube 8.8.0 inspeccionada solo tiene dos. No es una moneda."
+      "experimental_evidence": "Mapa de cantidades. En 8.6.0 tiene 139 claves, incluidas material_fish, material_fertilize y fragmentos; la nube 8.8.0 inspeccionada solo tiene dos. No es una moneda. El informe de la Fase 6.13 agrupa materiales, semillas y tickets sin habilitar edición."
     },
     {
       "internal_name": "plants",
@@ -1017,7 +1018,7 @@
       ],
       "validation_level": "E2",
       "edit_policy": "solo lectura",
-      "experimental_evidence": "Ocho posiciones en la muestra de nube, con objetos y null. No se probó plantar, regar ni fertilizar."
+      "experimental_evidence": "Ocho posiciones en la muestra de nube, con objetos y null. No se probó plantar, regar ni fertilizar. El informe de la Fase 6.13 muestra estado, riego y fertilización observados sin habilitar edición."
     },
     {
       "internal_name": "seeds",
@@ -1046,6 +1047,33 @@
       "validation_level": "E2",
       "edit_policy": "solo lectura",
       "experimental_evidence": "Las 47 claves de 8.6.0 aparecen en items.decrypted.csv."
+    },
+    {
+      "internal_name": "specialTickets",
+      "category": "inventario",
+      "locations": {
+        "local": "item_data*.data:specialTickets",
+        "cloud": "itemData.specialTickets"
+      },
+      "raw_types": [
+        "objeto"
+      ],
+      "sources": [
+        "propia",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "tipo de ticket",
+        "origen y consumo"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Campo identificado en la metadata 8.8.0 y en itemData; vacío en la muestra de nube. No se probó su obtención ni su consumo."
     },
     {
       "internal_name": "tokenTickets",
@@ -1340,7 +1368,7 @@
       ],
       "validation_level": "E2",
       "edit_policy": "solo lectura",
-      "experimental_evidence": "Diccionario disperso: solo aparece el personaje con skin seleccionada. La ausencia no se interpreta como falta de skin."
+      "experimental_evidence": "Diccionario disperso: solo aparece el personaje con skin seleccionada. La ausencia no se interpreta como falta de skin. El informe de la Fase 6.13 solo muestra la skin equipada cuando existe y no deduce posesión."
     },
     {
       "internal_name": "heroLevel",
@@ -1369,7 +1397,7 @@
       ],
       "validation_level": "E3",
       "edit_policy": "solo lectura",
-      "experimental_evidence": "Una mejora legítima del Caballero cambió Knight de 0 a 1 y persistió tras reiniciar. La escala y los requisitos de otros niveles no se probaron."
+      "experimental_evidence": "Una mejora legítima del Caballero cambió Knight de 0 a 1 y persistió tras reiniciar. La escala y los requisitos de otros niveles no se probaron. El informe de la Fase 6.13 muestra el nivel observado y lo marca como no validado fuera de Knight; no infiere un máximo."
     },
     {
       "internal_name": "heroSkill",
@@ -1543,7 +1571,7 @@
       ],
       "validation_level": "E2",
       "edit_policy": "solo lectura",
-      "experimental_evidence": "802 entradas en 42 listas. Valores observados: 0, 1, enteros negativos y positivos. No se ha demostrado que 1 sea posesión ni que los demás sean precio o requisito."
+      "experimental_evidence": "802 entradas en 42 listas. Valores observados: 0, 1, enteros negativos y positivos. No se ha demostrado que 1 sea posesión ni que los demás sean precio o requisito. El informe de la Fase 6.13 no usa estos valores para afirmar posesión ni los edita."
     },
     {
       "internal_name": "chips",

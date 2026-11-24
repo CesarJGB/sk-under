@@ -124,6 +124,7 @@ def test_load_and_prepare_real_flow_without_network(tmp_path):
     assert loaded.status_code == 200, loaded.text
     assert loaded.json()["gems"] == 1000
     assert loaded.json()["remote"]["source"] == "modern-cloud"
+    assert loaded.json()["report"]["fish_chips"]["status"] == "read_only"
     assert provider.calls == 1
 
     prepared = client.post(LAB + "/prepare", headers=auth(), json={"new_gems": 1001})
