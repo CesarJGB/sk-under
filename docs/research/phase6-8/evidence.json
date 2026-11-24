@@ -2,6 +2,8 @@
   "phase": "6.8",
   "branch": "feature/phase6-8-web-native-auth",
   "base_commit": "25219a2",
+  "implementation_commit": "f87d63fcc6997df2d7559334be106e079b47b16d",
+  "published_branch": "origin/feature/phase6-8-web-native-auth",
   "generated_at_utc": "2026-11-24T00:41:39Z",
   "status": "implemented_and_simulated; real_login_and_real_multiaccount_validation_pending_owner",
   "environment": {

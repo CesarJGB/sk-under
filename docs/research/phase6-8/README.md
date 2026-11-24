@@ -117,7 +117,7 @@ El detalle está en [security.md](security.md).
 
 ## 10. ¿Cuál es el commit publicado?
 
-Commit de implementación y documentación: _se completa al publicar la rama_. La rama es `feature/phase6-8-web-native-auth`; no se hace merge a `main`.
+Commit de implementación y documentación: **`f87d63f`** (`f87d63fcc6997df2d7559334be106e079b47b16d`), publicado en `origin/feature/phase6-8-web-native-auth`. El commit que añade esta línea es posterior y no cambia código. No se hace merge a `main`.
 
 ## Niveles alcanzados
 

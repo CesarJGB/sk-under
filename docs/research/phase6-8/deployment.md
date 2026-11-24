@@ -1,6 +1,6 @@
 # Fase 6.8 · Despliegue persistente en Coolify
 
-**Estado: runbook preparado; no ejecutado.** Esta guía describe cómo desplegar la rama `feature/phase6-8-web-native-auth` sin hacer merge a `main` ni activar escrituras. No se creó ningún recurso, volumen ni variable en producción desde esta sesión. La rama debe estar publicada en `origin` antes de usarla; el despliegue y el aprovisionamiento requieren acción manual del propietario. Quedan preparados el contrato de variables, la topología, el procedimiento de respaldo y las comprobaciones de solo lectura; requieren acción manual la publicación de la rama, la creación del recurso y del volumen, la carga de secretos y el aprovisionamiento de `distro_id`/`unique_id`.
+**Estado: runbook preparado; no ejecutado.** Esta guía describe cómo desplegar la rama `feature/phase6-8-web-native-auth` sin hacer merge a `main` ni activar escrituras. No se creó ningún recurso, volumen ni variable en producción desde esta sesión. La rama está publicada en `origin` (commit de implementación `f87d63f`) antes de usar esta guía; el despliegue y el aprovisionamiento requieren acción manual del propietario. Quedan preparados el contrato de variables, la topología, el procedimiento de respaldo y las comprobaciones de solo lectura; requieren acción manual la publicación de la rama, la creación del recurso y del volumen, la carga de secretos y el aprovisionamiento de `distro_id`/`unique_id`.
 
 ## 1. Topología
 
