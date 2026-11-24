@@ -1,5 +1,10 @@
 # Fase 6.14 — Edición experimental de fichas de pesca
 
+> La [Fase 6.15](../phase6-15/README.md) sustituye la edición de un solo campo por
+> una prueba conjunta de `gameData.fishChip` e
+> `itemData.materials.material_fish`, tras comprobarse que la nube conservaba el
+> valor pero el cliente no mostraba las fichas.
+
 Esta fase habilita una prueba manual autorizada del saldo candidato
 `gameData.fishChip` desde el editor web. La escritura se limita a ese campo y
 reutiliza el flujo autenticado, el respaldo cifrado, la confirmación y la

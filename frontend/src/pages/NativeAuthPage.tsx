@@ -62,7 +62,9 @@ const FRIENDLY: Record<string, string> = {
   gems_verification_failed: 'La copia editada no superó la comprobación de integridad.',
   outdated_gems_draft: 'El borrador usa una edición anterior. Prepara de nuevo la edición antes de subirla.',
   invalid_fish_chip_value: 'Introduce un número entero no negativo dentro del intervalo de fichas de pesca.',
+  invalid_fish_material_value: 'itemData.materials.material_fish no es un entero; no se sobrescribe automáticamente.',
   fish_chip_field_missing: 'La partida no contiene gameData.fishChip; la edición experimental no está disponible.',
+  fish_material_field_missing: 'La partida no contiene itemData.materials; la edición experimental no está disponible.',
   fish_chip_verification_failed: 'La copia editada de fichas no superó la comprobación de integridad.',
   fish_chip_edit: 'No se pudo preparar la edición experimental de fichas de pesca.',
   outdated_fish_chip_draft: 'El borrador de fichas usa una edición anterior. Prepara de nuevo la edición antes de subirla.',
@@ -374,9 +376,15 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     && fishAmount >= fishLimits.min && fishAmount <= fishLimits.max
   const disabled = operation.pending || backupOperation.pending
   const originalFishChip = save?.fish_chip ?? save?.report?.fish_chips.balance ?? null
+  const originalMaterialFish = save?.material_fish ?? null
   const cloudFishChip = fishResult?.persisted
     ? fishResult.remote_value ?? originalFishChip
     : originalFishChip
+  const cloudMaterialFish = fishResult?.persisted
+    ? fishResult.remote_material_fish ?? originalMaterialFish
+    : originalMaterialFish
+  const fishAlreadyCurrent = fishAmount === originalFishChip
+    && originalMaterialFish != null && fishAmount === originalMaterialFish
 
   function clearPreview() {
     setCandidate(null)
@@ -596,17 +604,22 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
       <div>
         <span className="cloud-kicker">Experimental · E2</span>
         <h2 id="edit-fish-chip-title">Fichas de pesca</h2>
-        <p className="cloud-state">gameData.fishChip · {accountLabel}</p>
+        <p className="cloud-state">gameData.fishChip + itemData.materials.material_fish · {accountLabel}</p>
       </div>
       <div className="editor-current">
-        <span>{fishResult?.persisted ? 'Últimas fichas verificadas' : 'Fichas de la copia descargada'}</span>
+        <span>{fishResult?.persisted ? 'Últimos valores verificados' : 'Valores de la copia descargada'}</span>
         <strong data-testid="native-current-fish-chip">
           {cloudFishChip == null ? '—' : gemFormat.format(cloudFishChip)}
+        </strong>
+        <span>material_fish</span>
+        <strong data-testid="native-current-material-fish">
+          {cloudMaterialFish == null ? '—' : gemFormat.format(cloudMaterialFish)}
         </strong>
       </div>
     </div>
     <Notice tone="warning">
-      La escritura de <code>gameData.fishChip</code> es una prueba experimental autorizada.
+      La escritura conjunta de <code>gameData.fishChip</code> y
+      <code>itemData.materials.material_fish</code> es una prueba experimental autorizada.
       No se ha validado la autoridad del servidor, el gasto dentro del juego ni la persistencia
       tras reiniciar. Prepara un respaldo antes de subir.
     </Notice>
@@ -633,10 +646,11 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
           }} />
         <small id="fish-chip-limits">
           Entero entre {gemFormat.format(fishLimits.min)} y {gemFormat.format(fishLimits.max)}.
-          Solo se modifica gameData.fishChip; material_fish, cumulativeFishCount y los historiales no se tocan.
+          Se aplica a gameData.fishChip y a itemData.materials.material_fish; cumulativeFishCount,
+          los historiales y los demás materiales no se tocan.
         </small>
       </label>
-      <button className="button primary" disabled={disabled || !fishValid || fishAmount === originalFishChip}>
+      <button className="button primary" disabled={disabled || !fishValid || fishAlreadyCurrent}>
         Preparar cambio experimental
       </button>
     </form>}
@@ -645,6 +659,10 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
       <dl className="cloud-preview-data">
         <div><dt>Fichas originales</dt><dd>{gemFormat.format(fishCandidate.original_fish_chip)}</dd></div>
         <div><dt>Fichas nuevas</dt><dd>{gemFormat.format(fishCandidate.new_fish_chip)}</dd></div>
+        <div><dt>material_fish original</dt><dd>
+          {fishCandidate.original_material_fish == null ? '—' : gemFormat.format(fishCandidate.original_material_fish)}
+        </dd></div>
+        <div><dt>material_fish nuevo</dt><dd>{gemFormat.format(fishCandidate.new_material_fish)}</dd></div>
         <div><dt>Cambio</dt><dd>{new Intl.NumberFormat('es-MX', { signDisplay: 'exceptZero' })
           .format(fishCandidate.new_fish_chip - fishCandidate.original_fish_chip)}</dd></div>
       </dl>

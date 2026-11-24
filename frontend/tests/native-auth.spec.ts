@@ -20,7 +20,9 @@ const DISTRIBUTIONS = [
 ]
 const SAVE = {
   verified: true, bytes: 505, sha256: SHA, gems: 1001, fish_chip: 3,
-  fish_chip_path: 'gameData.fishChip', fish_chip_write_policy: 'experimental',
+  fish_chip_path: 'gameData.fishChip', material_fish: 3,
+  material_fish_path: 'itemData.materials.material_fish',
+  fish_chip_write_policy: 'experimental',
   sections: 17, remote_source: 'modern-cloud',
 }
 const ACTIVE = {
@@ -104,13 +106,16 @@ const FISH_BACKUP = {
 const FISH_PREPARED = {
   remote: { source: 'modern-cloud', size: 505, sha256: SHA }, backup: FISH_BACKUP,
   field: 'gameData.fishChip', original_fish_chip: 3, new_fish_chip: 7,
+  material_fish_path: 'itemData.materials.material_fish',
+  original_material_fish: 3, new_material_fish: 7,
   original_value: 3, new_value: 7, experimental: true, changed: true,
   candidate_size: 505, candidate_sha256: CANDIDATE,
-  changed_fields: ['gameData.fishChip'],
+  changed_fields: ['gameData.fishChip', 'itemData.materials.material_fish'],
   byte_diff: PREPARED.byte_diff,
   validation: {
-    valid: true, structure_valid: true, only_fish_chip_changed: true,
-    experimental: true, evidence_level: 'E2', message: 'Campos modificados: gameData.fishChip.',
+    valid: true, structure_valid: true, only_fish_fields_changed: true,
+    experimental: true, evidence_level: 'E2',
+    message: 'Campos modificados: gameData.fishChip, itemData.materials.material_fish.',
   },
 }
 
@@ -435,7 +440,7 @@ test('edita y sube el saldo experimental de fichas con el flujo autenticado', as
       action: 'confirm', backup_id: FISH_BACKUP.id, field: 'gameData.fishChip',
       uploaded: true, accepted: true, persisted: true, already_original: false,
       expected_sha256: CANDIDATE, remote_sha256: CANDIDATE, remote_size: 505,
-      remote_gems: 1001, remote_value: 7, status: 200,
+      remote_gems: 1001, remote_value: 7, remote_material_fish: 7, status: 200,
       message: 'La descarga posterior coincide con el agregado subido de las fichas de pesca.',
     } })
   })
@@ -444,6 +449,7 @@ test('edita y sube el saldo experimental de fichas con el flujo autenticado', as
   await page.goto('/partida')
   await page.getByRole('link', { name: 'Abrir Editor' }).click()
   await expect(page.getByTestId('native-current-fish-chip')).toHaveText('3')
+  await expect(page.getByTestId('native-current-material-fish')).toHaveText('3')
   await expect(page.getByText('Experimental · E2').first()).toBeVisible()
   await expect(page.getByText('No se ha validado la autoridad del servidor', { exact: false })).toBeVisible()
   await page.getByLabel('Nuevo saldo de fichas de pesca').fill('7')
@@ -452,10 +458,13 @@ test('edita y sube el saldo experimental de fichas con el flujo autenticado', as
   const preview = page.locator('.cloud-preview-data')
   await expect(preview).toContainText('Fichas originales')
   await expect(preview).toContainText('Fichas nuevas')
+  await expect(preview).toContainText('material_fish original')
+  await expect(preview).toContainText('material_fish nuevo')
   await page.getByLabel(/cambio experimental/).check()
   await page.getByRole('button', { name: 'Subir fichas y verificar' }).click()
   await expect(page.getByText('Cambio experimental subido y verificado en la nube', { exact: false })).toBeVisible()
   await expect(page.getByTestId('native-current-fish-chip')).toHaveText('7')
+  await expect(page.getByTestId('native-current-material-fish')).toHaveText('7')
 
   await page.getByRole('link', { name: 'Partida' }).click()
   await expect(page.getByText('3 fichas de pesca')).toBeVisible()

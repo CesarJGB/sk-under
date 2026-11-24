@@ -28,6 +28,7 @@ from .fish_chip_editor import (
     FISH_CHIP_RECORD_FIELD,
     FishChipEdit,
     FishChipFieldMissing,
+    legacy_fish_chip_candidate_matches,
     prepare_fish_chip_edit,
     read_fish_chip,
 )
@@ -449,8 +450,12 @@ class LabBackupStore:
                 raise BackupIntegrityError(
                     "El candidato del respaldo no es reproducible desde el original."
                 ) from None
-            if current.candidate != candidate:
-                raise BackupIntegrityError("El candidato del respaldo no es reproducible desde el original.")
+            if current.candidate != candidate and not legacy_fish_chip_candidate_matches(
+                original, record.candidate_gems, candidate
+            ):
+                raise BackupIntegrityError(
+                    "El candidato del respaldo no es reproducible desde el original."
+                )
             return BackupBundle(record, original, candidate)
         if read_gems(original).gems != record.original_gems:
             raise BackupIntegrityError("El original del respaldo no conserva el valor registrado.")

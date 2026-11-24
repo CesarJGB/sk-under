@@ -271,6 +271,21 @@ def fish_chip_report(document: Mapping[str, Any]) -> dict[str, object]:
                 "evidence": "E2: nombre y tipo en archivos propios; sin saldo positivo observado.",
             }
         )
+    materials = item.get("materials") if item is not None else None
+    if isinstance(materials, dict) and "material_fish" in materials:
+        material = materials["material_fish"]
+        fields.append(
+            {
+                "path": "itemData.materials.material_fish",
+                "type": kind_of(material),
+                "value": material,
+                "role": "material de pesca (no es el saldo de fichas)",
+                "evidence": (
+                    "E2/H: el propietario recuerda que un editor anterior cambiaba este valor junto con "
+                    "gameData.fishChip; no hay validación dentro del cliente."
+                ),
+            }
+        )
     if item is not None:
         for name in sorted(item):
             if "fishchip" not in name.lower():

@@ -621,7 +621,7 @@ h3 { font-weight: 650; letter-spacing: -.02em; }
 .cloud-editor { max-width: 44rem; }
 .cloud-editor .cloud-form { max-width: 25rem; }
 .fish-chip-editor { border-color: #e0c98f; background: #fffdf6; }
-.fish-chip-editor code { font-family: var(--font-mono); font-size: .9em; }
+.fish-chip-editor code { font-family: var(--font-mono); font-size: .9em; overflow-wrap: anywhere; }
 .fish-chip-editor .cloud-kicker { color: #7a5a12; }
 .editor-current { display: grid; justify-items: end; }
 .editor-current strong { color: var(--accent-dark); font-size: 1.55rem; font-variant-numeric: tabular-nums; }

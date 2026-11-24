@@ -158,6 +158,8 @@ export type LabSave = {
   gems: number
   fish_chip?: number | null
   fish_chip_path?: string
+  material_fish?: number | null
+  material_fish_path?: string
   fish_chip_write_policy?: 'experimental'
   size: number
   sha256: string
@@ -220,8 +222,11 @@ export type LabFishChipPrepared = {
   remote: LabRemote
   backup: LabBackup
   field: 'gameData.fishChip'
+  material_fish_path: string
   original_fish_chip: number
   new_fish_chip: number
+  original_material_fish?: number | null
+  new_material_fish: number
   original_value?: number
   new_value?: number
   experimental: true
@@ -233,7 +238,7 @@ export type LabFishChipPrepared = {
   validation: {
     valid: true
     structure_valid: true
-    only_fish_chip_changed: boolean
+    only_fish_fields_changed: boolean
     experimental: true
     evidence_level: 'E2'
     message: string
@@ -253,6 +258,7 @@ export type LabWriteResult = {
   remote_size: number | null
   remote_gems: number | null
   remote_value?: number | null
+  remote_material_fish?: number | null
   status: number | null
   message: string
 }
@@ -266,6 +272,7 @@ export type LabVerification = {
   remote_size: number
   remote_gems: number | null
   remote_value?: number | null
+  remote_material_fish?: number | null
   expected_candidate_sha256: string
   expected_original_sha256: string
   message: string
@@ -474,6 +481,8 @@ export type NativeSaveSummary = {
   gems: number
   fish_chip?: number | null
   fish_chip_path?: string
+  material_fish?: number | null
+  material_fish_path?: string
   fish_chip_write_policy?: 'experimental'
   sections: number | null
   remote_source: string

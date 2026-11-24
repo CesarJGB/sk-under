@@ -127,6 +127,8 @@ class CloudLabSave(BaseModel):
     gems: int
     fish_chip: int | None = None
     fish_chip_path: str | None = None
+    material_fish: int | None = None
+    material_fish_path: str | None = None
     fish_chip_write_policy: Literal["experimental"] | None = None
     size: int
     sha256: str
@@ -192,6 +194,9 @@ class CloudLabFishChipPrepared(BaseModel):
     backup: CloudBackupSummary
     original_fish_chip: int
     new_fish_chip: int
+    original_material_fish: int | None = None
+    new_material_fish: int | None = None
+    material_fish_path: str | None = None
     original_value: int | None = None
     new_value: int | None = None
     field: str
@@ -245,6 +250,7 @@ class CloudLabWriteResult(BaseModel):
     remote_size: int | None
     remote_gems: int | None
     remote_value: int | None = None
+    remote_material_fish: int | None = None
     status: int | None
     message: str
 
@@ -258,6 +264,7 @@ class CloudLabVerification(BaseModel):
     remote_size: int
     remote_gems: int | None
     remote_value: int | None = None
+    remote_material_fish: int | None = None
     expected_candidate_sha256: str
     expected_original_sha256: str
     message: str

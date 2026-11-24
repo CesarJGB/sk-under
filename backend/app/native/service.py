@@ -391,11 +391,12 @@ class NativeAuthService:
     def prepare_fish_chip(
         self, session: NativeSessionRecord, new_fish_chip: object, source_sha256: str
     ) -> dict[str, object]:
-        """Escritura experimental autorizada de ``gameData.fishChip``.
+        """Escritura experimental autorizada de las dos rutas de pesca.
 
-        No se habilitan otros campos de peces. El respaldo y la restauración
-        comparten el almacén existente y la confirmación sigue exigiendo la
-        misma autorización de escritura del perfil.
+        Aplica el mismo entero a ``gameData.fishChip`` y a
+        ``itemData.materials.material_fish``. No se habilitan otros campos de
+        pesca. El respaldo y la restauración comparten el almacén existente y
+        la confirmación sigue exigiendo la misma autorización del perfil.
         """
         return self._operate(
             session,
@@ -742,9 +743,12 @@ class NativeAuthService:
         save = provider.download()
         gems = read_gems(save.payload)
         try:
-            fish_chip = read_fish_chip(save.payload).fish_chip
+            fish_snapshot = read_fish_chip(save.payload)
+            fish_chip = fish_snapshot.fish_chip
+            material_fish = fish_snapshot.material_fish
         except CloudSaveError:
             fish_chip = None
+            material_fish = None
         return {
             "verified": True,
             "bytes": save.metadata.size,
@@ -752,6 +756,8 @@ class NativeAuthService:
             "gems": gems.gems,
             "fish_chip": fish_chip,
             "fish_chip_path": "gameData.fishChip",
+            "material_fish": material_fish,
+            "material_fish_path": "itemData.materials.material_fish",
             "fish_chip_write_policy": "experimental",
             "sections": None,
             "remote_source": save.metadata.source,
@@ -880,9 +886,12 @@ class NativeAuthService:
         self.store.clear_binding_wait(profile.id)
         gems = read_gems(save.payload)
         try:
-            fish_chip = read_fish_chip(save.payload).fish_chip
+            fish_snapshot = read_fish_chip(save.payload)
+            fish_chip = fish_snapshot.fish_chip
+            material_fish = fish_snapshot.material_fish
         except CloudSaveError:
             fish_chip = None
+            material_fish = None
         self._event("save_verify", "ok", subject=subject)
         return {
             "verified": True,
@@ -891,6 +900,8 @@ class NativeAuthService:
             "gems": gems.gems,
             "fish_chip": fish_chip,
             "fish_chip_path": "gameData.fishChip",
+            "material_fish": material_fish,
+            "material_fish_path": "itemData.materials.material_fish",
             "fish_chip_write_policy": "experimental",
             "sections": None,
             "remote_source": save.metadata.source,

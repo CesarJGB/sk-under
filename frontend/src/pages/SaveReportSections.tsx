@@ -112,7 +112,8 @@ export function SaveReportSections({ report }: { report: SaveReport }) {
         </div>
         <p>
           {fish.balance_path ? `Campo candidato: ${fish.balance_path}. ` : 'No se encontró el campo candidato. '}
-          La escritura de gameData.fishChip está habilitada solo como prueba experimental autorizada; no está validada.
+          La escritura conjunta de gameData.fishChip e itemData.materials.material_fish está habilitada
+          solo como prueba experimental autorizada; no está validada.
         </p>
         <p data-testid="fish-chip-missing-proof">{fish.missing_proof}</p>
       </div>
