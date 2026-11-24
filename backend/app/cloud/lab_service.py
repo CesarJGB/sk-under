@@ -24,6 +24,7 @@ from .gems_editor import (
     GemsEdit,
     prepare_gems_edit,
     read_gems,
+    require_gems_write_compatibility,
 )
 from .provider import AcquiredCloudSave, CloudSaveMetadata
 
@@ -295,7 +296,7 @@ class CloudLabService:
         save = self.provider.download(self.max_input_bytes)
         if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
             raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
-        edit = prepare_gems_edit(save.payload, new_gems)
+        edit = prepare_gems_edit(save.payload, new_gems, require_consistency=True)
         if edit.original_sha256 != save.metadata.sha256:
             raise LabServiceError("El original preparado no coincide con la descarga.")
         bundle = self.store.save(
@@ -330,6 +331,7 @@ class CloudLabService:
                 raise LabHashMismatch("La huella esperada no coincide con el candidato respaldado.")
             if self.store.confirmation(backup_id) is not None:
                 raise LabAlreadyConfirmed("Este respaldo ya fue confirmado; usa la verificación.")
+            require_gems_write_compatibility(bundle.original, bundle.record.candidate_gems)
             current = self.provider.download(self.max_input_bytes)
             if current.metadata.sha256 != bundle.record.original_sha256:
                 raise LabRemoteChanged(
@@ -360,7 +362,8 @@ class CloudLabService:
                 remote_gems=remote_gems,
                 status=upload.status,
                 message=(
-                    "La descarga posterior coincide con el agregado subido."
+                    "La descarga posterior coincide con el agregado subido. "
+                    "Las transacciones y la persistencia dentro del juego siguen sin verificarse."
                     if persisted
                     else "La subida fue aceptada, pero la descarga posterior no coincide. No se declara persistencia."
                 ),

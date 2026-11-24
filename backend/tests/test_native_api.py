@@ -259,6 +259,7 @@ def test_installation_pending_can_be_completed_from_the_owner_session(tmp_path):
     assert env["client"].get(API + "/save", headers=HEADERS).json()["gems"] == 1000
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_two_accounts_have_isolated_sessions_backups_and_saves(tmp_path):
     env = make_native(tmp_path)
     profile_b = add_account_b(env)
@@ -330,6 +331,7 @@ def test_a_save_from_another_account_is_rejected_after_binding(tmp_path):
     assert "sintetico-cuenta-beta" not in response.text
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_session_expiry_idle_and_restart_persistence(tmp_path):
     env = make_native(tmp_path)
     assert login(env["client"]).status_code == 200
@@ -363,6 +365,7 @@ def test_session_expiry_idle_and_restart_persistence(tmp_path):
     assert restarted.get(API + "/backups", headers=HEADERS).json()["backups"][0]["id"] == draft["backup"]["id"]
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_write_requires_global_flag_profile_permission_and_confirmation(tmp_path):
     read_only = make_native(tmp_path / "off", write=False)
     assert login(read_only["client"]).status_code == 200
@@ -412,6 +415,56 @@ def test_write_requires_global_flag_profile_permission_and_confirmation(tmp_path
     assert writable["providers"]["unique-a"].payload == PAYLOAD_A
 
 
+@pytest.mark.parametrize("unsupported", ["new_version", "malformed_preference_snapshot"])
+def test_incompatible_aggregate_is_readable_but_cannot_prepare_a_write(tmp_path, unsupported):
+    env = make_native(tmp_path, write=True)
+    client = env["client"]
+    assert login(client).status_code == 200
+    payload = json.loads(PAYLOAD_A)
+    if unsupported == "new_version":
+        payload["serialzedVersion"] = 2
+    else:
+        payload["gameData"]["lastGems"] = True
+    env["providers"]["unique-a"].payload = canonical(payload)
+    source = client.get(API + "/save", headers=HEADERS)
+    assert source.status_code == 200
+    assert_error(
+        client.post(API + "/prepare", headers=HEADERS,
+                    json={"new_gems": 1002, "source_sha256": source.json()["sha256"]}),
+        422, "unsupported_gems_structure",
+    )
+    assert client.get(API + "/backups", headers=HEADERS).json()["backups"] == []
+    assert env["uploaders"]["unique-a"].calls == []
+
+
+@pytest.mark.parametrize(("gems", "expected_error"), [
+    (1000, "inconsistent_gems_balance"),
+    (1001, "inconsistent_gems_balance"),
+    (1000, "unknown_gems_dependencies"),
+])
+def test_native_rejects_partial_gems_edits_before_backup_or_upload(tmp_path, gems, expected_error):
+    env = make_native(tmp_path, write=True)
+    client = env["client"]
+    assert login(client).status_code == 200
+    original = json.loads(PAYLOAD_A)
+    original["gameData"].update(gems=gems, lastGems=0, cumulativeGems=1000, cumulativeConsumeGems=0)
+    if expected_error != "unknown_gems_dependencies":
+        original["gameData"]["varGems"] = 1000
+    before = canonical(original)
+    env["providers"]["unique-a"].payload = before
+    source = client.get(API + "/save", headers=HEADERS)
+    assert source.status_code == 200
+    assert source.json()["gems"] == gems
+    assert_error(
+        client.post(API + "/prepare", headers=HEADERS,
+                    json={"new_gems": 1002, "source_sha256": source.json()["sha256"]}),
+        422, expected_error,
+    )
+    assert client.get(API + "/backups", headers=HEADERS).json()["backups"] == []
+    assert env["uploaders"]["unique-a"].calls == []
+    assert env["providers"]["unique-a"].payload == before
+
+
 def test_origin_content_type_and_body_limits_are_enforced(tmp_path):
     env = make_native(tmp_path)
     assert_error(login(env["client"], headers={}), 403, "native_origin_denied")
@@ -441,6 +494,7 @@ def test_multiple_profiles_require_an_explicit_choice(tmp_path):
     assert login(env["client"], email="b@example.test", password="pass-b", profile=profile_b.id).status_code == 200
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_concurrent_confirmation_uploads_exactly_once(tmp_path):
     env = make_native(tmp_path, write=True, allow_write=True)
     second = TestClient(env["app"], base_url="http://127.0.0.1:8000", client=("127.0.0.1", 50001))

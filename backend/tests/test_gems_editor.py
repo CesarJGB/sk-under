@@ -15,8 +15,10 @@ from app.cloud.backup_store import (
 from app.cloud.gems_editor import (
     MAX_GEMS,
     GemsFieldMissing,
+    InconsistentGemsBalance,
     InvalidGemsValue,
     UnsupportedAggregateSerialization,
+    UnsupportedGemsStructure,
     prepare_gems_edit,
     read_gems,
 )
@@ -208,6 +210,7 @@ def test_status_distinguishes_read_only_and_live(tmp_path):
     assert live.status().backup_count == 0
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_prepare_creates_verified_private_backup(tmp_path):
     provider = FixedProvider(FIXTURE.read_bytes())
     lab = service(tmp_path, provider)
@@ -236,6 +239,7 @@ def test_prepare_noop_is_recorded_but_not_writable(tmp_path):
         lab.confirm(prepared.backup.id, prepared.edit.candidate_sha256)
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_confirm_requires_server_side_write_configuration(tmp_path):
     provider = FixedProvider(FIXTURE.read_bytes())
     lab = service(tmp_path, provider, uploader=FakeUploader(provider))
@@ -244,6 +248,33 @@ def test_confirm_requires_server_side_write_configuration(tmp_path):
         lab.confirm(prepared.backup.id, prepared.edit.candidate_sha256)
 
 
+@pytest.mark.parametrize("unknown_version", [False, True])
+def test_old_incompatible_draft_cannot_confirm_but_original_can_be_restored(tmp_path, unknown_version):
+    before = document()
+    if unknown_version:
+        before["serialzedVersion"] = 2
+    before["gameData"].update(lastGems=0, varGems=1000, cumulativeGems=1000, cumulativeConsumeGems=0)
+    original = canonical(before)
+    provider = FixedProvider(original)
+    uploader = FakeUploader(provider)
+    lab = service(tmp_path, provider, write=True, uploader=uploader)
+    old_edit = prepare_gems_edit(original, 1001)
+    bundle = lab.store.save(
+        old_edit, remote_source="modern-cloud", remote_size=len(original),
+        remote_sha256=old_edit.original_sha256,
+    )
+    error = UnsupportedGemsStructure if unknown_version else InconsistentGemsBalance
+    with pytest.raises(error):
+        lab.confirm(bundle.record.id, old_edit.candidate_sha256, single_attempt=True)
+    assert uploader.calls == []
+    assert provider.calls == 0
+
+    provider.payload = old_edit.candidate
+    assert lab.restore(bundle.record.id).persisted is True
+    assert uploader.calls == [original]
+
+
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_confirm_checks_hash_before_any_write(tmp_path):
     provider = FixedProvider(FIXTURE.read_bytes())
     uploader = FakeUploader(provider)
@@ -254,6 +285,7 @@ def test_confirm_checks_hash_before_any_write(tmp_path):
     assert uploader.calls == []
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_confirm_uploads_and_verifies_persistence(tmp_path):
     provider = FixedProvider(FIXTURE.read_bytes())
     uploader = FakeUploader(provider)
@@ -269,6 +301,7 @@ def test_confirm_uploads_and_verifies_persistence(tmp_path):
     assert len(uploader.calls) == 1
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_confirm_aborts_if_remote_changed_after_prepare(tmp_path):
     provider = FixedProvider(FIXTURE.read_bytes())
     uploader = FakeUploader(provider)
@@ -282,6 +315,7 @@ def test_confirm_aborts_if_remote_changed_after_prepare(tmp_path):
     assert uploader.calls == []
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_confirm_reports_failed_persistence_without_confirming(tmp_path):
     provider = FixedProvider(FIXTURE.read_bytes())
     uploader = FakeUploader(provider)
@@ -300,6 +334,7 @@ def test_confirm_reports_failed_persistence_without_confirming(tmp_path):
     assert lab.store.confirmation(prepared.backup.id) is None
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_restore_reverts_the_candidate_and_is_verified(tmp_path):
     provider = FixedProvider(FIXTURE.read_bytes())
     uploader = FakeUploader(provider)
@@ -315,6 +350,7 @@ def test_restore_reverts_the_candidate_and_is_verified(tmp_path):
     assert len(uploader.calls) == 2
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_verify_distinguishes_candidate_and_original(tmp_path):
     provider = FixedProvider(FIXTURE.read_bytes())
     lab = service(tmp_path, provider)
@@ -328,6 +364,7 @@ def test_verify_distinguishes_candidate_and_original(tmp_path):
     assert candidate_check.remote_gems == 1001
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_backup_store_rejects_tampering_and_traversal(tmp_path):
     provider = FixedProvider(FIXTURE.read_bytes())
     lab = service(tmp_path, provider)
@@ -342,6 +379,7 @@ def test_backup_store_rejects_tampering_and_traversal(tmp_path):
         lab.store.load("0" * 32)
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_backup_store_does_not_overwrite_confirmation(tmp_path):
     provider = FixedProvider(FIXTURE.read_bytes())
     lab = service(tmp_path, provider)
@@ -351,6 +389,7 @@ def test_backup_store_does_not_overwrite_confirmation(tmp_path):
         lab.store.save_confirmation(prepared.backup.id, {"ok": False})
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_backup_store_keeps_events_outside_the_record(tmp_path):
     provider = FixedProvider(FIXTURE.read_bytes())
     lab = service(tmp_path, provider)
@@ -361,6 +400,7 @@ def test_backup_store_keeps_events_outside_the_record(tmp_path):
     assert "cloudSaveId" not in "\n".join(events)
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_restore_aborts_if_cloud_changed_after_confirmation(tmp_path):
     provider = FixedProvider(FIXTURE.read_bytes())
     uploader = FakeUploader(provider)

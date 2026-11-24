@@ -1,8 +1,4 @@
-"""Conocimiento y diagnóstico conservador de recursos del agregado.
-
-Ninguna relación transaccional se considera demostrada por coincidencia de valores.
-El planificador estricto no autoriza escrituras hasta contar con esa evidencia.
-"""
+"""Estructuras observadas y comprobaciones de consistencia del agregado."""
 from dataclasses import dataclass
 from typing import Any
 
@@ -16,14 +12,16 @@ class Resource:
     name: str
     observed_paths: tuple[tuple[str, ...], ...]
     evidence: str
-    transactional_relations_confirmed: bool = False
+    aggregate_versions: frozenset[int] = frozenset()
+    integer_range: tuple[int, int] | None = None
 
 
 RESOURCES = {
     "gems": Resource("gems", "Gemas", (("gameData", "gems"),
         ("gameData", "lastGems"), ("gameData", "varGems"),
         ("gameData", "cumulativeGems"), ("gameData", "cumulativeConsumeGems")),
-        "docs/research/phase5-5/save-schema-880.md; docs/research/phase5-8/cloud-roundtrip.md"),
+        "docs/research/phase6-11/README.md",
+        aggregate_versions=frozenset({1}), integer_range=(0, 2_147_483_647)),
     "fish": Resource("fish", "Pescados", (("itemData", "cumulativeFishCount"),),
         "docs/research/phase5-5/schema-diff-860-880.md"),
     "season_coin": Resource("season_coin", "Monedas de temporada", (("seasonData", "coin"),
@@ -34,6 +32,60 @@ RESOURCES = {
 
 class ConsistencyUnknown(ValueError):
     """No hay evidencia suficiente para garantizar una operación."""
+
+
+class IncompatibleResource(ValueError):
+    """El recurso no encaja en la estructura respaldada por las muestras."""
+
+
+class ResourceDiscrepancy(ValueError):
+    """La edición no preservaría una relación observada en el cliente."""
+
+
+GEMS_PREFERENCES = {
+    "gems": "gems",
+    "last_gems": "lastGems",
+    "var_gems": "varGems",
+    "cumulative_gems": "cumulativeGems",
+    "cumulative_consume_gems": "cumulativeConsumeGems",
+}
+
+
+def validate_resource_shape(document: dict, resource_id: str) -> None:
+    """Valida el perfil del agregado sin exigir campos auxiliares para leerlo."""
+    resource = RESOURCES[resource_id]
+    version = document.get("serialzedVersion")
+    if type(version) is not int or version not in resource.aggregate_versions:
+        raise IncompatibleResource("La versión del agregado no está verificada para editar este recurso.")
+    if resource_id == "gems":
+        data = document.get("gameData")
+        if not isinstance(data, dict):
+            raise IncompatibleResource("Se requiere gameData como objeto JSON.")
+        # Los cinco miembros observados son Int32 en el modelo 8.8.0. Los
+        # auxiliares ausentes no se inventan. No se imponen signos ni igualdades.
+        for _, key in resource.observed_paths:
+            if key in data and (type(data[key]) is not int or not -(2**31) <= data[key] < 2**31):
+                raise IncompatibleResource(f"gameData.{key} debe ser un entero de 32 bits.")
+
+
+def validate_gems_transition(document: dict, target: int) -> None:
+    """Rechaza escrituras que no preservan la relación local de ConsumeGem."""
+    validate_resource_shape(document, "gems")
+    data = document["gameData"]
+    if data.get("gems") == target:
+        return  # La confirmación impide subir operaciones sin cambios.
+    if "lastGems" not in data or "varGems" not in data:
+        raise ConsistencyUnknown("Faltan campos para comprobar la consistencia de las gemas.")
+    effective = data["lastGems"] + data["varGems"]
+    minimum, maximum = RESOURCES["gems"].integer_range
+    if not minimum <= effective <= maximum:
+        raise ConsistencyUnknown("El saldo calculado queda fuera del intervalo verificado.")
+    if data.get("gems") != effective:
+        raise ResourceDiscrepancy("La partida de nube contiene un saldo de gemas discrepante.")
+    if target != effective:
+        raise ResourceDiscrepancy(
+            "Editar solo el saldo dejaría las gemas inconsistentes al gastar en el juego."
+        )
 
 
 def inspect_resource(document: dict, resource_id: str) -> dict[str, str]:
@@ -52,14 +104,6 @@ def inspect_resource(document: dict, resource_id: str) -> dict[str, str]:
 
 
 _MISSING = object()
-
-
-def plan_consistent_edit(document: dict, resource_id: str, value: object) -> None:
-    """Rechaza de forma explícita mientras se desconozcan las dependencias."""
-    resource = RESOURCES[resource_id]
-    if not resource.transactional_relations_confirmed:
-        raise ConsistencyUnknown(f"Dependencias transaccionales desconocidas: {resource_id}")
-    raise ConsistencyUnknown("No existe un planificador validado para este recurso")
 
 
 def aggregate_tree(source: bytes) -> dict:

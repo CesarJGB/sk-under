@@ -29,13 +29,18 @@ from ..cloud_save import (
 )
 from ..parsers.json_document import parse_json
 from .lab import BinaryDiff, binary_diff
+from .resource_consistency import (
+    RESOURCES,
+    ConsistencyUnknown,
+    IncompatibleResource,
+    ResourceDiscrepancy,
+    validate_gems_transition,
+)
 
-GEMS_FIELD_ID = "gems"
-GEMS_CATEGORY = "Gemas"
-MIN_GEMS = 0
-# Cota conservadora de entero con signo de 32 bits. No se verificó que el
-# servicio acepte valores fuera de este rango; el editor no los propone.
-MAX_GEMS = 2_147_483_647
+_GEMS = RESOURCES["gems"]
+GEMS_FIELD_ID = _GEMS.id
+GEMS_CATEGORY = _GEMS.name
+MIN_GEMS, MAX_GEMS = _GEMS.integer_range
 
 
 class GemsEditError(CloudSaveError):
@@ -56,6 +61,18 @@ class UnsupportedAggregateSerialization(GemsEditError):
 
 class GemsVerificationError(GemsEditError):
     code = "gems_verification_failed"
+
+
+class UnsupportedGemsStructure(GemsEditError):
+    code = "unsupported_gems_structure"
+
+
+class UnknownGemsDependencies(GemsEditError):
+    code = "unknown_gems_dependencies"
+
+
+class InconsistentGemsBalance(GemsEditError):
+    code = "inconsistent_gems_balance"
 
 
 @dataclass(frozen=True)
@@ -170,6 +187,22 @@ def _game_data(root: JsonObject) -> JsonObject:
     return game_data
 
 
+def _require_gems_write_compatibility(root: JsonObject, target: int) -> None:
+    try:
+        validate_gems_transition(root, target)
+    except IncompatibleResource as exc:
+        raise UnsupportedGemsStructure(str(exc)) from None
+    except ConsistencyUnknown as exc:
+        raise UnknownGemsDependencies(str(exc)) from None
+    except ResourceDiscrepancy as exc:
+        raise InconsistentGemsBalance(str(exc)) from None
+
+
+def require_gems_write_compatibility(source: bytes, target: int) -> None:
+    root, _ = _validated_document(source)
+    _require_gems_write_compatibility(root, target)
+
+
 def read_gems(source: bytes) -> GemsSnapshot:
     """Lee ``gameData.gems`` y valida la estructura sin modificarla."""
     root, version = _validated_document(source)
@@ -197,11 +230,12 @@ def _assert_only_gems_changed(original: JsonObject, modified: JsonObject, origin
         raise GemsVerificationError("La serialización no es determinista para el original.")
 
 
-def prepare_gems_edit(source: bytes, new_gems: object) -> GemsEdit:
+def prepare_gems_edit(source: bytes, new_gems: object, *, require_consistency: bool = False) -> GemsEdit:
     """Prepara una copia con solo ``gameData.gems`` modificado.
 
     Un valor igual al actual produce una operación sin cambios y conserva los
-    bytes originales exactos.
+    bytes originales exactos. La reproducción de respaldos antiguos valida
+    solo los bytes, con las reglas de escritura aplicadas en CloudLabService.
     """
     value = validate_gems_value(new_gems)
     root, version = _validated_document(source)
@@ -209,6 +243,8 @@ def prepare_gems_edit(source: bytes, new_gems: object) -> GemsEdit:
     if GEMS_FIELD_ID not in game_data:
         raise GemsFieldMissing("La copia no contiene gameData.gems.")
     original_gems = validate_gems_value(game_data[GEMS_FIELD_ID])
+    if require_consistency:
+        _require_gems_write_compatibility(root, value)
     original_sha = sha256(source).hexdigest()
 
     if value == original_gems:

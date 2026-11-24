@@ -118,6 +118,7 @@ def test_lab_requires_the_existing_access_token():
     assert_error(production.get(LAB + "/save", headers=auth()), 503, "cloud_lab_not_configured")
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_load_and_prepare_real_flow_without_network(tmp_path):
     client, provider, _ = lab_client(tmp_path)
     loaded = client.get(LAB + "/save", headers=auth())
@@ -148,6 +149,7 @@ def test_load_and_prepare_real_flow_without_network(tmp_path):
     assert [item["id"] for item in backups.json()["backups"]] == [body["backup"]["id"]]
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_confirm_requires_admin_header_and_phrase(tmp_path):
     client, _, uploader = lab_client(tmp_path)
     prepared = client.post(LAB + "/prepare", headers=auth(), json={"new_gems": 1001}).json()
@@ -177,6 +179,7 @@ def test_confirm_requires_admin_header_and_phrase(tmp_path):
     assert uploader.calls == []
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_confirm_persists_and_verifies_then_restores(tmp_path):
     client, provider, uploader = lab_client(tmp_path)
     prepared = client.post(LAB + "/prepare", headers=auth(), json={"new_gems": 1001}).json()
@@ -215,6 +218,7 @@ def test_confirm_persists_and_verifies_then_restores(tmp_path):
     assert provider.payload == FIXTURE.read_bytes()
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_confirm_rejects_noop_and_remote_changes(tmp_path):
     client, provider, uploader = lab_client(tmp_path)
     noop = client.post(LAB + "/prepare", headers=auth(), json={"new_gems": 1000}).json()
@@ -247,6 +251,7 @@ def test_confirm_rejects_noop_and_remote_changes(tmp_path):
     assert uploader.calls == []
 
 
+@pytest.mark.usefixtures("legacy_gems_policy")
 def test_write_disabled_and_admin_missing_fail_closed(tmp_path):
     client, _, _ = lab_client(tmp_path, write=False, uploader=False)
     prepared = client.post(LAB + "/prepare", headers=auth(), json={"new_gems": 1001}).json()
