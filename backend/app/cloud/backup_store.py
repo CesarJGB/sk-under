@@ -24,7 +24,7 @@ from Crypto.Cipher import AES
 
 from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError, reconstruct_cloud_save
 from ..parsers.json_document import parse_json
-from .gems_editor import GemsEdit, prepare_gems_edit, read_gems
+from .gems_editor import GemsEdit, GemsEditError, prepare_gems_edit, read_gems, replay_legacy_gems_edit
 
 _ID = re.compile(r"^[0-9a-f]{32}$")
 _RECORD_LIMIT = 64 * 1024
@@ -392,14 +392,16 @@ class LabBackupStore:
         reconstruct_cloud_save(original)
         if read_gems(original).gems != record.original_gems:
             raise BackupIntegrityError("El original del respaldo no conserva el valor registrado.")
-        edit = prepare_gems_edit(original, record.candidate_gems)
-        if (
-            edit.changed != record.changed
-            or edit.new_gems != record.candidate_gems
-            or edit.candidate_sha256 != record.candidate_sha256
-            or edit.candidate != candidate
-        ):
-            raise BackupIntegrityError("El candidato del respaldo no es reproducible desde el original.")
+        if record.changed != (original != candidate):
+            raise BackupIntegrityError("El indicador de cambio del respaldo no coincide.")
+        legacy = replay_legacy_gems_edit(original, record.candidate_gems)
+        if legacy.candidate != candidate:
+            try:
+                current = prepare_gems_edit(original, record.candidate_gems)
+            except GemsEditError:
+                raise BackupIntegrityError("El candidato del respaldo no es reproducible desde el original.") from None
+            if current.candidate != candidate:
+                raise BackupIntegrityError("El candidato del respaldo no es reproducible desde el original.")
         return BackupBundle(record, original, candidate)
 
     def list(self, limit: int = 25) -> list[BackupRecord]:

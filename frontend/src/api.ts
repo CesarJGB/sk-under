@@ -97,10 +97,11 @@ export type LabPrepared = {
   candidate_size: number
   candidate_sha256: string
   byte_diff: LabByteDiff
+  changed_fields?: string[]
   validation: {
     valid: true
     structure_valid: true
-    only_gems_changed: true
+    only_gems_changed: boolean
     message: string
   }
 }
@@ -168,6 +169,11 @@ async function request(
     credentials,
     redirect: 'error',
     signal,
+  }).catch((error: unknown) => {
+    if (error instanceof TypeError) {
+      throw new ApiProblem('No se pudo conectar con la API de SK-Under.', [], 'network_error')
+    }
+    throw error
   })
 
   if (!response.ok) {

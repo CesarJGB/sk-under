@@ -117,7 +117,6 @@ def test_accounts_storage_failure_does_not_mark_api_unavailable(setup, monkeypat
     assert client.get(API, headers=HEADERS).json()["storage_status"] == "ready"
 
 
-@pytest.mark.usefixtures("legacy_gems_policy")
 def test_logout_revokes_browser_cookie_and_cloud_session_without_affecting_second_owner(setup):
     _, store, app, client, *_ = setup
     account = claim(client, issue(store)).json()["accounts"][0]["id"]
@@ -178,7 +177,6 @@ def test_claim_checks_origin_replays_and_cookie_privacy(setup):
     assert not TestClient(wrong_key, base_url=BASE).get(API).json()["configured"]
 
 
-@pytest.mark.usefixtures("legacy_gems_policy")
 def test_switch_accounts_reject_cross_account_access_and_preserve_browser_after_restart(setup):
     settings, store, app, client, *_ = setup
     first = claim(client, issue(store)).json()["accounts"][0]["id"]
@@ -203,7 +201,6 @@ def test_switch_accounts_reject_cross_account_access_and_preserve_browser_after_
     assert_error(restarted.get(endpoint(first, "backups")), 404, "cloud_account_missing")
 
 
-@pytest.mark.usefixtures("legacy_gems_policy")
 def test_confirm_checks_concurrency_and_integrity_and_restores(setup):
     _, store, _, client, providers, uploads = setup
     account = claim(client, issue(store)).json()["accounts"][0]["id"]
@@ -259,7 +256,6 @@ def test_expiry_network_and_remote_identity(setup, monkeypatch):
     assert_error(client.get(endpoint(account, "save")), 422, "cloud_account_mismatch")
 
 
-@pytest.mark.usefixtures("legacy_gems_policy")
 def test_uncertain_upload_requires_a_fresh_edit_and_global_guard_survives_restart(setup, monkeypatch):
     settings, store, _, client, _, uploads = setup
     account = claim(client, issue(store)).json()["accounts"][0]["id"]

@@ -157,7 +157,7 @@ class CloudByteDiff(BaseModel):
 class CloudLabValidation(BaseModel):
     valid: Literal[True] = True
     structure_valid: Literal[True] = True
-    only_gems_changed: Literal[True] = True
+    only_gems_changed: bool
     message: str
 
 
@@ -170,6 +170,7 @@ class CloudLabPrepared(BaseModel):
     candidate_size: int
     candidate_sha256: str
     byte_diff: CloudByteDiff
+    changed_fields: list[str]
     validation: CloudLabValidation
 
 

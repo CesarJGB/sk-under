@@ -48,12 +48,13 @@ const PREPARED = {
   remote: { source: 'modern-cloud', size: 505, sha256: SHA }, backup: BACKUP,
   original_gems: 1001, new_gems: 1002, changed: true,
   candidate_size: 505, candidate_sha256: CANDIDATE,
+  changed_fields: ['gameData.gems', 'gameData.varGems'],
   byte_diff: {
     original_size: 505, modified_size: 505, first_difference: 1, common_prefix: 1,
     common_suffix: 503, changed_original_bytes: 1, changed_modified_bytes: 1,
     original_sha256: SHA, modified_sha256: CANDIDATE,
   },
-  validation: { valid: true, structure_valid: true, only_gems_changed: true, message: 'Solo cambia gameData.gems.' },
+  validation: { valid: true, structure_valid: true, only_gems_changed: false, message: 'Campos modificados: gameData.gems, gameData.varGems.' },
 }
 
 async function mockBase(page: Page, config: object = BASE_CONFIG) {
@@ -136,6 +137,7 @@ test('inicia sesión, descarga, prepara, confirma y cierra sesión', async ({ pa
   await page.getByLabel('Nueva cantidad de gemas').fill('1002')
   await page.getByRole('button', { name: 'Preparar edición' }).click()
   await expect(page.getByText('+1', { exact: true })).toBeVisible()
+  await expect(page.getByText('Se ajusta la variación de gemas junto con el saldo.')).toBeVisible()
   const confirm = page.getByRole('button', { name: 'Subir y verificar' })
   await expect(confirm).toBeDisabled()
   await page.getByRole('checkbox').check()
@@ -148,6 +150,28 @@ test('inicia sesión, descarga, prepara, confirma y cierra sesión', async ({ pa
   await expect(page.getByRole('heading', { name: 'Iniciar sesión en ChillyRoom' })).toBeVisible()
   await expect(page.getByTestId('native-current-gems')).toHaveCount(0)
 })
+
+for (const [code, message] of [
+  ['unsupported_gems_structure', 'La versión o los tipos de los campos de gemas son incompatibles con el editor.'],
+  ['unknown_gems_dependencies', 'El saldo depende de contadores ausentes o fuera del intervalo compatible.'],
+  ['inconsistent_gems_balance', 'Primero prepara una edición con el saldo conciliado (1000).'],
+  ['network_error', 'No se pudo conectar con la API de SK-Under. Revisa tu conexión.'],
+]) {
+  test(`explica el error de preparación ${code}`, async ({ page }) => {
+    await mockBase(page)
+    await mockEditor(page, { ...ACTIVE, save: SAVE })
+    await page.route('**/api/v1/cloud/native/prepare', (route) => code === 'network_error'
+      ? route.abort('connectionrefused')
+      : route.fulfill({ status: 422, json: { error: { code, message } } }))
+    await page.goto('/partida')
+    await submitLogin(page)
+    await page.getByRole('link', { name: 'Abrir Editor' }).click()
+    await page.getByLabel('Nueva cantidad de gemas').fill('1002')
+    await page.getByRole('button', { name: 'Preparar edición' }).click()
+    await expect(page.getByText(message, { exact: true })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Subir y verificar' })).toHaveCount(0)
+  })
+}
 
 test('no pide identificadores y descarga con la identidad generada por el servidor', async ({ page }) => {
   await mockBase(page)

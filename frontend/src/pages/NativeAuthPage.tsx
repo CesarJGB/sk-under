@@ -49,9 +49,24 @@ const FRIENDLY: Record<string, string> = {
   cloud_already_confirmed: 'Esta edición ya se subió. Verifica su respaldo en Partida.',
   native_save_identity_mismatch: 'No se pudo verificar que la partida pertenezca a tu cuenta.',
   cloud_remote_changed: 'La partida cambió en la nube. Descárgala de nuevo antes de editar.',
+  network_error: 'No se pudo conectar con la API de SK-Under. Revisa tu conexión.',
+  cloud_provider_unavailable: 'ChillyRoom no respondió al consultar la partida. Inténtalo más tarde.',
+  cloud_provider_protocol: 'La respuesta de ChillyRoom tiene un formato inesperado.',
+  invalid_aggregate: 'La partida descargada tiene un esquema de guardado incompatible.',
+  unsupported_gems_structure: 'La versión o los tipos de los campos de gemas son incompatibles con el editor.',
+  gems_field_missing: 'La partida descargada no contiene el saldo de gemas.',
+  unsupported_serialization: 'La copia usa una serialización incompatible con la edición granular.',
+  unknown_gems_dependencies: 'El saldo depende de contadores ausentes o fuera del intervalo compatible.',
+  invalid_gems_value: 'Introduce un número entero dentro del intervalo de gemas indicado.',
+  gems_verification_failed: 'La copia editada no superó la comprobación de integridad.',
+  outdated_gems_draft: 'El borrador usa una edición anterior. Prepara de nuevo la edición antes de subirla.',
+  cloud_hash_mismatch: 'La huella del borrador no coincide con la del respaldo. Prepara de nuevo la edición.',
+  backup_integrity: 'El respaldo no superó la comprobación de integridad.',
+  backup_store: 'No se pudo guardar o leer el respaldo privado.',
 }
 
 function friendly(error: ApiProblem, fallback: string): ApiProblem {
+  if (error.code === 'inconsistent_gems_balance') return error
   return new ApiProblem(
     FRIENDLY[error.code] ?? (error.message === 'El inicio de sesión requiere HTTPS en el editor y en la API.'
       ? FRIENDLY.native_https_required : fallback),
@@ -510,6 +525,9 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
         <div><dt>Cambio</dt><dd>{new Intl.NumberFormat('es-MX', { signDisplay: 'exceptZero' })
           .format(candidate.new_gems - candidate.original_gems)}</dd></div>
       </dl>
+      {candidate.changed_fields?.includes('gameData.varGems') && <p className="cloud-note">
+        Se ajusta la variación de gemas junto con el saldo.
+      </p>}
       <p className="cloud-note">Se guardó un respaldo de la partida original.</p>
       {session.write_ready && !result && <>
         <label className="cloud-check"><input type="checkbox" checked={confirm} disabled={disabled}

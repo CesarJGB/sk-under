@@ -68,24 +68,31 @@ def validate_resource_shape(document: dict, resource_id: str) -> None:
                 raise IncompatibleResource(f"gameData.{key} debe ser un entero de 32 bits.")
 
 
-def validate_gems_transition(document: dict, target: int) -> None:
-    """Rechaza escrituras que no preservan la relación local de ConsumeGem."""
+def plan_gems_transition(document: dict, target: int) -> dict[str, int]:
+    """Planifica las rutas que mantienen la relación observada en ConsumeGem."""
     validate_resource_shape(document, "gems")
     data = document["gameData"]
     if data.get("gems") == target:
-        return  # La confirmación impide subir operaciones sin cambios.
+        return {}  # La confirmación impide subir operaciones sin cambios.
     if "lastGems" not in data or "varGems" not in data:
-        raise ConsistencyUnknown("Faltan campos para comprobar la consistencia de las gemas.")
+        raise ConsistencyUnknown("Faltan lastGems o varGems para comprobar la consistencia de las gemas.")
     effective = data["lastGems"] + data["varGems"]
     minimum, maximum = RESOURCES["gems"].integer_range
     if not minimum <= effective <= maximum:
         raise ConsistencyUnknown("El saldo calculado queda fuera del intervalo verificado.")
+    if target == effective:
+        return {"gems": target}
     if data.get("gems") != effective:
-        raise ResourceDiscrepancy("La partida de nube contiene un saldo de gemas discrepante.")
-    if target != effective:
         raise ResourceDiscrepancy(
-            "Editar solo el saldo dejaría las gemas inconsistentes al gastar en el juego."
+            f"El saldo descargado difiere del saldo conciliado ({effective}). "
+            "Primero prepara una edición con el saldo conciliado."
         )
+    # Mantener la base previa y los contadores de transacciones reales. La
+    # diferencia es la única variación que satisface la suma con esa base.
+    variation = target - data["lastGems"]
+    if not -(2**31) <= variation < 2**31:
+        raise ConsistencyUnknown("La variación de gemas quedaría fuera del intervalo de 32 bits.")
+    return {"gems": target, "varGems": variation}
 
 
 def inspect_resource(document: dict, resource_id: str) -> dict[str, str]:

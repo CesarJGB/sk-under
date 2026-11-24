@@ -47,13 +47,3 @@ def fixture_path() -> Path:
 @pytest.fixture
 def original(fixture_path: Path) -> bytes:
     return fixture_path.read_bytes()
-
-
-@pytest.fixture
-def legacy_gems_policy(monkeypatch):
-    """Exercise the legacy backup/upload mechanics against a fake provider.
-
-    Tests for the current write policy use the unmodified production path.
-    There is no equivalent switch in the application.
-    """
-    monkeypatch.setattr("app.cloud.gems_editor.validate_gems_transition", lambda document, target: None)

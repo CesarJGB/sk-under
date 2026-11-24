@@ -149,12 +149,13 @@ class PreparedEdit:
             "candidate_size": len(self.edit.candidate),
             "candidate_sha256": self.edit.candidate_sha256,
             "byte_diff": self.edit.binary.as_dict(),
+            "changed_fields": list(self.edit.changed_fields),
             "validation": {
                 "valid": True,
                 "structure_valid": True,
-                "only_gems_changed": True,
+                "only_gems_changed": "gameData.varGems" not in self.edit.changed_fields,
                 "message": (
-                    "Solo cambia gameData.gems."
+                    "Campos modificados: " + ", ".join(self.edit.changed_fields) + "."
                     if self.edit.changed
                     else "El valor solicitado ya está en la partida; no hay cambios que subir."
                 ),
@@ -296,7 +297,7 @@ class CloudLabService:
         save = self.provider.download(self.max_input_bytes)
         if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
             raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
-        edit = prepare_gems_edit(save.payload, new_gems, require_consistency=True)
+        edit = prepare_gems_edit(save.payload, new_gems)
         if edit.original_sha256 != save.metadata.sha256:
             raise LabServiceError("El original preparado no coincide con la descarga.")
         bundle = self.store.save(
@@ -305,7 +306,7 @@ class CloudLabService:
             remote_size=save.metadata.size,
             remote_sha256=save.metadata.sha256,
         )
-        self.store.append_event(
+        self._event(
             bundle.record.id,
             {
                 "action": "prepare",
@@ -313,6 +314,7 @@ class CloudLabService:
                 "original_gems": edit.original_gems,
                 "candidate_gems": edit.new_gems,
                 "candidate_sha256": edit.candidate_sha256,
+                "changed_fields": list(edit.changed_fields),
                 "remote_source": save.metadata.source,
             },
         )
@@ -331,7 +333,7 @@ class CloudLabService:
                 raise LabHashMismatch("La huella esperada no coincide con el candidato respaldado.")
             if self.store.confirmation(backup_id) is not None:
                 raise LabAlreadyConfirmed("Este respaldo ya fue confirmado; usa la verificación.")
-            require_gems_write_compatibility(bundle.original, bundle.record.candidate_gems)
+            require_gems_write_compatibility(bundle.original, bundle.record.candidate_gems, bundle.candidate)
             current = self.provider.download(self.max_input_bytes)
             if current.metadata.sha256 != bundle.record.original_sha256:
                 raise LabRemoteChanged(

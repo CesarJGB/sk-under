@@ -1,14 +1,12 @@
-"""Edición determinista de ``gameData.gems`` en un agregado de nube.
+"""Edición determinista del saldo de gemas en un agregado de nube.
 
 El agregado real de 8.8.0 se serializa con claves ordenadas, separadores
 ``", "``/``": "``, sin indentación y sin escapes ASCII. Este módulo exige esa
 misma forma canónica antes de editar: si la serialización canónica del original
-no reproduce sus bytes, no se puede garantizar que el cambio afecte solo a
-``gems`` y la operación se rechaza.
+no reproduce sus bytes, se rechaza la operación.
 
-La edición no toca ninguna otra ruta. Después de serializar se vuelve a
-reconstruir el agregado completo, se compara el árbol y se comprueba que al
-restaurar el valor original se recuperan exactamente los bytes de entrada.
+Después de aplicar el plan se reconstruye el agregado completo. Restaurar las
+rutas del plan debe reproducir exactamente los bytes de entrada.
 """
 
 from __future__ import annotations
@@ -34,7 +32,7 @@ from .resource_consistency import (
     ConsistencyUnknown,
     IncompatibleResource,
     ResourceDiscrepancy,
-    validate_gems_transition,
+    plan_gems_transition,
 )
 
 _GEMS = RESOURCES["gems"]
@@ -75,6 +73,10 @@ class InconsistentGemsBalance(GemsEditError):
     code = "inconsistent_gems_balance"
 
 
+class OutdatedGemsDraft(GemsEditError):
+    code = "outdated_gems_draft"
+
+
 @dataclass(frozen=True)
 class GemsSnapshot:
     """Valor actual y huella del agregado, sin conservar su contenido."""
@@ -106,6 +108,7 @@ class GemsEdit:
     candidate_sha256: str = field(repr=False)
     binary: BinaryDiff = field(repr=False)
     serialzed_version: int
+    changed_fields: tuple[str, ...] = ()
 
     @property
     def original_size(self) -> int:
@@ -126,6 +129,7 @@ class GemsEdit:
             "candidate_sha256": self.candidate_sha256,
             "serialzed_version": self.serialzed_version,
             "binary": self.binary.as_dict(),
+            "changed_fields": list(self.changed_fields),
         }
 
 
@@ -172,7 +176,7 @@ def _validated_document(source: bytes) -> tuple[JsonObject, int]:
     if serialize_aggregate(root) != source:
         raise UnsupportedAggregateSerialization(
             "La copia no usa la serialización canónica observada; no se puede garantizar "
-            "que solo cambie gameData.gems."
+            "que el cambio sea granular."
         )
     version = root.get("serialzedVersion")
     if isinstance(version, bool) or not isinstance(version, int):
@@ -187,9 +191,9 @@ def _game_data(root: JsonObject) -> JsonObject:
     return game_data
 
 
-def _require_gems_write_compatibility(root: JsonObject, target: int) -> None:
+def _gems_plan(root: JsonObject, target: int) -> dict[str, int]:
     try:
-        validate_gems_transition(root, target)
+        return plan_gems_transition(root, target)
     except IncompatibleResource as exc:
         raise UnsupportedGemsStructure(str(exc)) from None
     except ConsistencyUnknown as exc:
@@ -198,9 +202,9 @@ def _require_gems_write_compatibility(root: JsonObject, target: int) -> None:
         raise InconsistentGemsBalance(str(exc)) from None
 
 
-def require_gems_write_compatibility(source: bytes, target: int) -> None:
-    root, _ = _validated_document(source)
-    _require_gems_write_compatibility(root, target)
+def require_gems_write_compatibility(source: bytes, target: int, candidate: bytes) -> None:
+    if prepare_gems_edit(source, target).candidate != candidate:
+        raise OutdatedGemsDraft("El respaldo usa un borrador antiguo. Prepara de nuevo la edición antes de subirla.")
 
 
 def read_gems(source: bytes) -> GemsSnapshot:
@@ -218,36 +222,29 @@ def read_gems(source: bytes) -> GemsSnapshot:
     )
 
 
-def _assert_only_gems_changed(original: JsonObject, modified: JsonObject, original_gems: int) -> None:
-    """Demuestra que el único valor distinto es ``gameData.gems``."""
-    if original == modified:
-        raise GemsVerificationError("La copia editada no contiene ningún cambio.")
-    restored = deepcopy(modified)
-    _game_data(restored)[GEMS_FIELD_ID] = original_gems
-    if restored != original:
-        raise GemsVerificationError("La edición afectó a datos distintos de gameData.gems.")
-    if serialize_aggregate(restored) != serialize_aggregate(original):
-        raise GemsVerificationError("La serialización no es determinista para el original.")
+def prepare_gems_edit(source: bytes, new_gems: object) -> GemsEdit:
+    """Prepara el candidato con la política actual de escritura."""
+    return _prepare(source, new_gems, legacy=False)
 
 
-def prepare_gems_edit(source: bytes, new_gems: object, *, require_consistency: bool = False) -> GemsEdit:
-    """Prepara una copia con solo ``gameData.gems`` modificado.
+def replay_legacy_gems_edit(source: bytes, new_gems: object) -> GemsEdit:
+    """Reproduce el candidato histórico para verificar y recuperar respaldos."""
+    return _prepare(source, new_gems, legacy=True)
 
-    Un valor igual al actual produce una operación sin cambios y conserva los
-    bytes originales exactos. La reproducción de respaldos antiguos valida
-    solo los bytes, con las reglas de escritura aplicadas en CloudLabService.
-    """
+
+def _prepare(source: bytes, new_gems: object, *, legacy: bool) -> GemsEdit:
     value = validate_gems_value(new_gems)
     root, version = _validated_document(source)
     game_data = _game_data(root)
     if GEMS_FIELD_ID not in game_data:
         raise GemsFieldMissing("La copia no contiene gameData.gems.")
     original_gems = validate_gems_value(game_data[GEMS_FIELD_ID])
-    if require_consistency:
-        _require_gems_write_compatibility(root, value)
+    fields = {GEMS_FIELD_ID: value} if legacy and value != original_gems else {}
+    if not legacy:
+        fields = _gems_plan(root, value)
     original_sha = sha256(source).hexdigest()
 
-    if value == original_gems:
+    if not fields:
         return GemsEdit(
             original_gems=original_gems,
             new_gems=value,
@@ -261,8 +258,7 @@ def prepare_gems_edit(source: bytes, new_gems: object, *, require_consistency: b
         )
 
     modified = deepcopy(root)
-    _game_data(modified)[GEMS_FIELD_ID] = value
-    _assert_only_gems_changed(root, modified, original_gems)
+    _game_data(modified).update(fields)
 
     candidate = serialize_aggregate(modified)
     if len(candidate) > MAX_INPUT_BYTES:
@@ -278,7 +274,11 @@ def prepare_gems_edit(source: bytes, new_gems: object, *, require_consistency: b
         raise GemsVerificationError("La copia editada no es estable al serializarla de nuevo.")
     if read_gems(candidate).gems != value:
         raise GemsVerificationError("La copia editada no contiene el valor solicitado.")
-    if binary_diff(source, candidate).first_difference is None:
+    _game_data(reopened).update({key: game_data[key] for key in fields})
+    if serialize_aggregate(reopened) != source:
+        raise GemsVerificationError("La edición afectó a datos fuera del plan de gemas.")
+    binary = binary_diff(source, candidate)
+    if binary.first_difference is None:
         raise GemsVerificationError("La copia editada es idéntica al original.")
 
     return GemsEdit(
@@ -289,6 +289,7 @@ def prepare_gems_edit(source: bytes, new_gems: object, *, require_consistency: b
         candidate=candidate,
         original_sha256=original_sha,
         candidate_sha256=sha256(candidate).hexdigest(),
-        binary=binary_diff(source, candidate),
+        binary=binary,
         serialzed_version=version,
+        changed_fields=tuple(f"gameData.{key}" for key in fields),
     )
