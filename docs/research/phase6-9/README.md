@@ -162,7 +162,15 @@ La imagen y el runbook están preparados: un worker, un volumen `/var/lib/sk-und
 
 ## 12. Commits publicados
 
-Los commits se indican en la sección final de este documento y en el mensaje de publicación de la rama. La rama es `feature/phase6-9-autonomous-auth`; no se hizo merge a `main` ni se desplegó públicamente.
+Rama `feature/phase6-9-autonomous-auth`, publicada en `origin`:
+
+| Commit | Contenido |
+| --- | --- |
+| `d8d40d5` | Backend: portal, identidad autónoma, selección de jugador, `100504`/`100509`, migración del almacén, respaldos cifrados, CSP, IP de proxy y límite atómico. |
+| `3027d73` | Frontend: formulario sin identificadores manuales, estados de vinculación/partida/desafío y CSP. |
+| `b39d9e9` | Documentación, evidencia saneada, runbook de Coolify y guía de pruebas. |
+
+No se hizo merge a `main` ni se desplegó públicamente.
 
 ## Documentos de la fase
 
