@@ -5,7 +5,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useLocation } from 'react-router'
 import {
   ApiProblem, nativeAuth,
-  type LabBackup, type LabFishChipPrepared, type LabPrepared, type LabVerification, type LabWriteResult,
+  type LabBackup, type LabFishChipPrepared, type LabFishProgressPrepared, type LabPrepared, type LabVerification, type LabWriteResult,
   type NativeConfig, type NativeSaveSummary, type NativeSession,
 } from '../api'
 import { formatSize } from '../session'
@@ -70,6 +70,12 @@ const FRIENDLY: Record<string, string> = {
   outdated_gems_draft: 'El borrador usa una edición anterior. Prepara de nuevo la edición antes de subirla.',
   invalid_fish_chip_value: 'Introduce un número entero no negativo dentro del intervalo de fichas de pesca.',
   invalid_fish_material_value: 'itemData.materials.material_fish no es un entero; no se sobrescribe automáticamente.',
+  invalid_fish_progress_value: 'Introduce un número entero no negativo para el progreso acumulado de fichas.',
+  fish_progress_field_missing: 'La partida no contiene itemData.cumulativeFishCount; el progreso acumulado no está disponible.',
+  fish_progress_verification_failed: 'La copia editada del progreso acumulado no superó la comprobación de integridad.',
+  fish_progress_edit: 'No se pudo preparar la edición del progreso acumulado de fichas.',
+  unsupported_fish_progress_serialization: 'La partida no usa el formato JSON canónico admitido para editar el progreso acumulado.',
+  outdated_fish_progress_draft: 'El borrador del progreso acumulado usa una edición anterior. Prepara de nuevo la edición antes de subirla.',
   fish_chip_field_missing: 'La partida no contiene gameData.fishChip; la edición de fichas no está disponible.',
   fish_material_field_missing: 'La partida no contiene itemData.materials; la edición de fichas no está disponible.',
   fish_chip_verification_failed: 'La copia editada de fichas no superó la comprobación de integridad.',
@@ -373,6 +379,13 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
   const [fishConfirm, setFishConfirm] = useState(false)
   const [fishResult, setFishResult] = useState<LabWriteResult | null>(null)
   const [fishAction, setFishAction] = useState<'prepare' | 'upload' | null>(null)
+  const [newFishProgress, setNewFishProgress] = useState(
+    initialSave?.cumulative_fish_count != null ? String(initialSave.cumulative_fish_count) : '',
+  )
+  const [fishProgressCandidate, setFishProgressCandidate] = useState<LabFishProgressPrepared | null>(null)
+  const [fishProgressConfirm, setFishProgressConfirm] = useState(false)
+  const [fishProgressResult, setFishProgressResult] = useState<LabWriteResult | null>(null)
+  const [fishProgressAction, setFishProgressAction] = useState<'prepare' | 'upload' | null>(null)
   const [history, setHistory] = useState<Array<LabBackup & { confirmed: boolean }>>([])
   const [backupResult, setBackupResult] = useState<(LabWriteResult | LabVerification) | null>(null)
   const [selections, setSelections] = useState<UnlockSelections>(emptyUnlockSelections)
@@ -412,6 +425,9 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
   const fishAmount = /^\d+$/.test(newFishChip) ? Number(newFishChip) : Number.NaN
   const fishValid = Number.isSafeInteger(fishAmount)
     && fishAmount >= fishLimits.min && fishAmount <= fishLimits.max
+  const fishProgressAmount = /^\d+$/.test(newFishProgress) ? Number(newFishProgress) : Number.NaN
+  const fishProgressValid = Number.isSafeInteger(fishProgressAmount)
+    && fishProgressAmount >= fishLimits.min && fishProgressAmount <= fishLimits.max
   const disabled = operation.pending || backupOperation.pending
   const originalFishChip = save?.fish_chip ?? save?.report?.fish_chips.balance ?? null
   const originalMaterialFish = save?.material_fish ?? null
@@ -423,6 +439,11 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     : originalMaterialFish
   const fishAlreadyCurrent = fishAmount === originalFishChip
     && originalMaterialFish != null && fishAmount === originalMaterialFish
+  const originalFishProgress = save?.cumulative_fish_count ?? null
+  const cloudFishProgress = fishProgressResult?.persisted
+    ? fishProgressResult.remote_value ?? originalFishProgress
+    : originalFishProgress
+  const fishProgressAlreadyCurrent = fishProgressAmount === originalFishProgress
 
   function clearPreview() {
     setCandidate(null)
@@ -434,6 +455,12 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     setFishCandidate(null)
     setFishConfirm(false)
     setFishResult(null)
+  }
+
+  function clearFishProgressPreview() {
+    setFishProgressCandidate(null)
+    setFishProgressConfirm(false)
+    setFishProgressResult(null)
   }
 
   const downloading = action === 'download' && operation.pending
@@ -463,12 +490,16 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     run(async (signal) => {
       clearPreview()
       clearFishPreview()
+      clearFishProgressPreview()
       setSyncResult(null)
       setSave(null)
       const downloaded = await nativeAuth.save(signal)
       setSave(downloaded)
       setNewGems(String(downloaded.gems))
       setNewFishChip(downloaded.fish_chip != null ? String(downloaded.fish_chip) : '')
+      setNewFishProgress(
+        downloaded.cumulative_fish_count != null ? String(downloaded.cumulative_fish_count) : '',
+      )
       setSelections(emptyUnlockSelections())
       setApplied(emptyUnlockSelections())
     })
@@ -844,6 +875,103 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
       fishAction === 'upload'
         ? 'No se pudo confirmar la subida de fichas. Verifica el estado desde Partida.'
         : 'No se pudo preparar la edición de fichas. Vuelve a intentarlo.')} />}
+    <div className="fish-progress-editor">
+      <div className="cloud-section-head">
+        <div>
+          <h3>Progreso acumulado de fichas de pesca</h3>
+          <p className="cloud-state">Contador de recompensas de la tienda</p>
+        </div>
+        <div className="editor-current">
+          <span>{fishProgressResult?.persisted ? 'Verificado' : 'Actual'}</span>
+          <strong data-testid="native-current-fish-progress">
+            {cloudFishProgress == null ? '—' : gemFormat.format(cloudFishProgress)}
+          </strong>
+        </div>
+      </div>
+      {originalFishProgress == null ? <p className="cloud-note">
+        La partida descargada no contiene <code>itemData.cumulativeFishCount</code>.
+        El progreso acumulado no está disponible.
+      </p> : <form className="cloud-form" onSubmit={(event) => {
+        event.preventDefault()
+        if (!fishProgressValid) return
+        setFishProgressAction('prepare')
+        run(async (signal) => {
+          clearFishProgressPreview()
+          setFishProgressCandidate(
+            await nativeAuth.prepareFishProgress(fishProgressAmount, save.sha256, signal),
+          )
+          void historyOperation.run(refreshHistory)
+        })
+      }}>
+        <label className="cloud-field"><span>Nuevo progreso acumulado</span>
+          <input inputMode="numeric" value={newFishProgress} disabled={disabled}
+            aria-invalid={!fishProgressValid} aria-describedby="fish-progress-limits"
+            onChange={(event) => {
+              setNewFishProgress(event.target.value)
+              clearFishProgressPreview()
+            }} />
+          <small id="fish-progress-limits">
+            Entero entre {gemFormat.format(fishLimits.min)} y {gemFormat.format(fishLimits.max)}.
+            No cambia el saldo, el material, los historiales ni las recompensas reclamadas.
+          </small>
+        </label>
+        <button className="button primary" disabled={disabled || !fishProgressValid || fishProgressAlreadyCurrent}>
+          Preparar cambio de progreso
+        </button>
+      </form>}
+      {fishProgressCandidate && <div className="cloud-preview">
+        <h3>Revisar progreso acumulado</h3>
+        <dl className="cloud-preview-data">
+          <div><dt>Progreso original</dt><dd>
+            {gemFormat.format(fishProgressCandidate.original_cumulative_fish_count)}
+          </dd></div>
+          <div><dt>Progreso nuevo</dt><dd>
+            {gemFormat.format(fishProgressCandidate.new_cumulative_fish_count)}
+          </dd></div>
+          <div><dt>Cambio</dt><dd>{new Intl.NumberFormat('es-MX', { signDisplay: 'exceptZero' })
+            .format(
+              fishProgressCandidate.new_cumulative_fish_count
+              - fishProgressCandidate.original_cumulative_fish_count,
+            )}</dd></div>
+        </dl>
+        <p className="cloud-note">
+          Se guardó un respaldo cifrado. Este contador es experimental E2 y no modifica
+          el saldo de fichas ni las recompensas ya reclamadas.
+        </p>
+        {session.write_ready && !fishProgressResult && <>
+          <label className="cloud-check"><input type="checkbox" checked={fishProgressConfirm} disabled={disabled}
+            onChange={(event) => setFishProgressConfirm(event.target.checked)} />
+            <span>Confirmo que quiero sobrescribir la partida en la nube de {accountLabel}
+              con este progreso acumulado.</span>
+          </label>
+          <button className="button primary" disabled={disabled || !fishProgressConfirm || !fishProgressCandidate.changed}
+            onClick={() => {
+              setFishProgressAction('upload')
+              run(async (signal) => {
+                setFishProgressConfirm(false)
+                const uploaded = await nativeAuth.confirm(
+                  fishProgressCandidate.backup.id, fishProgressCandidate.candidate_sha256, signal,
+                )
+                setFishProgressResult(uploaded)
+                void historyOperation.run(refreshHistory)
+              })
+            }}>Subir progreso y verificar</button>
+        </>}
+      </div>}
+      {fishProgressResult && <div role="status"
+        className={`cloud-feedback ${fishProgressResult.persisted ? 'verified' : 'uncertain'}`}>
+        {fishProgressResult.persisted
+          ? 'Progreso acumulado subido y verificado en la nube. Falta comprobarlo en Android.'
+          : 'No se pudo confirmar la subida del progreso. Verifica el estado desde Partida.'}
+      </div>}
+      {operation.pending && fishProgressAction && <Loading>
+        {fishProgressAction === 'prepare' ? 'Preparando progreso acumulado…' : 'Subiendo progreso y verificando…'}
+      </Loading>}
+      {operation.problem && fishProgressAction && <Problem problem={friendly(operation.problem,
+        fishProgressAction === 'upload'
+          ? 'No se pudo confirmar la subida del progreso. Verifica el estado desde Partida.'
+          : 'No se pudo preparar el progreso acumulado. Vuelve a intentarlo.')} />}
+    </div>
   </section>
   </div>
   {!reportCharacters ? <section className="cloud-section panel cloud-empty">
@@ -889,6 +1017,7 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
 
 function backupFieldLabel(backup: LabBackup) {
   if (backup.field === 'fish_chip') return 'fichas de pesca'
+  if (backup.field === 'fish_progress') return 'progreso acumulado de fichas'
   if (backup.field === 'characters') return 'personajes disponibles'
   if (backup.field === 'skills') return 'habilidades'
   if (backup.field === 'skins') return 'skins'

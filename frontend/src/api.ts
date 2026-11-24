@@ -196,6 +196,8 @@ export type LabSave = {
   fish_chip_path?: string
   material_fish?: number | null
   material_fish_path?: string
+  cumulative_fish_count?: number | null
+  cumulative_fish_count_path?: string
   fish_chip_write_policy?: 'confirmed_by_owner'
   character_write_policy?: 'confirmed_by_owner'
   skill_write_policy?: 'confirmed_by_owner'
@@ -209,7 +211,7 @@ export type LabSave = {
 export type LabBackup = {
   id: string
   created_at: string
-  field?: 'gems' | 'fish_chip' | 'characters' | 'skills' | 'skins'
+  field?: 'gems' | 'fish_chip' | 'fish_progress' | 'characters' | 'skills' | 'skins'
   changed: boolean
   original_size: number
   original_sha256: string
@@ -281,6 +283,30 @@ export type LabFishChipPrepared = {
     valid: true
     structure_valid: true
     only_fish_fields_changed: boolean
+    experimental: true
+    evidence_level: 'E2'
+    message: string
+  }
+}
+
+export type LabFishProgressPrepared = {
+  remote: LabRemote
+  backup: LabBackup
+  field: 'itemData.cumulativeFishCount'
+  original_cumulative_fish_count: number
+  new_cumulative_fish_count: number
+  original_value?: number
+  new_value?: number
+  experimental: true
+  changed: boolean
+  candidate_size: number
+  candidate_sha256: string
+  byte_diff: LabByteDiff
+  changed_fields: string[]
+  validation: {
+    valid: true
+    structure_valid: true
+    only_fish_progress_changed: boolean
     experimental: true
     evidence_level: 'E2'
     message: string
@@ -619,6 +645,8 @@ export type NativeSaveSummary = {
   fish_chip_path?: string
   material_fish?: number | null
   material_fish_path?: string
+  cumulative_fish_count?: number | null
+  cumulative_fish_count_path?: string
   fish_chip_write_policy?: 'confirmed_by_owner'
   character_write_policy?: 'confirmed_by_owner'
   skill_write_policy?: 'confirmed_by_owner'
@@ -720,6 +748,11 @@ export const nativeAuth = {
     nativeRequest<LabPrepared>('/prepare', signal, { new_gems, source_sha256 }),
   prepareFishChip: (new_fish_chip: number, source_sha256: string, signal: AbortSignal) =>
     nativeRequest<LabFishChipPrepared>('/prepare-fish-chip', signal, { new_fish_chip, source_sha256 }),
+  prepareFishProgress: (new_cumulative_fish_count: number, source_sha256: string, signal: AbortSignal) =>
+    nativeRequest<LabFishProgressPrepared>('/prepare-fish-progress', signal, {
+      new_cumulative_fish_count,
+      source_sha256,
+    }),
   prepareCharacters: (codes: string[], source_sha256: string, signal: AbortSignal) =>
     nativeRequest<LabCharacterPrepared>('/prepare-characters', signal, { codes, source_sha256 }),
   prepareSkills: (skills: LabSkillRef[], source_sha256: string, signal: AbortSignal) =>

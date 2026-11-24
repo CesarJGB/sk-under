@@ -132,6 +132,8 @@ class CloudLabSave(BaseModel):
     fish_chip_path: str | None = None
     material_fish: int | None = None
     material_fish_path: str | None = None
+    cumulative_fish_count: int | None = None
+    cumulative_fish_count_path: str | None = None
     fish_chip_write_policy: Literal["confirmed_by_owner"] | None = None
     character_write_policy: Literal["confirmed_by_owner"] | None = None
     skill_write_policy: Literal["confirmed_by_owner"] | None = None
@@ -145,7 +147,7 @@ class CloudLabSave(BaseModel):
 class CloudBackupSummary(BaseModel):
     id: str
     created_at: str
-    field: Literal["gems", "fish_chip", "characters", "skills", "skins"] = "gems"
+    field: Literal["gems", "fish_chip", "fish_progress", "characters", "skills", "skins"] = "gems"
     changed: bool
     original_size: int
     original_sha256: str
@@ -206,6 +208,23 @@ class CloudLabFishChipPrepared(BaseModel):
     original_material_fish: int | None = None
     new_material_fish: int | None = None
     material_fish_path: str | None = None
+    original_value: int | None = None
+    new_value: int | None = None
+    field: str
+    experimental: Literal[True] = True
+    changed: bool
+    candidate_size: int
+    candidate_sha256: str
+    byte_diff: CloudByteDiff
+    changed_fields: list[str]
+    validation: dict[str, Any]
+
+
+class CloudLabFishProgressPrepared(BaseModel):
+    remote: CloudRemoteInfo
+    backup: CloudBackupSummary
+    original_cumulative_fish_count: int
+    new_cumulative_fish_count: int
     original_value: int | None = None
     new_value: int | None = None
     field: str
@@ -301,6 +320,11 @@ class CloudLabPrepareInput(BaseModel):
 class CloudLabFishChipPrepareInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     new_fish_chip: StrictInt
+
+
+class CloudLabFishProgressPrepareInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    new_cumulative_fish_count: StrictInt
 
 
 class CloudLabCharacterPrepareInput(BaseModel):

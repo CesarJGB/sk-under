@@ -27,6 +27,7 @@ from ..models import (
     CloudLabCharacterPrepareInput,
     CloudLabConfirmInput,
     CloudLabFishChipPrepareInput,
+    CloudLabFishProgressPrepareInput,
     CloudLabPrepareInput,
     CloudLabRestoreInput,
     CloudLabSkinPrepareInput,
@@ -177,6 +178,10 @@ class FishChipPrepareInput(CloudLabFishChipPrepareInput):
     source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
 
 
+class FishProgressPrepareInput(CloudLabFishProgressPrepareInput):
+    source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
+
+
 class CharacterPrepareInput(CloudLabCharacterPrepareInput):
     source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
 
@@ -313,6 +318,20 @@ def prepare_fish_chip(payload: FishChipPrepareInput, request: Request) -> dict[s
     service = _require_service(request)
     current = service.require_session(_cookie(request, service))
     return service.prepare_fish_chip(current, payload.new_fish_chip, payload.source_sha256)
+
+
+@router.post(
+    "/prepare-fish-progress",
+    summary="Preparar el progreso acumulado de fichas de pesca y crear un respaldo",
+)
+def prepare_fish_progress(
+    payload: FishProgressPrepareInput, request: Request
+) -> dict[str, object]:
+    service = _require_service(request)
+    current = service.require_session(_cookie(request, service))
+    return service.prepare_fish_progress(
+        current, payload.new_cumulative_fish_count, payload.source_sha256
+    )
 
 
 @router.post(

@@ -23,6 +23,7 @@ from urllib.parse import urlsplit
 
 from ..cloud.backup_store import LabBackupStore
 from ..cloud.fish_chip_editor import MAX_FISH_CHIP, MIN_FISH_CHIP, read_fish_chip
+from ..cloud.fish_progress_editor import read_fish_progress
 from ..cloud.gems_editor import MAX_GEMS, MIN_GEMS, read_gems
 from ..cloud.lab_service import CloudLabService
 from ..cloud.provider import (
@@ -408,6 +409,21 @@ class NativeAuthService:
             session,
             lambda: self._lab(session).prepare_fish_chip(
                 new_fish_chip, expected_source=source_sha256
+            ).summary(),
+        )
+
+    def prepare_fish_progress(
+        self, session: NativeSessionRecord, new_cumulative_fish_count: object, source_sha256: str
+    ) -> dict[str, object]:
+        """Prepara el cambio aislado del progreso acumulado de fichas.
+
+        Solo modifica ``itemData.cumulativeFishCount``. No cambia el saldo, el
+        material espejo, los historiales ni las recompensas reclamadas.
+        """
+        return self._operate(
+            session,
+            lambda: self._lab(session).prepare_fish_progress(
+                new_cumulative_fish_count, expected_source=source_sha256
             ).summary(),
         )
 
@@ -806,6 +822,10 @@ class NativeAuthService:
         except CloudSaveError:
             fish_chip = None
             material_fish = None
+        try:
+            cumulative_fish_count = read_fish_progress(save.payload).cumulative_fish_count
+        except CloudSaveError:
+            cumulative_fish_count = None
         return {
             "verified": True,
             "bytes": save.metadata.size,
@@ -815,6 +835,8 @@ class NativeAuthService:
             "fish_chip_path": "gameData.fishChip",
             "material_fish": material_fish,
             "material_fish_path": "itemData.materials.material_fish",
+            "cumulative_fish_count": cumulative_fish_count,
+            "cumulative_fish_count_path": "itemData.cumulativeFishCount",
             "fish_chip_write_policy": "confirmed_by_owner",
             "character_write_policy": "confirmed_by_owner",
             "skill_write_policy": "confirmed_by_owner",
@@ -952,6 +974,10 @@ class NativeAuthService:
         except CloudSaveError:
             fish_chip = None
             material_fish = None
+        try:
+            cumulative_fish_count = read_fish_progress(save.payload).cumulative_fish_count
+        except CloudSaveError:
+            cumulative_fish_count = None
         self._event("save_verify", "ok", subject=subject)
         return {
             "verified": True,
@@ -962,6 +988,8 @@ class NativeAuthService:
             "fish_chip_path": "gameData.fishChip",
             "material_fish": material_fish,
             "material_fish_path": "itemData.materials.material_fish",
+            "cumulative_fish_count": cumulative_fish_count,
+            "cumulative_fish_count_path": "itemData.cumulativeFishCount",
             "fish_chip_write_policy": "confirmed_by_owner",
             "character_write_policy": "confirmed_by_owner",
             "skill_write_policy": "confirmed_by_owner",

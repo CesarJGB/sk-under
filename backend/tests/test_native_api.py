@@ -686,6 +686,95 @@ def test_native_reports_missing_fish_chip_without_creating_a_backup(tmp_path):
     assert client.get(API + "/backups", headers=HEADERS).json()["backups"] == []
 
 
+def test_native_fish_progress_flow_preserves_balance_and_history(tmp_path):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = fish_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+
+    source = client.get(API + "/save", headers=HEADERS).json()
+    assert source["cumulative_fish_count"] == 42
+    assert source["cumulative_fish_count_path"] == "itemData.cumulativeFishCount"
+    response = client.post(
+        API + "/prepare-fish-progress",
+        headers=HEADERS,
+        json={"new_cumulative_fish_count": 120, "source_sha256": source["sha256"]},
+    )
+    assert response.status_code == 200, response.text
+    draft = response.json()
+    assert draft["field"] == "itemData.cumulativeFishCount"
+    assert draft["experimental"] is True
+    assert draft["original_cumulative_fish_count"] == 42
+    assert draft["new_cumulative_fish_count"] == 120
+    assert draft["changed_fields"] == ["itemData.cumulativeFishCount"]
+    assert draft["backup"]["field"] == "fish_progress"
+    assert draft["backup"]["original_value"] == 42
+    assert draft["backup"]["candidate_value"] == 120
+
+    confirmed = client.post(API + "/confirm", headers=HEADERS, json=confirmation(draft))
+    assert confirmed.status_code == 200, confirmed.text
+    result = confirmed.json()
+    assert result["persisted"] is True
+    assert result["field"] == "itemData.cumulativeFishCount"
+    assert result["remote_value"] == 120
+    assert result["remote_gems"] == 1000
+
+    uploaded = json.loads(env["providers"]["unique-a"].payload)
+    assert uploaded["itemData"]["cumulativeFishCount"] == 120
+    assert uploaded["gameData"]["fishChip"] == 4
+    assert uploaded["itemData"]["materials"] == {"material_fish": 4, "material_ticket": 5}
+
+    refreshed = client.get(API + "/save", headers=HEADERS).json()
+    assert refreshed["cumulative_fish_count"] == 120
+    assert refreshed["fish_chip"] == 4
+    assert refreshed["material_fish"] == 4
+
+    restored = client.post(API + "/restore", headers=HEADERS,
+                           json={"backup_id": draft["backup"]["id"], "confirmation": "RESTAURAR"})
+    assert restored.status_code == 200, restored.text
+    assert restored.json()["persisted"] is True
+    assert restored.json()["remote_value"] == 42
+    after = client.get(API + "/save", headers=HEADERS).json()
+    assert after["cumulative_fish_count"] == 42
+    assert after["fish_chip"] == 4
+
+
+@pytest.mark.parametrize("value", [-1, 2_147_483_648, "9", 9.5, True])
+def test_native_rejects_invalid_fish_progress_values_before_backup(tmp_path, value):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = fish_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+    source = client.get(API + "/save", headers=HEADERS).json()
+    response = client.post(
+        API + "/prepare-fish-progress",
+        headers=HEADERS,
+        json={"new_cumulative_fish_count": value, "source_sha256": source["sha256"]},
+    )
+    assert response.status_code == 422, response.text
+    assert response.json()["error"]["code"] in {"invalid_fish_progress_value", "invalid_request"}
+    assert client.get(API + "/backups", headers=HEADERS).json()["backups"] == []
+
+
+def test_native_reports_missing_fish_progress_without_creating_it(tmp_path):
+    env = make_native(tmp_path, write=True)
+    data = json.loads(PAYLOAD_A)
+    data["itemData"]["cumulativeFishCount"] = 42
+    del data["itemData"]["cumulativeFishCount"]
+    env["providers"]["unique-a"].payload = canonical(data)
+    client = env["client"]
+    assert login(client).status_code == 200
+    source = client.get(API + "/save", headers=HEADERS).json()
+    assert source["cumulative_fish_count"] is None
+    response = client.post(
+        API + "/prepare-fish-progress",
+        headers=HEADERS,
+        json={"new_cumulative_fish_count": 120, "source_sha256": source["sha256"]},
+    )
+    assert_error(response, 422, "fish_progress_field_missing")
+    assert client.get(API + "/backups", headers=HEADERS).json()["backups"] == []
+
+
 def character_payload(unlocked=("Knight", "CostumePrince")) -> bytes:
     from app.save_report import _load_character_catalog
 

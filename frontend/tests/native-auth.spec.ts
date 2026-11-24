@@ -22,6 +22,8 @@ const SAVE = {
   verified: true, bytes: 505, sha256: SHA, gems: 1001, fish_chip: 3,
   fish_chip_path: 'gameData.fishChip', material_fish: 3,
   material_fish_path: 'itemData.materials.material_fish',
+  cumulative_fish_count: 42,
+  cumulative_fish_count_path: 'itemData.cumulativeFishCount',
   fish_chip_write_policy: 'confirmed_by_owner',
   sections: 17, remote_source: 'modern-cloud',
 }
@@ -244,6 +246,25 @@ const FISH_PREPARED = {
     valid: true, structure_valid: true, only_fish_fields_changed: true,
     experimental: true, evidence_level: 'E2',
     message: 'Campos modificados: gameData.fishChip, itemData.materials.material_fish.',
+  },
+}
+
+const PROGRESS_BACKUP = {
+  ...BACKUP, field: 'fish_progress', original_gems: 42, original_value: 42,
+  candidate_gems: 120, candidate_value: 120,
+}
+const FISH_PROGRESS_PREPARED = {
+  remote: { source: 'modern-cloud', size: 505, sha256: SHA }, backup: PROGRESS_BACKUP,
+  field: 'itemData.cumulativeFishCount',
+  original_cumulative_fish_count: 42, new_cumulative_fish_count: 120,
+  original_value: 42, new_value: 120, experimental: true, changed: true,
+  candidate_size: 505, candidate_sha256: CANDIDATE,
+  changed_fields: ['itemData.cumulativeFishCount'],
+  byte_diff: PREPARED.byte_diff,
+  validation: {
+    valid: true, structure_valid: true, only_fish_progress_changed: true,
+    experimental: true, evidence_level: 'E2',
+    message: 'Campo modificado: itemData.cumulativeFishCount.',
   },
 }
 
@@ -630,6 +651,48 @@ test('edita y sube el saldo de fichas con el flujo autenticado', async ({ page }
 
   await page.getByRole('link', { name: 'Partida' }).click()
   await expect(page.getByText('3 fichas de pesca')).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('edita el progreso acumulado de fichas sin cambiar el saldo', async ({ page }) => {
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: SAVE } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
+    json: { backups: [{ ...PROGRESS_BACKUP, confirmed: true }] },
+  }))
+  await page.route('**/api/v1/cloud/native/prepare-fish-progress', (route) => {
+    expect(route.request().postDataJSON()).toEqual({
+      new_cumulative_fish_count: 120, source_sha256: SHA,
+    })
+    return route.fulfill({ json: FISH_PROGRESS_PREPARED })
+  })
+  await page.route('**/api/v1/cloud/native/confirm', (route) => {
+    expect(route.request().postDataJSON()).toEqual({
+      backup_id: PROGRESS_BACKUP.id, expected_sha256: CANDIDATE, confirmation: 'SUBIR',
+    })
+    return route.fulfill({ json: {
+      action: 'confirm', backup_id: PROGRESS_BACKUP.id, field: 'itemData.cumulativeFishCount',
+      uploaded: true, accepted: true, persisted: true, already_original: false,
+      expected_sha256: CANDIDATE, remote_sha256: CANDIDATE, remote_size: 505,
+      remote_gems: 1001, remote_value: 120, status: 200,
+      message: 'La descarga posterior coincide con el agregado subido del progreso acumulado.',
+    } })
+  })
+
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/partida')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await expect(page.getByTestId('native-current-fish-progress')).toHaveText('42')
+  await page.getByLabel('Nuevo progreso acumulado').fill('120')
+  await page.getByRole('button', { name: 'Preparar cambio de progreso' }).click()
+  await expect(page.getByRole('heading', { name: 'Revisar progreso acumulado' })).toBeVisible()
+  const preview = page.locator('.fish-progress-editor')
+  await expect(preview).toContainText('Progreso original')
+  await expect(preview).toContainText('120')
+  await page.getByLabel(/con este progreso acumulado/).check()
+  await page.getByRole('button', { name: 'Subir progreso y verificar' }).click()
+  await expect(page.getByText('Progreso acumulado subido y verificado en la nube', { exact: false })).toBeVisible()
+  await expect(page.getByTestId('native-current-fish-progress')).toHaveText('120')
+  await expect(page.getByTestId('native-current-fish-chip')).toHaveText('3')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 

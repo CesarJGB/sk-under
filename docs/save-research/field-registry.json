@@ -18,7 +18,8 @@
     "phase6-16": "../research/phase6-16/README.md",
     "phase6-17": "../research/phase6-17/README.md",
     "phase6-18": "../research/phase6-18/README.md",
-    "phase6-19": "../research/phase6-19/README.md"
+    "phase6-19": "../research/phase6-19/README.md",
+    "phase6-20": "../research/phase6-20/README.md"
   },
   "fields": [
     {
@@ -426,13 +427,12 @@
       ],
       "known_dependencies": [],
       "pending_dependencies": [
-        "fishChip (H)",
         "paquetes de peces",
-        "progreso de recompensas acumuladas (H; candidato CumulativePurchaseFishChip/MallFishChipRewardManager)"
+        "semántica exacta de cada contador"
       ],
       "validation_level": "E2",
       "edit_policy": "solo lectura",
-      "experimental_evidence": "Los seis contadores están a 0 en las muestras 8.8.0; la muestra 8.6.0 no incluye mall_reload. Se refieren a compras de peces, no al saldo de fichas. La Fase 6.19 revisó los metadatos 8.8.0: existen CumulativePurchaseFishChip, MallFishChipRewardManager, FishChipRewardStatistics y DonateRewardController, pero ningún archivo descifrado contiene un contador de compras acumuladas distinto de estos buyFishCount*; todas las muestras observadas siguen a 0. No se identificó un campo de guardado escribible para el progreso de recompensas."
+      "experimental_evidence": "Los seis contadores están a 0 en las muestras 8.8.0; la muestra 8.6.0 no incluye mall_reload. Se refieren a compras de paquetes de peces, no al saldo. La Fase 6.20 confirmó por código que el progreso de recompensas de la tienda lee itemData.cumulativeFishCount, no estos contadores; siguen sin muestra positiva y en solo lectura."
     },
     {
       "internal_name": "fishChip",
@@ -461,7 +461,7 @@
         "proyección en furniture_fish_chips (H)",
         "historiales fishChipStore* (H)",
         "origen de cada saldo",
-        "progreso acumulado de compras/recompensas (CumulativePurchaseFishChip en metadatos; campo de guardado no identificado, Fase 6.19)"
+        "progreso de recompensas: identificado como itemData.cumulativeFishCount, campo separado del saldo (Fase 6.20, E2)"
       ],
       "validation_level": "E4",
       "edit_policy": "escritura confirmada de gameData.fishChip junto con itemData.materials.material_fish; respaldo, confirmación, verificación por descarga y restauración",
@@ -865,7 +865,7 @@
     },
     {
       "internal_name": "cumulativeFishCount",
-      "category": "inventario",
+      "category": "fichas de pesca",
       "locations": {
         "local": "item_data*.data:cumulativeFishCount",
         "cloud": "itemData.cumulativeFishCount"
@@ -882,13 +882,15 @@
         "Android Global 8.8.0 local",
         "Android Global 8.8.0 agregado"
       ],
-      "known_dependencies": [],
+      "known_dependencies": [
+        "gameData.fishChip (saldo separado; no se modifica al editar el acumulado)"
+      ],
       "pending_dependencies": [
-        "relación con el premio de pesca E1"
+        "confirmación manual en Android de que la barra de recompensas de la tienda se refresca tras restaurar la nube"
       ],
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "experimental_evidence": "Contador histórico de peces: 7.218 en la muestra 8.6.0 y 0 en la nube 8.8.0. No es el saldo de fichas de pesca."
+      "edit_policy": "experimental, edición aislada de itemData.cumulativeFishCount",
+      "experimental_evidence": "La Fase 6.20 confirmó por desensamblado del cliente 8.8.0 que FishChipPurchaseController.get_cumulativeFishCount devuelve este campo (ItemData, offset 0x28) y que MallFishChipRewardManager y la barra de PlutusWindowPanel lo consumen. Es el contador histórico de la tienda de fichas, separado del saldo actual y del material espejo. Se observó 7.218 en la muestra local 8.6.0 y 0 en la nube 8.8.0. Nivel E2: código y estructura observados, sin prueba Android de refresco de recompensas. El editor 6.20 solo cambia esta ruta y conserva saldo, material, historiales y recompensas."
     },
     {
       "internal_name": "forgeWeapons",
@@ -1549,12 +1551,13 @@
       "known_dependencies": [],
       "pending_dependencies": [
         "semántica de la tarjeta normal frente a la tarjeta de resurrección superior",
-        "si el booleano representa derecho permanente, cantidad o estado temporal",
-        "proyección al cliente oficial y dependencia de derechos de compra"
+        "si el booleano de nube representa derecho permanente, cantidad o estado temporal",
+        "proyección al cliente oficial y dependencia de derechos de compra",
+        "confirmar si CloudSaveGameData.CoverPlayerPref convierte gameData.rebornCard en el entero de PlayerPrefs que lee DataUtil.GetRebornCardUnlock"
       ],
       "validation_level": "E2",
       "edit_policy": "protegido, solo lectura",
-      "experimental_evidence": "Bandera booleana en gameData.rebornCard y entero con prefijo en PlayerPrefs tras la recuperación. La Fase 6.19 revisó los metadatos 8.8.0 (RebornCardUnlock, RebornCardConfig, UpdateRebornCard, onBuyRebornCard, ResurrectionCard) y las muestras descifradas: no se encontró un campo específico de tarjeta superior ni una cantidad separada. No se distingue tarjeta permanente, consumible, resurrección en partida ni estado temporal; se mantiene en solo lectura."
+      "experimental_evidence": "Bandera booleana en gameData.rebornCard (AboGameData, offset 0xA8) y entero con prefijo en PlayerPrefs tras la recuperación. La Fase 6.20 verificó en el cliente 8.8.0 que DataUtil.GetRebornCardUnlock consulta primero PlayerSaveData.get_reborn_card (entero de PlayerPrefs) y luego CPPlayerItemData.GetItemUnlock; también existen CloudSaveExtraData.rebornCard, ExtraDescribeOptions.rebornCard y FetchGameDataResp.RebornCardUnlock. No se demostró que editar solo el booleano de la nube active la tarjeta, por lo que se mantiene protegido y sin editor."
     },
     {
       "internal_name": "skinLock",

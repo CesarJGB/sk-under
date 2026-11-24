@@ -54,6 +54,9 @@ nuevo desde el cliente oficial.
 - `itemData.cumulativeFishCount` (`Int32`) es un contador histórico de peces
   capturados (`7218` en la muestra 8.6.0; `0` en 8.8.0). No es el saldo ni el
   progreso de la tienda.
+  **Corrección de la Fase 6.20:** el desensamblado 8.8.0 demuestra que
+  `FishChipPurchaseController` y la barra de recompensas leen este campo; es el
+  progreso acumulado de la tienda, no un contador de peces capturados.
 - `mallReloadData.buyFishCount5/10/20/45/68/128` son seis `Int32`. Se
   interpretan como contadores de paquetes o compras de peces, pero **todas las
   muestras observadas están a 0**. No hay una muestra legítima con un valor

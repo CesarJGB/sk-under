@@ -13,7 +13,7 @@ aceptará.
 Los demás nombres relacionados no son el saldo:
 
 - `itemData.materials.material_fish` es un material de pesca.
-- `itemData.cumulativeFishCount` cuenta peces obtenidos; no identifica fichas.
+- `itemData.cumulativeFishCount` es el contador acumulado de la tienda de fichas (Fase 6.20); no es el saldo actual.
 - `seasonData.chips` son chips de habilidad de temporada.
 - `gameData.petUnlock.FishChipKing` es una mascota, no una moneda.
 - `mallReloadData.buyFishCount*` cuenta compras de peces, no fichas.
@@ -35,7 +35,7 @@ Los demás nombres relacionados no son el saldo:
 | `extraRewardChestNoChipTimes` | `seasonData` | entero | E2; 0 | Contador de cofre sin chip de temporada. |
 | `extraRewardChestTimes` | `seasonData` | entero | E2; 0 | Contador de cofres de temporada. |
 | `StatisticsData.HallGameStatisticData._buyItemUseFishChipTimes` | `statisticData` | objeto escena → entero | E2; `{"Any": 999}` en 8.6.0 | Contador histórico de compras con fichas. No es el saldo. |
-| `cumulativeFishCount` | `itemData` | entero | E2; 7.218 en 8.6.0 y 0 en 8.8.0 | Total de peces; no es el saldo de fichas. |
+| `cumulativeFishCount` | `itemData` | entero | E2; 7.218 en 8.6.0 y 0 en 8.8.0 | Progreso acumulado de la tienda de fichas (corregido en 6.20); no es el saldo. |
 | `magicWellFishedTimes` | `itemData` | entero | E2; 0 | Contador de pesca en el pozo mágico. |
 | `chips` / `chipSchemes` | `seasonData` | lista / objeto | E2; 20 chips con nombre y nivel en 8.6.0 | Habilidad de temporada; no es una moneda. |
 

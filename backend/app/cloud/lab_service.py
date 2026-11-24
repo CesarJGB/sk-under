@@ -39,6 +39,14 @@ from .fish_chip_editor import (
     read_fish_chip,
     require_fish_chip_write_compatibility,
 )
+from .fish_progress_editor import (
+    PROGRESS_PATH,
+    PROGRESS_RECORD_FIELD,
+    FishProgressEdit,
+    prepare_fish_progress_edit,
+    read_fish_progress,
+    require_fish_progress_write_compatibility,
+)
 from .gems_editor import (
     GEMS_FIELD_ID,
     MAX_GEMS,
@@ -147,6 +155,7 @@ class LoadedSave:
     report: dict[str, object]
     fish_chip: int | None = None
     material_fish: int | None = None
+    cumulative_fish_count: int | None = None
 
     def summary(self) -> dict[str, object]:
         return {
@@ -160,6 +169,8 @@ class LoadedSave:
             "fish_chip_path": FISH_CHIP_PATH,
             "material_fish": self.material_fish,
             "material_fish_path": MATERIAL_FISH_PATH,
+            "cumulative_fish_count": self.cumulative_fish_count,
+            "cumulative_fish_count_path": PROGRESS_PATH,
             "fish_chip_write_policy": "confirmed_by_owner",
             "character_write_policy": "confirmed_by_owner",
             "skill_write_policy": "confirmed_by_owner",
@@ -287,6 +298,57 @@ class PreparedFishChipEdit:
                 "evidence_level": "E2",
                 "message": (
                     "Campos modificados: " + ", ".join(self.edit.changed_fields) + "."
+                    if self.edit.changed
+                    else "El valor solicitado ya está en la partida; no hay cambios que subir."
+                ),
+            },
+        }
+
+
+@dataclass(frozen=True)
+class PreparedFishProgressEdit:
+    """Resultado experimental de preparar el progreso acumulado de fichas."""
+
+    backup: BackupRecord
+    edit: FishProgressEdit
+    remote_source: str
+
+    @property
+    def changed(self) -> bool:
+        return self.edit.changed
+
+    @property
+    def candidate_sha256(self) -> str:
+        return self.edit.candidate_sha256
+
+    def summary(self) -> dict[str, object]:
+        return {
+            "field": PROGRESS_PATH,
+            "remote": {
+                "source": self.remote_source,
+                "size": self.edit.binary.original_size,
+                "sha256": self.edit.original_sha256,
+            },
+            "backup": self.backup.summary(),
+            "original_cumulative_fish_count": self.edit.original_cumulative_fish_count,
+            "new_cumulative_fish_count": self.edit.new_cumulative_fish_count,
+            "original_value": self.edit.original_cumulative_fish_count,
+            "new_value": self.edit.new_cumulative_fish_count,
+            "changed": self.edit.changed,
+            "candidate_size": len(self.edit.candidate),
+            "candidate_sha256": self.edit.candidate_sha256,
+            "byte_diff": self.edit.binary.as_dict(),
+            "changed_fields": list(self.edit.changed_fields),
+            "experimental": True,
+            "validation": {
+                "valid": True,
+                "structure_valid": True,
+                "only_fish_progress_changed": self.edit.changed
+                and set(self.edit.changed_fields) <= {PROGRESS_PATH},
+                "experimental": True,
+                "evidence_level": "E2",
+                "message": (
+                    "Campo modificado: " + ", ".join(self.edit.changed_fields) + "."
                     if self.edit.changed
                     else "El valor solicitado ya está en la partida; no hay cambios que subir."
                 ),
@@ -614,11 +676,16 @@ class CloudLabService:
         except (FishChipFieldMissing, CloudSaveError):
             fish_chip = None
             material_fish = None
+        try:
+            cumulative_fish_count = read_fish_progress(save.payload).cumulative_fish_count
+        except CloudSaveError:
+            cumulative_fish_count = None
         return LoadedSave(
             metadata=save.metadata,
             gems=snapshot.gems,
             fish_chip=fish_chip,
             material_fish=material_fish,
+            cumulative_fish_count=cumulative_fish_count,
             size=snapshot.size,
             sha256=snapshot.sha256,
             serialzed_version=snapshot.serialzed_version,
@@ -636,6 +703,8 @@ class CloudLabService:
     def _field_path(field: str) -> str:
         if field == FISH_CHIP_RECORD_FIELD:
             return FISH_CHIP_PATH
+        if field == PROGRESS_RECORD_FIELD:
+            return PROGRESS_PATH
         if field == CHARACTER_RECORD_FIELD:
             return CHARACTER_PATH
         if field == SKILL_RECORD_FIELD:
@@ -648,6 +717,8 @@ class CloudLabService:
     def _field_label(field: str) -> str:
         if field == FISH_CHIP_RECORD_FIELD:
             return "las fichas de pesca"
+        if field == PROGRESS_RECORD_FIELD:
+            return "el progreso acumulado de fichas de pesca"
         if field == CHARACTER_RECORD_FIELD:
             return "los personajes"
         if field == SKILL_RECORD_FIELD:
@@ -662,6 +733,11 @@ class CloudLabService:
             return (
                 f"La descarga posterior coincide con el agregado subido de {label}. "
                 "La efectividad dentro del juego fue confirmada por el propietario."
+            )
+        if field == PROGRESS_RECORD_FIELD:
+            return (
+                f"La descarga posterior coincide con el agregado subido de {label}. "
+                "La barra de recompensas aún no se ha comprobado en Android."
             )
         if field == CHARACTER_RECORD_FIELD:
             return (
@@ -703,6 +779,11 @@ class CloudLabService:
                 snapshot = read_fish_chip(payload)
                 value: int | None = snapshot.fish_chip
                 material = snapshot.material_fish
+            except CloudSaveError:
+                value = None
+        elif field == PROGRESS_RECORD_FIELD:
+            try:
+                value = read_fish_progress(payload).cumulative_fish_count
             except CloudSaveError:
                 value = None
         elif field == CHARACTER_RECORD_FIELD:
@@ -796,6 +877,46 @@ class CloudLabService:
             },
         )
         return PreparedFishChipEdit(bundle.record, edit, save.metadata.source)
+
+    def prepare_fish_progress(
+        self, new_cumulative_fish_count: object, *, expected_source: str | None = None
+    ) -> PreparedFishProgressEdit:
+        """Prepara un cambio aislado de ``itemData.cumulativeFishCount``.
+
+        No modifica el saldo de fichas, el material espejo, los historiales ni
+        las recompensas reclamadas. El respaldo usa el mismo almacén cifrado y
+        la confirmación vuelve a reproducir el candidato antes de subirlo.
+        """
+        save = self.provider.download(self.max_input_bytes)
+        if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
+            raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
+        edit = prepare_fish_progress_edit(save.payload, new_cumulative_fish_count)
+        if edit.original_sha256 != save.metadata.sha256:
+            raise LabServiceError("El original preparado no coincide con la descarga.")
+        bundle = self.store.save(
+            edit,
+            remote_source=save.metadata.source,
+            remote_size=save.metadata.size,
+            remote_sha256=save.metadata.sha256,
+            field=PROGRESS_RECORD_FIELD,
+            original_value=edit.original_cumulative_fish_count,
+            new_value=edit.new_cumulative_fish_count,
+        )
+        self.store.append_event(
+            bundle.record.id,
+            {
+                "action": "prepare",
+                "field": PROGRESS_PATH,
+                "experimental": True,
+                "changed": edit.changed,
+                "original_value": edit.original_cumulative_fish_count,
+                "candidate_value": edit.new_cumulative_fish_count,
+                "candidate_sha256": edit.candidate_sha256,
+                "changed_fields": list(edit.changed_fields),
+                "remote_source": save.metadata.source,
+            },
+        )
+        return PreparedFishProgressEdit(bundle.record, edit, save.metadata.source)
 
     def prepare_characters(
         self, codes: object, *, expected_source: str | None = None
@@ -942,6 +1063,10 @@ class CloudLabService:
                 raise LabAlreadyConfirmed("Este respaldo ya fue confirmado; usa la verificación.")
             if bundle.record.field == FISH_CHIP_RECORD_FIELD:
                 require_fish_chip_write_compatibility(
+                    bundle.original, bundle.record.candidate_gems, bundle.candidate
+                )
+            elif bundle.record.field == PROGRESS_RECORD_FIELD:
+                require_fish_progress_write_compatibility(
                     bundle.original, bundle.record.candidate_gems, bundle.candidate
                 )
             elif bundle.record.field == CHARACTER_RECORD_FIELD:

@@ -39,6 +39,13 @@ from .fish_chip_editor import (
     prepare_fish_chip_edit,
     read_fish_chip,
 )
+from .fish_progress_editor import (
+    PROGRESS_RECORD_FIELD,
+    FishProgressEdit,
+    FishProgressFieldMissing,
+    prepare_fish_progress_edit,
+    read_fish_progress,
+)
 from .gems_editor import GemsEdit, GemsEditError, prepare_gems_edit, read_gems, replay_legacy_gems_edit
 from .skill_editor import (
     MAX_SKILLS,
@@ -59,7 +66,14 @@ from .skin_editor import (
 
 _ID = re.compile(r"^[0-9a-f]{32}$")
 _FIELDS = frozenset(
-    {"gems", FISH_CHIP_RECORD_FIELD, CHARACTER_RECORD_FIELD, SKILL_RECORD_FIELD, SKIN_RECORD_FIELD}
+    {
+        "gems",
+        FISH_CHIP_RECORD_FIELD,
+        PROGRESS_RECORD_FIELD,
+        CHARACTER_RECORD_FIELD,
+        SKILL_RECORD_FIELD,
+        SKIN_RECORD_FIELD,
+    }
 )
 _RECORD_LIMIT = 64 * 1024
 _SEAL_MAGIC = b"SKB1"
@@ -363,7 +377,7 @@ class LabBackupStore:
 
     def save(
         self,
-        edit: GemsEdit | FishChipEdit | SkillEdit | SkinEdit,
+        edit: GemsEdit | FishChipEdit | FishProgressEdit | SkillEdit | SkinEdit,
         *,
         remote_source: str,
         remote_size: int,
@@ -413,9 +427,17 @@ class LabBackupStore:
         if remote_sha256 != edit.original_sha256 or remote_size != len(edit.original):
             raise BackupIntegrityError("La copia remota no coincide con el original preparado.")
         if original_value is None:
-            original_value = getattr(edit, "original_gems", getattr(edit, "original_fish_chip", None))
+            original_value = getattr(
+                edit,
+                "original_gems",
+                getattr(edit, "original_fish_chip", getattr(edit, "original_cumulative_fish_count", None)),
+            )
         if new_value is None:
-            new_value = getattr(edit, "new_gems", getattr(edit, "new_fish_chip", None))
+            new_value = getattr(
+                edit,
+                "new_gems",
+                getattr(edit, "new_fish_chip", getattr(edit, "new_cumulative_fish_count", None)),
+            )
         original_value = _require_int(original_value, "original_value")
         new_value = _require_int(new_value, "candidate_value")
         source = _require_text(remote_source, "remote_source")
@@ -676,6 +698,28 @@ class LabBackupStore:
             if current.candidate != candidate and not legacy_fish_chip_candidate_matches(
                 original, record.candidate_gems, candidate
             ):
+                raise BackupIntegrityError(
+                    "El candidato del respaldo no es reproducible desde el original."
+                )
+            return BackupBundle(record, original, candidate)
+        if record.field == PROGRESS_RECORD_FIELD:
+            try:
+                original_progress = read_fish_progress(original).cumulative_fish_count
+            except FishProgressFieldMissing:
+                raise BackupIntegrityError(
+                    "El original del respaldo no contiene el progreso acumulado de fichas."
+                ) from None
+            if original_progress != record.original_gems:
+                raise BackupIntegrityError("El original del respaldo no conserva el valor registrado.")
+            if not record.changed:
+                return BackupBundle(record, original, candidate)
+            try:
+                current = prepare_fish_progress_edit(original, record.candidate_gems)
+            except CloudSaveError:
+                raise BackupIntegrityError(
+                    "El candidato del respaldo no es reproducible desde el original."
+                ) from None
+            if current.candidate != candidate:
                 raise BackupIntegrityError(
                     "El candidato del respaldo no es reproducible desde el original."
                 )
