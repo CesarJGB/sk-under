@@ -384,7 +384,7 @@ export function PetsEditorSection({
   return <section className="cloud-section panel advanced-section" aria-labelledby="pets-title">
     <div className="cloud-section-head">
       <div>
-        <span className="cloud-kicker">Experimental E2</span>
+        <span className="cloud-kicker">Confirmado por el propietario · E3</span>
         <h2 id="pets-title">Mascotas</h2>
         <p className="cloud-state">Desbloqueos, alimento y progresión de solo lectura</p>
       </div>

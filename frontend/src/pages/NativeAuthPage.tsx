@@ -2,25 +2,16 @@ import {
   ChevronDown, CloudDownload, Eye, EyeOff, LogOut,
 } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
-import { Link, useLocation } from 'react-router'
+import { Link } from 'react-router'
 import {
   ApiProblem, nativeAuth,
-  type LabBackup, type LabFishChipPrepared, type LabFishProgressPrepared, type LabPrepared, type LabVerification, type LabWriteResult,
+  type LabBackup, type LabVerification, type LabWriteResult,
   type NativeConfig, type NativeSaveSummary, type NativeSession,
 } from '../api'
 import { formatSize } from '../session'
 import { Loading, Notice, PageTitle, Problem } from '../ui'
-import { AdvancedEditorSection } from './AdvancedEditorSection'
-import { CharacterUnlockSection } from './CharacterUnlockSection'
 import { HomePage } from './HomePage'
-import { PetsEditorSection } from './PetsEditorSection'
-import { SkillUnlockSection } from './SkillUnlockSection'
-import { SkinUnlockSection } from './SkinUnlockSection'
-import { QuickUnlockCard } from './QuickUnlockCard'
-import {
-  emptyUnlockSelections, pendingCharacterCodes, pendingSkinKeys, pendingSkillKeys,
-  type UnlockCategory, type UnlockSelections,
-} from '../unlockSelections'
+import { EditorWorkspace } from './EditorWorkspace'
 import { useOperation } from '../useOperation'
 
 const gemFormat = new Intl.NumberFormat('es-MX')
@@ -148,6 +139,7 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
   const [profileId, setProfileId] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [accountHint, setAccountHint] = useState('')
+  const [editorDirty, setEditorDirty] = useState(false)
   const [revision, setRevision] = useState(0)
   const configOperation = useOperation()
   const authOperation = useOperation()
@@ -208,9 +200,13 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
   }
 
   function logout() {
-    if (!window.confirm('¿Cerrar sesión? Se eliminará el acceso de este navegador a la cuenta.')) return
+    const message = editorDirty
+      ? 'Hay cambios sin guardar. ¿Cerrar sesión y descartarlos? Se eliminará el acceso de este navegador a la cuenta.'
+      : '¿Cerrar sesión? Se eliminará el acceso de este navegador a la cuenta.'
+    if (!window.confirm(message)) return
     void authOperation.run(async (signal) => {
       await nativeAuth.logout(signal)
+      setEditorDirty(false)
       setAccountHint('')
       setSession({ active: false, reason: 'none' })
       setConfig((current) => current && { ...current, session: { active: false, reason: 'none' } })
@@ -334,7 +330,7 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
       {view === 'save' && accountBar}
       {session.installation_ready ? <NativeEditor key={`${session.account?.label}-${session.session_expires_at}`}
         session={session} initialSave={session.save ?? null} view={view} platform={platform} accountLabel={accountLabel}
-        onExpired={expired} /> : view === 'home' ? <HomePage account={{ label: accountLabel, platform, saveStatus: 'Configuración de acceso pendiente' }} />
+        onExpired={expired} onDirtyChange={setEditorDirty} /> : view === 'home' ? <HomePage account={{ label: accountLabel, platform, saveStatus: 'Configuración de acceso pendiente' }} />
           : view === 'editor' ? <section className="cloud-empty panel">
             <h2>Configuración de acceso pendiente</h2>
             <Link className="button primary" to="/partida">Ir a Partida</Link>
@@ -361,48 +357,30 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
   </>
 }
 
-function NativeEditor({ session, initialSave, onExpired, view, platform, accountLabel }: {
+function NativeEditor({ session, initialSave, onExpired, view, platform, accountLabel, onDirtyChange }: {
   session: NativeSession
   initialSave: NativeSaveSummary | null
   onExpired: () => void
   view: CloudView
   platform: string
   accountLabel: string
+  onDirtyChange: (dirty: boolean) => void
 }) {
   const [save, setSave] = useState<(NativeSaveSummary & { downloaded_at?: string }) | null>(initialSave)
   const [syncResult, setSyncResult] = useState<LabWriteResult | null>(null)
-  const [action, setAction] = useState<'download' | 'prepare' | 'upload'>('download')
-  const [newGems, setNewGems] = useState(initialSave ? String(initialSave.gems) : '')
-  const [candidate, setCandidate] = useState<LabPrepared | null>(null)
-  const [confirm, setConfirm] = useState(false)
-  const [result, setResult] = useState<LabWriteResult | null>(null)
-  const [newFishChip, setNewFishChip] = useState(initialSave?.fish_chip != null ? String(initialSave.fish_chip) : '')
-  const [fishCandidate, setFishCandidate] = useState<LabFishChipPrepared | null>(null)
-  const [fishConfirm, setFishConfirm] = useState(false)
-  const [fishResult, setFishResult] = useState<LabWriteResult | null>(null)
-  const [fishAction, setFishAction] = useState<'prepare' | 'upload' | null>(null)
-  const [newFishProgress, setNewFishProgress] = useState(
-    initialSave?.cumulative_fish_count != null ? String(initialSave.cumulative_fish_count) : '',
-  )
-  const [fishProgressCandidate, setFishProgressCandidate] = useState<LabFishProgressPrepared | null>(null)
-  const [fishProgressConfirm, setFishProgressConfirm] = useState(false)
-  const [fishProgressResult, setFishProgressResult] = useState<LabWriteResult | null>(null)
-  const [fishProgressAction, setFishProgressAction] = useState<'prepare' | 'upload' | null>(null)
+  const [action, setAction] = useState<'download' | 'upload'>('download')
   const [history, setHistory] = useState<Array<LabBackup & { confirmed: boolean }>>([])
   const [backupResult, setBackupResult] = useState<(LabWriteResult | LabVerification) | null>(null)
-  const [selections, setSelections] = useState<UnlockSelections>(emptyUnlockSelections)
-  const [applied, setApplied] = useState<UnlockSelections>(emptyUnlockSelections)
   const operation = useOperation()
   const historyOperation = useOperation()
   const backupOperation = useOperation()
-  const { pathname } = useLocation()
 
   async function refreshHistory(signal: AbortSignal) {
     setHistory((await nativeAuth.backups(signal)).backups)
   }
 
-  function run(task: (signal: AbortSignal) => Promise<unknown>, action = operation) {
-    void action.run(async (signal) => {
+  function run(task: (signal: AbortSignal) => Promise<unknown>, target = operation) {
+    void target.run(async (signal) => {
       try {
         await task(signal)
       } catch (error) {
@@ -414,67 +392,6 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
 
   useEffect(() => { void historyOperation.run(refreshHistory) }, [])
 
-  const limits = {
-    min_gems: session.min_gems ?? 0,
-    max_gems: session.max_gems ?? 2_147_483_647,
-  }
-  const fishLimits = {
-    min: session.min_fish_chip ?? 0,
-    max: session.max_fish_chip ?? 2_147_483_647,
-  }
-  const amount = /^\d+$/.test(newGems) ? Number(newGems) : Number.NaN
-  const valid = Number.isSafeInteger(amount) && amount >= limits.min_gems && amount <= limits.max_gems
-  const fishAmount = /^\d+$/.test(newFishChip) ? Number(newFishChip) : Number.NaN
-  const fishValid = Number.isSafeInteger(fishAmount)
-    && fishAmount >= fishLimits.min && fishAmount <= fishLimits.max
-  const fishProgressAmount = /^\d+$/.test(newFishProgress) ? Number(newFishProgress) : Number.NaN
-  const fishProgressValid = Number.isSafeInteger(fishProgressAmount)
-    && fishProgressAmount >= fishLimits.min && fishProgressAmount <= fishLimits.max
-  const disabled = operation.pending || backupOperation.pending
-  const originalFishChip = save?.fish_chip ?? save?.report?.fish_chips.balance ?? null
-  const originalMaterialFish = save?.material_fish ?? null
-  const cloudFishChip = fishResult?.persisted
-    ? fishResult.remote_value ?? originalFishChip
-    : originalFishChip
-  const cloudMaterialFish = fishResult?.persisted
-    ? fishResult.remote_material_fish ?? originalMaterialFish
-    : originalMaterialFish
-  const fishAlreadyCurrent = fishAmount === originalFishChip
-    && originalMaterialFish != null && fishAmount === originalMaterialFish
-  const originalFishProgress = save?.cumulative_fish_count ?? null
-  const cloudFishProgress = fishProgressResult?.persisted
-    ? fishProgressResult.remote_value ?? originalFishProgress
-    : originalFishProgress
-  const fishProgressAlreadyCurrent = fishProgressAmount === originalFishProgress
-
-  function clearPreview() {
-    setCandidate(null)
-    setConfirm(false)
-    setResult(null)
-  }
-
-  function clearFishPreview() {
-    setFishCandidate(null)
-    setFishConfirm(false)
-    setFishResult(null)
-  }
-
-  function clearFishProgressPreview() {
-    setFishProgressCandidate(null)
-    setFishProgressConfirm(false)
-    setFishProgressResult(null)
-  }
-
-  function prepareFishProgress(value: number) {
-    if (!save || !Number.isSafeInteger(value) || value < fishLimits.min || value > fishLimits.max) return
-    setFishProgressAction('prepare')
-    run(async (signal) => {
-      clearFishProgressPreview()
-      setFishProgressCandidate(await nativeAuth.prepareFishProgress(value, save.sha256, signal))
-      void historyOperation.run(refreshHistory)
-    })
-  }
-
   const downloading = action === 'download' && operation.pending
   const downloadProblem = action === 'download' ? operation.problem : null
   const initialProblem = !save && !downloadProblem && !syncResult && !downloading ? session.save_error : null
@@ -483,37 +400,33 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     || downloadProblem?.code === 'native_device_binding_throttled'
   const waitUntil = session.binding_wait_until && formatDate(session.binding_wait_until)
   const cloudGems = syncResult?.persisted ? syncResult.remote_gems : save?.gems
-  const uploadPending = action === 'upload' && operation.pending
-  const uploadFailed = action === 'upload' && Boolean(operation.problem)
-  const syncUnconfirmed = uploadFailed || (syncResult !== null && !syncResult.persisted)
-  let saveStatus = 'Partida pendiente de descargar'
+  const disabled = operation.pending || backupOperation.pending
+  let saveStatus = save ? 'Copia verificada' : 'Partida pendiente de descargar'
   if (downloading) saveStatus = 'Descargando partida…'
-  else if (uploadPending) saveStatus = 'Subiendo y verificando…'
-  else if (syncUnconfirmed) saveStatus = 'Sincronización sin confirmar'
-  else if (syncResult?.persisted) saveStatus = syncResult.action === 'restore' ? 'Respaldo restaurado' : 'Subida verificada'
-  else if (save) saveStatus = 'Copia verificada'
+  else if (save) saveStatus = 'Editor listo'
   else if (noCloudSave) saveStatus = 'Sin partida en la nube'
   else if (waiting) saveStatus = 'En espera de ChillyRoom'
-  else if (downloadProblem || initialProblem) saveStatus = 'Descarga pendiente'
 
   function download() {
     setAction('download')
-    setFishAction(null)
     run(async (signal) => {
-      clearPreview()
-      clearFishPreview()
-      clearFishProgressPreview()
       setSyncResult(null)
       setSave(null)
-      const downloaded = await nativeAuth.save(signal)
-      setSave(downloaded)
-      setNewGems(String(downloaded.gems))
-      setNewFishChip(downloaded.fish_chip != null ? String(downloaded.fish_chip) : '')
-      setNewFishProgress(
-        downloaded.cumulative_fish_count != null ? String(downloaded.cumulative_fish_count) : '',
-      )
-      setSelections(emptyUnlockSelections())
-      setApplied(emptyUnlockSelections())
+      setSave(await nativeAuth.save(signal))
+    })
+  }
+
+  async function reload() {
+    setAction('download')
+    await new Promise<void>((resolve, reject) => {
+      run(async (signal) => {
+        try {
+          setSave(await nativeAuth.save(signal))
+          resolve()
+        } catch (error) {
+          reject(error)
+        }
+      })
     })
   }
 
@@ -530,39 +443,6 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
   </Notice> : downloadProblem ? <Problem problem={friendly(downloadProblem, 'No se pudo descargar la partida. Vuelve a intentarlo.')} />
     : initialProblem ? <Notice tone="warning">No se pudo comprobar la partida. Intenta descargarla de nuevo.</Notice> : null
 
-  const reportCharacters = save?.report?.characters ?? null
-  const pendingCharacters = reportCharacters
-    ? pendingCharacterCodes(reportCharacters, applied.characters) : []
-  const pendingSkills = reportCharacters
-    ? pendingSkillKeys(reportCharacters, applied.skills) : []
-  const pendingSkins = reportCharacters
-    ? pendingSkinKeys(reportCharacters, applied.skins) : []
-  const selectedCount = (category: UnlockCategory, keys: string[]) => (
-    keys.filter((key) => selections[category].has(key)).length
-  )
-  const updateSelection = (category: UnlockCategory, next: Set<string>) => {
-    setSelections((current) => ({ ...current, [category]: next }))
-  }
-  const applyUnlocks = (category: UnlockCategory, keys: string[]) => {
-    setApplied((current) => ({ ...current, [category]: new Set([...current[category], ...keys]) }))
-  }
-  const toggleCategory = (category: UnlockCategory, keys: string[]) => {
-    const current = selections[category]
-    const next = new Set(current)
-    const allSelected = keys.length > 0 && keys.every((key) => current.has(key))
-    for (const key of keys) {
-      if (allSelected) next.delete(key)
-      else next.add(key)
-    }
-    updateSelection(category, next)
-  }
-  const editorCategory = pathname.startsWith('/editor/')
-    ? pathname.slice('/editor/'.length).replace(/\/+$/, '')
-    : null
-  const selectedTotal = selectedCount('characters', pendingCharacters)
-    + selectedCount('skills', pendingSkills)
-    + selectedCount('skins', pendingSkins)
-
   if (view === 'home') return <HomePage account={{ label: accountLabel, platform, saveStatus }} />
 
   if (view === 'save') return <>
@@ -574,7 +454,7 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
         </div>
         {cloudGems != null && <dl className="cloud-save-data">
           <div className="cloud-gems">
-            <dt>{uploadPending || syncUnconfirmed ? 'Últimas gemas verificadas' : 'Gemas'}</dt>
+            <dt>Gemas</dt>
             <dd data-testid="native-current-gems">{gemFormat.format(cloudGems)}</dd>
           </div>
           {save?.downloaded_at && !syncResult && <div>
@@ -587,7 +467,6 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
         </div>
       </div>
       {downloadFeedback}
-      {uploadFailed && operation.problem && <Problem problem={friendly(operation.problem, 'No se pudo confirmar la subida. Puedes verificar el respaldo.')} />}
       {!session.write_ready && <p className="cloud-note">Acceso a la nube de solo lectura.</p>}
     </section>
 
@@ -616,14 +495,13 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
             }}>Verificar nube</button>
             {session.write_ready && backup.changed && <button className="button quiet" disabled={disabled}
               onClick={() => {
-                if (window.confirm(`¿Restaurar el respaldo de ${accountLabel} con ${gemFormat.format(backup.original_value ?? backup.original_gems)} ${backupFieldLabel(backup)}? Se reemplazará la partida en la nube.`)) {
+                if (window.confirm(`¿Restaurar el respaldo de ${accountLabel}? Se reemplazará la partida en la nube.`)) {
                   setBackupResult(null)
                   run(async (signal) => {
                     const restored = await nativeAuth.restore(backup.id, signal)
                     setBackupResult(restored)
                     setSyncResult(restored)
                     setSave(null)
-                    clearPreview()
                   }, backupOperation)
                 }
               }}>Restaurar respaldo</button>}
@@ -643,444 +521,14 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     {downloadButton}
   </section>
 
-  if (editorCategory && !['personajes', 'habilidades', 'skins', 'mascotas'].includes(editorCategory)) {
-    return <section className="cloud-empty panel">
-      <h2>Categoría no encontrada</h2>
-      <Link className="button primary" to="/editor">Volver al Editor</Link>
-    </section>
-  }
-
-  if (editorCategory === 'mascotas') {
-    return <>
-      <div className="editor-detail-nav">
-        <Link className="cloud-text-link" to="/editor">← Editor</Link>
-        <span>Mascotas y alimento · E2</span>
-      </div>
-      {!save.advanced || save.advanced.available === false ? <section className="cloud-empty panel">
-        <h2>Editor de mascotas no disponible</h2>
-        <p>{save.advanced?.error ?? 'La partida no contiene las estructuras necesarias.'}</p>
-      </section> : <PetsEditorSection
-        key={`pets-${save.sha256}`}
-        saveSha={save.sha256}
-        advanced={save.advanced}
-        writeReady={Boolean(session.write_ready)}
-        disabled={disabled}
-        accountLabel={accountLabel}
-        formatProblem={friendly}
-        onExpired={onExpired}
-        onPrepared={() => void historyOperation.run(refreshHistory)}
-      />}
-    </>
-  }
-
-  if (editorCategory) {
-    const category: UnlockCategory = editorCategory === 'personajes'
-      ? 'characters' : editorCategory === 'habilidades' ? 'skills' : 'skins'
-    const keys = category === 'characters' ? pendingCharacters
-      : category === 'skills' ? pendingSkills : pendingSkins
-    const title = category === 'characters' ? 'Personajes'
-      : category === 'skills' ? 'Habilidades' : 'Skins'
-    return <>
-      <div className="editor-detail-nav">
-        <Link className="cloud-text-link" to="/editor">← Editor</Link>
-        <span>{gemFormat.format(selectedCount(category, keys))} seleccionados · {title}</span>
-      </div>
-      {!reportCharacters ? <section className="cloud-empty panel">
-        <p>Informe no disponible. Descarga la partida de nuevo.</p>
-        <button className="button primary" disabled={disabled} onClick={download}>Descargar partida</button>
-        {downloadFeedback}
-      </section> : category === 'characters' ? <CharacterUnlockSection
-        key={save.sha256}
-        characters={reportCharacters}
-        saveSha={save.sha256}
-        writeReady={Boolean(session.write_ready)}
-        accountLabel={accountLabel}
-        disabled={disabled}
-        selected={selections.characters}
-        onSelectedChange={(next) => updateSelection('characters', next)}
-        applied={applied.characters}
-        onApplied={(codes) => applyUnlocks('characters', codes)}
-        formatProblem={friendly}
-        onExpired={onExpired}
-        onPrepared={() => void historyOperation.run(refreshHistory)}
-      /> : category === 'skills' ? <SkillUnlockSection
-        key={`skills-${save.sha256}`}
-        characters={reportCharacters}
-        saveSha={save.sha256}
-        writeReady={Boolean(session.write_ready)}
-        accountLabel={accountLabel}
-        disabled={disabled}
-        selected={selections.skills}
-        onSelectedChange={(next) => updateSelection('skills', next)}
-        applied={applied.skills}
-        onApplied={(codes) => applyUnlocks('skills', codes)}
-        formatProblem={friendly}
-        onExpired={onExpired}
-        onPrepared={() => void historyOperation.run(refreshHistory)}
-      /> : <SkinUnlockSection
-        key={`skins-${save.sha256}`}
-        characters={reportCharacters}
-        saveSha={save.sha256}
-        writeReady={Boolean(session.write_ready)}
-        accountLabel={accountLabel}
-        disabled={disabled}
-        selected={selections.skins}
-        onSelectedChange={(next) => updateSelection('skins', next)}
-        applied={applied.skins}
-        onApplied={(codes) => applyUnlocks('skins', codes)}
-        formatProblem={friendly}
-        onExpired={onExpired}
-        onPrepared={() => void historyOperation.run(refreshHistory)}
-      />}
-    </>
-  }
-
-  return <>
-  <section className="cloud-section panel quick-editor-head">
-    <div>
-      <span className="cloud-kicker">Editor rápido</span>
-      <h2>Partida</h2>
-      <p className="cloud-state">{accountLabel} · {platform}</p>
-    </div>
-    <div className="editor-current">
-      <span>Seleccionados</span>
-      <strong data-testid="quick-selected-count">{gemFormat.format(selectedTotal)}</strong>
-    </div>
-  </section>
-  <div className="quick-edit-grid">
-  <section className="cloud-section panel cloud-editor" aria-labelledby="edit-gems-title">
-    <div className="cloud-section-head">
-      <div><h2 id="edit-gems-title">Gemas</h2><p className="cloud-state">Saldo de la copia</p></div>
-      <div className="editor-current">
-        <span>Actual</span>
-        <strong>{gemFormat.format(save.gems)}</strong>
-      </div>
-    </div>
-    {!session.write_ready && <Notice tone="warning">
-      Puedes preparar una edición y su respaldo. La subida a la nube está deshabilitada.
-    </Notice>}
-    <form className="cloud-form" onSubmit={(event) => {
-      event.preventDefault()
-      if (!valid) return
-      setAction('prepare')
-      setFishAction(null)
-      run(async (signal) => {
-        clearPreview()
-        setCandidate(await nativeAuth.prepare(amount, save.sha256, signal))
-        void historyOperation.run(refreshHistory)
-      })
-    }}>
-      <label className="cloud-field"><span>Nueva cantidad de gemas</span>
-        <input inputMode="numeric" value={newGems} disabled={disabled}
-          aria-invalid={!valid} aria-describedby="gem-limits" onChange={(event) => {
-            setNewGems(event.target.value)
-            clearPreview()
-          }} />
-        <small id="gem-limits">Entero entre {gemFormat.format(limits.min_gems)} y {gemFormat.format(limits.max_gems)}.</small>
-      </label>
-      <button className="button primary" disabled={disabled || !valid || amount === save.gems}>Preparar edición</button>
-    </form>
-    {candidate && <div className="cloud-preview">
-      <h3>Revisar cambios</h3>
-      <dl className="cloud-preview-data">
-        <div><dt>Gemas originales</dt><dd>{gemFormat.format(candidate.original_gems)}</dd></div>
-        <div><dt>Gemas nuevas</dt><dd>{gemFormat.format(candidate.new_gems)}</dd></div>
-        <div><dt>Cambio</dt><dd>{new Intl.NumberFormat('es-MX', { signDisplay: 'exceptZero' })
-          .format(candidate.new_gems - candidate.original_gems)}</dd></div>
-      </dl>
-      {candidate.changed_fields?.includes('gameData.varGems') && <p className="cloud-note">
-        Se ajusta la variación de gemas junto con el saldo.
-      </p>}
-      <p className="cloud-note">Se guardó un respaldo de la partida original.</p>
-      {session.write_ready && !result && <>
-        <label className="cloud-check"><input type="checkbox" checked={confirm} disabled={disabled}
-          onChange={(event) => setConfirm(event.target.checked)} />
-          <span>Confirmo que quiero sobrescribir la partida en la nube de {accountLabel}.</span>
-        </label>
-        <button className="button primary" disabled={disabled || !confirm || !candidate.changed}
-          onClick={() => {
-            setAction('upload')
-            setFishAction(null)
-            run(async (signal) => {
-              setConfirm(false)
-              const uploaded = await nativeAuth.confirm(candidate.backup.id, candidate.candidate_sha256, signal)
-              setResult(uploaded)
-              setSyncResult(uploaded)
-              void historyOperation.run(refreshHistory)
-            })
-          }}>Subir y verificar</button>
-      </>}
-    </div>}
-    {result && <div role="status" className={`cloud-feedback ${result.persisted ? 'verified' : 'uncertain'}`}>
-      {result.persisted ? 'Cambios guardados y verificados en la nube.' : 'No se pudo confirmar la subida. Verifica el estado desde Partida.'}
-    </div>}
-    {operation.pending && !fishAction && <Loading>{action === 'prepare' ? 'Preparando edición…' : 'Subiendo y verificando…'}</Loading>}
-    {operation.problem && !fishAction && <Problem problem={friendly(operation.problem, action === 'upload'
-      ? 'No se pudo confirmar la subida. Verifica el estado desde Partida.'
-      : 'No se pudo preparar la edición. Vuelve a intentarlo.')} />}
-  </section>
-  <section className="cloud-section panel cloud-editor fish-chip-editor" aria-labelledby="edit-fish-chip-title">
-    <div className="cloud-section-head">
-      <div>
-        <h2 id="edit-fish-chip-title">Fichas de pesca</h2>
-        <p className="cloud-state">Saldo y <code>material_fish</code></p>
-      </div>
-      <div className="editor-current">
-        <span>{fishResult?.persisted ? 'Verificados' : 'Actuales'}</span>
-        <strong data-testid="native-current-fish-chip">
-          {cloudFishChip == null ? '—' : gemFormat.format(cloudFishChip)}
-        </strong>
-        <span>material_fish</span>
-        <strong data-testid="native-current-material-fish">
-          {cloudMaterialFish == null ? '—' : gemFormat.format(cloudMaterialFish)}
-        </strong>
-      </div>
-    </div>
-    {!session.write_ready && <Notice tone="warning">
-      Puedes preparar la edición y su respaldo. La subida a la nube no está disponible.
-    </Notice>}
-    {originalFishChip == null ? <p className="cloud-note">
-      La partida descargada no contiene <code>gameData.fishChip</code>. La edición no está disponible.
-    </p> : <form className="cloud-form" onSubmit={(event) => {
-      event.preventDefault()
-      if (!fishValid) return
-      setFishAction('prepare')
-      run(async (signal) => {
-        clearFishPreview()
-        setFishCandidate(await nativeAuth.prepareFishChip(fishAmount, save.sha256, signal))
-        void historyOperation.run(refreshHistory)
-      })
-    }}>
-      <label className="cloud-field"><span>Nuevo saldo de fichas de pesca</span>
-        <input inputMode="numeric" value={newFishChip} disabled={disabled}
-          aria-invalid={!fishValid} aria-describedby="fish-chip-limits" onChange={(event) => {
-            setNewFishChip(event.target.value)
-            clearFishPreview()
-          }} />
-        <small id="fish-chip-limits">
-          Entero entre {gemFormat.format(fishLimits.min)} y {gemFormat.format(fishLimits.max)}.
-          No modifica historiales, recompensas ni otros materiales.
-        </small>
-      </label>
-      <button className="button primary" disabled={disabled || !fishValid || fishAlreadyCurrent}>
-        Preparar cambio de fichas
-      </button>
-    </form>}
-    {fishCandidate && <div className="cloud-preview">
-      <h3>Revisar cambio de fichas</h3>
-      <dl className="cloud-preview-data">
-        <div><dt>Fichas originales</dt><dd>{gemFormat.format(fishCandidate.original_fish_chip)}</dd></div>
-        <div><dt>Fichas nuevas</dt><dd>{gemFormat.format(fishCandidate.new_fish_chip)}</dd></div>
-        <div><dt>material_fish original</dt><dd>
-          {fishCandidate.original_material_fish == null ? '—' : gemFormat.format(fishCandidate.original_material_fish)}
-        </dd></div>
-        <div><dt>material_fish nuevo</dt><dd>{gemFormat.format(fishCandidate.new_material_fish)}</dd></div>
-        <div><dt>Cambio</dt><dd>{new Intl.NumberFormat('es-MX', { signDisplay: 'exceptZero' })
-          .format(fishCandidate.new_fish_chip - fishCandidate.original_fish_chip)}</dd></div>
-      </dl>
-      <p className="cloud-note">Se guardó un respaldo cifrado de la partida original.</p>
-      {session.write_ready && !fishResult && <>
-        <label className="cloud-check"><input type="checkbox" checked={fishConfirm} disabled={disabled}
-          onChange={(event) => setFishConfirm(event.target.checked)} />
-          <span>Confirmo que quiero sobrescribir la partida en la nube de {accountLabel} con este cambio de fichas.</span>
-        </label>
-        <button className="button primary" disabled={disabled || !fishConfirm || !fishCandidate.changed}
-          onClick={() => {
-            setFishAction('upload')
-            run(async (signal) => {
-              setFishConfirm(false)
-              const uploaded = await nativeAuth.confirm(
-                fishCandidate.backup.id, fishCandidate.candidate_sha256, signal,
-              )
-              setFishResult(uploaded)
-              void historyOperation.run(refreshHistory)
-            })
-          }}>Subir fichas y verificar</button>
-      </>}
-    </div>}
-    {fishResult && <div role="status" className={`cloud-feedback ${fishResult.persisted ? 'verified' : 'uncertain'}`}>
-      {fishResult.persisted
-        ? 'Fichas de pesca subidas y verificadas en la nube.'
-        : 'No se pudo confirmar la subida de fichas. Verifica el estado desde Partida.'}
-    </div>}
-    {operation.pending && fishAction && <Loading>
-      {fishAction === 'prepare' ? 'Preparando edición de fichas…' : 'Subiendo fichas y verificando…'}
-    </Loading>}
-    {operation.problem && fishAction && <Problem problem={friendly(operation.problem,
-      fishAction === 'upload'
-        ? 'No se pudo confirmar la subida de fichas. Verifica el estado desde Partida.'
-        : 'No se pudo preparar la edición de fichas. Vuelve a intentarlo.')} />}
-    <div className="fish-progress-editor">
-      <div className="cloud-section-head">
-        <div>
-          <h3>Progreso acumulado de fichas de pesca</h3>
-          <p className="cloud-state">Contador de recompensas de la tienda</p>
-        </div>
-        <div className="editor-current">
-          <span>{fishProgressResult?.persisted ? 'Verificado' : 'Actual'}</span>
-          <strong data-testid="native-current-fish-progress">
-            {cloudFishProgress == null ? '—' : gemFormat.format(cloudFishProgress)}
-          </strong>
-        </div>
-      </div>
-      {originalFishProgress == null ? <p className="cloud-note">
-        La partida descargada no contiene <code>itemData.cumulativeFishCount</code>.
-        El progreso acumulado no está disponible.
-      </p> : <form className="cloud-form" onSubmit={(event) => {
-        event.preventDefault()
-        prepareFishProgress(fishProgressAmount)
-      }}>
-        <label className="cloud-field"><span>Nuevo progreso acumulado</span>
-          <input inputMode="numeric" value={newFishProgress} disabled={disabled}
-            aria-invalid={!fishProgressValid} aria-describedby="fish-progress-limits"
-            onChange={(event) => {
-              setNewFishProgress(event.target.value)
-              clearFishProgressPreview()
-            }} />
-          <small id="fish-progress-limits">
-            Entero entre {gemFormat.format(fishLimits.min)} y {gemFormat.format(fishLimits.max)}.
-            No cambia el saldo, el material, los historiales ni las recompensas reclamadas.
-          </small>
-        </label>
-        <button className="button primary" disabled={disabled || !fishProgressValid || fishProgressAlreadyCurrent}>
-          Preparar cambio de progreso
-        </button>
-      </form>}
-      {originalFishProgress != null && originalFishProgress <= 20 && !fishProgressCandidate
-        && !fishProgressResult && <div className="fish-reward-quick">
-          <button type="button" className="button quiet" disabled={disabled}
-            onClick={() => {
-              const target = Math.max(originalFishProgress, 21)
-              setNewFishProgress(String(target))
-              prepareFishProgress(target)
-            }}>Desbloquear todas las recompensas acumuladas</button>
-          <p className="cloud-note">
-            Ajusta el progreso acumulado a 21 (superior a 20). No cambia el saldo de fichas,
-            el material ni las recompensas ya reclamadas; la reclamación se hace después en el cliente.
-          </p>
-        </div>}
-      {originalFishProgress != null && originalFishProgress > 20 && !fishProgressResult && <p className="cloud-note">
-        El progreso acumulado ya supera 20. El control rápido no reduce el valor existente.
-      </p>}
-      {fishProgressCandidate && <div className="cloud-preview">
-        <h3>Revisar progreso acumulado</h3>
-        <dl className="cloud-preview-data">
-          <div><dt>Progreso original</dt><dd>
-            {gemFormat.format(fishProgressCandidate.original_cumulative_fish_count)}
-          </dd></div>
-          <div><dt>Progreso nuevo</dt><dd>
-            {gemFormat.format(fishProgressCandidate.new_cumulative_fish_count)}
-          </dd></div>
-          <div><dt>Cambio</dt><dd>{new Intl.NumberFormat('es-MX', { signDisplay: 'exceptZero' })
-            .format(
-              fishProgressCandidate.new_cumulative_fish_count
-              - fishProgressCandidate.original_cumulative_fish_count,
-            )}</dd></div>
-        </dl>
-        <p className="cloud-note">
-          Se guardó un respaldo cifrado. El propietario confirmó en Android físico que este
-          contador habilita el canje de recompensas acumuladas. No modifica el saldo de fichas
-          ni marca recompensas como reclamadas.
-        </p>
-        {session.write_ready && !fishProgressResult && <>
-          <label className="cloud-check"><input type="checkbox" checked={fishProgressConfirm} disabled={disabled}
-            onChange={(event) => setFishProgressConfirm(event.target.checked)} />
-            <span>Confirmo que quiero sobrescribir la partida en la nube de {accountLabel}
-              con este progreso acumulado.</span>
-          </label>
-          <button className="button primary" disabled={disabled || !fishProgressConfirm || !fishProgressCandidate.changed}
-            onClick={() => {
-              setFishProgressAction('upload')
-              run(async (signal) => {
-                setFishProgressConfirm(false)
-                const uploaded = await nativeAuth.confirm(
-                  fishProgressCandidate.backup.id, fishProgressCandidate.candidate_sha256, signal,
-                )
-                setFishProgressResult(uploaded)
-                void historyOperation.run(refreshHistory)
-              })
-            }}>Subir progreso y verificar</button>
-        </>}
-      </div>}
-      {fishProgressResult && <div role="status"
-        className={`cloud-feedback ${fishProgressResult.persisted ? 'verified' : 'uncertain'}`}>
-        {fishProgressResult.persisted
-          ? 'Progreso acumulado subido y verificado en la nube. El canje fue confirmado por el propietario en Android físico.'
-          : 'No se pudo confirmar la subida del progreso. Verifica el estado desde Partida.'}
-      </div>}
-      {operation.pending && fishProgressAction && <Loading>
-        {fishProgressAction === 'prepare' ? 'Preparando progreso acumulado…' : 'Subiendo progreso y verificando…'}
-      </Loading>}
-      {operation.problem && fishProgressAction && <Problem problem={friendly(operation.problem,
-        fishProgressAction === 'upload'
-          ? 'No se pudo confirmar la subida del progreso. Verifica el estado desde Partida.'
-          : 'No se pudo preparar el progreso acumulado. Vuelve a intentarlo.')} />}
-    </div>
-  </section>
-  </div>
-  {save.advanced && save.advanced.available !== false ? <AdvancedEditorSection
-    key={`advanced-${save.sha256}`}
-    saveSha={save.sha256}
-    advanced={save.advanced}
-    writeReady={Boolean(session.write_ready)}
-    disabled={disabled}
-    accountLabel={accountLabel}
-    formatProblem={friendly}
-    onExpired={onExpired}
-    onPrepared={() => void historyOperation.run(refreshHistory)}
-  /> : save.advanced ? <section className="cloud-section panel cloud-empty">
-    <h2>Editor avanzado no disponible</h2>
-    <p>{save.advanced.error ?? 'La partida no contiene las estructuras necesarias.'}</p>
-  </section> : null}
-  {!reportCharacters ? <section className="cloud-section panel cloud-empty">
-    <h2>Informe no disponible</h2>
-    <p>Descarga la partida de nuevo para editar desbloqueos.</p>
-    <button className="button quiet" disabled={disabled} onClick={download}>
-      {downloading ? 'Descargando…' : 'Actualizar informe'}
-    </button>
-    {downloadFeedback}
-  </section> : <section className="cloud-section panel quick-unlock-section" aria-labelledby="quick-unlock-title">
-    <div className="cloud-section-head">
-      <div>
-        <span className="cloud-kicker">Desbloqueos</span>
-        <h2 id="quick-unlock-title">Selecciona y revisa por categoría</h2>
-      </div>
-    </div>
-    <div className="quick-unlock-grid">
-      <QuickUnlockCard title="Personajes" path="/editor/personajes"
-        unlocked={Math.min(reportCharacters.counts.characters, reportCharacters.counts.unlocked + applied.characters.size)}
-        total={reportCharacters.counts.characters}
-        pending={pendingCharacters.length}
-        selected={selectedCount('characters', pendingCharacters)}
-        busy={disabled}
-        onToggleAll={() => toggleCategory('characters', pendingCharacters)} />
-      <QuickUnlockCard title="Habilidades" path="/editor/habilidades"
-        unlocked={Math.min(reportCharacters.skills?.total ?? 0, (reportCharacters.skills?.unlocked ?? 0) + applied.skills.size)}
-        total={reportCharacters.skills?.total ?? 0}
-        pending={pendingSkills.length}
-        selected={selectedCount('skills', pendingSkills)}
-        busy={disabled}
-        onToggleAll={() => toggleCategory('skills', pendingSkills)} />
-      <QuickUnlockCard title="Skins" path="/editor/skins"
-        unlocked={Math.min(reportCharacters.skins?.total ?? 0, (reportCharacters.skins?.unlocked ?? 0) + applied.skins.size)}
-        total={reportCharacters.skins?.total ?? 0}
-        pending={pendingSkins.length}
-        selected={selectedCount('skins', pendingSkins)}
-        busy={disabled}
-        onToggleAll={() => toggleCategory('skins', pendingSkins)} />
-      {save.advanced && save.advanced.available !== false && <QuickUnlockCard title="Mascotas"
-        path="/editor/mascotas"
-        unlocked={save.advanced.pets.filter((pet) => pet.unlocked === true).length}
-        total={save.advanced.pets.length}
-        pending={save.advanced.pets.filter((pet) => pet.editable && pet.unlocked !== true).length}
-        selected={0}
-        busy={disabled}
-        withSelection={false}
-        onToggleAll={() => undefined} />}
-    </div>
-    <p className="cloud-note">Nada se sube hasta revisarlo y confirmarlo dentro de cada categoría.</p>
-  </section>}
-</>}
+  return <EditorWorkspace save={save} session={session}
+    accountLabel={accountLabel} platform={platform} onExpired={onExpired}
+    onDirtyChange={onDirtyChange}
+    onReload={() => { void reload() }}
+    onUploaded={async () => {
+      setSave(await nativeAuth.save(new AbortController().signal))
+    }} />
+}
 
 function backupFieldLabel(backup: LabBackup) {
   if (backup.field === 'fish_chip') return 'fichas de pesca'
@@ -1089,6 +537,7 @@ function backupFieldLabel(backup: LabBackup) {
   if (backup.field === 'skills') return 'habilidades'
   if (backup.field === 'skins') return 'skins'
   if (backup.field === 'advanced') return 'materiales, recursos, beneficios, pase y mascotas'
+  if (backup.field === 'unified') return 'cambios combinados'
   return 'gemas'
 }
 

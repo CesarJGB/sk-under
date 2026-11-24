@@ -1167,3 +1167,67 @@ def test_native_rejects_invalid_character_selections_before_backup(tmp_path, cod
     )
     assert_error(response, 422, code)
     assert client.get(API + "/backups", headers=HEADERS).json()["backups"] == []
+
+
+def test_native_unified_prepare_confirm_uses_one_backup_and_one_upload(tmp_path):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = character_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+    source = client.get(API + "/save", headers=HEADERS).json()
+    response = client.post(
+        API + "/prepare-unified",
+        headers=HEADERS,
+        json={
+            "gems": 1200,
+            "characters": ["Ranger"],
+            "source_sha256": source["sha256"],
+        },
+    )
+    assert response.status_code == 200, response.text
+    draft = response.json()
+    assert draft["field"] == "unified"
+    assert draft["change_count"] > 0
+    assert [category["key"] for category in draft["categories"]] == ["gems", "characters"]
+    assert draft["backup"]["field"] == "unified"
+    assert draft["backup"]["unified_plan"]["gems"] == 1200
+    assert draft["backup"]["unified_plan"]["characters"] == ["Ranger"]
+    assert len(client.get(API + "/backups", headers=HEADERS).json()["backups"]) == 1
+
+    confirmed = client.post(API + "/confirm", headers=HEADERS, json=confirmation(draft))
+    assert confirmed.status_code == 200, confirmed.text
+    result = confirmed.json()
+    assert result["persisted"] is True
+    assert result["remote_gems"] == 1200
+    assert result["remote_characters"] == 3
+    assert len(env["uploaders"]["unique-a"].calls) == 1
+    uploaded = json.loads(env["providers"]["unique-a"].payload)
+    assert uploaded["gameData"]["gems"] == 1200
+    assert uploaded["gameData"]["heroUnlock"]["Ranger"] is True
+    assert uploaded["gameData"]["heroUnlock"]["Mage"] is False
+    assert uploaded["gameData"]["heroLevel"]["Knight"] == 2
+
+    duplicate = client.post(API + "/confirm", headers=HEADERS, json=confirmation(draft))
+    assert_error(duplicate, 409, "cloud_already_confirmed")
+    assert len(env["uploaders"]["unique-a"].calls) == 1
+
+
+def test_native_unified_rejects_stale_source_and_empty_plan(tmp_path):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = character_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+    source = client.get(API + "/save", headers=HEADERS).json()
+    stale = client.post(
+        API + "/prepare-unified",
+        headers=HEADERS,
+        json={"gems": 1200, "source_sha256": "0" * 64},
+    )
+    assert_error(stale, 409, "cloud_remote_changed")
+    empty = client.post(
+        API + "/prepare-unified",
+        headers=HEADERS,
+        json={"source_sha256": source["sha256"]},
+    )
+    assert_error(empty, 422, "invalid_unified_plan")
+    assert client.get(API + "/backups", headers=HEADERS).json()["backups"] == []

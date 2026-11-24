@@ -28,8 +28,8 @@
   "counts_by_validation_level": {
     "H": 0,
     "E1": 194,
-    "E2": 406,
-    "E3": 10,
+    "E2": 405,
+    "E3": 11,
     "E4": 6
   },
   "fields": [
@@ -4990,7 +4990,7 @@
       "id": "gameData.petUnlock",
       "internal_name": "petUnlock",
       "category": "Progreso y acceso",
-      "description": "Mapa booleano de desbloqueo de mascotas por código interno; incluye variantes de skin observadas.",
+      "description": "Mapa booleano de desbloqueo de mascotas y variantes de skin confirmado por el propietario (E3).",
       "locations": {
         "local": "files/game.data:petUnlock",
         "cloud": "gameData.petUnlock",
@@ -5012,7 +5012,7 @@
       "known_value_semantics": [
         "Cada clave es un código de mascota del catálogo; true indica desbloqueo.",
         "Las variantes Cat1..Cat7, Dog1..Dog3, Pig1 y Rabbit1 usan el mismo mapa; no se halló un mapa de skins separado.",
-        "El propietario no ha validado todavía la edición de mascotas en Android físico."
+        "El propietario confirmó en Android físico el desbloqueo de mascotas y de skins de mascotas desde el editor."
       ],
       "initial_values": null,
       "limits": {
@@ -5046,22 +5046,20 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "E2",
+        "semantics": "E3",
         "version_compatibility": "E2",
-        "relations": "E2",
-        "persistence": "H"
+        "relations": "E3",
+        "persistence": "E3"
       },
-      "validation_level": "E2",
-      "edit_policy": "experimental E2: activa códigos seleccionados de gameData.petUnlock, conserva los existentes y no escribe progresión ni skins equipadas; pendiente de prueba en Android físico.",
+      "validation_level": "E3",
+      "edit_policy": "confirmed_by_owner: activa códigos seleccionados de gameData.petUnlock, conserva los existentes y no escribe progresión ni skins equipadas; confirmado por el propietario en Android físico.",
       "constraints": [
         "Conservar todos los códigos existentes y sus valores booleanos.",
         "Insertar un código seleccionado ausente solo si el mapa petUnlock ya existe como objeto.",
-        "No escribir intimidad, experiencia, alimento ni skins equipadas desde este control.",
+        "No escribir intimidad, experiencia ni skins equipadas desde este control.",
         "No tocar recibos, compras ni derechos de servidor."
       ],
-      "open_questions": [
-        "Confirmar en Android físico el desbloqueo individual, masivo y de variantes de skin."
-      ],
+      "open_questions": [],
       "experiments_required": [],
       "registry_tier": "legacy",
       "legacy_record": {

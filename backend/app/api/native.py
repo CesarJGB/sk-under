@@ -33,6 +33,7 @@ from ..models import (
     CloudLabRestoreInput,
     CloudLabSkinPrepareInput,
     CloudLabSkillPrepareInput,
+    CloudLabUnifiedPrepareInput,
     CloudLabVerifyInput,
 )
 from ..net import client_ip
@@ -191,6 +192,10 @@ class CharacterPrepareInput(CloudLabCharacterPrepareInput):
     source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
 
 
+class UnifiedPrepareInput(CloudLabUnifiedPrepareInput):
+    source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
+
+
 class SkillPrepareInput(CloudLabSkillPrepareInput):
     source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
 
@@ -337,6 +342,40 @@ def prepare_fish_progress(
     return service.prepare_fish_progress(
         current, payload.new_cumulative_fish_count, payload.source_sha256
     )
+
+
+@router.post(
+    "/prepare-unified",
+    summary="Preparar un candidato único con todos los cambios seleccionados",
+)
+def prepare_unified(payload: UnifiedPrepareInput, request: Request) -> dict[str, object]:
+    service = _require_service(request)
+    current = service.require_session(_cookie(request, service))
+    advanced = None
+    if payload.advanced is not None:
+        advanced = {
+            "materials": [item.model_dump() for item in payload.advanced.materials],
+            "seeds": [item.model_dump() for item in payload.advanced.seeds],
+            "season_coin": payload.advanced.season_coin,
+            "reborn_card": payload.advanced.reborn_card,
+            "battle_pass": (
+                payload.advanced.battle_pass.model_dump()
+                if payload.advanced.battle_pass
+                else None
+            ),
+            "pets": list(payload.advanced.pets),
+            "pet_food": [item.model_dump() for item in payload.advanced.pet_food],
+        }
+    plan = {
+        "gems": payload.gems,
+        "fish_chip": payload.fish_chip,
+        "fish_progress": payload.fish_progress,
+        "characters": list(payload.characters),
+        "skills": [skill.model_dump() for skill in payload.skills],
+        "skins": [skin.model_dump() for skin in payload.skins],
+        "advanced": advanced,
+    }
+    return service.prepare_unified(current, plan, payload.source_sha256)
 
 
 @router.post(

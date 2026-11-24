@@ -389,7 +389,7 @@ export type LabSave = {
 export type LabBackup = {
   id: string
   created_at: string
-  field?: 'gems' | 'fish_chip' | 'fish_progress' | 'characters' | 'skills' | 'skins' | 'advanced'
+  field?: 'gems' | 'fish_chip' | 'fish_progress' | 'characters' | 'skills' | 'skins' | 'advanced' | 'unified'
   changed: boolean
   original_size: number
   original_sha256: string
@@ -406,6 +406,47 @@ export type LabBackup = {
   skill_selections?: Array<{ code: string; index: number }>
   skin_selections?: Array<{ code: string; index: number }>
   advanced_plan?: LabAdvancedPlan
+  unified_plan?: LabUnifiedPlan
+}
+
+export type LabUnifiedPlan = {
+  gems?: number | null
+  fish_chip?: number | null
+  fish_progress?: number | null
+  characters?: string[]
+  skills?: LabSkillRef[]
+  skins?: LabSkinRef[]
+  advanced?: LabAdvancedPlan | null
+}
+
+export type LabUnifiedCategory = {
+  key: string
+  label: string
+  changes: number
+  detail: Record<string, unknown>
+}
+
+export type LabUnifiedPrepared = {
+  remote: LabRemote
+  backup: LabBackup
+  field: 'unified'
+  plan: LabUnifiedPlan
+  categories: LabUnifiedCategory[]
+  steps: string[]
+  change_count: number
+  original_value?: number
+  new_value?: number
+  changed: boolean
+  candidate_size: number
+  candidate_sha256: string
+  byte_diff: LabByteDiff
+  changed_fields: string[]
+  validation: {
+    valid: true
+    structure_valid: true
+    atomic: true
+    message: string
+  }
 }
 
 export type LabByteDiff = {
@@ -965,6 +1006,8 @@ export const nativeAuth = {
     nativeRequest<LabSkillPrepared>('/prepare-skills', signal, { skills, source_sha256 }),
   prepareSkins: (skins: LabSkinRef[], source_sha256: string, signal: AbortSignal) =>
     nativeRequest<LabSkinPrepared>('/prepare-skins', signal, { skins, source_sha256 }),
+  prepareUnified: (plan: LabUnifiedPlan, source_sha256: string, signal: AbortSignal) =>
+    nativeRequest<LabUnifiedPrepared>('/prepare-unified', signal, { ...plan, source_sha256 }),
   confirm: (backup_id: string, expected_sha256: string, signal: AbortSignal) =>
     nativeRequest<LabWriteResult>('/confirm', signal, { backup_id, expected_sha256, confirmation: 'SUBIR' }),
   restore: (backup_id: string, signal: AbortSignal) =>

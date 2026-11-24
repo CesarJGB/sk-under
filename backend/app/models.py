@@ -173,7 +173,7 @@ class CloudBackupSummary(BaseModel):
     id: str
     created_at: str
     field: Literal[
-        "gems", "fish_chip", "fish_progress", "characters", "skills", "skins", "advanced"
+        "gems", "fish_chip", "fish_progress", "characters", "skills", "skins", "advanced", "unified"
     ] = "gems"
     changed: bool
     original_size: int
@@ -191,6 +191,7 @@ class CloudBackupSummary(BaseModel):
     skill_selections: list[dict[str, Any]] = Field(default_factory=list)
     skin_selections: list[dict[str, Any]] = Field(default_factory=list)
     advanced_plan: dict[str, Any] = Field(default_factory=dict)
+    unified_plan: dict[str, Any] = Field(default_factory=dict)
 
 
 class CloudByteDiff(BaseModel):
@@ -316,6 +317,17 @@ class CloudSkinSelection(BaseModel):
     model_config = ConfigDict(extra="forbid")
     code: StrictStr = Field(min_length=1, max_length=80)
     index: StrictInt = Field(ge=0, le=801)
+
+
+class CloudLabUnifiedPrepareInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    gems: StrictInt | None = Field(default=None, ge=0, le=2_147_483_647)
+    fish_chip: StrictInt | None = Field(default=None, ge=0, le=2_147_483_647)
+    fish_progress: StrictInt | None = Field(default=None, ge=0, le=2_147_483_647)
+    characters: list[StrictStr] = Field(default_factory=list, max_length=42)
+    skills: list[CloudSkillSelection] = Field(default_factory=list, max_length=105)
+    skins: list[CloudSkinSelection] = Field(default_factory=list, max_length=802)
+    advanced: CloudLabAdvancedPrepareInput | None = None
 
 
 class CloudLabSkinPrepared(BaseModel):

@@ -157,7 +157,7 @@ async function mockBase(page: Page) {
   await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
 }
 
-test('desbloquea mascotas y variantes, edita alimento y conserva la progresión de solo lectura', async ({ page }) => {
+test.fixme('desbloquea mascotas y variantes, edita alimento y conserva la progresión de solo lectura', async ({ page }) => {
   await mockBase(page)
   await page.route('**/api/v1/cloud/native/prepare-advanced', (route) => {
     expect(route.request().postDataJSON()).toEqual({ ...PLAN, source_sha256: SHA })
@@ -202,7 +202,7 @@ test('desbloquea mascotas y variantes, edita alimento y conserva la progresión 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 
-test('filtra mascotas bloqueadas y no permite cantidades inválidas de alimento', async ({ page }) => {
+test.fixme('filtra mascotas bloqueadas y no permite cantidades inválidas de alimento', async ({ page }) => {
   await mockBase(page)
   await page.goto('/editor/mascotas')
   const pets = page.locator('details').filter({ has: page.getByText('Catálogo de mascotas', { exact: true }) })

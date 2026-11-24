@@ -69,6 +69,12 @@ from .skin_editor import (
     prepare_skin_unlock_edit,
     read_skins,
 )
+from .unified_editor import (
+    UNIFIED_RECORD_FIELD,
+    UnifiedEdit,
+    normalize_unified_plan,
+    prepare_unified_edit,
+)
 
 _ID = re.compile(r"^[0-9a-f]{32}$")
 _FIELDS = frozenset(
@@ -80,6 +86,7 @@ _FIELDS = frozenset(
         SKILL_RECORD_FIELD,
         SKIN_RECORD_FIELD,
         ADVANCED_RECORD_FIELD,
+        UNIFIED_RECORD_FIELD,
     }
 )
 _RECORD_LIMIT = 64 * 1024
@@ -126,6 +133,7 @@ class BackupRecord:
     skill_selections: tuple[tuple[str, int], ...] = ()
     skin_selections: tuple[tuple[str, int], ...] = ()
     advanced_plan: dict[str, object] = dataclass_field(default_factory=dict)
+    unified_plan: dict[str, object] = dataclass_field(default_factory=dict)
 
     @property
     def original_value(self) -> int:
@@ -162,6 +170,7 @@ class BackupRecord:
                 {"code": code, "index": index} for code, index in self.skin_selections
             ],
             "advanced_plan": self.advanced_plan,
+            "unified_plan": self.unified_plan,
         }
 
 
@@ -203,6 +212,18 @@ def _require_advanced_plan(value: object) -> dict[str, object]:
         raise BackupIntegrityError("El plan avanzado del respaldo no es válido.") from exc
     if plan != value:
         raise BackupIntegrityError("El plan avanzado del respaldo no está normalizado.")
+    return plan
+
+
+def _require_unified_plan(value: object) -> dict[str, object]:
+    if not isinstance(value, dict):
+        raise BackupIntegrityError("El registro de respaldo no contiene un plan unificado válido.")
+    try:
+        plan = normalize_unified_plan(value)
+    except CloudSaveError as exc:
+        raise BackupIntegrityError("El plan unificado del respaldo no es válido.") from exc
+    if plan != value:
+        raise BackupIntegrityError("El plan unificado del respaldo no está normalizado.")
     return plan
 
 
@@ -398,7 +419,7 @@ class LabBackupStore:
 
     def save(
         self,
-        edit: GemsEdit | FishChipEdit | FishProgressEdit | SkillEdit | SkinEdit | AdvancedEdit,
+        edit: GemsEdit | FishChipEdit | FishProgressEdit | SkillEdit | SkinEdit | AdvancedEdit | UnifiedEdit,
         *,
         remote_source: str,
         remote_size: int,
@@ -410,6 +431,7 @@ class LabBackupStore:
         skill_selections: list[dict[str, object]] | tuple[dict[str, object], ...] | None = None,
         skin_selections: list[dict[str, object]] | tuple[dict[str, object], ...] | None = None,
         advanced_plan: dict[str, object] | None = None,
+        unified_plan: dict[str, object] | None = None,
     ) -> BackupBundle:
         """Crea un respaldo y devuelve los bytes que quedaron en disco.
 
@@ -428,6 +450,7 @@ class LabBackupStore:
             list(skin_selections) if skin_selections is not None else None
         )
         plan: dict[str, object] = {}
+        unified: dict[str, object] = {}
         if field == CHARACTER_RECORD_FIELD:
             if edit.changed and not codes:
                 raise BackupIntegrityError("El respaldo de personajes requiere la selección preparada.")
@@ -452,6 +475,16 @@ class LabBackupStore:
             codes = ()
             skills = ()
             skins = ()
+        elif field == UNIFIED_RECORD_FIELD:
+            if unified_plan is None:
+                raise BackupIntegrityError("El respaldo unificado requiere su plan preparado.")
+            unified = _require_unified_plan(unified_plan)
+            if getattr(edit, "plan", None) != unified:
+                raise BackupIntegrityError("El plan unificado no coincide con la edición preparada.")
+            codes = ()
+            skills = ()
+            skins = ()
+            plan = {}
         else:
             codes = ()
             skills = ()
@@ -499,6 +532,7 @@ class LabBackupStore:
             skill_selections=skills,
             skin_selections=skins,
             advanced_plan=plan,
+            unified_plan=unified,
         )
         try:
             self._write_private(directory / "original.json", edit.original)
@@ -602,6 +636,7 @@ class LabBackupStore:
         if field not in _FIELDS:
             raise BackupIntegrityError("El registro de respaldo contiene un tipo de campo inválido.")
         plan = _require_advanced_plan(data.get("advanced_plan")) if field == ADVANCED_RECORD_FIELD else {}
+        unified = _require_unified_plan(data.get("unified_plan")) if field == UNIFIED_RECORD_FIELD else {}
         record = BackupRecord(
             id=_require_text(data.get("id"), "id"),
             created_at=_require_text(data.get("created_at"), "created_at"),
@@ -620,6 +655,7 @@ class LabBackupStore:
             skill_selections=_require_skill_selections(data.get("skill_selections")),
             skin_selections=_require_skin_selections(data.get("skin_selections")),
             advanced_plan=plan,
+            unified_plan=unified,
         )
         if record.id != backup_id:
             raise BackupIntegrityError("El identificador del registro no coincide.")
@@ -640,6 +676,22 @@ class LabBackupStore:
         reconstruct_cloud_save(original)
         if record.changed != (original != candidate):
             raise BackupIntegrityError("El indicador de cambio del respaldo no coincide.")
+        if record.field == UNIFIED_RECORD_FIELD:
+            if not record.unified_plan:
+                raise BackupIntegrityError("El respaldo unificado no contiene su plan.")
+            if not record.changed:
+                return BackupBundle(record, original, candidate)
+            try:
+                current = prepare_unified_edit(original, record.unified_plan)
+            except CloudSaveError:
+                raise BackupIntegrityError(
+                    "El candidato del respaldo no es reproducible desde el original."
+                ) from None
+            if current.candidate != candidate or current.change_count != record.candidate_gems:
+                raise BackupIntegrityError(
+                    "El candidato del respaldo no es reproducible desde el original."
+                )
+            return BackupBundle(record, original, candidate)
         if record.field == CHARACTER_RECORD_FIELD:
             try:
                 original_unlocked = read_characters(original).unlocked

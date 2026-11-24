@@ -17,8 +17,8 @@ def test_fields_document_matches_schema_and_declares_every_aspect():
     assert document["counts_by_validation_level"] == {
         "H": 0,
         "E1": 194,
-        "E2": 406,
-        "E3": 10,
+        "E2": 405,
+        "E3": 11,
         "E4": 6,
     }
     for field in document["fields"]:
@@ -91,5 +91,5 @@ def test_owner_confirmed_functions_are_e3_and_battle_pass_remains_e2():
         assert field["validation_level"] == "E2"
         assert "experimental" in field["edit_policy"]
     pets = fields["gameData.petUnlock"]
-    assert pets["validation_level"] == "E2"
-    assert "experimental" in pets["edit_policy"]
+    assert pets["validation_level"] == "E3"
+    assert "confirmed_by_owner" in pets["edit_policy"]

@@ -86,6 +86,12 @@ from .skin_editor import (
     read_skins,
     require_skin_write_compatibility,
 )
+from .unified_editor import (
+    UNIFIED_RECORD_FIELD,
+    UnifiedEdit,
+    prepare_unified_edit,
+    require_unified_write_compatibility,
+)
 
 
 class LabServiceError(CloudSaveError):
@@ -396,17 +402,16 @@ class PreparedAdvancedEdit:
             for path in self.edit.changed_fields
         )
         plan = self.edit.plan
-        experimental = bool(plan.get("battle_pass") or plan.get("pets") or plan.get("pet_food"))
+        experimental = bool(plan.get("battle_pass"))
         evidence_level = "E2" if experimental else "E3"
         message = (
             "Campos modificados: " + ", ".join(self.edit.changed_fields) + ". "
             "No se modifican gemas, fichas de pesca, recompensas reclamadas ni recibos. "
             + (
-                "Esta operación incluye mascotas o pase de batalla: son funciones experimentales "
-                "pendientes de prueba en Android físico."
+                "Esta operación incluye el pase de batalla, que conserva evidencia experimental E2."
                 if experimental
-                else "Materiales, semillas, moneda de temporada, renacimiento y progreso de pesca "
-                "están confirmados por el propietario en Android físico."
+                else "Materiales, semillas, moneda de temporada, renacimiento, mascotas, skins y "
+                "alimento están confirmados por el propietario en Android físico."
             )
         ) if self.edit.changed else "Los valores solicitados ya están en la partida; no hay cambios que subir."
         return {
@@ -434,6 +439,56 @@ class PreparedAdvancedEdit:
                 "experimental": experimental,
                 "evidence_level": evidence_level,
                 "message": message,
+            },
+        }
+
+
+@dataclass(frozen=True)
+class PreparedUnifiedEdit:
+    """Resultado de una edición compuesta: un candidato y un solo respaldo."""
+
+    backup: BackupRecord
+    edit: UnifiedEdit
+    remote_source: str
+
+    @property
+    def changed(self) -> bool:
+        return self.edit.changed
+
+    @property
+    def candidate_sha256(self) -> str:
+        return self.edit.candidate_sha256
+
+    def summary(self) -> dict[str, object]:
+        return {
+            "field": UNIFIED_RECORD_FIELD,
+            "remote": {
+                "source": self.remote_source,
+                "size": self.edit.original_size,
+                "sha256": self.edit.original_sha256,
+            },
+            "backup": self.backup.summary(),
+            "plan": self.edit.plan,
+            "categories": [category.summary() for category in self.edit.categories],
+            "steps": list(self.edit.steps),
+            "change_count": self.edit.change_count,
+            "original_value": 0,
+            "new_value": self.edit.change_count,
+            "changed": self.edit.changed,
+            "candidate_size": self.edit.candidate_size,
+            "candidate_sha256": self.edit.candidate_sha256,
+            "byte_diff": self.edit.binary.as_dict(),
+            "changed_fields": list(self.edit.changed_fields),
+            "validation": {
+                "valid": True,
+                "structure_valid": True,
+                "atomic": True,
+                "message": (
+                    "Campos modificados: " + ", ".join(self.edit.changed_fields) + ". "
+                    "La operación se compone sobre un único candidato y se sube una sola vez."
+                    if self.edit.changed
+                    else "Los valores solicitados ya están en la partida; no hay cambios que subir."
+                ),
             },
         }
 
@@ -803,6 +858,8 @@ class CloudLabService:
                 "itemData.materials, itemData.seeds, seasonData.coin, gameData.rebornCard, "
                 "battlePassSaveData.seasonData, gameData.petUnlock, statisticData.event2Count"
             )
+        if field == UNIFIED_RECORD_FIELD:
+            return "gameData, itemData y seasonData (edición unificada)"
         return "gameData.gems"
 
     @staticmethod
@@ -822,6 +879,8 @@ class CloudLabService:
                 "los materiales, las semillas, las monedas de temporada, la tarjeta de "
                 "renacimiento, el pase de batalla y las mascotas"
             )
+        if field == UNIFIED_RECORD_FIELD:
+            return "los cambios seleccionados"
         return "las gemas"
 
     @staticmethod
@@ -842,6 +901,11 @@ class CloudLabService:
                 "Los materiales, semillas, moneda de temporada, renacimiento y progreso de pesca "
                 "fueron confirmados por el propietario en Android físico. El pase de batalla y "
                 "las mascotas siguen como experimentales E2."
+            )
+        if field == UNIFIED_RECORD_FIELD:
+            return (
+                f"La descarga posterior coincide con el agregado subido de {label}. "
+                "Se subió un único candidato compuesto y se conserva el respaldo restaurable."
             )
         if field == CHARACTER_RECORD_FIELD:
             return (
@@ -908,6 +972,24 @@ class CloudLabService:
             except CloudSaveError:
                 skins = None
             value = skins
+        elif field == UNIFIED_RECORD_FIELD:
+            value = None
+            try:
+                material = read_fish_chip(payload).material_fish
+            except CloudSaveError:
+                material = None
+            try:
+                characters = len(read_characters(payload).unlocked)
+            except CloudSaveError:
+                characters = None
+            try:
+                skills = len(read_skills(payload).unlocked)
+            except CloudSaveError:
+                skills = None
+            try:
+                skins = len(read_skins(payload).unlocked)
+            except CloudSaveError:
+                skins = None
         elif field == ADVANCED_RECORD_FIELD:
             value = None
         else:
@@ -1023,6 +1105,43 @@ class CloudLabService:
             },
         )
         return PreparedFishProgressEdit(bundle.record, edit, save.metadata.source)
+
+    def prepare_unified(
+        self, plan: object, *, expected_source: str | None = None
+    ) -> PreparedUnifiedEdit:
+        """Compone todos los escritores sobre una sola descarga y un solo respaldo."""
+        if not isinstance(plan, dict):
+            raise LabServiceError("El plan unificado debe ser un objeto JSON.")
+        save = self.provider.download(self.max_input_bytes)
+        if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
+            raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
+        edit = prepare_unified_edit(save.payload, plan)
+        if edit.original_sha256 != save.metadata.sha256:
+            raise LabServiceError("El original preparado no coincide con la descarga.")
+        bundle = self.store.save(
+            edit,
+            remote_source=save.metadata.source,
+            remote_size=save.metadata.size,
+            remote_sha256=save.metadata.sha256,
+            field=UNIFIED_RECORD_FIELD,
+            original_value=0,
+            new_value=edit.change_count,
+            unified_plan=edit.plan,
+        )
+        self.store.append_event(
+            bundle.record.id,
+            {
+                "action": "prepare",
+                "field": UNIFIED_RECORD_FIELD,
+                "changed": edit.changed,
+                "change_count": edit.change_count,
+                "steps": list(edit.steps),
+                "candidate_sha256": edit.candidate_sha256,
+                "changed_fields": list(edit.changed_fields),
+                "remote_source": save.metadata.source,
+            },
+        )
+        return PreparedUnifiedEdit(bundle.record, edit, save.metadata.source)
 
     def prepare_characters(
         self, codes: object, *, expected_source: str | None = None
@@ -1236,6 +1355,10 @@ class CloudLabService:
             elif bundle.record.field == ADVANCED_RECORD_FIELD:
                 require_advanced_write_compatibility(
                     bundle.original, bundle.record.advanced_plan, bundle.candidate
+                )
+            elif bundle.record.field == UNIFIED_RECORD_FIELD:
+                require_unified_write_compatibility(
+                    bundle.original, bundle.record.unified_plan, bundle.candidate
                 )
             else:
                 require_gems_write_compatibility(bundle.original, bundle.record.candidate_gems, bundle.candidate)

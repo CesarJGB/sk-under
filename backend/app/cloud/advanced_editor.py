@@ -773,8 +773,8 @@ def read_advanced_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
         "pet_progression": pet_progression,
         "pet_policy": {
             "field": "pets",
-            "experimental": True,
-            "evidence_level": "E2",
+            "experimental": False,
+            "evidence_level": "E3",
             "path": PETS_PATH,
             "skin_note": (
                 "No se encontró un mapa de bloqueo de skins separado. Las variantes Cat1..Cat7, "
@@ -798,8 +798,8 @@ def read_advanced_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
             "max": MAX_VALUE,
             "max_note": "Límite estructural int32; no se ha confirmado un tope del juego.",
             "material_fish_note": "material_fish se excluye por ser espejo de gameData.fishChip.",
-            "confirmed_functions": ["materials", "seeds", "season_coin", "reborn_card"],
-            "experimental_functions": ["battle_pass", "pets", "pet_food"],
+            "confirmed_functions": ["materials", "seeds", "season_coin", "reborn_card", "pets", "pet_food", "pet_skins"],
+            "experimental_functions": ["battle_pass"],
         },
     }
 

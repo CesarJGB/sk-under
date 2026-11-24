@@ -68,7 +68,7 @@ def test_validation_passes_without_the_manifest_check(capsys):
 def test_coverage_report_matches_the_generated_artifacts():
     report = generate_report.coverage(generate_report.load_all())
     assert report["fields"]["total"] == 616
-    assert report["fields"]["by_level"] == {"E1": 194, "E2": 406, "E3": 10, "E4": 6}
+    assert report["fields"]["by_level"] == {"E1": 194, "E2": 405, "E3": 11, "E4": 6}
     assert report["catalog_items"] == 4298
     assert len(report["catalogs"]) == 25
     assert report["translations"] == 8562

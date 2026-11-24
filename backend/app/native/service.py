@@ -396,6 +396,17 @@ class NativeAuthService:
             lambda: self._lab(session).prepare(new_gems, expected_source=source_sha256).summary(),
         )
 
+    def prepare_unified(
+        self, session: NativeSessionRecord, plan: dict[str, object], source_sha256: str
+    ) -> dict[str, object]:
+        """Prepara todos los cambios sobre un único candidato y un único respaldo."""
+        return self._operate(
+            session,
+            lambda: self._lab(session).prepare_unified(
+                plan, expected_source=source_sha256
+            ).summary(),
+        )
+
     def prepare_fish_chip(
         self, session: NativeSessionRecord, new_fish_chip: object, source_sha256: str
     ) -> dict[str, object]:
