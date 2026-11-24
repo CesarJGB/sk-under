@@ -365,3 +365,58 @@ def test_portal_is_consulted_only_on_the_first_auto_login(tmp_path):
     assert portal.calls == 1
     assert login(env["client"]).status_code == 200
     assert portal.calls == 1
+
+
+def test_reuses_a_bound_phase_6_8_profile_without_binding_a_second_device(tmp_path):
+    env = make_auto(tmp_path)
+    store = env["store"]
+    subject = store.identity_subject(email="a@example.test", uid=1, player_id=11)
+    existing = store.create_profile(
+        label="Perfil anterior", distribution_id="android-global",
+        distro_id=PORTAL_DISTRO_A, unique_id="xiaomioutseas_" + "a" * 16,
+        allow_write=False,
+    )
+    store.bind(existing.id, subject)
+    provider = FakeProvider(PAYLOAD_A)
+    env["service"].provider_factory = lambda token, unique, distro: provider
+    response = login(env["client"])
+    assert response.status_code == 200, response.text
+    profiles = store.list_profiles()
+    assert len(profiles) == 1
+    assert profiles[0].id == existing.id
+    assert profiles[0].email_hash == store.hash_email("a@example.test")
+    assert profiles[0].distro_id == PORTAL_DISTRO_A
+    assert provider.calls == 1
+    assert env["portal"].calls == 1
+
+
+class RejectOldDistroAuth(AutoAuth):
+    def authenticate(self, email, password, *, distribution, distro_id, unique_id=None):
+        if distro_id == PORTAL_DISTRO_EMPTY:
+            from app.native.client import NativeAuthRejected
+
+            raise NativeAuthRejected(401)
+        return super().authenticate(
+            email, password, distribution=distribution, distro_id=distro_id, unique_id=unique_id
+        )
+
+
+def test_updates_a_stale_existing_profile_after_identity_verification(tmp_path):
+    env = make_auto(tmp_path, auth=RejectOldDistroAuth())
+    store = env["store"]
+    subject = store.identity_subject(email="a@example.test", uid=1, player_id=11)
+    existing = store.create_profile(
+        label="Perfil antiguo", distribution_id="android-global",
+        distro_id=PORTAL_DISTRO_EMPTY, unique_id="xiaomioutseas_" + "b" * 16,
+        allow_write=False,
+    )
+    store.bind(existing.id, subject)
+    env["service"].provider_factory = lambda token, unique, distro: FakeProvider(PAYLOAD_A)
+    response = login(env["client"])
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["save"]["gems"] == 1000
+    profiles = store.list_profiles()
+    assert len(profiles) == 1 and profiles[0].id == existing.id
+    assert profiles[0].distro_id == PORTAL_DISTRO_A
+    assert profiles[0].unique_id != existing.unique_id

@@ -428,6 +428,13 @@ class NativeStore:
             ).fetchone()
         return self._profile(row) if row else None
 
+    def profile_by_subject(self, subject: str) -> Profile | None:
+        if not isinstance(subject, str) or not _SUBJECT.fullmatch(subject):
+            raise NativeProfileInvalid("La identidad del perfil no es válida.")
+        with closing(self.connect()) as db:
+            row = db.execute("SELECT * FROM profiles WHERE subject = ?", (subject,)).fetchone()
+        return self._profile(row) if row else None
+
     def profile(self, profile_id: str) -> Profile:
         if not isinstance(profile_id, str) or not _PROFILE.fullmatch(profile_id):
             raise NativeProfileNotFound("El perfil de instalación no existe.")
@@ -491,6 +498,17 @@ class NativeStore:
                     "Este perfil de instalación ya está vinculado a otra cuenta. "
                     "No se reutilizan identificadores entre cuentas."
                 )
+            elif email_hash is not None and row["email_hash"] is None:
+                try:
+                    db.execute(
+                        "UPDATE profiles SET email_hash = ? WHERE id = ? AND email_hash IS NULL",
+                        (email_hash, profile_id),
+                    )
+                except sqlite3.IntegrityError:
+                    raise NativeProfileIdentityMismatch(
+                        "Esta cuenta ya tiene otro perfil de instalación vinculado."
+                    ) from None
+                row = db.execute("SELECT * FROM profiles WHERE id = ?", (profile_id,)).fetchone()
         return self._profile(row)
 
     def set_binding_wait(self, profile_id: str, until: int, code: str) -> Profile:
@@ -552,6 +570,38 @@ class NativeStore:
             values["unique"] = unique_id
             sealed = self._seal("profile:" + profile_id, values)
             db.execute("UPDATE profiles SET sealed = ? WHERE id = ?", (sealed, profile_id))
+            row = db.execute("SELECT * FROM profiles WHERE id = ?", (profile_id,)).fetchone()
+        return self._profile(row)
+
+    def update_installation(
+        self, profile_id: str, distro_id: str, unique_id: str, subject: str
+    ) -> Profile:
+        """Actualiza el par de un perfil ya vinculado a la misma identidad.
+
+        Solo se usa cuando el portal devuelve un distro vigente distinto del
+        guardado y la identidad (subject) ya se verificó. No permite cambiar
+        de cuenta ni reutilizar el perfil para otro subject.
+        """
+
+        if not isinstance(distro_id, str) or not _DISTRO.fullmatch(distro_id):
+            raise NativeInstallationInvalid("El identificador de distribución no tiene un formato válido.")
+        if not _credential(unique_id):
+            raise NativeInstallationInvalid("El identificador de instalación no tiene un formato válido.")
+        if not isinstance(subject, str) or not _SUBJECT.fullmatch(subject):
+            raise NativeProfileIdentityMismatch("La identidad del perfil no es válida.")
+        with closing(self.connect()) as db, db:
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute("SELECT * FROM profiles WHERE id = ?", (profile_id,)).fetchone()
+            if row is None:
+                raise NativeProfileNotFound("El perfil de instalación no existe.")
+            if row["subject"] is None or not compare_digest(row["subject"], subject):
+                raise NativeProfileIdentityMismatch("El perfil no pertenece a la identidad verificada.")
+            sealed = self._seal("profile:" + profile_id, {"distro": distro_id, "unique": unique_id})
+            db.execute(
+                "UPDATE profiles SET sealed = ?, binding_wait_until = NULL, last_save_error = NULL "
+                "WHERE id = ?",
+                (sealed, profile_id),
+            )
             row = db.execute("SELECT * FROM profiles WHERE id = ?", (profile_id,)).fetchone()
         return self._profile(row)
 

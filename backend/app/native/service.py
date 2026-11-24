@@ -112,6 +112,7 @@ class _Candidate:
     save: dict[str, object] | None
     save_error: str | None
     retry_after: int | None = None
+    reuse_profile: bool = False
 
 
 @dataclass(frozen=True)
@@ -510,6 +511,15 @@ class NativeAuthService:
                 unique_id=identity.unique_id,
                 portal_pid=None,
             )
+        existing = self.store.profile_by_subject(candidate.subject)
+        if candidate.reuse_profile or existing is not None:
+            if existing is None:
+                raise NativeProfileIdentityMismatch(
+                    "El perfil existente cambió durante el acceso. Reintenta el inicio de sesión."
+                )
+            return self._adopt_existing_profile(
+                existing, email, password, distribution, email_hash, candidate
+            )
         profile = self._create_auto_profile(distribution, email_hash, candidate)
         return (
             profile,
@@ -519,6 +529,70 @@ class NativeAuthService:
             candidate.save_error,
             True,
         )
+
+    def _adopt_existing_profile(
+        self,
+        existing: Profile,
+        email: str,
+        password: str,
+        distribution: Distribution,
+        email_hash: str,
+        candidate: _Candidate,
+    ) -> tuple[Profile, GatewaySession, str, dict[str, object] | None, str | None, bool]:
+        """Reutiliza un perfil de la Fase 6.8 ya vinculado a la misma identidad.
+
+        El índice de subject impide crear un segundo perfil para la misma
+        cuenta. Si el par guardado sigue funcionando, se usa; si el portal
+        devolvió un distro vigente distinto, se actualiza el par solo tras
+        verificar el mismo subject.
+        """
+
+        if existing.distribution != distribution.id:
+            raise NativeProfileIdentityMismatch(
+                "El perfil existente pertenece a otra distribución."
+            )
+        if existing.email_hash is not None and existing.email_hash != email_hash:
+            raise NativeProfileIdentityMismatch(
+                "El perfil existente pertenece a otra cuenta."
+            )
+        if existing.distro_id == candidate.distro_id and existing.unique_id == candidate.unique_id:
+            profile = self.store.bind(existing.id, candidate.subject, email_hash=email_hash)
+            profile = self._apply_candidate_state(profile, candidate)
+            return (
+                profile, candidate.session, candidate.subject,
+                candidate.save, candidate.save_error, False,
+            )
+        try:
+            session, subject, save, save_error = self._login_known_profile(
+                existing, email, password, distribution, email_hash
+            )
+            return self.store.profile(existing.id), session, subject, save, save_error, False
+        except (NativeAuthRejected, NativeDistributionRejected, NativeIdentityMismatch):
+            profile = self.store.update_installation(
+                existing.id, candidate.distro_id, candidate.unique_id, candidate.subject
+            )
+            profile = self.store.bind(profile.id, candidate.subject, email_hash=email_hash)
+            save, save_error = self._save_or_error(
+                profile, candidate.session.token, candidate.subject
+            )
+            profile = self.store.profile(profile.id)
+            return (
+                profile, candidate.session, candidate.subject,
+                save, save_error, False,
+            )
+
+    def _apply_candidate_state(self, profile: Profile, candidate: _Candidate) -> Profile:
+        if candidate.retry_after is not None:
+            profile = self.store.set_binding_wait(
+                profile.id,
+                int(self.now()) + candidate.retry_after,
+                "native_device_binding_throttled",
+            )
+        elif candidate.save_error is not None:
+            profile = self.store.set_save_error(profile.id, candidate.save_error)
+        else:
+            profile = self.store.clear_binding_wait(profile.id)
+        return profile
 
     def _select_portal_candidate(
         self,
@@ -549,7 +623,7 @@ class NativeAuthService:
                 continue
             if first is None:
                 first = candidate
-            if candidate.save is not None:
+            if candidate.reuse_profile or candidate.save is not None:
                 return candidate
             if candidate.save_error == "native_device_binding_throttled":
                 return candidate
@@ -593,6 +667,14 @@ class NativeAuthService:
         subject = self.store.identity_subject(
             email=session.email, uid=session.uid, player_id=session.player_id
         )
+        existing = self.store.profile_by_subject(subject)
+        if existing is not None and existing.distribution == distribution.id:
+            # Ya hay un perfil ligado a esta identidad (por ejemplo, uno de la
+            # Fase 6.8). No se prueba el unique nuevo para no consumir otra
+            # vinculación: se reutiliza el par guardado.
+            return _Candidate(
+                distro_id, unique_id, session, subject, None, None, reuse_profile=True
+            )
         try:
             save = self._candidate_save(
                 session.token, unique_id, distro_id, distribution, subject
@@ -666,17 +748,7 @@ class NativeAuthService:
         except NativeError:
             self._discard_unbound_auto(profile.id)
             raise
-        if candidate.retry_after is not None:
-            self.store.set_binding_wait(
-                profile.id,
-                int(self.now()) + candidate.retry_after,
-                "native_device_binding_throttled",
-            )
-        elif candidate.save_error is not None:
-            self.store.set_save_error(profile.id, candidate.save_error)
-        else:
-            self.store.clear_binding_wait(profile.id)
-        return self.store.profile(profile.id)
+        return self._apply_candidate_state(profile, candidate)
 
     @staticmethod
     def _auto_label(email_hash: str) -> str:

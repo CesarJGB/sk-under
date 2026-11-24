@@ -63,7 +63,7 @@ Esto evita que un cliente falsifique su IP para el limitador. En Coolify/Traefik
 
 ### 2.8 Descubrimiento concurrente
 
-La primera resolución de una cuenta (portal + prueba de jugadores + vinculación) se serializa con un bloqueo de proceso y se vuelve a comprobar el perfil por hash de correo. Dos pestañas no generan dos pares ni dos vinculaciones.
+La primera resolución de una cuenta (portal + prueba de jugadores + vinculación) se serializa con un bloqueo de proceso y se vuelve a comprobar el perfil por hash de correo. Dos pestañas no generan dos pares ni dos vinculaciones. Si ya existe un perfil de la Fase 6.8 vinculado al mismo subject, se reutiliza; el índice único de subject impide un segundo perfil y el par solo se actualiza tras verificar la identidad.
 
 ### 2.9 Persistencia
 

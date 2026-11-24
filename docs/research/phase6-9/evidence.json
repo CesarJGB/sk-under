@@ -182,7 +182,7 @@
   ],
   "automated_tests": {
     "backend": {
-      "passed": 438,
+      "passed": 440,
       "skipped": 16,
       "new_phase_6_9_files": [
         "test_native_auto.py",

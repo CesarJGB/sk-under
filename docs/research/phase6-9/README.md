@@ -40,7 +40,7 @@ La investigación completa está en [identifiers.md](identifiers.md) y la cronol
 7. Si no hay jugadores en el portal (cuenta nueva), se genera una instalación nueva y se informa si aún no existe partida en la nube.
 8. Si el portal rechaza las credenciales o pide un desafío, no se inventa un jugador ni se simula una sesión: se devuelve un error estable.
 
-La consulta al portal ocurre una sola vez por cuenta; los accesos posteriores usan el perfil guardado y no vuelven a llamar al portal. Dos primeras solicitudes concurrentes de la misma cuenta se serializan para no duplicar la vinculación.
+La consulta al portal ocurre una sola vez por cuenta; los accesos posteriores usan el perfil guardado y no vuelven a llamar al portal. Dos primeras solicitudes concurrentes de la misma cuenta se serializan para no duplicar la vinculación. Si ya existe un perfil de la Fase 6.8 vinculado al mismo subject, se reutiliza en lugar de crear otro; si su par guardado es obsoleto, se actualiza solo después de verificar la misma identidad y se descarga la partida con el par nuevo.
 
 ## 4. Pruebas reales
 
@@ -116,7 +116,7 @@ El detalle, incluida la corrección de la hipótesis de la Fase 6.7 sobre el UUI
 
 ## 8. Pruebas automatizadas
 
-- **Backend:** 438 pruebas aprobadas, 16 omitidas por requerir muestras privadas. Incluyen portal, identidad, selección de jugador, `100504`, `100509`, aislamiento de dos cuentas, reserva atómica concurrente, migración de esquema, cifrado de respaldos, CSP, proxies confiables y redacción de secretos.
+- **Backend:** 440 pruebas aprobadas, 16 omitidas por requerir muestras privadas. Incluyen portal, identidad, selección de jugador, `100504`, `100509`, aislamiento de dos cuentas, reserva atómica concurrente, migración de esquema, cifrado de respaldos, CSP, proxies confiables y redacción de secretos.
 - **Frontend:** TypeScript y Vite compilan; 25 pruebas Playwright en Chromium (11 del acceso nativo), incluidas ausencia de identificadores manuales, espera de vinculación, ausencia de partida, desafío del portal, aislamiento visual y solo lectura.
 - Las pruebas no abren red: el portal, el cliente de autenticación y el proveedor se inyectan.
 
