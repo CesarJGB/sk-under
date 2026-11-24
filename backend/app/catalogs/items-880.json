@@ -1,0 +1,3965 @@
+{
+  "schema": "sk-under/backend-items@1",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_backend_items.py",
+  "source_refs": {
+    "materials": "knowledge/catalogs/materials.json",
+    "seeds": "knowledge/catalogs/seeds.json"
+  },
+  "counts": {
+    "materials": 343,
+    "seeds": 47
+  },
+  "materials": [
+    {
+      "id": "material_activity_christmas2024",
+      "name": {
+        "en": "Ice Coin",
+        "es": "Moneda helada"
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_bug_feature",
+      "name": {
+        "en": "Inherited Coin",
+        "es": "Moneda heredada"
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_bug_feature2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_bug_feature3",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_dream",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_element",
+      "name": {
+        "en": "Elemental Coin",
+        "es": "Moneda elemental"
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_fire",
+      "name": {
+        "en": "Firepower Token",
+        "es": "Ficha de potencia de fuego"
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_fire2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_fire3",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_fusion_2025",
+      "name": {
+        "en": "Fusion Particle",
+        "es": "Partícula de fusión"
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_gunmaster",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_halloween",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_heroball",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_legend",
+      "name": {
+        "en": "Ingot",
+        "es": "Lingote"
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_legend2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_legend_safe_token",
+      "name": {
+        "en": "Failsafe Voucher",
+        "es": "Cupón de garantía"
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_legend_token",
+      "name": {
+        "en": "Reroll Voucher",
+        "es": "Cupón de cambio"
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_legend_yin",
+      "name": {
+        "en": "Silver Ingot",
+        "es": "Lingote de plata"
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_mecha2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_mecha2_ingame",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_plant",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_reborn_egg",
+      "name": {
+        "en": "Monster Coin",
+        "es": "Moneda monstruosa"
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_school",
+      "name": {
+        "en": "Scholar Coin",
+        "es": "Moneda escolar"
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_school_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_talent",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_talent2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_zongzi",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_activity_coin_zongzi2026",
+      "name": {
+        "en": "Zongzi Wrapper",
+        "es": "Envoltura de zongzi"
+      },
+      "subcategory": "activity",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_ancient_weapon_fragment",
+      "name": {
+        "en": "Fragments of Ancient Weapon",
+        "es": "Fragmentos de arma antigua"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_battery",
+      "name": {
+        "en": "Battery",
+        "es": "Batería"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_bp_point",
+      "name": {
+        "en": "Training Points",
+        "es": "Puntos de entrenamiento"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_c17_book_1",
+      "name": {
+        "en": "Shepherd's Book",
+        "es": "Libro del pastor"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_c17_book_2",
+      "name": {
+        "en": "Resurrection Book",
+        "es": "Libro de resurrección"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_c18_book_1",
+      "name": {
+        "en": "Tear of Elf",
+        "es": "Lágrima de elfa"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_c18_book_2",
+      "name": {
+        "en": "Magic Crystals",
+        "es": "Cristales mágicos"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_c20_book_1",
+      "name": {
+        "en": "Inherited Emblem",
+        "es": "Emblema heredado"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_c20_book_2",
+      "name": {
+        "en": "Portable Time Travel Device",
+        "es": "Dispositivo portátil de viajes en el tiempo"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_c21_book_1",
+      "name": {
+        "en": "Valued Badge",
+        "es": "Insignia valiosa"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_c21_book_2",
+      "name": {
+        "en": "Operation Order",
+        "es": "Orden de operación"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_cell",
+      "name": {
+        "en": "Organic Matter",
+        "es": "Materia orgánica"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_choose_hero",
+      "name": {
+        "en": "Character Selection Card",
+        "es": "Tarjeta de selección de personaje"
+      },
+      "subcategory": null,
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_choose_hero_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_choose_hero_return_player_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_choose_skin",
+      "name": {
+        "en": "Skin Selection Card",
+        "es": "Tarjeta de selección de aspecto"
+      },
+      "subcategory": null,
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_choose_skin_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_choose_skin_bp_1",
+      "name": {
+        "en": "Skin Selection Card",
+        "es": "Tarjeta de selección de aspecto"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_choose_skin_return_player_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_combo_gun_spark_currency",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_dead_cell",
+      "name": {
+        "en": "Cell",
+        "es": "Células"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_fertilize",
+      "name": {
+        "en": "Fertilizer",
+        "es": "Fertilizante"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_fish",
+      "name": {
+        "en": "Fish Chip",
+        "es": "Ficha de pez"
+      },
+      "subcategory": "others",
+      "insertable": false,
+      "editable": false,
+      "reason": "Es el espejo de gameData.fishChip; se edita desde el control de fichas de pesca."
+    },
+    {
+      "id": "material_fragment_c6h8o6",
+      "name": {
+        "en": "C6H8O6 Fragment",
+        "es": "Fragmento de C6H8O6"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_fragment_zulan",
+      "name": {
+        "en": "Zulan Fragment",
+        "es": "Fragmento de Zulan"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_fusion_fragment",
+      "name": {
+        "en": "Fusion Particle",
+        "es": "Partícula de fusión"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_gear",
+      "name": {
+        "en": "Parts",
+        "es": "Piezas"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_gem",
+      "name": {
+        "en": "Gem",
+        "es": "Gema"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_generic_weapon_fragment",
+      "name": {
+        "en": "Universal Weapon Evolution Fragment",
+        "es": "Fragmento de evolución de arma universal"
+      },
+      "subcategory": null,
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_generic_weapon_fragment_0",
+      "name": {
+        "en": "White Universal Weapon Evolution Fragment",
+        "es": "Fragmento de evolución de arma universal (blanca)"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_generic_weapon_fragment_1",
+      "name": {
+        "en": "Green Universal Weapon Evolution Fragment",
+        "es": "Fragmento de evolución de arma universal (verde)"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_generic_weapon_fragment_2",
+      "name": {
+        "en": "Blue Universal Weapon Evolution Fragment",
+        "es": "Fragmento de evolución de arma universal (azul)"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_generic_weapon_fragment_3",
+      "name": {
+        "en": "Purple Universal Weapon Evolution Fragment",
+        "es": "Fragmento de evolución de arma universal (morada)"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_generic_weapon_fragment_4",
+      "name": {
+        "en": "Orange Universal Weapon Evolution Fragment",
+        "es": "Fragmento de evolución de arma universal (naranja)"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_generic_weapon_fragment_5",
+      "name": {
+        "en": "Red Universal Weapon Evolution Fragment",
+        "es": "Fragmento de evolución de arma universal (roja)"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_grain",
+      "name": {
+        "en": "Pet Treats",
+        "es": "Bocadillos de mascotas"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_halloween_new_money",
+      "name": {
+        "en": "Hades Coin",
+        "es": "Moneda de Hades"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_hopper_ticket",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_iron",
+      "name": {
+        "en": "Ironstone",
+        "es": "Siderita"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_jewelry_fragment",
+      "name": {
+        "en": "General Blueprint Fragments",
+        "es": "Fragmentos de plano general"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_magic_black",
+      "name": {
+        "en": "Magic Stone Fragment Obsidian",
+        "es": "Fragmento de piedra mágica obsidiana"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_magic_blue",
+      "name": {
+        "en": "Magic Fragment Blue",
+        "es": "Fragmento mágico azul"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_magic_cyan",
+      "name": {
+        "en": "Magic Stone Fragment Cyan",
+        "es": "Fragmento de piedra mágica cian"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_magic_green",
+      "name": {
+        "en": "Magic Fragment Green",
+        "es": "Fragmento mágico verde"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_magic_orange",
+      "name": {
+        "en": "Magic Stone Fragment Orange",
+        "es": "Fragmento de piedra mágica naranja"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_magic_purple",
+      "name": {
+        "en": "Magic Fragment Purple",
+        "es": "Fragmento mágico morado"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_magic_red",
+      "name": {
+        "en": "Magic Fragment Red",
+        "es": "Fragmento mágico rojo"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_mech_fragment",
+      "name": {
+        "en": "{} Blueprint Fragment",
+        "es": "Fragmento de plano {}"
+      },
+      "subcategory": null,
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_mech_fragment_m_mech_8",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_mech_fragment_m_mech_coin",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_mech_fragment_m_mecha_normal_2s",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_mech_fragment_m_mecha_normal_b",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_mech_fragment_m_mecha_normal_d",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_mech_fragment_m_mecha_normal_e",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_plantpot_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_plantpot_2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_plantpot_3",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_plantpot_4",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_postman_upgrade",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_rebornCard",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_season_coin",
+      "name": {
+        "en": "Season Coin",
+        "es": "Moneda de temporada"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_season_ticket_treasure_box",
+      "name": {
+        "en": "Can be used to summon bodyguards and mounts at the season shop for Three Kingdoms - Gunfight.",
+        "es": "Sirve para invocar guardaespaldas y monturas en la tienda de temporada de Los Tres Reinos: Tiroteo."
+      },
+      "subcategory": null,
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_season_ticket_treasure_box_2",
+      "name": {
+        "en": "Summon Voucher",
+        "es": "Cupón de invocación"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_season_treasure_box",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_season_treasure_box_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_season_treasure_box_2",
+      "name": {
+        "en": "Temporal Treasure",
+        "es": "Tesoro temporal"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_season_treasure_box_3",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_season_tresure_box",
+      "name": {
+        "en": "Season Supply Crate",
+        "es": "Caja de suministros de temporada"
+      },
+      "subcategory": null,
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skill_Druid_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skill",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skill_Officer_2",
+      "name": {
+        "en": "Radio",
+        "es": "Radio"
+      },
+      "subcategory": "skill",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skill_Paladin_2",
+      "name": {
+        "en": "High Templar Martial Arts",
+        "es": "Artes marciales del gran templario"
+      },
+      "subcategory": "skill",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skill_Priest_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skill",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skill_Viking_2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skill",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skill_Warlock_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skill",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment",
+      "name": {
+        "en": "[{}] Skin Fragment",
+        "es": "Fragmento de aspecto [{}]"
+      },
+      "subcategory": null,
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_boss01",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_boss02",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_boss07",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_boss08",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_boss10",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_boss15",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_boss16",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_boss18",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_boss19",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_boss23",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_boss30",
+      "name": {
+        "en": "Worn Badge",
+        "es": "Insignia gastada"
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c0_s20",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c12_s06",
+      "name": {
+        "en": "Nüwa's Crystal",
+        "es": "Cristal de Nüwa"
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c12_s12",
+      "name": {
+        "en": "Moai Skin Fragment",
+        "es": "Fragmento de aspecto de Moái"
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c12_s6",
+      "name": {
+        "en": "Fragment of Berserker Skin \"Shi\"",
+        "es": "Fragmento del aspecto Shi de bersérker"
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c13_s19",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c14_s13",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c14_s6",
+      "name": {
+        "en": "Moon's Mark",
+        "es": "Marca de la luna"
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c16_s14",
+      "name": {
+        "en": "Bozi's Soulpiece",
+        "es": "Fragmento de alma de Bozi"
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c16_s6",
+      "name": {
+        "en": "Fragment of Taoist Skin \"Magician\"",
+        "es": "Fragmento del aspecto \"Mago\" para el taoísta"
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c1_s18",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c1_s25",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c25_s4",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c26_s7",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c29_s4",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c3_s23",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c4_s14",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c5_s26",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c5_s8",
+      "name": {
+        "en": "Ruler's Seal",
+        "es": "Sello del gobernante"
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c7_s12",
+      "name": {
+        "en": "King's Emblem",
+        "es": "Emblema del rey"
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c7_s22",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_c9_s22",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_flag",
+      "name": {
+        "en": "Battle Ensign",
+        "es": "Insignia de batalla"
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_law",
+      "name": {
+        "en": "Judge's Scroll",
+        "es": "Pergamino del juez"
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_skin_fragment_shop",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_soul_fragment",
+      "name": {
+        "en": "Soul Fragment",
+        "es": "Fragmento de alma"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_airbender_16",
+      "name": {
+        "en": "Flux of Fury",
+        "es": "Flujo de Furia"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_alien",
+      "name": {
+        "en": "Interstellar Travel",
+        "es": "Viaje interestelar"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_ambition",
+      "name": {
+        "en": "Mighty Heroes",
+        "es": "Héroes poderosos"
+      },
+      "subcategory": null,
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_assassin_27",
+      "name": {
+        "en": "Exultant Cadence",
+        "es": "Cadencia exultante"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_aurora",
+      "name": {
+        "en": "Digital Xunder #2",
+        "es": "Xunder digital n.º 2"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_aurora_wrong_version",
+      "name": {
+        "en": "Digital Xunder #2 (Demo)",
+        "es": "Xunder digital n.º 2 (Demo)"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_bgm_multi_room_skin_17",
+      "name": {
+        "en": "Assembly Order",
+        "es": "Orden de reunión"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_bgm_room_19",
+      "name": {
+        "en": "Hot on Fire",
+        "es": "Al rojo vivo"
+      },
+      "subcategory": null,
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_boss1",
+      "name": {
+        "en": "Rival",
+        "es": "Rival"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_boss2",
+      "name": {
+        "en": "Threat",
+        "es": "Amenaza"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_boss3",
+      "name": {
+        "en": "Finale!",
+        "es": "¡El final!"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_boss4",
+      "name": {
+        "en": "Echoes of Ruins",
+        "es": "Ecos de las ruinas"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_boss_void",
+      "name": {
+        "en": "The Void Descends",
+        "es": "El vacío desciende"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_boss_void_origin",
+      "name": {
+        "en": "The Advent of End",
+        "es": "La llegada del fin"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_castle",
+      "name": {
+        "en": "Heroes' Avatar",
+        "es": "Avatar de héroes"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_chess",
+      "name": {
+        "en": "Castling March",
+        "es": "Marcha de enroque"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_civilization",
+      "name": {
+        "en": "GlobalTravelOverture.mid",
+        "es": "OberturadeViajeGlobal.mid"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_dark",
+      "name": {
+        "en": "Hidden Hit",
+        "es": "Éxito oculto"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_defence",
+      "name": {
+        "en": "Till the End of Dawn",
+        "es": "Hasta que acabe el alba"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_doctor_12",
+      "name": {
+        "en": "Placid Rhapsody",
+        "es": "Rapsodia plácida"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_doctor_6",
+      "name": {
+        "en": "Drum - Pulses of Vibrancy",
+        "es": "Tambor - Ondas de resonancia"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_dongzhuo",
+      "name": {
+        "en": "The Tyrant",
+        "es": "El tirano"
+      },
+      "subcategory": null,
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_dragon_boy",
+      "name": {
+        "en": "Auspicious Realm",
+        "es": "Reino Auspicioso"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_easter",
+      "name": {
+        "en": "Call of the Spring",
+        "es": "Llamada de la primavera"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_elves_17",
+      "name": {
+        "en": "Guitar - Strings of Rhythm",
+        "es": "Guitarra - Cuerdas del ritmo"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_end_temple",
+      "name": {
+        "en": "Kneeling at God's Feet",
+        "es": "Arrodíllense ante Dios"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_forest",
+      "name": {
+        "en": "Deep in the Forest",
+        "es": "En lo profundo del bosque"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_four_seasons",
+      "name": {
+        "en": "Ballad of Seasons",
+        "es": "Balada de las estaciones"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_grave",
+      "name": {
+        "en": "Beware of Falling!",
+        "es": "¡Evita caerte!"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_graveyard",
+      "name": {
+        "en": "Dark Dungeon",
+        "es": "Mazmorra oscura"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_hall",
+      "name": {
+        "en": "Home Sweet Home",
+        "es": "Hogar, dulce hogar"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_hall_cny",
+      "name": {
+        "en": "Happy New Year!",
+        "es": "¡Feliz Año Nuevo!"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_halloween",
+      "name": {
+        "en": "Wraith on Halloween",
+        "es": "Espectro de Halloween"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_heroBall",
+      "name": {
+        "en": "Digital Realm",
+        "es": "Reino digital"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_ice",
+      "name": {
+        "en": "Blizzard",
+        "es": "Ventisca"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_icecave",
+      "name": {
+        "en": "Buried Secret",
+        "es": "Secreto enterrado"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_irontide_multiroom",
+      "name": {
+        "en": "Deep in Down Grave",
+        "es": "Profundidades del cementerio subterráneo"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_island",
+      "name": {
+        "en": "Iron Will Braves the Waves",
+        "es": "Iron Will Braves the Waves"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_joker_7",
+      "name": {
+        "en": "Euphoric Pulsation",
+        "es": "Pulsación eufórica"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_level_2g",
+      "name": {
+        "en": "Hail to Connectionism!",
+        "es": "¡Viva el conexionismo!"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_level_4g",
+      "name": {
+        "en": "Majestic Grandeur",
+        "es": "Grandeza majestuosa"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_lvbu",
+      "name": {
+        "en": "Matchless Warrior",
+        "es": "Guerrero invencible"
+      },
+      "subcategory": null,
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_mecha",
+      "name": {
+        "en": "Robotic Reboot",
+        "es": "Reinicio Robótico"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_monster",
+      "name": {
+        "en": "Enlightened",
+        "es": "Iluminado"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_mythology",
+      "name": {
+        "en": "Wander as a Cloud",
+        "es": "Vagando como una nube"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_necromancer_16",
+      "name": {
+        "en": "Keyboard - Keys of Harmony",
+        "es": "Teclado - Notas armónicas"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_neon",
+      "name": {
+        "en": "Digital Xunder #1",
+        "es": "Xunder digital n.º 1"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_ninja_6",
+      "name": {
+        "en": "Searing Ire",
+        "es": "Ira abrasadora"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_opera",
+      "name": {
+        "en": "Stellar Moments",
+        "es": "Momentos estelares"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_party",
+      "name": {
+        "en": "Sunset Surfer",
+        "es": "Surfista del sol"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_rock_girl",
+      "name": {
+        "en": "H✦R✦S✦H",
+        "es": "H✦R✦S✦H"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_ruins",
+      "name": {
+        "en": "Splendid Shrine",
+        "es": "Santuario espléndido"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_stars",
+      "name": {
+        "en": "River of Stars",
+        "es": "Río de estrellas"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_stronghold_wave",
+      "name": {
+        "en": "Tea Break",
+        "es": "Descanso"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_summer",
+      "name": {
+        "en": "A Taste of Summer",
+        "es": "Una pizca de verano"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_swamp",
+      "name": {
+        "en": "Hymn",
+        "es": "Himno"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_sword",
+      "name": {
+        "en": "Clash of Blades",
+        "es": "Choque de espadas"
+      },
+      "subcategory": null,
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_sword_master_4",
+      "name": {
+        "en": "Bass - The Soul of the Beat",
+        "es": "Bajo - El alma del ritmo"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_thunderstorm",
+      "name": {
+        "en": "Digital Xunder #3",
+        "es": "Xunder digital n.º 3"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_transcendent_5",
+      "name": {
+        "en": "Serene Reverie",
+        "es": "Ensueño sereno"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_unrivaled_archenemy",
+      "name": {
+        "en": "Heist Rivalry",
+        "es": "Rivalidad criminal"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_volcano",
+      "name": {
+        "en": "Roaring Lava",
+        "es": "Lava ardiente"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_warliege_12",
+      "name": {
+        "en": "Soaring Dolor",
+        "es": "Angustia creciente"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_warlock_16",
+      "name": {
+        "en": "Drifting Lament",
+        "es": "Lamento errante"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_tape_zhuazhua",
+      "name": {
+        "en": "Digital Xunder #4",
+        "es": "Xunder digital n.º 4"
+      },
+      "subcategory": "tape",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_ticket",
+      "name": {
+        "en": "Free Trial Voucher",
+        "es": "Cupón de prueba gratuita"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_ticket_bossrush",
+      "name": {
+        "en": "Feather of Valkyrie",
+        "es": "Pluma de valquiria"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_chest_0",
+      "name": {
+        "en": "White Weapon Evolution Fragment Chest",
+        "es": "Cofre de fragmento de evolución de arma (blanca)"
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_chest_1",
+      "name": {
+        "en": "Green Weapon Evolution Fragment Chest",
+        "es": "Cofre de fragmento de evolución de arma (verde)"
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_chest_2",
+      "name": {
+        "en": "Blue Weapon Evolution Fragment Chest",
+        "es": "Cofre de fragmento de evolución de arma (azul)"
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_chest_3",
+      "name": {
+        "en": "Purple Weapon Evolution Fragment Chest",
+        "es": "Cofre de fragmento de evolución de arma (morada)"
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_chest_4",
+      "name": {
+        "en": "Orange Weapon Evolution Fragment Chest",
+        "es": "Cofre de fragmento de evolución de arma (naranja)"
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_chest_5",
+      "name": {
+        "en": "Red Weapon Evolution Fragment Chest",
+        "es": "Cofre de fragmento de evolución de arma (roja)"
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_006",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_007",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_008",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_009",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_010",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_015",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_018",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_028",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_033",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_034",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_038",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_041",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_043",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_044",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_050",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_061",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_064",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_072",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_076",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_078",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_079",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_089",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_093",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_094",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_095",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_097",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_108",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_111",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_115",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_120",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_121",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_122",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_127",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_128",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_129",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_131",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_132",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_134",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_135",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_139",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_140",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_141",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_145",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_146",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_156",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_159",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_160",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_161",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_167",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_169",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_170",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_175",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_181",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_183",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_192",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_200",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_203",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_207",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_210",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_215",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_220",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_223",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_224",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_231",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_233",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_239",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_243",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_246",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_247",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_250",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_253",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_255",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_260",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_270",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_274",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_275",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_277",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_278",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_298",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_299",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_302",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_306",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_307",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_309",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_310",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_311",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_315",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_316",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_317",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_320",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_323",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_325",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_326",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_327",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_329",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_330",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_343",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_345",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_346",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_357",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_366",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_367",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_370",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_371",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_372",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_374",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_376",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_377",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_378",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_388",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_399",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_400",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_401",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_402",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_403",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_404",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_405",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_406",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_411",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_412",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_413",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_414",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_415",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_weapon_fragment_weapon_cg_2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon_fragment",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_wood",
+      "name": {
+        "en": "Timber",
+        "es": "Leña"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_zongzi_fragment",
+      "name": {
+        "en": "Zongzi Leaf",
+        "es": "Zongzi Hoja"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_zongzi_leaf_basic",
+      "name": {
+        "en": "Basic Wrapper",
+        "es": "Envoltura básica"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_zongzi_leaf_fire",
+      "name": {
+        "en": "Ornate Wrapper",
+        "es": "Envoltura ornamentada"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_zongzi_leaf_guard",
+      "name": {
+        "en": "Hardy Banana Wrapper",
+        "es": "Envoltura de banana japonesa"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_zongzi_leaf_thunder",
+      "name": {
+        "en": "Cornhusk Wrapper",
+        "es": "Envoltura de hoja de maíz"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    },
+    {
+      "id": "material_zongzi_leaf_wind",
+      "name": {
+        "en": "Bamboo Tube",
+        "es": "Tubo de bambú"
+      },
+      "subcategory": "others",
+      "insertable": true,
+      "editable": true
+    }
+  ],
+  "seeds": [
+    {
+      "id": "plant_banboo_seed",
+      "name": {
+        "en": "Bamboo",
+        "es": "Bambú"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_banboo"
+    },
+    {
+      "id": "plant_binary_tree_seed",
+      "name": {
+        "en": "Binary Tree",
+        "es": "Árbol binario"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_binary_tree"
+    },
+    {
+      "id": "plant_blackrose_seed",
+      "name": {
+        "en": "Black Rose",
+        "es": "Rosa negra"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_blackrose"
+    },
+    {
+      "id": "plant_cactus_seed",
+      "name": {
+        "en": "Cactus",
+        "es": "Cactus"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_cactus"
+    },
+    {
+      "id": "plant_carrot_seed",
+      "name": {
+        "en": "Carrot",
+        "es": "Zanahoria"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_carrot"
+    },
+    {
+      "id": "plant_clivia_seed",
+      "name": {
+        "en": "Bush Lily",
+        "es": "Clivia"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_clivia"
+    },
+    {
+      "id": "plant_datura_seed",
+      "name": {
+        "en": "Devil's Snare",
+        "es": "Trampa del Demonio"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_datura"
+    },
+    {
+      "id": "plant_defend_flower_seed",
+      "name": {
+        "en": "Guardian Flower",
+        "es": "Flor guardiana"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_defend_flower"
+    },
+    {
+      "id": "plant_dragon_tree_seed",
+      "name": {
+        "en": "Dragon Fruit Tree",
+        "es": "Árbol de fruta del dragón"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_dragon_tree"
+    },
+    {
+      "id": "plant_eator_seed",
+      "name": {
+        "en": "Titan arum",
+        "es": "Aro gigante"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_eator"
+    },
+    {
+      "id": "plant_fantastic_flower_seed",
+      "name": {
+        "en": "Fantastic Flower",
+        "es": "Flor fantástica"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_fantastic_flower"
+    },
+    {
+      "id": "plant_firecracker_seed",
+      "name": {
+        "en": "Firecracker",
+        "es": "Petardo"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_firecracker"
+    },
+    {
+      "id": "plant_flatpeach_seed",
+      "name": {
+        "en": "Heavenly Peach",
+        "es": "Durazno celestial"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_flatpeach"
+    },
+    {
+      "id": "plant_gear_flower_seed",
+      "name": {
+        "en": "Gear Flower",
+        "es": "Flor de engranaje"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_gear_flower"
+    },
+    {
+      "id": "plant_gem_flower_seed",
+      "name": {
+        "en": "Gem Flower",
+        "es": "Flor de gemas"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_gem_flower"
+    },
+    {
+      "id": "plant_gem_tree_seed",
+      "name": {
+        "en": "Gem Tree",
+        "es": "Árbol de gemas"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_gem_tree"
+    },
+    {
+      "id": "plant_ginseng_seed",
+      "name": {
+        "en": "Ginseng",
+        "es": "Ginseng"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_ginseng"
+    },
+    {
+      "id": "plant_heptacolor_seed",
+      "name": {
+        "en": "Heptacolor Viola",
+        "es": "Violeta heptacolor"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_heptacolor"
+    },
+    {
+      "id": "plant_icepear_seed",
+      "name": {
+        "en": "Frozen Pear",
+        "es": "Pera helada"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_icepear"
+    },
+    {
+      "id": "plant_iron_tree_seed",
+      "name": {
+        "en": "Ironwood",
+        "es": "Palo fierro"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_iron_tree"
+    },
+    {
+      "id": "plant_lavender_seed",
+      "name": {
+        "en": "Lavender",
+        "es": "Lavanda"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_lavender"
+    },
+    {
+      "id": "plant_lithiumflower_seed",
+      "name": {
+        "en": "Lithium Flower",
+        "es": "Flor de litio"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_lithiumflower"
+    },
+    {
+      "id": "plant_lotus_seed",
+      "name": {
+        "en": "Snow Lotus",
+        "es": "Loto de las nieves"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_lotus"
+    },
+    {
+      "id": "plant_lycoris_seed",
+      "name": {
+        "en": "Red Spider Lily",
+        "es": "Flor de infierno"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_lycoris"
+    },
+    {
+      "id": "plant_magic_flower_seed",
+      "name": {
+        "en": "Magic Flower",
+        "es": "Flor mágica"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_magic_flower"
+    },
+    {
+      "id": "plant_mandrake_seed",
+      "name": {
+        "en": "Mandrake",
+        "es": "Mandrágora"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_mandrake"
+    },
+    {
+      "id": "plant_mirror_plane_flower_seed",
+      "name": {
+        "en": "Mirror Flower",
+        "es": "Flor espejo"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_mirror_plane_flower"
+    },
+    {
+      "id": "plant_monotropa_seed",
+      "name": {
+        "en": "Ghost Pipe",
+        "es": "Pipa fantasma"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_monotropa"
+    },
+    {
+      "id": "plant_mushroom_gold_seed",
+      "name": {
+        "en": "Golden Mushroom",
+        "es": "Champiñón dorado"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_mushroom_gold"
+    },
+    {
+      "id": "plant_mushroom_seed",
+      "name": {
+        "en": "Crystal Mushroom",
+        "es": "Champiñón de cristal"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_mushroom"
+    },
+    {
+      "id": "plant_nepenthes_seed",
+      "name": {
+        "en": "Monkey Cup",
+        "es": "Copa de mono"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_nepenthes"
+    },
+    {
+      "id": "plant_pumpkin_seed",
+      "name": {
+        "en": "Pumpkin",
+        "es": "Calabaza"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_pumpkin"
+    },
+    {
+      "id": "plant_qilixiang_seed",
+      "name": {
+        "en": "Daphne Odera",
+        "es": "Daphne odora"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_qilixiang"
+    },
+    {
+      "id": "plant_radar_seed",
+      "name": {
+        "en": "Radar Flower",
+        "es": "Flor radar"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_radar"
+    },
+    {
+      "id": "plant_rainbow_grass_seed",
+      "name": {
+        "en": "Rainbow Grass",
+        "es": "Grama arcoíris"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_rainbow_grass"
+    },
+    {
+      "id": "plant_roselle_seed",
+      "name": {
+        "en": "Roselle",
+        "es": "Flor de Jamaica"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_roselle"
+    },
+    {
+      "id": "plant_rosemary_seed",
+      "name": {
+        "en": "Rosemary",
+        "es": "Romero"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_rosemary"
+    },
+    {
+      "id": "plant_shallot_seed",
+      "name": {
+        "en": "Green Onions",
+        "es": "Cebollines"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_shallot"
+    },
+    {
+      "id": "plant_silver_poplar_seed",
+      "name": {
+        "en": "Abele",
+        "es": "Álamo blanco"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_silver_poplar"
+    },
+    {
+      "id": "plant_strange_flower_seed",
+      "name": {
+        "en": "Strange Flower",
+        "es": "Flor extraña"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_strange_flower"
+    },
+    {
+      "id": "plant_tree_seed",
+      "name": {
+        "en": "Oak Tree",
+        "es": "Roble"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_tree"
+    },
+    {
+      "id": "plant_trumpet_seed",
+      "name": {
+        "en": "Trumpet Flower",
+        "es": "Trompeta de ángel"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_trumpet"
+    },
+    {
+      "id": "plant_vine_seed",
+      "name": {
+        "en": "Vine",
+        "es": "Enredadera"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_vine"
+    },
+    {
+      "id": "plant_watermelon_seed",
+      "name": {
+        "en": "Watermelon",
+        "es": "Sandía"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_watermelon"
+    },
+    {
+      "id": "plant_worm_seed",
+      "name": {
+        "en": "Caterpillar fungus",
+        "es": "Hongo oruga"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_worm"
+    },
+    {
+      "id": "plant_xmas_seed",
+      "name": {
+        "en": "Xmas Tree",
+        "es": "Árbol de Navidad"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_xmas"
+    },
+    {
+      "id": "plant_zongzi_seed",
+      "name": {
+        "en": "Zongzi Flower",
+        "es": "Zongzi Flor"
+      },
+      "subcategory": "garden_seed",
+      "insertable": true,
+      "editable": true,
+      "plant_id": "plant_zongzi"
+    }
+  ]
+}

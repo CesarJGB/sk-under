@@ -1,6 +1,6 @@
 from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 
 from .settings import AccessMode
 
@@ -144,10 +144,35 @@ class CloudLabSave(BaseModel):
     report: dict[str, Any] | None = None
 
 
+class CloudItemChange(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    id: StrictStr = Field(min_length=1, max_length=80)
+    value: StrictInt = Field(ge=0, le=2_147_483_647)
+
+
+class CloudBattlePassChange(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    season_id: StrictInt = Field(ge=0, le=2_147_483_647)
+    cur_level: StrictInt | None = Field(default=None, ge=0, le=2_147_483_647)
+    cur_exp: StrictInt | None = Field(default=None, ge=0, le=2_147_483_647)
+    has_buy: bool | None = None
+
+
+class CloudLabAdvancedPrepareInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    materials: list[CloudItemChange] = Field(default_factory=list, max_length=343)
+    seeds: list[CloudItemChange] = Field(default_factory=list, max_length=47)
+    season_coin: StrictInt | None = Field(default=None, ge=0, le=2_147_483_647)
+    reborn_card: StrictBool | None = None
+    battle_pass: CloudBattlePassChange | None = None
+
+
 class CloudBackupSummary(BaseModel):
     id: str
     created_at: str
-    field: Literal["gems", "fish_chip", "fish_progress", "characters", "skills", "skins"] = "gems"
+    field: Literal[
+        "gems", "fish_chip", "fish_progress", "characters", "skills", "skins", "advanced"
+    ] = "gems"
     changed: bool
     original_size: int
     original_sha256: str
@@ -163,6 +188,7 @@ class CloudBackupSummary(BaseModel):
     character_codes: list[str] = Field(default_factory=list)
     skill_selections: list[dict[str, Any]] = Field(default_factory=list)
     skin_selections: list[dict[str, Any]] = Field(default_factory=list)
+    advanced_plan: dict[str, Any] = Field(default_factory=dict)
 
 
 class CloudByteDiff(BaseModel):

@@ -189,6 +189,98 @@ export type SaveReport = {
   limitations: string[]
 }
 
+export type LabItemRow = {
+  id: string
+  name: { en?: string | null; es?: string | null }
+  subcategory: string | null
+  plant_id: string | null
+  count: number | null
+  value_type: string | null
+  owned: boolean
+  known: boolean
+  editable: boolean
+  insertable: boolean
+  reason: string | null
+  path: string
+}
+
+export type LabSeasonCoin = {
+  value: number | null
+  value_type: string | null
+  available: boolean
+  path: string
+  min: number
+  max: number
+  owner_reference: string
+  note: string
+}
+
+export type LabRebornCard = {
+  value: boolean | null
+  available: boolean
+  path: string
+  experimental: true
+  local_reference: string
+  remote_representation: string
+  projection: string
+  limitation: string
+  evidence_level: 'E2'
+}
+
+export type LabBattlePassRecord = {
+  index: number
+  key: number | null
+  season_id: number | null
+  cur_level: number | null
+  cur_exp: number | null
+  has_buy: boolean | null
+  free_claimed_level: number | null
+  paid_claimed_level: number | null
+  max_level: number | null
+  editable: boolean
+  error: string | null
+}
+
+export type LabBattlePass = {
+  records: LabBattlePassRecord[]
+  selected_season_id: number | null
+  active_season_id: number | null
+  active_matches_selected: boolean | null
+  note: string
+}
+
+export type LabAdvanced = {
+  available?: false
+  error?: string
+  materials: LabItemRow[]
+  seeds: LabItemRow[]
+  season_coin: LabSeasonCoin
+  reborn_card: LabRebornCard
+  battle_pass: LabBattlePass
+  policy: {
+    field: 'advanced'
+    experimental: true
+    evidence_level: 'E2'
+    min: number
+    max: number
+    max_note: string
+    material_fish_note: string
+  }
+}
+
+export type LabAdvancedPlan = {
+  materials: Array<{ id: string; value: number }>
+  seeds: Array<{ id: string; value: number }>
+  season_coin?: number | null
+  reborn_card?: true | null
+  battle_pass?: {
+    season_id: number
+    cur_level?: number
+    cur_exp?: number
+    has_buy?: boolean
+  } | null
+}
+
 export type LabSave = {
   remote: LabRemote
   gems: number
@@ -206,12 +298,13 @@ export type LabSave = {
   sha256: string
   serialzed_version: number
   report?: SaveReport | null
+  advanced?: LabAdvanced | null
 }
 
 export type LabBackup = {
   id: string
   created_at: string
-  field?: 'gems' | 'fish_chip' | 'fish_progress' | 'characters' | 'skills' | 'skins'
+  field?: 'gems' | 'fish_chip' | 'fish_progress' | 'characters' | 'skills' | 'skins' | 'advanced'
   changed: boolean
   original_size: number
   original_sha256: string
@@ -227,6 +320,7 @@ export type LabBackup = {
   character_codes?: string[]
   skill_selections?: Array<{ code: string; index: number }>
   skin_selections?: Array<{ code: string; index: number }>
+  advanced_plan?: LabAdvancedPlan
 }
 
 export type LabByteDiff = {
@@ -307,6 +401,30 @@ export type LabFishProgressPrepared = {
     valid: true
     structure_valid: true
     only_fish_progress_changed: boolean
+    experimental: true
+    evidence_level: 'E2'
+    message: string
+  }
+}
+
+export type LabAdvancedPrepared = {
+  remote: LabRemote
+  backup: LabBackup
+  field: 'advanced'
+  plan: LabAdvancedPlan
+  changes: Array<{ path: string; before: unknown; after: unknown }>
+  original_value?: number
+  new_value?: number
+  experimental: true
+  changed: boolean
+  candidate_size: number
+  candidate_sha256: string
+  byte_diff: LabByteDiff
+  changed_fields: string[]
+  validation: {
+    valid: true
+    structure_valid: true
+    only_advanced_changed: boolean
     experimental: true
     evidence_level: 'E2'
     message: string
@@ -654,6 +772,7 @@ export type NativeSaveSummary = {
   sections: number | null
   remote_source: string
   report?: SaveReport | null
+  advanced?: LabAdvanced | null
 }
 
 export type NativeSession = {
@@ -753,6 +872,8 @@ export const nativeAuth = {
       new_cumulative_fish_count,
       source_sha256,
     }),
+  prepareAdvanced: (plan: LabAdvancedPlan, source_sha256: string, signal: AbortSignal) =>
+    nativeRequest<LabAdvancedPrepared>('/prepare-advanced', signal, { ...plan, source_sha256 }),
   prepareCharacters: (codes: string[], source_sha256: string, signal: AbortSignal) =>
     nativeRequest<LabCharacterPrepared>('/prepare-characters', signal, { codes, source_sha256 }),
   prepareSkills: (skills: LabSkillRef[], source_sha256: string, signal: AbortSignal) =>

@@ -24,6 +24,7 @@ from ..cloud.gems_editor import MAX_GEMS, MIN_GEMS
 from ..cloud_save import CloudSaveError
 from ..errors import PRIVATE_HEADERS, EditorError
 from ..models import (
+    CloudLabAdvancedPrepareInput,
     CloudLabCharacterPrepareInput,
     CloudLabConfirmInput,
     CloudLabFishChipPrepareInput,
@@ -182,6 +183,10 @@ class FishProgressPrepareInput(CloudLabFishProgressPrepareInput):
     source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
 
 
+class AdvancedPrepareInput(CloudLabAdvancedPrepareInput):
+    source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
+
+
 class CharacterPrepareInput(CloudLabCharacterPrepareInput):
     source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
 
@@ -332,6 +337,23 @@ def prepare_fish_progress(
     return service.prepare_fish_progress(
         current, payload.new_cumulative_fish_count, payload.source_sha256
     )
+
+
+@router.post(
+    "/prepare-advanced",
+    summary="Preparar materiales, semillas, moneda de temporada, renacimiento y pase",
+)
+def prepare_advanced(payload: AdvancedPrepareInput, request: Request) -> dict[str, object]:
+    service = _require_service(request)
+    current = service.require_session(_cookie(request, service))
+    plan = {
+        "materials": [item.model_dump() for item in payload.materials],
+        "seeds": [item.model_dump() for item in payload.seeds],
+        "season_coin": payload.season_coin,
+        "reborn_card": payload.reborn_card,
+        "battle_pass": payload.battle_pass.model_dump() if payload.battle_pass else None,
+    }
+    return service.prepare_advanced(current, plan, payload.source_sha256)
 
 
 @router.post(

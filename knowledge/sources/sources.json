@@ -2,7 +2,7 @@
   "schema": "sk-knowledge/sources@1",
   "schema_version": 1,
   "generated_by": "knowledge/tools/build_sources.py (curaduría de fase 7.0)",
-  "count": 15,
+  "count": 16,
   "sources": [
     {
       "id": "skdfe-main",
@@ -251,6 +251,25 @@
         "No se declara compatibilidad con versiones no probadas."
       ],
       "redistributed": true
+    },
+    {
+      "id": "owner-guide-phase7-1",
+      "type": "owner_reference",
+      "title": "Guía funcional del propietario — fase 7.1",
+      "location": "knowledge/sources/owner-guide-phase7-1.md",
+      "commit": null,
+      "version": "8.8.0",
+      "accessed": "2026-11-24",
+      "license": null,
+      "evidence": "E1",
+      "usage": "Especificación funcional aceptada para monedas de temporada, tarjeta de renacimiento, recompensas acumuladas y pase de batalla. Orienta las rutas y controles implementados en la fase 7.1.",
+      "limitations": [
+        "Describe archivos locales y valores de ejemplo; no prueba por sí sola la representación remota ni la reacción del cliente.",
+        "No confirma que editar gameData.rebornCard active el PlayerPrefs local.",
+        "No confirma que el progreso acumulado marque recompensas como reclamadas.",
+        "No autoriza compras, recibos ni derechos de servidor."
+      ],
+      "redistributed": false
     }
   ]
 }

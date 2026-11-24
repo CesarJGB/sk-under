@@ -5,7 +5,7 @@ Versión del juego: **8.8.0**.
 ## Campos
 
 - Total: **616**
-- Preguntas abiertas: **565**
+- Preguntas abiertas: **568**
 
 | Nivel | Campos |
 | --- | ---: |
@@ -18,10 +18,10 @@ Versión del juego: **8.8.0**.
 
 | Nivel | Campos |
 | --- | ---: |
-| E2 | 24 |
+| E2 | 31 |
 | E3 | 5 |
 | E4 | 6 |
-| H | 581 |
+| H | 574 |
 
 ### Categorías
 
@@ -81,12 +81,12 @@ Versión del juego: **8.8.0**.
 
 ## Dependencias y fuentes
 
-- Dependencias: **26**
-- Fuentes: **15**
+- Dependencias: **32**
+- Fuentes: **16**
 - Versiones analizadas: **8.6.0, 8.7.0, 8.8.0**
 - confirmed: 3
-- hypothesis: 4
-- negative: 2
-- observed: 17
+- hypothesis: 6
+- negative: 4
+- observed: 19
 
 > Los catálogos no prueban posesión. La cobertura de nombres no equivale a cobertura funcional.

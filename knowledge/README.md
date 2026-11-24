@@ -16,7 +16,8 @@ aparezca en un catálogo no significa que una cuenta lo tenga desbloqueado.
 - 616 campos técnicos (66 del registro histórico + 550 declarados en metadata).
 - 24 catálogos normalizados con 4.286 elementos.
 - 8.526 entradas de nombres en inglés, español y chino simplificado.
-- 26 relaciones documentadas y 15 fuentes con procedencia.
+- 32 relaciones documentadas y 16 fuentes con procedencia.
+- Políticas de escritura experimentales E2 para materiales, semillas, monedas de temporada, tarjeta de renacimiento de nube y pase de batalla.
 - Herramientas CLI sin autenticación, sin red y sin acceso a guardados reales.
 
 Las cifras actualizadas se regeneran en [reports/coverage.md](reports/coverage.md).

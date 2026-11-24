@@ -16,7 +16,7 @@
         "required": ["id", "type", "title", "location", "evidence", "usage", "limitations"],
         "properties": {
           "id": {"type": "string", "minLength": 1},
-          "type": {"type": "string", "enum": ["external_repository", "internal_document", "internal_catalog", "static_metadata", "community_reference", "own_observation"]},
+          "type": {"type": "string", "enum": ["external_repository", "internal_document", "internal_catalog", "static_metadata", "community_reference", "own_observation", "owner_reference"]},
           "title": {"type": "string", "minLength": 1},
           "location": {"type": "string", "minLength": 1},
           "commit": {"type": ["string", "null"]},

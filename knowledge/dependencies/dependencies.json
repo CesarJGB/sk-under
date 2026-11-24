@@ -7,9 +7,10 @@
     "Una coincidencia de nombres no se considera dependencia. Cada relación declara su nivel de evidencia y su estado.",
     "Las relaciones confirmed solo reproducen conclusiones ya documentadas y verificadas en fases anteriores; no se elevaron niveles en esta fase.",
     "Las relaciones observed describen coaparición estructural en muestras propias, sin demostrar causalidad.",
-    "Las relaciones hypothesis y negative existen para evitar que futuras fases confundan campos parecidos."
+    "Las relaciones hypothesis y negative existen para evitar que futuras fases confundan campos parecidos.",
+    "Las relaciones de la fase 7.1 distinguen la referencia funcional del propietario de la confirmación empírica en dispositivo; ninguna relación se eleva a E3/E4 sin esa prueba."
   ],
-  "count": 26,
+  "count": 32,
   "dependencies": [
     {
       "id": "gems-balance-composition",
@@ -471,6 +472,114 @@
       ],
       "edit_implication": "No modificar el sobre de serialización al editar secciones.",
       "experiments_required": []
+    },
+    {
+      "id": "materials-seeds-catalog-insertion",
+      "from": "itemData.materials",
+      "to": "catalog.materials",
+      "relation": "IDs del catálogo son estructuralmente insertables",
+      "status": "observed",
+      "evidence": "E1",
+      "scope": "8.6.0 y 8.8.0, mapas itemData.materials / itemData.seeds",
+      "description": "Los mapas observados usan ID de material/semilla como clave y entero como valor. La fase 7.1 permite insertar IDs presentes en los catálogos empaquetados y conserva cualquier clave desconocida.",
+      "sources": [
+        "knowledge/catalogs/materials.json",
+        "knowledge/catalogs/seeds.json",
+        "knowledge/sources/owner-guide-phase7-1.md"
+      ],
+      "edit_implication": "No borrar claves desconocidas ni aceptar IDs fuera del catálogo. material_fish se excluye de la edición genérica.",
+      "experiments_required": [
+        "Confirmar en Android que un material o semilla insertado con cantidad positiva aparece y persiste."
+      ]
+    },
+    {
+      "id": "season-coin-battlepass-independent",
+      "from": "seasonData.coin",
+      "to": "battlePassSaveData.seasonData",
+      "relation": "moneda separada del progreso del pase",
+      "status": "negative",
+      "evidence": "E2",
+      "scope": "8.8.0, controles de temporada de la fase 7.1",
+      "description": "seasonData.coin es una moneda de temporada; curLevel y curExp pertenecen al pase. No se sincronizan entre sí ni con gemas o fichas.",
+      "sources": [
+        "knowledge/fields/fields.json",
+        "knowledge/sources/owner-guide-phase7-1.md"
+      ],
+      "edit_implication": "No usar monedas de temporada para calcular nivel, experiencia o recompensas del pase.",
+      "experiments_required": []
+    },
+    {
+      "id": "battle-pass-level-claimed-consistency",
+      "from": "battlePassSaveData.seasonData._.Value.curLevel",
+      "to": "battlePassSaveData.seasonData._.Value.freeClaimedLevel",
+      "relation": "curLevel >= max(freeClaimedLevel, paidClaimedLevel)",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.6.0 local, editor de la fase 7.1",
+      "description": "El progreso reclamado no debería superar el nivel actual. La fase 7.1 rechaza niveles menores que el máximo de recompensas gratuitas o premium ya reclamadas.",
+      "sources": [
+        "knowledge/fields/fields.json",
+        "knowledge/sources/owner-guide-phase7-1.md"
+      ],
+      "edit_implication": "Editar curLevel solo si el nuevo valor es mayor o igual que ambos contadores reclamados; preservar los contadores.",
+      "experiments_required": [
+        "Comprobar en Android si el cliente acepta un nivel inferior al reclamado o corrige el estado."
+      ]
+    },
+    {
+      "id": "battle-pass-hasbuy-local-state",
+      "from": "battlePassSaveData.seasonData._.Value.hasBuy",
+      "to": "battlePassSaveData.seasonData._.Value.paidClaimedLevel",
+      "relation": "estado local no acredita compra",
+      "status": "negative",
+      "evidence": "E2",
+      "scope": "8.8.0, editor de la fase 7.1",
+      "description": "hasBuy es un estado local del pase. Cambiarlo no crea un recibo, no completa una compra y no concede derechos del servidor. No se desactiva si existen recompensas premium reclamadas.",
+      "sources": [
+        "knowledge/fields/fields.json",
+        "knowledge/sources/owner-guide-phase7-1.md"
+      ],
+      "edit_implication": "Separar la edición local de cualquier operación de compra o verificación de derechos.",
+      "experiments_required": [
+        "Confirmar que el cliente no vuelve a sincronizar hasBuy desde el servidor."
+      ]
+    },
+    {
+      "id": "reborn-card-cloud-local-gap",
+      "from": "gameData.rebornCard",
+      "to": "playerprefs.reborn_card",
+      "relation": "proyección local no confirmada",
+      "status": "hypothesis",
+      "evidence": "E2",
+      "scope": "8.8.0, gameData.rebornCard / shared_pref:reborn_card",
+      "description": "La guía del propietario identifica shared_pref:reborn_card = 1 como activación local. El agregado contiene gameData.rebornCard booleano y el cliente lee PlayerPrefs; la proyección CoverPlayerPref no está decompilada ni probada.",
+      "sources": [
+        "knowledge/sources/playerprefs-research.md",
+        "docs/research/phase6-20/README.md",
+        "knowledge/sources/owner-guide-phase7-1.md"
+      ],
+      "edit_implication": "La fase 7.1 solo activa el booleano de nube existente, marca la función como experimental E2 y no afirma que conceda la tarjeta.",
+      "experiments_required": [
+        "Activar gameData.rebornCard en Android físico, reiniciar y comprobar la tarjeta y shared_pref:reborn_card."
+      ]
+    },
+    {
+      "id": "cumulative-fish-reward-threshold",
+      "from": "itemData.cumulativeFishCount",
+      "to": "external.rewards",
+      "relation": "umbral >20 para recompensas acumuladas",
+      "status": "hypothesis",
+      "evidence": "E2",
+      "scope": "8.8.0, referencia funcional del propietario y editor de la fase 6.20",
+      "description": "La guía indica que un valor estrictamente mayor que 20 permite desbloquear todas las recompensas acumuladas, incluida la tarjeta de acceso diario. No se demostró que el cliente marque las recompensas como reclamadas.",
+      "sources": [
+        "knowledge/sources/owner-guide-phase7-1.md",
+        "docs/research/phase6-20/README.md"
+      ],
+      "edit_implication": "El control rápido ajusta max(actual, 21), conserva valores superiores y no afirma una reclamación automática.",
+      "experiments_required": [
+        "Ajustar a 21 en Android físico y comprobar la barra, la reclamación y el Mode Hopper Ticket."
+      ]
     }
   ]
 }

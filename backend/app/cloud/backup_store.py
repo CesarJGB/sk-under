@@ -13,7 +13,7 @@ import json
 import os
 import re
 import stat
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field as dataclass_field
 from datetime import datetime, timezone
 from hashlib import sha256
 from pathlib import Path
@@ -24,6 +24,12 @@ from Crypto.Cipher import AES
 
 from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError, reconstruct_cloud_save
 from ..parsers.json_document import parse_json
+from .advanced_editor import (
+    ADVANCED_RECORD_FIELD,
+    AdvancedEdit,
+    normalize_advanced_plan,
+    prepare_advanced_edit,
+)
 from .character_editor import (
     CHARACTER_RECORD_FIELD,
     MAX_CHARACTERS,
@@ -73,6 +79,7 @@ _FIELDS = frozenset(
         CHARACTER_RECORD_FIELD,
         SKILL_RECORD_FIELD,
         SKIN_RECORD_FIELD,
+        ADVANCED_RECORD_FIELD,
     }
 )
 _RECORD_LIMIT = 64 * 1024
@@ -106,18 +113,19 @@ class BackupRecord:
     created_at: str
     changed: bool
     original_size: int
-    original_sha256: str = field(repr=False)
+    original_sha256: str = dataclass_field(repr=False)
     original_gems: int
     candidate_size: int
-    candidate_sha256: str = field(repr=False)
+    candidate_sha256: str = dataclass_field(repr=False)
     candidate_gems: int
     remote_source: str
     remote_size: int
-    remote_sha256: str = field(repr=False)
+    remote_sha256: str = dataclass_field(repr=False)
     field: str = "gems"
     character_codes: tuple[str, ...] = ()
     skill_selections: tuple[tuple[str, int], ...] = ()
     skin_selections: tuple[tuple[str, int], ...] = ()
+    advanced_plan: dict[str, object] = dataclass_field(default_factory=dict)
 
     @property
     def original_value(self) -> int:
@@ -153,14 +161,15 @@ class BackupRecord:
             "skin_selections": [
                 {"code": code, "index": index} for code, index in self.skin_selections
             ],
+            "advanced_plan": self.advanced_plan,
         }
 
 
 @dataclass(frozen=True)
 class BackupBundle:
     record: BackupRecord
-    original: bytes = field(repr=False)
-    candidate: bytes = field(repr=False)
+    original: bytes = dataclass_field(repr=False)
+    candidate: bytes = dataclass_field(repr=False)
 
 
 def _now() -> str:
@@ -183,6 +192,18 @@ def _require_text(value: object, name: str) -> str:
     if not isinstance(value, str) or not value or len(value) > 200:
         raise BackupIntegrityError(f"El registro de respaldo contiene {name} inválido.")
     return value
+
+
+def _require_advanced_plan(value: object) -> dict[str, object]:
+    if not isinstance(value, dict):
+        raise BackupIntegrityError("El registro de respaldo no contiene un plan avanzado válido.")
+    try:
+        plan = normalize_advanced_plan(value)
+    except CloudSaveError as exc:
+        raise BackupIntegrityError("El plan avanzado del respaldo no es válido.") from exc
+    if plan != value:
+        raise BackupIntegrityError("El plan avanzado del respaldo no está normalizado.")
+    return plan
 
 
 def _require_skill_selections(value: object) -> tuple[tuple[str, int], ...]:
@@ -377,7 +398,7 @@ class LabBackupStore:
 
     def save(
         self,
-        edit: GemsEdit | FishChipEdit | FishProgressEdit | SkillEdit | SkinEdit,
+        edit: GemsEdit | FishChipEdit | FishProgressEdit | SkillEdit | SkinEdit | AdvancedEdit,
         *,
         remote_source: str,
         remote_size: int,
@@ -388,6 +409,7 @@ class LabBackupStore:
         character_codes: tuple[str, ...] | None = None,
         skill_selections: list[dict[str, object]] | tuple[dict[str, object], ...] | None = None,
         skin_selections: list[dict[str, object]] | tuple[dict[str, object], ...] | None = None,
+        advanced_plan: dict[str, object] | None = None,
     ) -> BackupBundle:
         """Crea un respaldo y devuelve los bytes que quedaron en disco.
 
@@ -405,6 +427,7 @@ class LabBackupStore:
         skins = _require_skin_selections(
             list(skin_selections) if skin_selections is not None else None
         )
+        plan: dict[str, object] = {}
         if field == CHARACTER_RECORD_FIELD:
             if edit.changed and not codes:
                 raise BackupIntegrityError("El respaldo de personajes requiere la selección preparada.")
@@ -420,10 +443,20 @@ class LabBackupStore:
                 raise BackupIntegrityError("El respaldo de skins requiere la selección preparada.")
             codes = ()
             skills = ()
+        elif field == ADVANCED_RECORD_FIELD:
+            if advanced_plan is None:
+                raise BackupIntegrityError("El respaldo avanzado requiere su plan preparado.")
+            plan = _require_advanced_plan(advanced_plan)
+            if getattr(edit, "plan", None) != plan:
+                raise BackupIntegrityError("El plan avanzado no coincide con la edición preparada.")
+            codes = ()
+            skills = ()
+            skins = ()
         else:
             codes = ()
             skills = ()
             skins = ()
+            plan = {}
         if remote_sha256 != edit.original_sha256 or remote_size != len(edit.original):
             raise BackupIntegrityError("La copia remota no coincide con el original preparado.")
         if original_value is None:
@@ -465,6 +498,7 @@ class LabBackupStore:
             character_codes=codes,
             skill_selections=skills,
             skin_selections=skins,
+            advanced_plan=plan,
         )
         try:
             self._write_private(directory / "original.json", edit.original)
@@ -567,6 +601,7 @@ class LabBackupStore:
         field = data.get("field", "gems")
         if field not in _FIELDS:
             raise BackupIntegrityError("El registro de respaldo contiene un tipo de campo inválido.")
+        plan = _require_advanced_plan(data.get("advanced_plan")) if field == ADVANCED_RECORD_FIELD else {}
         record = BackupRecord(
             id=_require_text(data.get("id"), "id"),
             created_at=_require_text(data.get("created_at"), "created_at"),
@@ -584,6 +619,7 @@ class LabBackupStore:
             character_codes=_require_codes(data.get("character_codes")),
             skill_selections=_require_skill_selections(data.get("skill_selections")),
             skin_selections=_require_skin_selections(data.get("skin_selections")),
+            advanced_plan=plan,
         )
         if record.id != backup_id:
             raise BackupIntegrityError("El identificador del registro no coincide.")
@@ -678,6 +714,22 @@ class LabBackupStore:
                     "El candidato del respaldo no es reproducible desde el original."
                 ) from None
             if current.candidate != candidate or len(current.new_unlocked) != record.candidate_gems:
+                raise BackupIntegrityError(
+                    "El candidato del respaldo no es reproducible desde el original."
+                )
+            return BackupBundle(record, original, candidate)
+        if record.field == ADVANCED_RECORD_FIELD:
+            if not record.advanced_plan:
+                raise BackupIntegrityError("El respaldo avanzado no contiene su plan.")
+            if not record.changed:
+                return BackupBundle(record, original, candidate)
+            try:
+                current = prepare_advanced_edit(original, record.advanced_plan)
+            except CloudSaveError:
+                raise BackupIntegrityError(
+                    "El candidato del respaldo no es reproducible desde el original."
+                ) from None
+            if current.candidate != candidate or len(current.changes) != record.candidate_gems:
                 raise BackupIntegrityError(
                     "El candidato del respaldo no es reproducible desde el original."
                 )

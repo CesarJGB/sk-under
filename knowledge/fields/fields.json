@@ -3161,7 +3161,7 @@
       "id": "itemData.materials",
       "internal_name": "materials",
       "category": "Inventario",
-      "description": "Mapa de material o fragmento a cantidad.",
+      "description": "Mapa de material o fragmento a cantidad; editor avanzado por lote de la fase 7.1.",
       "locations": {
         "local": "item_data*.data:materials",
         "cloud": "itemData.materials"
@@ -3181,22 +3181,25 @@
       "observed_values": null,
       "known_value_semantics": [
         "Cantidad poseída por identificador de material.",
-        "material_fish se escribe junto con gameData.fishChip en el flujo confirmado."
+        "material_fish es el espejo de gameData.fishChip y se edita únicamente desde el control de fichas de pesca.",
+        "Los identificadores desconocidos de la partida se conservan sin cambios."
       ],
       "initial_values": null,
       "limits": {
         "type": "objeto ID → entero",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "observed": "Cantidades enteras en las muestras propias.",
+        "functional": "No hay tope funcional confirmado; el editor aplica 0..2147483647 como límite estructural int32."
       },
       "related_ids": [
         "knowledge.catalogs.materials",
-        "gameData.fishChip"
+        "gameData.fishChip",
+        "itemData.commodities"
       ],
-      "associated_catalog": "materials",
+      "associated_catalog": null,
       "sources": [
         "discord",
         "docs/research/phase5-5/metadata-880-inventory.json",
+        "knowledge/sources/owner-guide-phase7-1.md",
         "propia",
         "skdfe"
       ],
@@ -3206,7 +3209,10 @@
         "Android Global 8.8.0 agregado",
         "Android Global 8.8.0 local"
       ],
-      "known_dependencies": [],
+      "known_dependencies": [
+        "gameData.fishChip ↔ itemData.materials.material_fish (espejo E4; no editar material_fish de forma aislada)",
+        "Los IDs del catálogo materials-880 son compatibles con la estructura del mapa; las claves desconocidas se preservan."
+      ],
       "pending_dependencies": [
         "consumo de materiales y copias locales"
       ],
@@ -3220,12 +3226,15 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
+      "edit_policy": "experimental E2, edición por lote de cantidades de materiales del catálogo; material_fish excluido",
       "constraints": [
-        "El resto de materiales sigue en solo lectura."
+        "Solo se aceptan IDs presentes en el catálogo empaquetado materials-880.",
+        "material_fish no se edita desde este control.",
+        "Conservar claves desconocidas y valores no enteros sin modificarlos.",
+        "No se inventan cantidades máximas de juego; 2147483647 es solo el límite estructural int32."
       ],
       "open_questions": [
-        "Confirmar el consumo y la persistencia de cada familia de materiales."
+        "Confirmar en Android el consumo y la persistencia de cada familia de materiales."
       ],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -3360,7 +3369,7 @@
       "id": "itemData.seeds",
       "internal_name": "seeds",
       "category": "Inventario",
-      "description": "Cantidad de semillas poseídas por identificador.",
+      "description": "Cantidad de semillas poseídas por identificador; editor avanzado por lote de la fase 7.1.",
       "locations": {
         "local": "item_data*.data:seeds",
         "cloud": "itemData.seeds"
@@ -3378,22 +3387,26 @@
         "resolved": false
       },
       "observed_values": null,
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "Cantidad de semillas en el inventario, separada del estado de crecimiento del jardín.",
+        "Los IDs del catálogo seeds-880 son compatibles con la estructura del mapa; las claves desconocidas se preservan."
+      ],
       "initial_values": null,
       "limits": {
         "type": "objeto ID → entero",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "observed": "Cantidades enteras en las muestras propias.",
+        "functional": "No hay tope funcional confirmado; el editor aplica 0..2147483647 como límite estructural int32."
       },
       "related_ids": [
         "knowledge.catalogs.seeds",
         "knowledge.catalogs.plants",
         "itemData.plants"
       ],
-      "associated_catalog": "seeds",
+      "associated_catalog": null,
       "sources": [
         "discord",
         "docs/research/phase5-5/metadata-880-inventory.json",
+        "knowledge/sources/owner-guide-phase7-1.md",
         "propia",
         "skdfe"
       ],
@@ -3403,7 +3416,9 @@
         "Android Global 8.8.0 agregado",
         "Android Global 8.8.0 local"
       ],
-      "known_dependencies": [],
+      "known_dependencies": [
+        "Las semillas no modifican por sí solas itemData.plants ni el estado de crecimiento del jardín."
+      ],
       "pending_dependencies": [
         "adquisición, plantación y jardín"
       ],
@@ -3417,8 +3432,12 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
+      "edit_policy": "experimental E2, edición por lote de cantidades de semillas del catálogo",
+      "constraints": [
+        "Solo se aceptan IDs presentes en el catálogo empaquetado seeds-880.",
+        "Conservar claves desconocidas y valores no enteros sin modificarlos.",
+        "No se modifica el jardín ni los estados de crecimiento."
+      ],
       "open_questions": [
         "Confirmar la relación entre semillas de inventario y estados de crecimiento del jardín."
       ],
@@ -3642,7 +3661,7 @@
       "id": "battlePassSaveData.seasonData._.Value.curExp",
       "internal_name": "curExp",
       "category": "Pase de batalla",
-      "description": null,
+      "description": "Experiencia actual del pase seleccionado.",
       "locations": {
         "local": "bp_data_<perfil>_.data:seasonData[].Value.curExp",
         "cloud_candidate": "battlePassSaveData.seasonData[].Value.curExp"
@@ -3663,14 +3682,15 @@
       "initial_values": null,
       "limits": {
         "type": "entero",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "observed": "Experiencia entera en 8.6.0.",
+        "functional": "Relación nivel-experiencia no documentada."
       },
       "related_ids": [],
       "associated_catalog": null,
       "sources": [
         "propia",
-        "discord"
+        "discord",
+        "knowledge/sources/owner-guide-phase7-1.md"
       ],
       "observed_versions": [
         "Android 8.6.0 local"
@@ -3685,14 +3705,17 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "H",
+        "semantics": "E2",
         "version_compatibility": "E2",
         "relations": "E2",
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
+      "edit_policy": "experimental E2, edición de curExp entero no negativo",
+      "constraints": [
+        "Solo enteros no negativos.",
+        "No se conoce una relación pública entre curExp y curLevel."
+      ],
       "open_questions": [],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -3728,7 +3751,7 @@
       "id": "battlePassSaveData.seasonData._.Value.curLevel",
       "internal_name": "curLevel",
       "category": "Pase de batalla",
-      "description": null,
+      "description": "Nivel actual del pase seleccionado.",
       "locations": {
         "local": "bp_data_<perfil>_.data:seasonData[].Value.curLevel",
         "cloud_candidate": "battlePassSaveData.seasonData[].Value.curLevel"
@@ -3749,20 +3772,21 @@
       "initial_values": null,
       "limits": {
         "type": "entero",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "observed": "Niveles enteros en 8.6.0.",
+        "functional": "No hay nivel máximo confirmado; no se ofrece un botón de máximo sin campo respaldado."
       },
       "related_ids": [],
       "associated_catalog": null,
       "sources": [
         "propia",
-        "discord"
+        "discord",
+        "knowledge/sources/owner-guide-phase7-1.md"
       ],
       "observed_versions": [
         "Android 8.6.0 local"
       ],
       "known_dependencies": [
-        "seasonData"
+        "curLevel >= max(freeClaimedLevel, paidClaimedLevel) antes de editar."
       ],
       "pending_dependencies": [
         "forma de una temporada poblada en 8.8.0"
@@ -3771,14 +3795,17 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "H",
+        "semantics": "E2",
         "version_compatibility": "E2",
         "relations": "E2",
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
+      "edit_policy": "experimental E2, edición de curLevel con nivel >= recompensas reclamadas",
+      "constraints": [
+        "No reducir el nivel por debajo de las recompensas ya reclamadas.",
+        "No inventar un nivel máximo."
+      ],
       "open_questions": [],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -3814,7 +3841,7 @@
       "id": "battlePassSaveData.seasonData._.Value.freeClaimedLevel",
       "internal_name": "freeClaimedLevel",
       "category": "Pase de batalla",
-      "description": null,
+      "description": "Progreso de recompensas gratuitas reclamadas.",
       "locations": {
         "local": "bp_data_<perfil>_.data:seasonData[].Value.freeClaimedLevel",
         "cloud_candidate": "battlePassSaveData.seasonData[].Value.freeClaimedLevel"
@@ -3842,7 +3869,8 @@
       "associated_catalog": null,
       "sources": [
         "propia",
-        "discord"
+        "discord",
+        "knowledge/sources/owner-guide-phase7-1.md"
       ],
       "observed_versions": [
         "Android 8.6.0 local"
@@ -3857,14 +3885,16 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "H",
+        "semantics": "E2",
         "version_compatibility": "E2",
         "relations": "E2",
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "protegido, solo lectura",
-      "constraints": [],
+      "edit_policy": "protegido, solo lectura; preservar",
+      "constraints": [
+        "No modificar en las ediciones ordinarias de la fase 7.1."
+      ],
       "open_questions": [],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -3900,7 +3930,7 @@
       "id": "battlePassSaveData.seasonData._.Value.hasBuy",
       "internal_name": "hasBuy",
       "category": "Pase de batalla",
-      "description": null,
+      "description": "Estado local de adquisición premium del pase seleccionado.",
       "locations": {
         "local": "bp_data_<perfil>_.data:seasonData[].Value.hasBuy",
         "cloud_candidate": "battlePassSaveData.seasonData[].Value.hasBuy"
@@ -3928,13 +3958,14 @@
       "associated_catalog": null,
       "sources": [
         "propia",
-        "discord"
+        "discord",
+        "knowledge/sources/owner-guide-phase7-1.md"
       ],
       "observed_versions": [
         "Android 8.6.0 local"
       ],
       "known_dependencies": [
-        "seasonData"
+        "hasBuy no puede desactivarse mientras paidClaimedLevel sea mayor que cero."
       ],
       "pending_dependencies": [
         "forma de una temporada poblada en 8.8.0"
@@ -3943,14 +3974,17 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "H",
+        "semantics": "E2",
         "version_compatibility": "E2",
         "relations": "E2",
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "protegido, solo lectura",
-      "constraints": [],
+      "edit_policy": "experimental E2, solo estado local hasBuy; no compra ni derecho de servidor",
+      "constraints": [
+        "No modifica recibos, facturación ni derechos del servidor.",
+        "No repetir recompensas reclamadas."
+      ],
       "open_questions": [],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -3986,7 +4020,7 @@
       "id": "battlePassSaveData.seasonData._.Value.paidClaimedLevel",
       "internal_name": "paidClaimedLevel",
       "category": "Pase de batalla",
-      "description": null,
+      "description": "Progreso de recompensas premium reclamadas.",
       "locations": {
         "local": "bp_data_<perfil>_.data:seasonData[].Value.paidClaimedLevel",
         "cloud_candidate": "battlePassSaveData.seasonData[].Value.paidClaimedLevel"
@@ -4014,7 +4048,8 @@
       "associated_catalog": null,
       "sources": [
         "propia",
-        "discord"
+        "discord",
+        "knowledge/sources/owner-guide-phase7-1.md"
       ],
       "observed_versions": [
         "Android 8.6.0 local"
@@ -4029,14 +4064,16 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "H",
+        "semantics": "E2",
         "version_compatibility": "E2",
         "relations": "E2",
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "protegido, solo lectura",
-      "constraints": [],
+      "edit_policy": "protegido, solo lectura; preservar",
+      "constraints": [
+        "No modificar en las ediciones ordinarias de la fase 7.1."
+      ],
       "open_questions": [],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -4072,7 +4109,7 @@
       "id": "battlePassSaveData.seasonData",
       "internal_name": "seasonData",
       "category": "Pase de batalla",
-      "description": null,
+      "description": "Lista de temporadas del pase de batalla; se edita únicamente un registro existente.",
       "locations": {
         "local": "bp_data_<perfil>_.data:seasonData",
         "cloud": "battlePassSaveData.seasonData"
@@ -4092,18 +4129,25 @@
         "resolved": false
       },
       "observed_values": null,
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "Cada entrada contiene Key y Value; Value incluye seasonID, curLevel, curExp, hasBuy, freeClaimedLevel y paidClaimedLevel.",
+        "La interfaz selecciona por defecto el seasonID válido más alto y no crea temporadas."
+      ],
       "initial_values": null,
       "limits": {
-        "type": "lista [{Key, Value}], objeto vacío local 8.8.0, lista vacía nube 8.8.0",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "type": "lista [{Key, Value}]",
+        "observed": "Lista vacía en la nube 8.8.0 sintética; tres pares en 8.6.0.",
+        "functional": "No hay número máximo de temporadas confirmado."
       },
-      "related_ids": [],
+      "related_ids": [
+        "battlePassSaveData.seasonData._.Value.seasonID",
+        "seasonData.coin"
+      ],
       "associated_catalog": null,
       "sources": [
         "discord",
         "docs/research/phase5-5/metadata-880-inventory.json",
+        "knowledge/sources/owner-guide-phase7-1.md",
         "propia"
       ],
       "observed_versions": [
@@ -4112,7 +4156,9 @@
         "Android Global 8.8.0 agregado",
         "Android Global 8.8.0 local"
       ],
-      "known_dependencies": [],
+      "known_dependencies": [
+        "Las temporadas históricas se conservan; solo se modifica el registro seleccionado."
+      ],
       "pending_dependencies": [
         "regla de selección de temporada activa"
       ],
@@ -4120,15 +4166,21 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "H",
+        "semantics": "E2",
         "version_compatibility": "E2",
-        "relations": "H",
+        "relations": "E2",
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
-      "open_questions": [],
+      "edit_policy": "experimental E2, edición de un registro existente; no crea temporadas",
+      "constraints": [
+        "Nunca crear temporadas ni codificar un seasonID permanente.",
+        "Conservar todas las demás entradas de seasonData.",
+        "Preservar freeClaimedLevel y paidClaimedLevel en las modificaciones ordinarias."
+      ],
+      "open_questions": [
+        "Confirmar la regla del cliente para la temporada activa en 8.8.0."
+      ],
       "experiments_required": [],
       "registry_tier": "legacy",
       "legacy_record": {
@@ -4165,7 +4217,7 @@
       "id": "battlePassSaveData.seasonData._.Value.seasonID",
       "internal_name": "seasonID",
       "category": "Pase de batalla",
-      "description": null,
+      "description": "Identificador de la temporada del pase.",
       "locations": {
         "local": "bp_data_<perfil>_.data:seasonData[].Value.seasonID",
         "cloud_candidate": "battlePassSaveData.seasonData[].Value.seasonID"
@@ -4193,7 +4245,8 @@
       "associated_catalog": null,
       "sources": [
         "propia",
-        "discord"
+        "discord",
+        "knowledge/sources/owner-guide-phase7-1.md"
       ],
       "observed_versions": [
         "Android 8.6.0 local"
@@ -4208,14 +4261,16 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "H",
+        "semantics": "E2",
         "version_compatibility": "E2",
         "relations": "E2",
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
+      "edit_policy": "solo lectura; identifica el registro seleccionado",
+      "constraints": [
+        "No crear temporadas ni reutilizar un identificador inventado."
+      ],
       "open_questions": [],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -5023,7 +5078,7 @@
       "id": "gameData.rebornCard",
       "internal_name": "rebornCard",
       "category": "Progreso y acceso",
-      "description": "Bandera de la tarjeta de resurrección en el agregado de nube.",
+      "description": "Bandera booleana de la tarjeta de renacimiento en el agregado de nube; objetivo experimental de la fase 7.1.",
       "locations": {
         "local": "files/game.data:rebornCard",
         "cloud": "gameData.rebornCard",
@@ -5043,19 +5098,24 @@
       },
       "observed_values": null,
       "known_value_semantics": [
-        "No se demostró que editar solo este booleano active la tarjeta; el cliente consulta además PlayerPrefs y datos de objeto."
+        "La guía del propietario identifica shared_pref:reborn_card = 1 como activación local de la tarjeta gratuita permanente.",
+        "El agregado de nube contiene gameData.rebornCard booleano; no se demostró que escribir solo este booleano active la tarjeta."
       ],
       "initial_values": null,
       "limits": {
         "type": "booleano JSON, XML int",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "observed": "false/true en muestras propias.",
+        "functional": "No hay límite numérico; el control solo activa true cuando el campo ya existe como bool."
       },
-      "related_ids": [],
+      "related_ids": [
+        "playerprefs.reborn_card",
+        "itemData.RebornCard"
+      ],
       "associated_catalog": null,
       "sources": [
         "discord",
         "docs/research/phase5-5/metadata-880-inventory.json",
+        "knowledge/sources/owner-guide-phase7-1.md",
         "propia"
       ],
       "observed_versions": [
@@ -5064,11 +5124,15 @@
         "Android Global 8.8.0 local",
         "Android Global 8.8.0.11"
       ],
-      "known_dependencies": [],
+      "known_dependencies": [
+        "shared_pref:reborn_card (entero por perfil; proyección CoverPlayerPref no confirmada)",
+        "DataUtil.GetRebornCardUnlock consulta PlayerPrefs y CPPlayerItemData.GetItemUnlock"
+      ],
       "pending_dependencies": [
-        "PlayerPrefs entero de reborn_card",
-        "CPPlayerItemData.GetItemUnlock",
-        "Derechos gestionados por servicios externos"
+        "semántica de la tarjeta normal frente a la tarjeta de resurrección superior",
+        "si el booleano de nube representa derecho permanente, cantidad o estado temporal",
+        "proyección al cliente oficial y dependencia de derechos de compra",
+        "confirmar si CloudSaveGameData.CoverPlayerPref convierte gameData.rebornCard en el entero de PlayerPrefs que lee DataUtil.GetRebornCardUnlock"
       ],
       "preserve": [],
       "evidence": {
@@ -5080,12 +5144,16 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "protegido, solo lectura",
+      "edit_policy": "experimental E2, solo activación de gameData.rebornCard; no modifica shared_pref local",
       "constraints": [
-        "Protegido y de solo lectura; no modificar derechos ni estados de pago."
+        "Solo escribir true cuando gameData.rebornCard exista y sea booleano.",
+        "No inventar propiedades, recibos ni comprobantes de compra.",
+        "No afirmar que la tarjeta queda concedida hasta la prueba en Android.",
+        "No modifica el PlayerPrefs local ni la proyección CoverPlayerPref."
       ],
       "open_questions": [
-        "Determinar si el booleano representa derecho permanente, cantidad o estado temporal."
+        "Determinar si el booleano representa derecho permanente, cantidad o estado temporal.",
+        "Confirmar si CoverPlayerPref proyecta gameData.rebornCard al entero de PlayerPrefs."
       ],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -5333,7 +5401,7 @@
       "id": "seasonData.coin",
       "internal_name": "coin",
       "category": "Temporada",
-      "description": "Moneda de la temporada.",
+      "description": "Moneda de la temporada; control independiente de monedas y recursos.",
       "locations": {
         "local": "season_data*.data:coin",
         "cloud": "seasonData.coin"
@@ -5351,18 +5419,24 @@
         "resolved": false
       },
       "observed_values": null,
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "Moneda de temporada, distinta de gemas, fichas de pesca, experiencia del pase y monedas de otros modos.",
+        "La guía funcional del propietario confirma season_data:coin y su correspondencia con seasonData.coin."
+      ],
       "initial_values": null,
       "limits": {
-        "type": "entero",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "type": "int",
+        "observed": "Entero en las muestras propias.",
+        "functional": "No hay tope funcional confirmado; el editor aplica 0..2147483647 como límite estructural int32."
       },
-      "related_ids": [],
+      "related_ids": [
+        "battlePassSaveData.seasonData"
+      ],
       "associated_catalog": null,
       "sources": [
         "discord",
         "docs/research/phase5-5/metadata-880-inventory.json",
+        "knowledge/sources/owner-guide-phase7-1.md",
         "propia"
       ],
       "observed_versions": [
@@ -5371,7 +5445,9 @@
         "Android Global 8.8.0 agregado",
         "Android Global 8.8.0 local"
       ],
-      "known_dependencies": [],
+      "known_dependencies": [
+        "No se sincroniza automáticamente con gemas, fichas de pesca ni con el pase de batalla."
+      ],
       "pending_dependencies": [
         "temporada activa y cambios correlacionados"
       ],
@@ -5381,13 +5457,18 @@
         "data_type": "E2",
         "semantics": "E2",
         "version_compatibility": "E2",
-        "relations": "E2",
+        "relations": "H",
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
-      "open_questions": [],
+      "edit_policy": "experimental E2, edición aislada de seasonData.coin",
+      "constraints": [
+        "No crear seasonData.coin si el campo no existe como entero.",
+        "No confundir con gameData.gems, gameData.fishChip, itemData.cumulativeFishCount ni curExp."
+      ],
+      "open_questions": [
+        "Confirmar en Android si la temporada activa aplica límites adicionales del cliente."
+      ],
       "experiments_required": [],
       "registry_tier": "legacy",
       "legacy_record": {

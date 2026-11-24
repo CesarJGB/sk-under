@@ -63,10 +63,7 @@
   "field_overrides": {
     "gameData.gems": {
       "description": "Saldo local de gemas que el cliente muestra y consume.",
-      "known_value_semantics": [
-        "Saldo actual de gemas en la partida local.",
-        "La rama de consumo de 8.8.0 aplica gems = lastGems + varGems."
-      ],
+      "known_value_semantics": ["Saldo actual de gemas en la partida local.", "La rama de consumo de 8.8.0 aplica gems = lastGems + varGems."],
       "limits": {"type": "int32", "observed": "Incluye valores no negativos en las muestras propias.", "functional": "El límite funcional no está documentado."},
       "related_ids": ["gameData.lastGems", "gameData.varGems", "gameData.cumulativeGems"],
       "known_dependencies": ["gems = lastGems + varGems (rama de consumo 8.8.0, E4)"],
@@ -101,10 +98,7 @@
     },
     "gameData.fishChip": {
       "description": "Saldo local de fichas de pesca.",
-      "known_value_semantics": [
-        "Saldo que el cliente descuenta al comprar en la tienda de peces.",
-        "Se escribe junto con itemData.materials.material_fish en el flujo confirmado."
-      ],
+      "known_value_semantics": ["Saldo que el cliente descuenta al comprar en la tienda de peces.", "Se escribe junto con itemData.materials.material_fish en el flujo confirmado."],
       "limits": {"type": "int32", "observed": "0 en las muestras de solo lectura previas a la fase 6.14.", "functional": "El límite funcional no está documentado."},
       "related_ids": ["itemData.materials", "playerprefs.furniture_fish_chips", "itemData.cumulativeFishCount"],
       "known_dependencies": ["itemData.materials.material_fish (E4, Fase 6.16)"],
@@ -186,21 +180,28 @@
       "open_questions": ["Confirmar la correspondencia entre códigos de petUnlock y los identificadores numéricos de mascota."]
     },
     "gameData.rebornCard": {
-      "description": "Bandera de la tarjeta de resurrección en el agregado de nube.",
-      "known_value_semantics": ["No se demostró que editar solo este booleano active la tarjeta; el cliente consulta además PlayerPrefs y datos de objeto."],
-      "pending_dependencies": ["PlayerPrefs entero de reborn_card", "CPPlayerItemData.GetItemUnlock", "Derechos gestionados por servicios externos"],
+      "description": "Bandera booleana de la tarjeta de renacimiento en el agregado de nube; objetivo experimental de la fase 7.1.",
+      "known_value_semantics": ["La guía del propietario identifica shared_pref:reborn_card = 1 como activación local de la tarjeta gratuita permanente.", "El agregado de nube contiene gameData.rebornCard booleano; no se demostró que escribir solo este booleano active la tarjeta."],
+      "limits": {"type": "booleano JSON, XML int", "observed": "false/true en muestras propias.", "functional": "No hay límite numérico; el control solo activa true cuando el campo ya existe como bool."},
+      "related_ids": ["playerprefs.reborn_card", "itemData.RebornCard"],
+      "known_dependencies": ["shared_pref:reborn_card (entero por perfil; proyección CoverPlayerPref no confirmada)", "DataUtil.GetRebornCardUnlock consulta PlayerPrefs y CPPlayerItemData.GetItemUnlock"],
+      "sources": ["discord", "docs/research/phase5-5/metadata-880-inventory.json", "knowledge/sources/owner-guide-phase7-1.md", "propia"],
       "evidence": {"semantics": "H", "relations": "E2", "persistence": "H"},
-      "constraints": ["Protegido y de solo lectura; no modificar derechos ni estados de pago."],
-      "open_questions": ["Determinar si el booleano representa derecho permanente, cantidad o estado temporal."]
+      "edit_policy": "experimental E2, solo activación de gameData.rebornCard; no modifica shared_pref local",
+      "constraints": ["Solo escribir true cuando gameData.rebornCard exista y sea booleano.", "No inventar propiedades, recibos ni comprobantes de compra.", "No afirmar que la tarjeta queda concedida hasta la prueba en Android.", "No modifica el PlayerPrefs local ni la proyección CoverPlayerPref."],
+      "open_questions": ["Determinar si el booleano representa derecho permanente, cantidad o estado temporal.", "Confirmar si CoverPlayerPref proyecta gameData.rebornCard al entero de PlayerPrefs."]
     },
     "itemData.materials": {
-      "description": "Mapa de material o fragmento a cantidad.",
-      "known_value_semantics": ["Cantidad poseída por identificador de material.", "material_fish se escribe junto con gameData.fishChip en el flujo confirmado."],
-      "related_ids": ["knowledge.catalogs.materials", "gameData.fishChip"],
-      "associated_catalog": "materials",
+      "description": "Mapa de material o fragmento a cantidad; editor avanzado por lote de la fase 7.1.",
+      "known_value_semantics": ["Cantidad poseída por identificador de material.", "material_fish es el espejo de gameData.fishChip y se edita únicamente desde el control de fichas de pesca.", "Los identificadores desconocidos de la partida se conservan sin cambios."],
+      "limits": {"type": "objeto ID → entero", "observed": "Cantidades enteras en las muestras propias.", "functional": "No hay tope funcional confirmado; el editor aplica 0..2147483647 como límite estructural int32."},
+      "related_ids": ["knowledge.catalogs.materials", "gameData.fishChip", "itemData.commodities"],
+      "known_dependencies": ["gameData.fishChip ↔ itemData.materials.material_fish (espejo E4; no editar material_fish de forma aislada)", "Los IDs del catálogo materials-880 son compatibles con la estructura del mapa; las claves desconocidas se preservan."],
+      "sources": ["discord", "docs/research/phase5-5/metadata-880-inventory.json", "knowledge/sources/owner-guide-phase7-1.md", "propia", "skdfe"],
       "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"},
-      "constraints": ["El resto de materiales sigue en solo lectura."],
-      "open_questions": ["Confirmar el consumo y la persistencia de cada familia de materiales."]
+      "edit_policy": "experimental E2, edición por lote de cantidades de materiales del catálogo; material_fish excluido",
+      "constraints": ["Solo se aceptan IDs presentes en el catálogo empaquetado materials-880.", "material_fish no se edita desde este control.", "Conservar claves desconocidas y valores no enteros sin modificarlos.", "No se inventan cantidades máximas de juego; 2147483647 es solo el límite estructural int32."],
+      "open_questions": ["Confirmar en Android el consumo y la persistencia de cada familia de materiales."]
     },
     "itemData.blueprints": {
       "description": "Estado de planos investigados o disponibles.",
@@ -211,10 +212,15 @@
       "open_questions": ["Confirmar los estados válidos y su efecto en el cliente."]
     },
     "itemData.seeds": {
-      "description": "Cantidad de semillas poseídas por identificador.",
+      "description": "Cantidad de semillas poseídas por identificador; editor avanzado por lote de la fase 7.1.",
+      "known_value_semantics": ["Cantidad de semillas en el inventario, separada del estado de crecimiento del jardín.", "Los IDs del catálogo seeds-880 son compatibles con la estructura del mapa; las claves desconocidas se preservan."],
+      "limits": {"type": "objeto ID → entero", "observed": "Cantidades enteras en las muestras propias.", "functional": "No hay tope funcional confirmado; el editor aplica 0..2147483647 como límite estructural int32."},
       "related_ids": ["knowledge.catalogs.seeds", "knowledge.catalogs.plants", "itemData.plants"],
-      "associated_catalog": "seeds",
+      "known_dependencies": ["Las semillas no modifican por sí solas itemData.plants ni el estado de crecimiento del jardín."],
+      "sources": ["discord", "docs/research/phase5-5/metadata-880-inventory.json", "knowledge/sources/owner-guide-phase7-1.md", "propia", "skdfe"],
       "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"},
+      "edit_policy": "experimental E2, edición por lote de cantidades de semillas del catálogo",
+      "constraints": ["Solo se aceptan IDs presentes en el catálogo empaquetado seeds-880.", "Conservar claves desconocidas y valores no enteros sin modificarlos.", "No se modifica el jardín ni los estados de crecimiento."],
       "open_questions": ["Confirmar la relación entre semillas de inventario y estados de crecimiento del jardín."]
     },
     "itemData.plants": {
@@ -297,8 +303,16 @@
       "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
     },
     "seasonData.coin": {
-      "description": "Moneda de la temporada.",
-      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+      "description": "Moneda de la temporada; control independiente de monedas y recursos.",
+      "known_value_semantics": ["Moneda de temporada, distinta de gemas, fichas de pesca, experiencia del pase y monedas de otros modos.", "La guía funcional del propietario confirma season_data:coin y su correspondencia con seasonData.coin."],
+      "limits": {"type": "int", "observed": "Entero en las muestras propias.", "functional": "No hay tope funcional confirmado; el editor aplica 0..2147483647 como límite estructural int32."},
+      "related_ids": ["battlePassSaveData.seasonData"],
+      "known_dependencies": ["No se sincroniza automáticamente con gemas, fichas de pesca ni con el pase de batalla."],
+      "sources": ["discord", "docs/research/phase5-5/metadata-880-inventory.json", "knowledge/sources/owner-guide-phase7-1.md", "propia"],
+      "evidence": {"semantics": "E2", "persistence": "H"},
+      "edit_policy": "experimental E2, edición aislada de seasonData.coin",
+      "constraints": ["No crear seasonData.coin si el campo no existe como entero.", "No confundir con gameData.gems, gameData.fishChip, itemData.cumulativeFishCount ni curExp."],
+      "open_questions": ["Confirmar en Android si la temporada activa aplica límites adicionales del cliente."]
     },
     "seasonData.cumulativeCoinCount": {
       "description": "Contador acumulado de moneda de temporada.",
@@ -361,6 +375,64 @@
     "statisticData.object2PassTime": {
       "description": "Tiempo de superación por objeto.",
       "evidence": {"semantics": "H", "relations": "H", "persistence": "H"}
+    },
+    "battlePassSaveData.seasonData": {
+      "description": "Lista de temporadas del pase de batalla; se edita únicamente un registro existente.",
+      "known_value_semantics": ["Cada entrada contiene Key y Value; Value incluye seasonID, curLevel, curExp, hasBuy, freeClaimedLevel y paidClaimedLevel.", "La interfaz selecciona por defecto el seasonID válido más alto y no crea temporadas."],
+      "limits": {"type": "lista [{Key, Value}]", "observed": "Lista vacía en la nube 8.8.0 sintética; tres pares en 8.6.0.", "functional": "No hay número máximo de temporadas confirmado."},
+      "related_ids": ["battlePassSaveData.seasonData._.Value.seasonID", "seasonData.coin"],
+      "known_dependencies": ["Las temporadas históricas se conservan; solo se modifica el registro seleccionado."],
+      "sources": ["propia", "discord", "knowledge/sources/owner-guide-phase7-1.md"],
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"},
+      "edit_policy": "experimental E2, edición de un registro existente; no crea temporadas",
+      "constraints": ["Nunca crear temporadas ni codificar un seasonID permanente.", "Conservar todas las demás entradas de seasonData.", "Preservar freeClaimedLevel y paidClaimedLevel en las modificaciones ordinarias."],
+      "open_questions": ["Confirmar la regla del cliente para la temporada activa en 8.8.0."]
+    },
+    "battlePassSaveData.seasonData._.Value.curLevel": {
+      "description": "Nivel actual del pase seleccionado.",
+      "sources": ["propia", "discord", "knowledge/sources/owner-guide-phase7-1.md"],
+      "evidence": {"semantics": "E2", "persistence": "H"},
+      "edit_policy": "experimental E2, edición de curLevel con nivel >= recompensas reclamadas",
+      "known_dependencies": ["curLevel >= max(freeClaimedLevel, paidClaimedLevel) antes de editar."],
+      "limits": {"type": "entero", "observed": "Niveles enteros en 8.6.0.", "functional": "No hay nivel máximo confirmado; no se ofrece un botón de máximo sin campo respaldado."},
+      "constraints": ["No reducir el nivel por debajo de las recompensas ya reclamadas.", "No inventar un nivel máximo."]
+    },
+    "battlePassSaveData.seasonData._.Value.curExp": {
+      "description": "Experiencia actual del pase seleccionado.",
+      "sources": ["propia", "discord", "knowledge/sources/owner-guide-phase7-1.md"],
+      "evidence": {"semantics": "E2", "persistence": "H"},
+      "edit_policy": "experimental E2, edición de curExp entero no negativo",
+      "limits": {"type": "entero", "observed": "Experiencia entera en 8.6.0.", "functional": "Relación nivel-experiencia no documentada."},
+      "constraints": ["Solo enteros no negativos.", "No se conoce una relación pública entre curExp y curLevel."]
+    },
+    "battlePassSaveData.seasonData._.Value.hasBuy": {
+      "description": "Estado local de adquisición premium del pase seleccionado.",
+      "sources": ["propia", "discord", "knowledge/sources/owner-guide-phase7-1.md"],
+      "evidence": {"semantics": "E2", "persistence": "H"},
+      "edit_policy": "experimental E2, solo estado local hasBuy; no compra ni derecho de servidor",
+      "known_dependencies": ["hasBuy no puede desactivarse mientras paidClaimedLevel sea mayor que cero."],
+      "constraints": ["No modifica recibos, facturación ni derechos del servidor.", "No repetir recompensas reclamadas."]
+    },
+    "battlePassSaveData.seasonData._.Value.freeClaimedLevel": {
+      "description": "Progreso de recompensas gratuitas reclamadas.",
+      "sources": ["propia", "discord", "knowledge/sources/owner-guide-phase7-1.md"],
+      "evidence": {"semantics": "E2", "persistence": "H"},
+      "edit_policy": "protegido, solo lectura; preservar",
+      "constraints": ["No modificar en las ediciones ordinarias de la fase 7.1."]
+    },
+    "battlePassSaveData.seasonData._.Value.paidClaimedLevel": {
+      "description": "Progreso de recompensas premium reclamadas.",
+      "sources": ["propia", "discord", "knowledge/sources/owner-guide-phase7-1.md"],
+      "evidence": {"semantics": "E2", "persistence": "H"},
+      "edit_policy": "protegido, solo lectura; preservar",
+      "constraints": ["No modificar en las ediciones ordinarias de la fase 7.1."]
+    },
+    "battlePassSaveData.seasonData._.Value.seasonID": {
+      "description": "Identificador de la temporada del pase.",
+      "sources": ["propia", "discord", "knowledge/sources/owner-guide-phase7-1.md"],
+      "evidence": {"semantics": "E2", "persistence": "H"},
+      "edit_policy": "solo lectura; identifica el registro seleccionado",
+      "constraints": ["No crear temporadas ni reutilizar un identificador inventado."]
     }
   }
 }

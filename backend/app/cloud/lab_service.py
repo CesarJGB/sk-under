@@ -18,6 +18,18 @@ from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError, CopyLimitError
 from ..save_report import read_save_report
 from .backup_store import BackupRecord, BackupStoreError, LabBackupStore
 from .blob_upload import UploadResult
+from .advanced_editor import (
+    ADVANCED_RECORD_FIELD,
+    BATTLE_PASS_PATH,
+    MATERIALS_PATH,
+    REBORN_PATH,
+    SEASON_COIN_PATH,
+    SEEDS_PATH,
+    AdvancedEdit,
+    prepare_advanced_edit,
+    read_advanced_source,
+    require_advanced_write_compatibility,
+)
 from .character_editor import (
     CHARACTER_PATH,
     CHARACTER_RECORD_FIELD,
@@ -156,6 +168,7 @@ class LoadedSave:
     fish_chip: int | None = None
     material_fish: int | None = None
     cumulative_fish_count: int | None = None
+    advanced: dict[str, object] = field(default_factory=dict)
 
     def summary(self) -> dict[str, object]:
         return {
@@ -179,6 +192,7 @@ class LoadedSave:
             "sha256": self.sha256,
             "serialzed_version": self.serialzed_version,
             "report": self.report,
+            "advanced": self.advanced,
         }
 
 
@@ -351,6 +365,66 @@ class PreparedFishProgressEdit:
                     "Campo modificado: " + ", ".join(self.edit.changed_fields) + "."
                     if self.edit.changed
                     else "El valor solicitado ya está en la partida; no hay cambios que subir."
+                ),
+            },
+        }
+
+
+@dataclass(frozen=True)
+class PreparedAdvancedEdit:
+    """Resultado experimental del editor avanzado por lotes."""
+
+    backup: BackupRecord
+    edit: AdvancedEdit
+    remote_source: str
+
+    @property
+    def changed(self) -> bool:
+        return self.edit.changed
+
+    @property
+    def candidate_sha256(self) -> str:
+        return self.edit.candidate_sha256
+
+    def summary(self) -> dict[str, object]:
+        prefixes = (MATERIALS_PATH + ".", SEEDS_PATH + ".", BATTLE_PASS_PATH + ".")
+        only_advanced = self.edit.changed and all(
+            path == SEASON_COIN_PATH
+            or path == REBORN_PATH
+            or path.startswith(prefixes)
+            for path in self.edit.changed_fields
+        )
+        return {
+            "field": ADVANCED_RECORD_FIELD,
+            "remote": {
+                "source": self.remote_source,
+                "size": self.edit.original_size,
+                "sha256": self.edit.original_sha256,
+            },
+            "backup": self.backup.summary(),
+            "changes": [change.summary() for change in self.edit.changes],
+            "plan": self.edit.plan,
+            "original_value": 0,
+            "new_value": len(self.edit.changes),
+            "changed": self.edit.changed,
+            "candidate_size": self.edit.candidate_size,
+            "candidate_sha256": self.edit.candidate_sha256,
+            "byte_diff": self.edit.binary.as_dict(),
+            "changed_fields": list(self.edit.changed_fields),
+            "experimental": True,
+            "validation": {
+                "valid": True,
+                "structure_valid": True,
+                "only_advanced_changed": only_advanced,
+                "experimental": True,
+                "evidence_level": "E2",
+                "message": (
+                    "Campos modificados: " + ", ".join(self.edit.changed_fields) + ". "
+                    "No se modifican gemas, fichas de pesca, recompensas reclamadas ni recibos. "
+                    "La referencia del propietario es funcional, pero la persistencia en el cliente "
+                    "todavía requiere prueba en Android físico."
+                    if self.edit.changed
+                    else "Los valores solicitados ya están en la partida; no hay cambios que subir."
                 ),
             },
         }
@@ -680,12 +754,17 @@ class CloudLabService:
             cumulative_fish_count = read_fish_progress(save.payload).cumulative_fish_count
         except CloudSaveError:
             cumulative_fish_count = None
+        try:
+            advanced = read_advanced_source(save.payload)
+        except CloudSaveError as exc:
+            advanced = {"available": False, "error": str(exc)}
         return LoadedSave(
             metadata=save.metadata,
             gems=snapshot.gems,
             fish_chip=fish_chip,
             material_fish=material_fish,
             cumulative_fish_count=cumulative_fish_count,
+            advanced=advanced,
             size=snapshot.size,
             sha256=snapshot.sha256,
             serialzed_version=snapshot.serialzed_version,
@@ -711,6 +790,11 @@ class CloudLabService:
             return SKILL_PATH
         if field == SKIN_RECORD_FIELD:
             return SKIN_PATH
+        if field == ADVANCED_RECORD_FIELD:
+            return (
+                "itemData.materials, itemData.seeds, seasonData.coin, "
+                "gameData.rebornCard, battlePassSaveData.seasonData"
+            )
         return "gameData.gems"
 
     @staticmethod
@@ -725,6 +809,11 @@ class CloudLabService:
             return "las habilidades"
         if field == SKIN_RECORD_FIELD:
             return "las skins"
+        if field == ADVANCED_RECORD_FIELD:
+            return (
+                "los materiales, las semillas, las monedas de temporada, "
+                "la tarjeta de renacimiento y el pase de batalla"
+            )
         return "las gemas"
 
     @staticmethod
@@ -738,6 +827,12 @@ class CloudLabService:
             return (
                 f"La descarga posterior coincide con el agregado subido de {label}. "
                 "La barra de recompensas aún no se ha comprobado en Android."
+            )
+        if field == ADVANCED_RECORD_FIELD:
+            return (
+                f"La descarga posterior coincide con el agregado subido de {label}. "
+                "Esto confirma la persistencia del guardado, no el efecto dentro del cliente ni "
+                "la proyección de PlayerPrefs; falta la prueba del propietario en Android."
             )
         if field == CHARACTER_RECORD_FIELD:
             return (
@@ -804,6 +899,8 @@ class CloudLabService:
             except CloudSaveError:
                 skins = None
             value = skins
+        elif field == ADVANCED_RECORD_FIELD:
+            value = None
         else:
             value = gems
         return gems, value, material, characters, skills, skins
@@ -1047,6 +1144,42 @@ class CloudLabService:
         )
         return PreparedSkinEdit(bundle.record, edit, save.metadata.source)
 
+    def prepare_advanced(
+        self, plan: object, *, expected_source: str | None = None
+    ) -> PreparedAdvancedEdit:
+        """Prepara un lote atómico de campos avanzados autorizados."""
+        if not isinstance(plan, dict):
+            raise LabServiceError("El plan avanzado debe ser un objeto JSON.")
+        save = self.provider.download(self.max_input_bytes)
+        if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
+            raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
+        edit = prepare_advanced_edit(save.payload, plan)
+        if edit.original_sha256 != save.metadata.sha256:
+            raise LabServiceError("El original preparado no coincide con la descarga.")
+        bundle = self.store.save(
+            edit,
+            remote_source=save.metadata.source,
+            remote_size=save.metadata.size,
+            remote_sha256=save.metadata.sha256,
+            field=ADVANCED_RECORD_FIELD,
+            original_value=0,
+            new_value=len(edit.changes),
+            advanced_plan=edit.plan,
+        )
+        self.store.append_event(
+            bundle.record.id,
+            {
+                "action": "prepare",
+                "field": ADVANCED_RECORD_FIELD,
+                "experimental": True,
+                "changed": edit.changed,
+                "changed_fields": list(edit.changed_fields),
+                "candidate_sha256": edit.candidate_sha256,
+                "remote_source": save.metadata.source,
+            },
+        )
+        return PreparedAdvancedEdit(bundle.record, edit, save.metadata.source)
+
     def confirm(self, backup_id: str, expected_sha256: str, *, single_attempt: bool = False) -> WriteResult:
         if not self.write_enabled or self.uploader is None:
             raise LabWriteDisabled("La escritura remota está deshabilitada en el servidor.")
@@ -1090,6 +1223,10 @@ class CloudLabService:
                         for code, index in bundle.record.skin_selections
                     ],
                     bundle.candidate,
+                )
+            elif bundle.record.field == ADVANCED_RECORD_FIELD:
+                require_advanced_write_compatibility(
+                    bundle.original, bundle.record.advanced_plan, bundle.candidate
                 )
             else:
                 require_gems_write_compatibility(bundle.original, bundle.record.candidate_gems, bundle.candidate)

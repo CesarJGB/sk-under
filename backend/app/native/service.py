@@ -21,6 +21,7 @@ from time import time
 from typing import Callable
 from urllib.parse import urlsplit
 
+from ..cloud.advanced_editor import read_advanced_source
 from ..cloud.backup_store import LabBackupStore
 from ..cloud.fish_chip_editor import MAX_FISH_CHIP, MIN_FISH_CHIP, read_fish_chip
 from ..cloud.fish_progress_editor import read_fish_progress
@@ -427,6 +428,18 @@ class NativeAuthService:
             ).summary(),
         )
 
+    def prepare_advanced(
+        self, session: NativeSessionRecord, plan: dict[str, object], source_sha256: str
+    ) -> dict[str, object]:
+        """Prepara un lote atómico de materiales, semillas, moneda de temporada,
+        tarjeta de renacimiento y pase de batalla local."""
+        return self._operate(
+            session,
+            lambda: self._lab(session).prepare_advanced(
+                plan, expected_source=source_sha256
+            ).summary(),
+        )
+
     def prepare_characters(
         self, session: NativeSessionRecord, codes: list[str], source_sha256: str
     ) -> dict[str, object]:
@@ -826,6 +839,10 @@ class NativeAuthService:
             cumulative_fish_count = read_fish_progress(save.payload).cumulative_fish_count
         except CloudSaveError:
             cumulative_fish_count = None
+        try:
+            advanced = read_advanced_source(save.payload)
+        except CloudSaveError as exc:
+            advanced = {"available": False, "error": str(exc)}
         return {
             "verified": True,
             "bytes": save.metadata.size,
@@ -842,6 +859,7 @@ class NativeAuthService:
             "skill_write_policy": "confirmed_by_owner",
             "skin_write_policy": "confirmed_by_owner",
             "sections": None,
+            "advanced": advanced,
             "remote_source": save.metadata.source,
         }
 
@@ -978,6 +996,10 @@ class NativeAuthService:
             cumulative_fish_count = read_fish_progress(save.payload).cumulative_fish_count
         except CloudSaveError:
             cumulative_fish_count = None
+        try:
+            advanced = read_advanced_source(save.payload)
+        except CloudSaveError as exc:
+            advanced = {"available": False, "error": str(exc)}
         self._event("save_verify", "ok", subject=subject)
         return {
             "verified": True,
@@ -995,6 +1017,7 @@ class NativeAuthService:
             "skill_write_policy": "confirmed_by_owner",
             "skin_write_policy": "confirmed_by_owner",
             "sections": None,
+            "advanced": advanced,
             "remote_source": save.metadata.source,
         }
 

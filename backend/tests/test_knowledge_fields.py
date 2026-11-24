@@ -39,7 +39,7 @@ def test_legacy_projection_is_byte_identical_to_the_frozen_registry():
 
 def test_every_field_source_is_traceable_or_declared():
     document = common.read_json(common.FIELDS_DIR / "fields.json")
-    known_prefixes = {"docs/", "backend/", "propia", "discord", "skdfe"}
+    known_prefixes = {"docs/", "backend/", "knowledge/", "propia", "discord", "skdfe"}
     for field in document["fields"]:
         assert field["sources"], field["id"]
         for source in field["sources"]:
@@ -47,7 +47,7 @@ def test_every_field_source_is_traceable_or_declared():
                 field["id"],
                 source,
             )
-            if source.startswith(("docs/", "backend/")):
+            if source.startswith(("docs/", "backend/", "knowledge/")):
                 assert (ROOT / source).exists(), (field["id"], source)
 
 

@@ -21,18 +21,18 @@
       "E3": 5,
       "E4": 6
     },
-    "dependencies": 26,
-    "sources": 15,
+    "dependencies": 32,
+    "sources": 16,
     "translations": 8526,
     "versions_analyzed": 3,
-    "open_questions": 565
+    "open_questions": 568
   },
   "artifacts": [
     {
       "path": "knowledge/README.md",
       "kind": "knowledge",
-      "sha256": "7fc2ac30996a2b2c18dc9f3e650afedf28e242f9c8937dabc225f30d001e48ee",
-      "bytes": 8770,
+      "sha256": "50f9225307cffa49a9ad812c7d2eda79fc01029c7f9d4cd132559cff6a3d3de4",
+      "bytes": 8914,
       "count": null
     },
     {
@@ -206,9 +206,9 @@
     {
       "path": "knowledge/dependencies/dependencies.json",
       "kind": "dependencies",
-      "sha256": "52550812e4d7c63ecc715fe516af561fb7182d27371a647156981d894acb9fa2",
-      "bytes": 21664,
-      "count": 26
+      "sha256": "66931bb2c0de5df66eb20b3b2aecc5cdead77a8d5490986d8bcdc19cf104efa6",
+      "bytes": 27538,
+      "count": 32
     },
     {
       "path": "knowledge/evidence/data-json-structure.json",
@@ -241,21 +241,21 @@
     {
       "path": "knowledge/fields/fields.json",
       "kind": "fields",
-      "sha256": "c1e2eebde3091bf5ee7a933e8d89b5a8938e41cf5cb88664f4a6810a7652ab7a",
-      "bytes": 1199593,
+      "sha256": "250be364193d87fc5ea47c67297bc751f572cffdfc8296767045a89e2bfb80ec",
+      "bytes": 1206012,
       "count": 616
     },
     {
       "path": "knowledge/fields/overrides.json",
       "kind": "fields",
-      "sha256": "4ded10a68ffb8e0942a971219fe78e482c07c516b7adbec286bd043bdee89405",
-      "bytes": 18994,
+      "sha256": "6aed54607c80eecc1fb7faeff95db95759a01073c2fc2293e94aeef1eca6854f",
+      "bytes": 28032,
       "count": null
     },
     {
       "path": "knowledge/reports/coverage.md",
       "kind": "reports",
-      "sha256": "052de0920bb5708ac76ebe1965d041eb8a00f1f697407cbbc6aca71eb842b3a7",
+      "sha256": "6988c26df189d5ba24de07579563819439aeee64f1e3385936ed9146193201a7",
       "bytes": 2314,
       "count": null
     },
@@ -290,8 +290,8 @@
     {
       "path": "knowledge/schemas/sources.schema.json",
       "kind": "schemas",
-      "sha256": "993264f78f82ccc501181eaec2257e121191c514bfa3fccd8d8bc6fdb77c3eff",
-      "bytes": 1504,
+      "sha256": "5faa81e405ec70fae1735c121ed32b562fb2386c01aecb074f30208f4389d314",
+      "bytes": 1523,
       "count": null
     },
     {
@@ -306,6 +306,13 @@
       "kind": "sources",
       "sha256": "713a7673a93b64151a67b2717eba5778c73313546473096b3702a22395cd2166",
       "bytes": 4761,
+      "count": null
+    },
+    {
+      "path": "knowledge/sources/owner-guide-phase7-1.md",
+      "kind": "sources",
+      "sha256": "4fb8fb212dce0ce101b0125abd30ae2b1e4aa10b4f17c306906ee08a09a5e4c8",
+      "bytes": 2414,
       "count": null
     },
     {
@@ -325,15 +332,22 @@
     {
       "path": "knowledge/sources/sources.json",
       "kind": "sources",
-      "sha256": "ca2a7cfd7bf98d021434ce13111982b9b553db1b2f3b9aa6e0f450ca088faf9a",
-      "bytes": 10101,
-      "count": 15
+      "sha256": "41491bd25c602d4ad3da60a81118e202ad10683c5c23c3facd13ee597e9ad215",
+      "bytes": 11073,
+      "count": 16
     },
     {
       "path": "knowledge/tools/README.md",
       "kind": "tools",
       "sha256": "3a1aa145a54a7fcf194932ee6ddbb7b9f1f5f80b2fe961747083297e28893159",
       "bytes": 3086,
+      "count": null
+    },
+    {
+      "path": "knowledge/tools/build_backend_items.py",
+      "kind": "tools",
+      "sha256": "d4ae0928300228ee299489f9ff0736c8aeed2424b51cf75756d5c815368568ca",
+      "bytes": 4583,
       "count": null
     },
     {

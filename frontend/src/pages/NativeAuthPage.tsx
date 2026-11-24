@@ -10,6 +10,7 @@ import {
 } from '../api'
 import { formatSize } from '../session'
 import { Loading, Notice, PageTitle, Problem } from '../ui'
+import { AdvancedEditorSection } from './AdvancedEditorSection'
 import { CharacterUnlockSection } from './CharacterUnlockSection'
 import { HomePage } from './HomePage'
 import { SkillUnlockSection } from './SkillUnlockSection'
@@ -463,6 +464,16 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     setFishProgressResult(null)
   }
 
+  function prepareFishProgress(value: number) {
+    if (!save || !Number.isSafeInteger(value) || value < fishLimits.min || value > fishLimits.max) return
+    setFishProgressAction('prepare')
+    run(async (signal) => {
+      clearFishProgressPreview()
+      setFishProgressCandidate(await nativeAuth.prepareFishProgress(value, save.sha256, signal))
+      void historyOperation.run(refreshHistory)
+    })
+  }
+
   const downloading = action === 'download' && operation.pending
   const downloadProblem = action === 'download' ? operation.problem : null
   const initialProblem = !save && !downloadProblem && !syncResult && !downloading ? session.save_error : null
@@ -893,15 +904,7 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
         El progreso acumulado no está disponible.
       </p> : <form className="cloud-form" onSubmit={(event) => {
         event.preventDefault()
-        if (!fishProgressValid) return
-        setFishProgressAction('prepare')
-        run(async (signal) => {
-          clearFishProgressPreview()
-          setFishProgressCandidate(
-            await nativeAuth.prepareFishProgress(fishProgressAmount, save.sha256, signal),
-          )
-          void historyOperation.run(refreshHistory)
-        })
+        prepareFishProgress(fishProgressAmount)
       }}>
         <label className="cloud-field"><span>Nuevo progreso acumulado</span>
           <input inputMode="numeric" value={newFishProgress} disabled={disabled}
@@ -919,6 +922,22 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
           Preparar cambio de progreso
         </button>
       </form>}
+      {originalFishProgress != null && originalFishProgress <= 20 && !fishProgressCandidate
+        && !fishProgressResult && <div className="fish-reward-quick">
+          <button type="button" className="button quiet" disabled={disabled}
+            onClick={() => {
+              const target = Math.max(originalFishProgress, 21)
+              setNewFishProgress(String(target))
+              prepareFishProgress(target)
+            }}>Desbloquear todas las recompensas acumuladas</button>
+          <p className="cloud-note">
+            Ajusta el progreso acumulado a 21 (superior a 20). No cambia el saldo de fichas,
+            el material ni las recompensas ya reclamadas; la reclamación se hace después en el cliente.
+          </p>
+        </div>}
+      {originalFishProgress != null && originalFishProgress > 20 && !fishProgressResult && <p className="cloud-note">
+        El progreso acumulado ya supera 20. El control rápido no reduce el valor existente.
+      </p>}
       {fishProgressCandidate && <div className="cloud-preview">
         <h3>Revisar progreso acumulado</h3>
         <dl className="cloud-preview-data">
@@ -974,6 +993,20 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     </div>
   </section>
   </div>
+  {save.advanced && save.advanced.available !== false ? <AdvancedEditorSection
+    key={`advanced-${save.sha256}`}
+    saveSha={save.sha256}
+    advanced={save.advanced}
+    writeReady={Boolean(session.write_ready)}
+    disabled={disabled}
+    accountLabel={accountLabel}
+    formatProblem={friendly}
+    onExpired={onExpired}
+    onPrepared={() => void historyOperation.run(refreshHistory)}
+  /> : save.advanced ? <section className="cloud-section panel cloud-empty">
+    <h2>Editor avanzado no disponible</h2>
+    <p>{save.advanced.error ?? 'La partida no contiene las estructuras necesarias.'}</p>
+  </section> : null}
   {!reportCharacters ? <section className="cloud-section panel cloud-empty">
     <h2>Informe no disponible</h2>
     <p>Descarga la partida de nuevo para editar desbloqueos.</p>
@@ -1021,6 +1054,7 @@ function backupFieldLabel(backup: LabBackup) {
   if (backup.field === 'characters') return 'personajes disponibles'
   if (backup.field === 'skills') return 'habilidades'
   if (backup.field === 'skins') return 'skins'
+  if (backup.field === 'advanced') return 'materiales, recursos, beneficios y pase'
   return 'gemas'
 }
 
