@@ -167,6 +167,11 @@ export function CloudAccountsPage() {
       </>}
 
       <details className="account-details">
+        <summary>Acceso nativo (Fase 6.8)</summary>
+        <Link className="button lab-quiet" to="/partida">Ir al acceso con correo y contraseña</Link>
+      </details>
+
+      <details className="account-details">
         <summary>Administración</summary>
         <Link className="button lab-quiet" to="/partida/laboratorio">Abrir laboratorio administrativo</Link>
       </details>

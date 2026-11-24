@@ -1,0 +1,103 @@
+{
+  "phase": "6.8",
+  "branch": "feature/phase6-8-web-native-auth",
+  "base_commit": "25219a2",
+  "generated_at_utc": "2026-11-24T00:41:39Z",
+  "status": "implemented_and_simulated; real_login_and_real_multiaccount_validation_pending_owner",
+  "environment": {
+    "client": "Linux",
+    "python": "3.12",
+    "emulator_active": false,
+    "real_provider_requests": 0,
+    "coolify_deployment_attempted": false,
+    "credentials_available": false
+  },
+  "integrated_components": [
+    "backend/app/native/client.py",
+    "backend/app/native/distributions.py",
+    "backend/app/native/store.py",
+    "backend/app/native/service.py",
+    "backend/app/native/provision.py",
+    "backend/app/api/native.py",
+    "backend/app/settings.py",
+    "backend/app/main.py",
+    "frontend/src/pages/NativeAuthPage.tsx",
+    "frontend/src/api.ts"
+  ],
+  "distributions": {
+    "enabled": ["android-global"],
+    "disabled": [
+      "android-vietnam",
+      "ios-global",
+      "ios-vietnam",
+      "ios-china",
+      "taptap"
+    ]
+  },
+  "tests": {
+    "backend_passed": 380,
+    "backend_skipped_private_samples": 16,
+    "native_backend_new": {
+      "client": 11,
+      "store": 7,
+      "api": 19,
+      "provision": 3,
+      "total": 40
+    },
+    "frontend_typescript_build": "ok",
+    "playwright_passed": 22,
+    "playwright_native": 8,
+    "network_used": false
+  },
+  "real_runs": [],
+  "not_executed": [
+    {
+      "check": "Login nativo real con la cuenta de laboratorio",
+      "reason": "No hay credenciales ni un perfil de instalación aprovisionado en el entorno de esta sesión. No se solicitó ni se almacenó la contraseña.",
+      "last_real_evidence": "docs/research/phase6-7/evidence.json"
+    },
+    {
+      "check": "Validación multicuenta real",
+      "reason": "Requiere que el propietario despliegue el servicio y ejecute dos cuentas propias; no se marcó como completada.",
+      "guide": "docs/research/phase6-8/manual-testing.md"
+    },
+    {
+      "check": "Despliegue y health check en Coolify",
+      "reason": "No se dispone de credenciales de Coolify en esta sesión; el runbook queda preparado.",
+      "guide": "docs/research/phase6-8/deployment.md"
+    }
+  ],
+  "security": {
+    "password_stored": false,
+    "provider_token_exposed_to_browser": false,
+    "provider_token_encrypted_at_rest": "AES-SIV",
+    "installation_ids_encrypted_at_rest": "AES-SIV",
+    "cookie": "__Host-sk_native (Secure, HttpOnly, SameSite=Strict, Path=/)",
+    "session_id_stored": "SHA-256 of cookie",
+    "cors": "exact origin, credentials, explicit methods and headers",
+    "csrf": "exact Origin + SameSite=Strict + JSON; no separate token",
+    "rate_limit": "per IP hash and email hash, failures only, configurable window",
+    "retries": "none on 429, provider rejection or challenge",
+    "write_default": false,
+    "double_switch_write": true,
+    "cross_account_backups": "subject-scoped directories; 404 for foreign backup",
+    "session_expiry": "idle 1800s and absolute min(provider expire, 7 days)"
+  },
+  "identifiers": {
+    "document": "docs/research/phase6-8/identifiers.md",
+    "phase6_7_distro_id_sha256": "cccff053a36de2934a015bb62fd93e213552a5ecb21ace5eb5da0d0a39af7d77",
+    "phase6_7_unique_id_sha256": "49f9776c930c27d0658e36530a5dcf1f91170ee0bafcc64faf98abaa71f53ed0",
+    "conclusions": [
+      "x-distro-id es un identificador de contexto validado, no una credencial suficiente ni un identificador de cuenta",
+      "_crde_misc no pertenece al formato documentado y no se usa para identidad",
+      "ChillyUid es local y no se ha demostrado equivalente a x-unique-id",
+      "cloudSaveId/platformId se usan solo como subject HMAC de guardado"
+    ]
+  },
+  "levels": {
+    "minimum": "achieved",
+    "main": "achieved_with_simulated_provider; real pending",
+    "advanced": "prepared; not deployed",
+    "complete": "pending_owner_manual_multiaccount"
+  }
+}

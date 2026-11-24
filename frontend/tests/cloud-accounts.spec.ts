@@ -18,7 +18,7 @@ test('informa el bloqueo de ChillyRoom, conserva Android Global y protege el for
     json: { ...status, configured: false, message: 'Configura el origen seguro para las cuentas.', accounts: [] },
   }))
   await page.setViewportSize({ width: 320, height: 730 })
-  await page.goto('/partida')
+  await page.goto('/partida/vinculadas')
   await expect(page.getByText(status.login_message)).toBeVisible()
   await expect(page.getByText('Configura el origen seguro para las cuentas.')).toBeVisible()
   await expect(page.getByLabel('Plataforma')).toHaveValue('android-global')
@@ -38,7 +38,7 @@ test('impide enviar el formulario cuando el editor se sirve por HTTP', async ({ 
     requests += 1
     await route.abort()
   })
-  await page.goto('/partida')
+  await page.goto('/partida/vinculadas')
   await page.getByLabel('Correo electrónico de ChillyRoom').fill('fixture@example.test')
   await page.getByLabel('Contraseña').fill('fixture-password')
   await page.getByRole('button', { name: 'Iniciar sesión' }).click()
@@ -73,7 +73,7 @@ test('vincula, confirma con cookie y reinicia la vista al cambiar de cuenta', as
   })
 
   await page.setViewportSize({ width: 390, height: 844 })
-  await page.goto('/partida#vincular=synthetic-browser-fixture')
+  await page.goto('/partida/vinculadas#vincular=synthetic-browser-fixture')
   await page.getByRole('button', { name: 'Vincular cuenta del enlace' }).click()
   expect(new URL(page.url()).hash).toBe('')
   await page.getByRole('button', { name: 'Descargar partida' }).click()
@@ -109,7 +109,7 @@ test('cierra la sesión y elimina la partida cargada de la vista', async ({ page
     await route.fulfill({ status: 204 })
   })
 
-  await page.goto('/partida')
+  await page.goto('/partida/vinculadas')
   await page.getByRole('button', { name: 'Descargar partida' }).click()
   await expect(page.getByTestId('cloud-current-gems')).toHaveText('1,001')
   page.once('dialog', (dialog) => dialog.accept())

@@ -300,6 +300,118 @@ export const cloudAccounts = {
   },
 }
 
+export type NativeDistribution = {
+  id: string
+  label: string
+  platform: 'android' | 'ios' | null
+  game_version: string
+  enabled: boolean
+  validated: boolean
+  note: string
+}
+
+export type NativeProfile = {
+  id: string
+  label: string
+  distribution: string
+  installation_ready: boolean
+  bound: boolean
+  write_allowed: boolean
+}
+
+export type NativeSaveSummary = {
+  verified: true
+  bytes: number
+  sha256: string
+  gems: number
+  sections: number | null
+  remote_source: string
+}
+
+export type NativeSession = {
+  active: boolean
+  reason?: 'none' | 'expired' | 'disabled' | 'unavailable'
+  message?: string | null
+  identity_verified?: boolean
+  account?: {
+    label: string
+    distribution: string
+    distribution_label: string
+    platform: string | null
+  }
+  session_expires_at?: string
+  idle_expires_at?: string
+  installation_ready?: boolean
+  write_enabled?: boolean
+  write_ready?: boolean
+  min_gems?: number
+  max_gems?: number
+  save?: NativeSaveSummary | null
+  save_error?: string | null
+}
+
+export type NativeConfig = {
+  available: boolean
+  enabled: boolean
+  configured: boolean
+  native_auth_ready?: boolean
+  write_enabled: boolean
+  secure: boolean
+  min_gems: number
+  max_gems: number
+  login_available: boolean
+  profiles: NativeProfile[]
+  distributions: NativeDistribution[]
+  session: NativeSession
+  problem_code?: string | null
+  message?: string | null
+}
+
+export type NativeLoginInput = {
+  distribution: string
+  email: string
+  password: string
+  profile_id?: string
+}
+
+function requireSecureLogin() {
+  const host = window.location.hostname
+  if (host === 'localhost' || host === '127.0.0.1' || host === '::1') return
+  if (window.location.protocol !== 'https:' || !baseUrl.toLowerCase().startsWith('https://')) {
+    throw new ApiProblem('El inicio de sesión requiere HTTPS en el editor y en la API.', [], 'native_https_required')
+  }
+}
+
+async function nativeRequest<T>(path: string, signal: AbortSignal, payload?: object): Promise<T> {
+  return (await request(`/cloud/native${path}`, signal, payload, '', '', 'include')).json()
+}
+
+export const nativeAuth = {
+  config: (signal: AbortSignal) => nativeRequest<NativeConfig>('/config', signal),
+  session: (signal: AbortSignal) => nativeRequest<NativeSession>('/session', signal),
+  login(input: NativeLoginInput, signal: AbortSignal) {
+    requireSecureLogin()
+    return nativeRequest<NativeSession>('/login', signal, input)
+  },
+  async logout(signal: AbortSignal): Promise<void> {
+    await request('/cloud/native/logout', signal, {}, '', '', 'include')
+  },
+  save: (signal: AbortSignal) => nativeRequest<NativeSaveSummary & { downloaded_at: string }>('/save', signal),
+  installation: (unique_id: string, signal: AbortSignal) =>
+    nativeRequest<NativeSession>('/installation', signal, { unique_id }),
+  prepare: (new_gems: number, source_sha256: string, signal: AbortSignal) =>
+    nativeRequest<LabPrepared>('/prepare', signal, { new_gems, source_sha256 }),
+  confirm: (backup_id: string, expected_sha256: string, signal: AbortSignal) =>
+    nativeRequest<LabWriteResult>('/confirm', signal, { backup_id, expected_sha256, confirmation: 'SUBIR' }),
+  restore: (backup_id: string, signal: AbortSignal) =>
+    nativeRequest<LabWriteResult>('/restore', signal, { backup_id, confirmation: 'RESTAURAR' }),
+  verify: (backup_id: string, signal: AbortSignal) =>
+    nativeRequest<LabVerification>('/verify', signal, { backup_id }),
+  backups: (signal: AbortSignal) =>
+    nativeRequest<{ backups: Array<LabBackup & { confirmed: boolean }> }>('/backups', signal),
+  diagnostics: (signal: AbortSignal) => nativeRequest<Record<string, unknown>>('/diagnostics', signal),
+}
+
 export async function encodeFile(file: File): Promise<string> {
   const bytes = new Uint8Array(await file.arrayBuffer())
   const chunks: string[] = []

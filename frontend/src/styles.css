@@ -433,7 +433,7 @@ h3 { font-weight: 650; letter-spacing: -.02em; }
 .lab-metric strong { color: var(--lime); font-size: clamp(2.2rem, 6vw, 3.2rem); line-height: 1; letter-spacing: -.06em; }
 
 .lab-field { display: grid; gap: .38rem; margin-top: .8rem; }
-.lab-field > span { color: #d4e6da; font-size: .9rem; font-weight: 600; }
+.lab-field > span, .lab-field > label { color: #d4e6da; font-size: .9rem; font-weight: 600; }
 .lab-field small { color: #a8c2b4; font-size: .8rem; line-height: 1.4; }
 .lab-field small.invalid { color: #ffc3b8; }
 .lab-input {
@@ -551,4 +551,12 @@ h3 { font-weight: 650; letter-spacing: -.02em; }
 @media (max-width: 520px) {
   .account-shell .button { width: 100%; }
   .account-shell .lab-save { grid-template-columns: 1fr; }
+}
+
+/* Acceso nativo · Fase 6.8 */
+.password-control { display: flex; align-items: stretch; gap: .45rem; }
+.password-control .lab-input { flex: 1; min-width: 0; }
+.password-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 46px; min-height: 46px; padding: 0 .55rem; margin-top: 0;
 }

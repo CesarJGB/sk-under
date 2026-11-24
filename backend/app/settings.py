@@ -39,6 +39,22 @@ class Settings(BaseSettings):
         default_factory=lambda: Path.home() / ".local" / "share" / "sk-under" / "backups"
     )
 
+    # Autenticación nativa (Fase 6.8). Deshabilitada por defecto.
+    native_auth_enabled: bool = False
+    native_write_enabled: bool = False
+    native_store_key: SecretStr | None = None
+    native_store_dir: Path | None = None
+    native_backup_dir: Path | None = None
+    native_origin: str = ""
+    native_distro_id: SecretStr | None = None
+    native_unique_id: SecretStr | None = None
+    native_profile_label: str = "Instalación Android Global"
+    native_profile_allow_write: bool = False
+    native_idle_seconds: int = Field(default=1800, ge=60, le=86400)
+    native_absolute_seconds: int = Field(default=7 * 86400, ge=3600, le=30 * 86400)
+    native_login_attempts: int = Field(default=5, ge=1, le=50)
+    native_login_window_seconds: int = Field(default=900, ge=60, le=86400)
+
     @field_validator("save_general_key_hex", "save_statistics_key_hex", "save_iv_hex", mode="before")
     @classmethod
     def validate_save_hex(cls, value: object) -> SecretStr | None:
@@ -134,6 +150,73 @@ class Settings(BaseSettings):
             _ = parsed.port
         return values
 
+    @field_validator("native_store_key", mode="before")
+    @classmethod
+    def validate_native_store_key(cls, value: object) -> SecretStr | None:
+        secret = value.get_secret_value() if isinstance(value, SecretStr) else value
+        if secret is None or secret == "":
+            return None
+        if not isinstance(secret, str) or not re.fullmatch(r"[0-9a-fA-F]{64}", secret):
+            raise ValueError("SK_NATIVE_STORE_KEY requiere 32 bytes aleatorios en 64 dígitos hexadecimales.")
+        return SecretStr(secret)
+
+    @field_validator("native_distro_id", "native_unique_id", mode="before")
+    @classmethod
+    def validate_native_identifier(cls, value: object) -> SecretStr | None:
+        secret = value.get_secret_value() if isinstance(value, SecretStr) else value
+        if secret is None or secret == "":
+            return None
+        if (
+            not isinstance(secret, str)
+            or len(secret) > 512
+            or not all(33 <= ord(char) <= 126 for char in secret)
+        ):
+            raise ValueError("Los identificadores nativos deben ser texto ASCII visible sin espacios.")
+        return SecretStr(secret)
+
+    @field_validator("native_distro_id", mode="before")
+    @classmethod
+    def validate_native_distro(cls, value: object) -> SecretStr | None:
+        secret = value.get_secret_value() if isinstance(value, SecretStr) else value
+        if secret is None or secret == "":
+            return None
+        if not isinstance(secret, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,127}", secret):
+            raise ValueError("SK_NATIVE_DISTRO_ID no tiene el formato observado para una distribución.")
+        return SecretStr(secret)
+
+    @field_validator("native_store_dir", "native_backup_dir", mode="before")
+    @classmethod
+    def validate_native_dir(cls, value: object) -> Path | None:
+        if value is None or value == "":
+            return None
+        if not isinstance(value, (str, Path)):
+            raise ValueError("La ruta del almacén nativo debe ser un directorio.")
+        path = Path(value).expanduser()
+        if not path.is_absolute():
+            raise ValueError("La ruta del almacén nativo debe ser absoluta.")
+        return path
+
+    @field_validator("native_origin")
+    @classmethod
+    def validate_native_origin(cls, value: str) -> str:
+        if value == "":
+            return value
+        return cls.validate_origins([value])[0]
+
+    @field_validator("native_profile_label")
+    @classmethod
+    def validate_native_label(cls, value: str) -> str:
+        value = value.strip()
+        if not 1 <= len(value) <= 80 or not value.isprintable():
+            raise ValueError("SK_NATIVE_PROFILE_LABEL debe tener entre 1 y 80 caracteres visibles.")
+        return value
+
+    @model_validator(mode="after")
+    def validate_native_config(self) -> "Settings":
+        if self.native_unique_id is not None and self.native_distro_id is None:
+            raise ValueError("SK_NATIVE_UNIQUE_ID requiere SK_NATIVE_DISTRO_ID.")
+        return self
+
     @property
     def access_mode(self) -> AccessMode:
         if self.access_token:
@@ -151,3 +234,15 @@ class Settings(BaseSettings):
     @property
     def cloud_write_ready(self) -> bool:
         return self.cloud_write_enabled and self.cloud_configured and self.cloud_admin_configured
+
+    @property
+    def native_store_path(self) -> Path:
+        return self.native_store_dir or Path.home() / ".local" / "share" / "sk-under" / "native"
+
+    @property
+    def native_backup_path(self) -> Path:
+        return self.native_backup_dir or Path.home() / ".local" / "share" / "sk-under" / "native-backups"
+
+    @property
+    def native_configured(self) -> bool:
+        return self.native_auth_enabled and self.native_store_key is not None

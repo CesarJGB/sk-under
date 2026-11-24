@@ -8,6 +8,7 @@ import { HomePage } from './pages/HomePage'
 import { ImportPage } from './pages/ImportPage'
 import { LabEditorPage } from './pages/LabEditorPage'
 import { CloudAccountsPage } from './pages/CloudAccountsPage'
+import { NativeAuthPage } from './pages/NativeAuthPage'
 import type { Draft, Session } from './session'
 import { PageTitle } from './ui'
 
@@ -114,7 +115,8 @@ export default function App() {
           <Route path="/importar" element={<ImportPage {...service} token={token} setToken={setToken}
             currentName={session?.name} onImport={importSession} />} />
           <Route path="/editor" element={<EditorPage session={session} draft={draft} update={updateDraft} />} />
-          <Route path="/partida" element={<CloudAccountsPage />} />
+          <Route path="/partida" element={<NativeAuthPage />} />
+          <Route path="/partida/vinculadas" element={<CloudAccountsPage />} />
           <Route path="/partida/laboratorio" element={<LabEditorPage token={token} setToken={setToken}
             adminToken={adminToken} setAdminToken={setAdminToken} health={service.health}
             loading={service.loading} />} />

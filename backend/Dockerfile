@@ -18,13 +18,17 @@ ENV PATH="/opt/venv/bin:$PATH" \
     SK_ENV=production \
     HOME=/home/sk-under \
     SK_CLOUD_BACKUP_DIR=/var/lib/sk-under/backups \
-    SK_CLOUD_ACCOUNTS_DIR=/var/lib/sk-under/accounts
+    SK_CLOUD_ACCOUNTS_DIR=/var/lib/sk-under/accounts \
+    SK_NATIVE_STORE_DIR=/var/lib/sk-under/native \
+    SK_NATIVE_BACKUP_DIR=/var/lib/sk-under/native-backups
 
 COPY --from=dependencies /opt/venv /opt/venv
 COPY app/ ./app/
 RUN mkdir -p "$HOME" /var/lib/sk-under/backups /var/lib/sk-under/accounts \
+    /var/lib/sk-under/native /var/lib/sk-under/native-backups \
     && chown -R 10001:10001 "$HOME" /var/lib/sk-under \
-    && chmod 700 /var/lib/sk-under/backups /var/lib/sk-under/accounts
+    && chmod 700 /var/lib/sk-under/backups /var/lib/sk-under/accounts \
+    /var/lib/sk-under/native /var/lib/sk-under/native-backups
 USER 10001:10001
 
 EXPOSE 8000

@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .api.cloud_accounts import router as cloud_accounts_router
 from .api.cloud_lab import router as cloud_lab_router
+from .api.native import router as native_router
 from .api.routes import router
 from .cloud.accounts import AccountError, CloudAccounts
 from .cloud.lab_service import build_cloud_lab
@@ -11,6 +12,7 @@ from .errors import install_error_handlers
 from .formats.game_data import GameDataAdapter
 from .formats.real_save import RealSaveAdapter
 from .formats.registry import ADAPTERS
+from .native.service import build_native
 from .settings import Settings
 
 
@@ -28,6 +30,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.cloud_lab = build_cloud_lab(settings)
     app.state.cloud_accounts = None
     app.state.cloud_accounts_problem = None
+    native = build_native(settings)
+    app.state.native_service = native.service
+    app.state.native_problem = native.problem
+    app.state.native_enabled = native.enabled
     try:
         app.state.cloud_accounts = CloudAccounts(settings)
     except AccountError as exc:
@@ -44,4 +50,5 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(router)
     app.include_router(cloud_lab_router)
     app.include_router(cloud_accounts_router)
+    app.include_router(native_router)
     return app

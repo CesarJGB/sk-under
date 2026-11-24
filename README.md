@@ -1,8 +1,8 @@
 # sk-under
 
-**Soul Knight Editor · Fase 6.2**
+**Soul Knight Editor · Fase 6.8**
 
-Editor web privado para inspeccionar copias locales. La muestra sintética `.skdemo` permite edición y exportación. El adaptador opcional de la Fase 3 lee nueve estructuras `.data` observadas en muestras de Soul Knight 8.6.0 y permite descargar copias intactas. [Configuración y cobertura de la Fase 3](docs/phase3/IMPLEMENTATION.md)
+Editor web privado para inspeccionar copias locales y, con autorización expresa, autenticar una cuenta propia de ChillyRoom y editar sus gemas desde el navegador. La muestra sintética `.skdemo` permite edición y exportación. El adaptador opcional de la Fase 3 lee nueve estructuras `.data` observadas en muestras de Soul Knight 8.6.0 y permite descargar copias intactas. [Configuración y cobertura de la Fase 3](docs/phase3/IMPLEMENTATION.md)
 
 La Fase 4 documenta el análisis estático del APK 8.8.0 y las pruebas con las muestras de 8.6.0. [Informe de la Fase 4](docs/research/phase4/README.md)
 
@@ -28,9 +28,11 @@ La Fase 6.1 ejecutó la primera subida real desde Linux a `/BlobSave/Upload`. El
 
 La Fase 6.2 convirtió ese protocolo en un editor web de gemas. La página **Partida** descarga la copia auténtica de laboratorio, muestra `gameData.gems`, prepara una copia determinista que solo cambia ese campo, crea un respaldo privado, valida el resultado y permite confirmar la subida con una autorización administrativa del servidor. La persistencia se comprueba con una descarga posterior y el original se puede restaurar desde el respaldo. La escritura sigue deshabilitada por defecto y no se puede activar desde el navegador. [Informe de Fase 6.2](docs/research/phase6-2/README.md)
 
-La [Fase 6.3](docs/research/phase6-3/README.md) documenta la vinculación privada, el editor por cuenta y la prueba real de persistencia en Android Global. El inicio directo con correo y contraseña sigue pendiente.
+La [Fase 6.3](docs/research/phase6-3/README.md) documenta la vinculación privada, el editor por cuenta y la prueba real de persistencia en Android Global. El inicio directo con correo y contraseña se integró en la Fase 6.8, pendiente de la prueba real del propietario.
 
 La [Fase 6.7](docs/research/phase6-7/README.md) obtuvo una sesión nueva desde Linux con la cuenta de laboratorio, verificó su identidad y descargó la partida real sin emulador activo. La diferencia decisiva fue la cabecera `x-distro-id`; el cuerpo correcto es JSON plano. El cliente experimental y la propuesta de integración quedan en la rama de investigación, no en producción. [Evidencia saneada](docs/research/phase6-7/evidence.json)
+
+La [Fase 6.8](docs/research/phase6-8/README.md) integra ese cliente en el backend y añade acceso web con sesiones aisladas por cuenta: formulario con distribución, correo y contraseña; verificación de identidad; perfiles de instalación cifrados; descarga, edición, respaldo y verificación de gemas. Solo Android Global está habilitada; las demás distribuciones aparecen deshabilitadas. La escritura sigue apagada por defecto y la validación multicuenta real queda pendiente del propietario. [Arquitectura](docs/research/phase6-8/architecture.md) · [Identificadores](docs/research/phase6-8/identifiers.md) · [Seguridad](docs/research/phase6-8/security.md) · [Guía manual](docs/research/phase6-8/manual-testing.md)
 
 ## Arquitectura
 
@@ -60,6 +62,8 @@ soul-knight-editor/
 │           ├── HomePage.tsx
 │           ├── ImportPage.tsx
 │           ├── LabEditorPage.tsx
+│           ├── NativeAuthPage.tsx
+│           ├── CloudAccountsPage.tsx
 │           ├── EditorPage.tsx
 │           └── ExportPage.tsx
 └── backend/
@@ -71,9 +75,17 @@ soul-knight-editor/
     │   ├── __init__.py
     │   ├── api/
     │   │   ├── __init__.py
+    │   │   ├── cloud_accounts.py
     │   │   ├── cloud_lab.py
+    │   │   ├── native.py
     │   │   ├── routes.py
     │   │   └── uploads.py
+    │   ├── native/
+    │   │   ├── client.py
+    │   │   ├── distributions.py
+    │   │   ├── provision.py
+    │   │   ├── service.py
+    │   │   └── store.py
     │   ├── cloud/
     │   │   ├── backup_store.py
     │   │   ├── gems_editor.py
@@ -158,9 +170,51 @@ Swagger UI está en `http://127.0.0.1:8017/docs` y el esquema generado está en 
 | `SK_CLOUD_ADMIN_TOKEN` | Backend | Vacío por defecto. Secreto de al menos 32 caracteres ASCII visibles. Se exige en la cabecera `X-SK-Cloud-Admin` para confirmar o restaurar. |
 | `SK_CLOUD_WRITE_ENABLED` | Backend | `false` por defecto. Solo `true` habilita la escritura remota; el frontend no puede cambiarlo. |
 | `SK_CLOUD_BACKUP_DIR` | Backend | Ruta absoluta privada, fuera del repositorio. Por defecto `~/.local/share/sk-under/backups`. Los archivos se crean con modo `0600` y el directorio con `0700`. |
+| `SK_NATIVE_AUTH_ENABLED` | Backend | `false` por defecto. Habilita `/api/v1/cloud/native/*` y el formulario de acceso. |
+| `SK_NATIVE_WRITE_ENABLED` | Backend | `false` por defecto. Interruptor global de escritura nativa; el navegador no puede activarlo. |
+| `SK_NATIVE_STORE_KEY` | Backend | Clave de 32 bytes en 64 hex para AES-SIV. Obligatoria si la autenticación nativa está habilitada. Genérala con `openssl rand -hex 32`. |
+| `SK_NATIVE_STORE_DIR` | Backend | Almacén SQLite de perfiles y sesiones. Por defecto `~/.local/share/sk-under/native`; en la imagen `/var/lib/sk-under/native`. |
+| `SK_NATIVE_BACKUP_DIR` | Backend | Respaldos por subject. Por defecto `~/.local/share/sk-under/native-backups`; en la imagen `/var/lib/sk-under/native-backups`. |
+| `SK_NATIVE_ORIGIN` | Backend | Origen HTTPS exacto del editor, incluido en `SK_ALLOWED_ORIGINS`. Si está vacío se usa `SK_CLOUD_ACCOUNTS_ORIGIN`. |
+| `SK_NATIVE_DISTRO_ID` | Backend | Opcional. `x-distro-id` privado de una instalación propia para crear el perfil inicial. Nunca se publica ni se registra en claro. |
+| `SK_NATIVE_UNIQUE_ID` | Backend | Opcional. Identificador de instalación de esa misma instalación; si falta, la sesión queda en instalación pendiente. |
+| `SK_NATIVE_PROFILE_LABEL` | Backend | Etiqueta del perfil inicial. Por defecto `Instalación Android Global`. |
+| `SK_NATIVE_PROFILE_ALLOW_WRITE` | Backend | `false` por defecto. Permiso de escritura solo para el perfil aprovisionado. |
+| `SK_NATIVE_IDLE_SECONDS` | Backend | `1800` por defecto. Caducidad por inactividad, entre 60 y 86400. |
+| `SK_NATIVE_LOGIN_ATTEMPTS` | Backend | `5` por defecto. Fallos permitidos por IP/correo en la ventana. |
+| `SK_NATIVE_LOGIN_WINDOW_SECONDS` | Backend | `900` por defecto. Ventana del límite de intentos. |
 | `VITE_API_BASE_URL` | Frontend | URL pública de la API, sin `/api/v1`. En desarrollo cae por defecto en `http://127.0.0.1:8017`. Configúrala explícitamente al compilar para otro entorno. |
 
 Para desarrollo, el backend y Vite leen el `.env` de la raíz. El backend también puede leer `backend/.env`. Las variables del proceso tienen prioridad. Los valores `VITE_*` son públicos y se incorporan al JavaScript durante el build. El propietario introduce el token en el formulario de importación. En producción sin token, las rutas de archivos devuelven `503` y `health` informa `access_mode: "disabled"`. La API rechaza el token ausente o incorrecto con `401` cuando está configurado.
+
+## Acceso nativo web (Fase 6.8)
+
+La página `/partida` permite iniciar sesión con una cuenta propia de ChillyRoom usando Android Global. El flujo es: login → verificación de identidad → perfil de instalación → descarga autorizada → edición → respaldo → confirmación explícita → subida → verificación. El flujo anterior por enlace de la Fase 6.3 sigue disponible en `/partida/vinculadas`.
+
+La autenticación nativa permanece deshabilitada hasta que el propietario configure el origen, la clave del almacén y un perfil de instalación. El perfil contiene `distro_id` y `unique_id` cifrados con AES-SIV; el primero es obligatorio para el login y el segundo para BlobSave. Se aprovisiona una vez por cuenta con la CLI privada:
+
+```bash
+cd backend
+uv run --locked python -m app.native.provision --label "Mi cuenta" --distro-stdin --unique-stdin
+```
+
+Los identificadores se leen sin eco o por `stdin` y nunca se imprimen. No se generan valores aleatorios ni se reutiliza el perfil de otra cuenta. El primer login vincula el perfil a la identidad (correo normalizado, `uid` y `player.id`); después no se puede usar con otra cuenta.
+
+| Método y ruta | Autenticación | Respuesta |
+| --- | --- | --- |
+| `GET /api/v1/cloud/native/config` | pública, sin secretos | distribuciones, perfiles, disponibilidad y estado de sesión. |
+| `POST /api/v1/cloud/native/login` | origen exacto + JSON | sesión verificada, caducidades y resumen de la partida; nunca token, correo ni identificadores. |
+| `GET /api/v1/cloud/native/session` | cookie | estado de la sesión del navegador. |
+| `POST /api/v1/cloud/native/logout` | cookie + origen | revoca la sesión local y borra la cookie. |
+| `POST /api/v1/cloud/native/installation` | cookie + origen | completa el `unique_id` del perfil ya vinculado. |
+| `GET /api/v1/cloud/native/save` | cookie | gemas, tamaño y SHA-256 de la partida. |
+| `POST /api/v1/cloud/native/{prepare,confirm,restore,verify}` | cookie + origen | mismas validaciones que el laboratorio, por cuenta. |
+| `GET /api/v1/cloud/native/backups` | cookie | respaldos del subject autenticado. |
+| `GET /api/v1/cloud/native/diagnostics` | cookie o Bearer existente | conteos y eventos saneados. |
+
+La cookie es `__Host-sk_native` en HTTPS (`Secure`, `HttpOnly`, `SameSite=Strict`, `Path=/`); en desarrollo local se usa `sk_native_dev`. Las sesiones caducan por inactividad y por el plazo absoluto; el cierre de sesión no afirma revocar el token en ChillyRoom. Los errores tienen códigos estables (`native_credentials_rejected`, `native_login_throttled`, `native_profile_identity_mismatch`, `native_session_expired`, `native_installation_required`, `native_session_rejected`, `native_write_disabled`, etc.) y no incluyen cuerpos remotos ni secretos.
+
+La guía de despliegue y la lista de variables están en [deployment.md](docs/research/phase6-8/deployment.md). La validación multicuenta real debe ejecutarla el propietario con la [guía de pruebas manuales](docs/research/phase6-8/manual-testing.md).
 
 ## Editor web de partida (Fase 6.2)
 
