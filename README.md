@@ -1,6 +1,6 @@
 # sk-under
 
-**Soul Knight Editor · Fase 6.8**
+**Soul Knight Editor · Fase 6.9**
 
 Editor web privado para inspeccionar copias locales y, con autorización expresa, autenticar una cuenta propia de ChillyRoom y editar sus gemas desde el navegador. La muestra sintética `.skdemo` permite edición y exportación. El adaptador opcional de la Fase 3 lee nueve estructuras `.data` observadas en muestras de Soul Knight 8.6.0 y permite descargar copias intactas. [Configuración y cobertura de la Fase 3](docs/phase3/IMPLEMENTATION.md)
 
@@ -32,7 +32,9 @@ La [Fase 6.3](docs/research/phase6-3/README.md) documenta la vinculación privad
 
 La [Fase 6.7](docs/research/phase6-7/README.md) obtuvo una sesión nueva desde Linux con la cuenta de laboratorio, verificó su identidad y descargó la partida real sin emulador activo. La diferencia decisiva fue la cabecera `x-distro-id`; el cuerpo correcto es JSON plano. El cliente experimental y la propuesta de integración quedan en la rama de investigación, no en producción. [Evidencia saneada](docs/research/phase6-7/evidence.json)
 
-La [Fase 6.8](docs/research/phase6-8/README.md) (rama `feature/phase6-8-web-native-auth`, commit `f87d63f`) integra ese cliente en el backend y añade acceso web con sesiones aisladas por cuenta: formulario con distribución, correo y contraseña; verificación de identidad; perfiles de instalación cifrados; descarga, edición, respaldo y verificación de gemas. Solo Android Global está habilitada; las demás distribuciones aparecen deshabilitadas. La escritura sigue apagada por defecto y la validación multicuenta real queda pendiente del propietario. [Arquitectura](docs/research/phase6-8/architecture.md) · [Identificadores](docs/research/phase6-8/identifiers.md) · [Seguridad](docs/research/phase6-8/security.md) · [Guía manual](docs/research/phase6-8/manual-testing.md)
+La [Fase 6.8](docs/research/phase6-8/README.md) (rama `feature/phase6-8-web-native-auth`, commit `f87d63f`) integra ese cliente en el backend y añade acceso web con sesiones aisladas por cuenta: formulario con distribución, correo y contraseña; verificación de identidad; perfiles de instalación cifrados; descarga, edición, respaldo y verificación de gemas. Solo Android Global está habilitada; las demás distribuciones aparecen deshabilitadas. La escritura sigue apagada por defecto.
+
+La [Fase 6.9](docs/research/phase6-9/README.md) elimina el aprovisionamiento manual del flujo normal. El backend consulta el portal oficial de cuentas, recupera el distro del jugador de Soul Knight, genera un código de instalación nuevo, lo cifra y lo conserva, y descarga la partida con una sesión aislada. La prueba real con la cuenta de laboratorio completó portal → login → descarga de 114.779 bytes con 99.999 gemas → edición y respaldo cifrado → reinicio del proceso → descarga y re-login. Las tres cuentas facilitadas no autenticaron con la contraseña indicada (rechazo del gateway y del portal); la validación multicuenta queda pendiente de esas credenciales. También se añadieron cifrado de respaldos en reposo, CSP, límite de intentos atómico, IP real tras proxies confiables y sesiones persistentes. [Identificadores](docs/research/phase6-9/identifiers.md) · [Experimentos](docs/research/phase6-9/experiments.md) · [Seguridad](docs/research/phase6-9/security.md) · [Despliegue](docs/research/phase6-9/deployment.md)
 
 ## Arquitectura
 
@@ -173,32 +175,32 @@ Swagger UI está en `http://127.0.0.1:8017/docs` y el esquema generado está en 
 | `SK_NATIVE_AUTH_ENABLED` | Backend | `false` por defecto. Habilita `/api/v1/cloud/native/*` y el formulario de acceso. |
 | `SK_NATIVE_WRITE_ENABLED` | Backend | `false` por defecto. Interruptor global de escritura nativa; el navegador no puede activarlo. |
 | `SK_NATIVE_STORE_KEY` | Backend | Clave de 32 bytes en 64 hex para AES-SIV. Obligatoria si la autenticación nativa está habilitada. Genérala con `openssl rand -hex 32`. |
+| `SK_NATIVE_BACKUP_KEY` | Backend | Opcional. Clave de 32 bytes en 64 hex para cifrar los respaldos. Si falta, se deriva de `SK_NATIVE_STORE_KEY` con HMAC-SHA-256 y un dominio distinto. |
+| `SK_NATIVE_AUTO_IDENTITY` | Backend | `true` por defecto. Genera y conserva un par de instalación por cuenta. El usuario solo aporta correo, contraseña y distribución. |
+| `SK_NATIVE_AUTO_ALLOW_WRITE` | Backend | `false` por defecto. No autoriza escritura automáticamente; la edición remota sigue siendo opt-in. |
+| `SK_NATIVE_PORTAL_ENABLED` | Backend | `true` por defecto. Consulta el portal oficial de cuentas para recuperar el distro del jugador existente. Sin esta consulta, una cuenta con progreso anterior puede quedar en un jugador vacío. |
 | `SK_NATIVE_STORE_DIR` | Backend | Almacén SQLite de perfiles y sesiones. Por defecto `~/.local/share/sk-under/native`; en la imagen `/var/lib/sk-under/native`. |
 | `SK_NATIVE_BACKUP_DIR` | Backend | Respaldos por subject. Por defecto `~/.local/share/sk-under/native-backups`; en la imagen `/var/lib/sk-under/native-backups`. |
 | `SK_NATIVE_ORIGIN` | Backend | Origen HTTPS exacto del editor, incluido en `SK_ALLOWED_ORIGINS`. Si está vacío se usa `SK_CLOUD_ACCOUNTS_ORIGIN`. |
-| `SK_NATIVE_DISTRO_ID` | Backend | Opcional. `x-distro-id` privado de una instalación propia para crear el perfil inicial. Nunca se publica ni se registra en claro. |
-| `SK_NATIVE_UNIQUE_ID` | Backend | Opcional. Identificador de instalación de esa misma instalación; si falta, la sesión queda en instalación pendiente. |
+| `SK_NATIVE_DISTRO_ID` | Backend | Opcional y solo administrativo/migración. `x-distro-id` privado de una instalación propia para crear un perfil inicial. El flujo normal no lo necesita. Nunca se publica ni se registra en claro. |
+| `SK_NATIVE_UNIQUE_ID` | Backend | Opcional y solo administrativo/migración. Identificador de instalación de esa misma instalación. El flujo normal lo genera y lo cifra. |
 | `SK_NATIVE_PROFILE_LABEL` | Backend | Etiqueta del perfil inicial. Por defecto `Instalación Android Global`. |
 | `SK_NATIVE_PROFILE_ALLOW_WRITE` | Backend | `false` por defecto. Permiso de escritura solo para el perfil aprovisionado. |
 | `SK_NATIVE_IDLE_SECONDS` | Backend | `1800` por defecto. Caducidad por inactividad, entre 60 y 86400. |
 | `SK_NATIVE_LOGIN_ATTEMPTS` | Backend | `5` por defecto. Fallos permitidos por IP/correo en la ventana. |
 | `SK_NATIVE_LOGIN_WINDOW_SECONDS` | Backend | `900` por defecto. Ventana del límite de intentos. |
+| `SK_NATIVE_TRUSTED_PROXIES` | Backend | Vacío por defecto. IPs o CIDR de proxies confiables, separados por comas o JSON. Solo entonces se interpreta `X-Forwarded-For`; si está vacío se usa la IP del socket. |
 | `VITE_API_BASE_URL` | Frontend | URL pública de la API, sin `/api/v1`. En desarrollo cae por defecto en `http://127.0.0.1:8017`. Configúrala explícitamente al compilar para otro entorno. |
 
 Para desarrollo, el backend y Vite leen el `.env` de la raíz. El backend también puede leer `backend/.env`. Las variables del proceso tienen prioridad. Los valores `VITE_*` son públicos y se incorporan al JavaScript durante el build. El propietario introduce el token en el formulario de importación. En producción sin token, las rutas de archivos devuelven `503` y `health` informa `access_mode: "disabled"`. La API rechaza el token ausente o incorrecto con `401` cuando está configurado.
 
-## Acceso nativo web (Fase 6.8)
+## Acceso nativo web (Fase 6.9)
 
-La página `/partida` permite iniciar sesión con una cuenta propia de ChillyRoom usando Android Global. El flujo es: login → verificación de identidad → perfil de instalación → descarga autorizada → edición → respaldo → confirmación explícita → subida → verificación. El flujo anterior por enlace de la Fase 6.3 sigue disponible en `/partida/vinculadas`.
+La página `/partida` permite iniciar sesión con una cuenta propia de ChillyRoom usando solo distribución, correo y contraseña. El flujo es: consulta del portal oficial → selección del jugador → generación y cifrado del par de instalación → login → verificación de identidad → descarga autorizada → edición → respaldo cifrado → confirmación explícita → subida → verificación. El flujo anterior por enlace de la Fase 6.3 sigue disponible en `/partida/vinculadas`.
 
-La autenticación nativa permanece deshabilitada hasta que el propietario configure el origen, la clave del almacén y un perfil de instalación. El perfil contiene `distro_id` y `unique_id` cifrados con AES-SIV; el primero es obligatorio para el login y el segundo para BlobSave. Se aprovisiona una vez por cuenta con la CLI privada:
+La autenticación nativa permanece deshabilitada hasta que el propietario configure el origen y `SK_NATIVE_STORE_KEY`. No se exige aprovisionar `distro_id` ni `unique_id`: el backend los resuelve y los conserva cifrados con AES-SIV. El portal se consulta una sola vez por cuenta; después el perfil se reutiliza y no se vuelve a llamar al portal. La CLI `python -m app.native.provision` queda como herramienta administrativa o de migración para una instalación concreta.
 
-```bash
-cd backend
-uv run --locked python -m app.native.provision --label "Mi cuenta" --distro-stdin --unique-stdin
-```
-
-Los identificadores se leen sin eco o por `stdin` y nunca se imprimen. No se generan valores aleatorios ni se reutiliza el perfil de otra cuenta. El primer login vincula el perfil a la identidad (correo normalizado, `uid` y `player.id`); después no se puede usar con otra cuenta.
+Si el proveedor limita la vinculación de un dispositivo nuevo (`error 100509`), el backend conserva el par generado, guarda la espera indicada y no reintenta automáticamente. El frontend muestra el plazo y permite reintentar la descarga después. Si la cuenta no tiene partida en la nube (`100504`), se informa sin crear ni sobrescribir nada. Los respaldos nativos se cifran en reposo (AES-SIV); los antiguos se pueden migrar con `python -m app.native.maintenance migrate-backups`.
 
 | Método y ruta | Autenticación | Respuesta |
 | --- | --- | --- |
@@ -206,15 +208,15 @@ Los identificadores se leen sin eco o por `stdin` y nunca se imprimen. No se gen
 | `POST /api/v1/cloud/native/login` | origen exacto + JSON | sesión verificada, caducidades y resumen de la partida; nunca token, correo ni identificadores. |
 | `GET /api/v1/cloud/native/session` | cookie | estado de la sesión del navegador. |
 | `POST /api/v1/cloud/native/logout` | cookie + origen | revoca la sesión local y borra la cookie. |
-| `POST /api/v1/cloud/native/installation` | cookie + origen | completa el `unique_id` del perfil ya vinculado. |
+| `POST /api/v1/cloud/native/installation` | cookie + origen | vía administrativa para completar un `unique_id` en un perfil migrado; el flujo normal no la usa. |
 | `GET /api/v1/cloud/native/save` | cookie | gemas, tamaño y SHA-256 de la partida. |
 | `POST /api/v1/cloud/native/{prepare,confirm,restore,verify}` | cookie + origen | mismas validaciones que el laboratorio, por cuenta. |
 | `GET /api/v1/cloud/native/backups` | cookie | respaldos del subject autenticado. |
 | `GET /api/v1/cloud/native/diagnostics` | cookie o Bearer existente | conteos y eventos saneados. |
 
-La cookie es `__Host-sk_native` en HTTPS (`Secure`, `HttpOnly`, `SameSite=Strict`, `Path=/`); en desarrollo local se usa `sk_native_dev`. Las sesiones caducan por inactividad y por el plazo absoluto; el cierre de sesión no afirma revocar el token en ChillyRoom. Los errores tienen códigos estables (`native_credentials_rejected`, `native_login_throttled`, `native_profile_identity_mismatch`, `native_session_expired`, `native_installation_required`, `native_session_rejected`, `native_write_disabled`, etc.) y no incluyen cuerpos remotos ni secretos.
+La cookie es `__Host-sk_native` en HTTPS (`Secure`, `HttpOnly`, `SameSite=Strict`, `Path=/`); en desarrollo local se usa `sk_native_dev`. Las sesiones caducan por inactividad y por el plazo absoluto; el cierre de sesión no afirma revocar el token en ChillyRoom. Los errores tienen códigos estables (`native_credentials_rejected`, `native_portal_rejected`, `native_portal_challenge_required`, `native_device_binding_throttled`, `native_no_cloud_save`, `native_login_throttled`, `native_session_expired`, `native_session_rejected`, `native_write_disabled`, etc.) y no incluyen cuerpos remotos ni secretos.
 
-La guía de despliegue y la lista de variables están en [deployment.md](docs/research/phase6-8/deployment.md). La validación multicuenta real debe ejecutarla el propietario con la [guía de pruebas manuales](docs/research/phase6-8/manual-testing.md).
+La guía de despliegue está en [deployment.md](docs/research/phase6-9/deployment.md) y la validación con cuentas reales en [manual-testing.md](docs/research/phase6-9/manual-testing.md).
 
 ## Editor web de partida (Fase 6.2)
 

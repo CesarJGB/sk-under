@@ -1,0 +1,225 @@
+{
+  "phase": "6.9",
+  "generated_at_utc": "2026-11-24T01:40:00Z",
+  "environment": {
+    "client": "Linux",
+    "emulator_active": false,
+    "distribution": "Android Global 8.8.0",
+    "network": "HTTPS real a api-gateway, save y accounts.chillyroom.com",
+    "tls_verification": "normal",
+    "redirects_followed": false,
+    "write_enabled": false,
+    "write_attempted": false
+  },
+  "method": {
+    "http_requests_real": "login de laboratorio, portal oficial, BlobSave de lectura, reinicio local",
+    "brute_force": false,
+    "password_recovery": false,
+    "captcha_bypass": false,
+    "pinning_bypass": false,
+    "destructive_migration": false
+  },
+  "hypotheses": [
+    {
+      "name": "un UUID v4 nuevo es rechazado siempre",
+      "result": "refutada",
+      "evidence": "login de laboratorio con dos UUID v4 nuevos devolvió 200; el jugador cambió y BlobSave devolvió 100504"
+    },
+    {
+      "name": "el distro identifica al jugador, no a la cuenta",
+      "result": "confirmada",
+      "evidence": "distro nuevo produjo player.id distinto; el distro del portal produjo el player.id del laboratorio"
+    },
+    {
+      "name": "el portal oficial expone el distro del jugador",
+      "result": "confirmada",
+      "evidence": "consulta Profile devolvió registerDistroId y lastLoginDistroId por jugador; el pid coincidió con player.id"
+    },
+    {
+      "name": "un unique nuevo puede vincularse al jugador correcto",
+      "result": "confirmada con límites",
+      "evidence": "flujo autónomo real descargó 114.779 bytes; en otro contexto el servidor devolvió 100509 con espera de 81970 s"
+    },
+    {
+      "name": "el portal entrega la partida",
+      "result": "refutada",
+      "evidence": "el portal solo devolvió identidad y jugadores; la partida se descargó por BlobSave"
+    }
+  ],
+  "identifiers": {
+    "distro_id": {
+      "nature": "contexto de jugador/instalación",
+      "observed_format": "UUID v4",
+      "account_bound": false,
+      "player_bound": true,
+      "arbitrary_uuid_accepted_for_login": true,
+      "arbitrary_uuid_sees_existing_save": false,
+      "portal_registration_distro_sha256": "5b0594470404dc68e3bf0d98e7dab8f0ae9efe72aeb77766b55f360bf8aeb9f8",
+      "local_lab_distro_sha256": "cccff053a36de2934a015bb62fd93e213552a5ecb21ace5eb5da0d0a39af7d77"
+    },
+    "unique_id": {
+      "nature": "código de instalación/dispositivo",
+      "observed_format": "xiaomioutseas_ + 16 hex",
+      "observed_length": 30,
+      "required_for_login": false,
+      "required_for_blobsave": true,
+      "server_binds_to_player": true,
+      "must_persist": true
+    },
+    "cloud_save_id": {
+      "example_shape": "GPV2_<uid>",
+      "is_distro_id": false,
+      "is_unique_id": false
+    },
+    "platform_id": {
+      "observed": "GP",
+      "is_distro_id": false,
+      "is_unique_id": false
+    },
+    "player_id": {
+      "matches_portal_pid": true,
+      "is_session_uid": false
+    },
+    "session_uid": {
+      "matches_user_id": true,
+      "changes_between_sessions": false
+    }
+  },
+  "provider_errors": {
+    "100504": "el jugador no tiene partida en la nube",
+    "100505": "código de dispositivo no aceptable",
+    "100509": {
+      "meaning": "límite de vinculación de dispositivo nuevo",
+      "observed_wait_seconds": 81970,
+      "action": "conservar el par, guardar la espera, no reintentar"
+    }
+  },
+  "real_runs": {
+    "autonomous_lab": {
+      "portal_calls": 1,
+      "players_visible": 2,
+      "selected_player_matched_gateway": true,
+      "login_http": 200,
+      "auto_identity": true,
+      "save": {
+        "bytes": 114779,
+        "gems": 99999,
+        "sha256": "ace7c58b3c7776ce26afe4f18a362d819b804984b7ca37b3e4aab2bc5d82cfb1"
+      },
+      "prepare": {
+        "http": 200,
+        "original_gems": 99999,
+        "new_gems": 100000,
+        "only_gems_changed": true,
+        "uploaded": false
+      },
+      "backups": {
+        "count": 1,
+        "sealed_files": [
+          "candidate.json",
+          "events.jsonl",
+          "record.json",
+          "original.json"
+        ],
+        "plaintext_gems_found": false
+      },
+      "restart": {
+        "session_active": true,
+        "download_http": 200,
+        "gems": 99999,
+        "backups": 1
+      },
+      "logout": {
+        "http": 204,
+        "session_active_after": false
+      },
+      "relogin": {
+        "http": 200,
+        "gems": 99999,
+        "portal_calls_total": 1,
+        "profiles_total": 1
+      },
+      "distro_sha256": "5b0594470404dc68e3bf0d98e7dab8f0ae9efe72aeb77766b55f360bf8aeb9f8",
+      "unique_sha256": "3af426eaa5db96045ef8d12529b77a35dcbfa7ad6003d1accd2e3cb8b0b915ce"
+    },
+    "administrative_control": {
+      "description": "mismo flujo con el par original del laboratorio",
+      "login_http": 200,
+      "save_bytes": 114779,
+      "gems": 99999,
+      "sha256": "ace7c58b3c7776ce26afe4f18a362d819b804984b7ca37b3e4aab2bc5d82cfb1",
+      "prepare_http": 200,
+      "backups_sealed": true,
+      "logout_http": 204,
+      "relogin_http": 200
+    }
+  },
+  "account_matrix": [
+    {
+      "account": 1,
+      "email_sha256_prefix": "a8ba83b9f73f",
+      "gateway_http": 400,
+      "gateway_error": 10001,
+      "portal": "credenciales rechazadas",
+      "attempts": 1
+    },
+    {
+      "account": 2,
+      "email_sha256_prefix": "ed92b9fffd9f",
+      "gateway_http": 400,
+      "gateway_error": 10001,
+      "portal": "credenciales rechazadas",
+      "attempts": 1
+    },
+    {
+      "account": 3,
+      "email_sha256_prefix": "83954491d749",
+      "gateway_http": 400,
+      "gateway_error": 10001,
+      "portal": "credenciales rechazadas",
+      "attempts": 1
+    }
+  ],
+  "automated_tests": {
+    "backend": {
+      "passed": 438,
+      "skipped": 16,
+      "new_phase_6_9_files": [
+        "test_native_auto.py",
+        "test_native_backup_crypto.py",
+        "test_native_identity.py",
+        "test_native_portal.py",
+        "test_net.py",
+        "test_security_headers.py"
+      ]
+    },
+    "frontend": {
+      "typecheck": true,
+      "vite_build": true,
+      "playwright_chromium": 25,
+      "native_auth_tests": 11
+    }
+  },
+  "security": {
+    "backup_encryption": "AES-SIV; SKB1; clave derivada o explícita",
+    "csp": "meta con origen exacto de VITE_API_BASE_URL + _headers + API default-src none",
+    "hsts": "solo producción HTTPS",
+    "rate_limit": "reserva atómica BEGIN IMMEDIATE; prueba concurrente 10/3",
+    "trusted_proxies": "X-Forwarded-For solo desde CIDR confiable",
+    "session_cookie": "__Host-sk_native Secure HttpOnly SameSite=Strict",
+    "session_isolation": "cookie -> perfil y subject; sin account_id en URL",
+    "token_expiry": "actividad y plazo absoluto",
+    "credential_logging": false,
+    "write_default": false
+  },
+  "limitations": [
+    "las tres cuentas facilitadas no autenticaron con la contraseña indicada",
+    "falta autorización del proveedor para uso de terceros",
+    "límite de vinculación de dispositivos del proveedor",
+    "captchas/2FA no se resuelven automáticamente",
+    "selección de jugador entre varios sin etiqueta del portal",
+    "un solo worker con SQLite",
+    "no se probó escritura real en esta fase",
+    "no se desplegó en Coolify desde esta sesión"
+  ]
+}
