@@ -1,6 +1,6 @@
 # Fase 6.11 — Consistencia del saldo de gemas
 
-La ruta local de consumo del APK Android Global 8.8.0 explica por qué un saldo que aparece tras recuperar de la nube puede revertirse al comprar. La recuperación puede aplicar `gameData.gems` al saldo mostrado y conservar los otros valores de la copia. Al gastar, el cliente compara el saldo de sus preferencias con el saldo anterior más la variación y restablece el saldo si difiere. El ensayo en el dispositivo del reporte y la validación con el hotfix activo siguen pendientes.
+La ruta local de consumo del APK Android Global 8.8.0 explica por qué un saldo que aparece tras recuperar de la nube puede revertirse al comprar. La recuperación puede aplicar `gameData.gems` al saldo mostrado y conservar los otros valores de la copia. Al gastar, el cliente compara el saldo de sus preferencias con el saldo anterior más la variación y restablece el saldo si difiere. Las recompensas y gastos legítimos reproducen la relación en el hotfix 8.8.0.11. El ensayo con saldo discrepante en el dispositivo del reporte sigue pendiente.
 
 ## Evidencia del cliente 8.8.0
 
@@ -17,8 +17,8 @@ Los cinco campos son enteros de 32 bits en el modelo Android 8.8.0. En el agrega
 | `gems` | `gems` | Saldo mostrado y saldo que usa la rama local de consumo después de conciliarlo. Se observó el valor 1.001 en HUD, archivo y preferencias tras la recuperación de 6.1. |
 | `lastGems` | `last_gems` | Base previa usada en el cálculo local. La rama de consumo escribe el saldo inmediatamente anterior al cargo. En las capturas de tutorial y recuperación valía 0. |
 | `varGems` | `var_gems` | Variación aplicada a esa base. El tutorial dejó 1.000 en preferencias y la rama local de consumo registra el coste con signo negativo. |
-| `cumulativeGems` | `cumulative_gems` | Contador asociado a la ganancia. Acompañó la recompensa de tutorial en preferencias y permaneció en 1.000 al recuperar el saldo editado de 1.001. La actualización por cada clase de recompensa queda pendiente. |
-| `cumulativeConsumeGems` | `cumulative_consume_gems` | En la rama de consumo comprobada se incrementa por el coste. La recuperación legítima incorporó la clave de preferencias con valor 0. |
+| `cumulativeGems` | `cumulative_gems` | Total acumulado ganado en las dos recompensas observadas. Permaneció en 1.500 durante los gastos posteriores. |
+| `cumulativeConsumeGems` | `cumulative_consume_gems` | Total acumulado gastado. Aumentó exactamente 500 al mejorar y otros 1.000 al comprar. |
 
 `mallReloadData` de los agregados de 6.1 contiene contadores `buyGemCount*` y `hasConvertGemPackages`. Ninguno cambió en el ciclo observado de 1.000 a 1.001. No se vincularon al saldo local. `files/backup.data` se describe en referencias externas y en el inventario de literales del APK. Estaba ausente en las capturas de recuperación comparadas. Queda por comprobar cuándo se escribe y si interviene en otros casos.
 
@@ -42,6 +42,29 @@ El inventario conserva como referencias `itemData.cumulativeFishCount`, `seasonD
 
 Las capturas anteriores se detallan en [tutorial y copia local](../phase5-8/local-files.md), [recuperación oficial](../phase5-8/cloud-roundtrip.md), [reinicio y recuperación de 5.9](../phase5-9/roundtrip.md) y [validación de 6.1](../phase6-1/client-validation.md).
 
+## Experimentos nuevos en Android 8.8.0.11
+
+Se usó Android 11 API 30 x86_64 con el APK ARM64 y el hotfix oficial `8.8.0.11`. El primer arranque sin red quedó bloqueado al descargar el hotfix. En otro AVD con red hubo dos cierres con SIGSEGV en `UnityMain` al entrar. La prueba avanzó en una copia temporal del AVD de laboratorio, con un perfil de invitado nuevo. Se tomaron tars de `files/` y `shared_prefs/` y capturas del HUD antes y después de cada acción.
+
+| Punto de captura | HUD | `game.data` | Preferencias del invitado |
+| --- | ---: | --- | --- |
+| Antes del portal final del tutorial | — | (0, 0, 0, 0, 0) | (—, 0, —, —, —) |
+| Recompensa del tutorial, al llegar a selección | 1000 | (0, 0, 0, 0, 0) | (1000, 0, 1000, 1000, —) |
+| Tras iniciar el personaje de prueba y volver al título | 1000 en el vestíbulo | (1000, 0, 1000, 1000, 0) | (1000, 0, 1000, 1000, —) |
+| Recompensa guiada de 500 al seleccionar al Caballero | 1500 | (1000, 0, 1000, 1000, 0) | (1500, 1000, 500, 1500, —) |
+| Inmediatamente tras mejorar al Caballero por 500 | 1000 | (1000, 0, 1000, 1000, 0) | (1000, 1500, -500, 1500, 500) |
+| Tras iniciar al Caballero y volver al título | 1000 en el vestíbulo | (1000, 1500, -500, 1500, 500) | (1000, 1500, -500, 1500, 500) |
+| Tras reiniciar el proceso y reabrir al Caballero | 1000 | (1000, 1500, -500, 1500, 500) | (1000, 1500, -500, 1500, 500) |
+| Tras comprar el cofre por 1.000 | 0 | (1000, 1500, -500, 1500, 500) | (0, 1000, -1000, 1500, 1500) |
+| En el panel oficial antes de recuperar | 0 local, 1000 remoto | (1000, 1500, -500, 1500, 500) | (0, 1000, -1000, 1500, 1500) |
+| En el panel oficial tras recuperar | 1000 local y remoto | (1000, 1500, -500, 1500, 500) | (1000, 1500, -500, 1500, 500) |
+
+El tutorial combinó la primera recompensa con un desbloqueo y cambios de inicialización. El guardado posterior de la sesión de prueba añadió otros cambios ajenos al saldo. La recompensa guiada de 500 separa mejor el efecto económico. La captura de ese paso tenía el mismo árbol `game.data` y dos archivos distintos por bytes frente a la captura previa. Tras la única pulsación de mejora, solo cambió el XML de preferencias. En ese archivo, `c0_level` pasó de 0 a 1 junto al cargo. Tras el guardado aparecieron los cinco valores ya conciliados en `game.data` y `heroLevel.Knight` pasó de 0 a 1. El saldo nominal en disco quedó en 1.000 antes y después del gasto, aunque en ese intervalo sí hubo un ingreso de 500 y un gasto de 500. Esto confirma experimentalmente que `lastGems` es la base previa de la operación y `varGems` es su variación con signo para estas dos acciones. Los acumulados registraron la ganancia y el consumo por separado.
+
+Tras la mejora se usó **Upload Progress** en la interfaz oficial del invitado. La fila remota pasó de mostrar que faltaba una copia a mostrar 1.000 gemas y un Caballero con una estrella, igual que la fila local. Se cerró el juego desde su menú y se terminó el proceso antes de reabrirlo. El proceso nuevo conservó la estrella, las 1.000 gemas y los cinco campos, sin pedir una recuperación.
+
+En ese proceso se compró el cofre del vestíbulo con una sola pulsación. El único archivo que cambió al cobrar fue el XML de preferencias. Modificó cuatro campos de gemas y añadió `furniture_chest=1`. Al volver al menú, la fila local mostraba 0, igual que las preferencias, y la remota permanecía en 1.000. En ese punto el archivo `game.data` aún mostraba 1.000. Se guardó un tar de ese estado y se recuperó la copia oficial anterior. El log registró `CoverPlayerPref`. Las preferencias recuperaron los cinco valores anteriores a la compra y la comparación del tar detectó seis archivos modificados. Esta prueba verifica el resultado visible y los archivos locales. La interfaz oficial del invitado no expone los bytes exactos del agregado remoto.
+
 ## Referencias históricas contrastadas
 
 - El hilo de 4PDA documenta la reversión al comprar el 11 de noviembre de 2021. La respuesta siguiente vincula `gems` y `lastgems`. La coincidencia es histórica y el hilo no establece la relación de tres campos del APK actual. Se consultó la versión indexada porque la apertura directa devolvió HTTP 403. [Mensajes #2599–2600 de 4PDA](https://4pda.to/forum/index.php?showtopic=798561&st=2580)
@@ -56,6 +79,6 @@ Con la edición actual de un único campo, cualquier cambio de saldo sobre un or
 
 Pasaron 466 pruebas de backend, con las capturas privadas 8.6.0 y 8.8.0 y una respuesta archivada de nube. También pasaron la compilación del frontend y 29 pruebas en Chromium con servicios simulados.
 
-## Captura pendiente en Android
+## Validación pendiente en el dispositivo del reporte
 
-El [protocolo de captura](capture.md) aísla una recompensa, una compra y una mejora. Incluye los pasos de guardado, reinicio y recuperación, y permite procesar las muestras con el comparador local sin cargar datos en servicios externos.
+El par decisivo es una captura justo antes y otra justo después de gastar desde una copia ya discrepante en el dispositivo original. Conservar el HUD, el precio, el build y el hotfix en ambas. Sigue pendiente verificar esa rama sobre el dispositivo afectado y determinar si el proveedor aplica controles adicionales. El protocolo aísla cada operación y permite procesar las muestras localmente. [Protocolo de captura](capture.md)

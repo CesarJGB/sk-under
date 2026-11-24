@@ -196,6 +196,8 @@ Para desarrollo, el backend y Vite leen el `.env` de la raíz. El backend tambi�
 
 ## Acceso nativo web (Fase 6.9)
 
+**Estado desde la Fase 6.11.** La edición de saldo de gemas está suspendida. El backend rechaza escrituras parciales que el cliente podría revertir al gastar. La descarga de partidas y la verificación y restauración de respaldos siguen disponibles. [Investigación y validación de consistencia](docs/research/phase6-11/README.md)
+
 La página `/partida` permite iniciar sesión con una cuenta propia de ChillyRoom usando solo distribución, correo y contraseña. El flujo es: consulta del portal oficial → selección del jugador → generación y cifrado del par de instalación → login → verificación de identidad → descarga autorizada → edición → respaldo cifrado → confirmación explícita → subida → verificación. El flujo anterior por enlace de la Fase 6.3 sigue disponible en `/partida/vinculadas`.
 
 La autenticación nativa permanece deshabilitada hasta que el propietario configure el origen y `SK_NATIVE_STORE_KEY`. No se exige aprovisionar `distro_id` ni `unique_id`: el backend los resuelve y los conserva cifrados con AES-SIV. El portal se consulta una sola vez por cuenta; después el perfil se reutiliza y no se vuelve a llamar al portal. La CLI `python -m app.native.provision` queda como herramienta administrativa o de migración para una instalación concreta.
