@@ -1,0 +1,1215 @@
+{
+  "schema_version": 1,
+  "evidence_levels": {
+    "E1": "Referencia comunitaria",
+    "E2": "Estructura propia observada",
+    "E3": "Semántica comprobada",
+    "E4": "Persistencia y consistencia verificadas",
+    "H": "Hipótesis"
+  },
+  "source_index": {
+    "propia": "save-file-mapping.md",
+    "discord": "community-reference.txt",
+    "skdfe": "external-sources.md"
+  },
+  "fields": [
+    {
+      "internal_name": "gems",
+      "category": "gemas",
+      "locations": {
+        "local": "files/game.data:gems",
+        "cloud": "gameData.gems",
+        "xml": "shared_prefs/com.ChillyRoom.DungeonShooter.v2.playerprefs.xml:{perfil}_gems"
+      },
+      "raw_types": [
+        "Int32",
+        "XML int"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado",
+        "Android Global 8.8.0.11"
+      ],
+      "known_dependencies": [
+        "lastGems",
+        "varGems"
+      ],
+      "pending_dependencies": [
+        "variantes regionales"
+      ],
+      "validation_level": "E4",
+      "edit_policy": "plan de gemas, también conciliación",
+      "experimental_evidence": "El HUD mostró saldo recuperado. La rama de consumo aplica el saldo conciliado y el guardado normal lo persiste."
+    },
+    {
+      "internal_name": "lastGems",
+      "category": "gemas",
+      "locations": {
+        "local": "files/game.data:lastGems",
+        "cloud": "gameData.lastGems",
+        "xml": "shared_prefs/com.ChillyRoom.DungeonShooter.v2.playerprefs.xml:{perfil}_last_gems"
+      },
+      "raw_types": [
+        "Int32",
+        "XML int"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado",
+        "Android Global 8.8.0.11"
+      ],
+      "known_dependencies": [
+        "gems",
+        "varGems"
+      ],
+      "pending_dependencies": [
+        "variantes regionales"
+      ],
+      "validation_level": "E4",
+      "edit_policy": "conservar en el plan de gemas",
+      "experimental_evidence": "En recompensa y gasto se escribe el saldo previo. Copias de reinicio y recuperación conservan la base."
+    },
+    {
+      "internal_name": "varGems",
+      "category": "gemas",
+      "locations": {
+        "local": "files/game.data:varGems",
+        "cloud": "gameData.varGems",
+        "xml": "shared_prefs/com.ChillyRoom.DungeonShooter.v2.playerprefs.xml:{perfil}_var_gems"
+      },
+      "raw_types": [
+        "Int32",
+        "XML int"
+      ],
+      "sources": [
+        "propia"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado",
+        "Android Global 8.8.0.11"
+      ],
+      "known_dependencies": [
+        "gems",
+        "lastGems"
+      ],
+      "pending_dependencies": [
+        "variantes regionales"
+      ],
+      "validation_level": "E4",
+      "edit_policy": "plan de gemas junto al saldo",
+      "experimental_evidence": "Recompensa de +500 y gastos de −500 / −1000 establecen la variación con signo."
+    },
+    {
+      "internal_name": "cumulativeGems",
+      "category": "gemas",
+      "locations": {
+        "local": "files/game.data:cumulativeGems",
+        "cloud": "gameData.cumulativeGems",
+        "xml": "shared_prefs/com.ChillyRoom.DungeonShooter.v2.playerprefs.xml:{perfil}_cumulative_gems"
+      },
+      "raw_types": [
+        "Int32",
+        "XML int"
+      ],
+      "sources": [
+        "propia"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado",
+        "Android Global 8.8.0.11"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "variantes regionales"
+      ],
+      "validation_level": "E4",
+      "edit_policy": "conservar en el plan de gemas",
+      "experimental_evidence": "La recompensa de +500 incrementó este acumulado. Los gastos lo conservaron."
+    },
+    {
+      "internal_name": "cumulativeConsumeGems",
+      "category": "gemas",
+      "locations": {
+        "local": "files/game.data:cumulativeConsumeGems",
+        "cloud": "gameData.cumulativeConsumeGems",
+        "xml": "shared_prefs/com.ChillyRoom.DungeonShooter.v2.playerprefs.xml:{perfil}_cumulative_consume_gems"
+      },
+      "raw_types": [
+        "Int32",
+        "XML int"
+      ],
+      "sources": [
+        "propia"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado",
+        "Android Global 8.8.0.11"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "variantes regionales"
+      ],
+      "validation_level": "E4",
+      "edit_policy": "conservar en el plan de gemas",
+      "experimental_evidence": "El acumulado subió por el coste del gasto. El reinicio y la recuperación conservaron el acumulado de la copia correspondiente."
+    },
+    {
+      "internal_name": "object2ObtainTime",
+      "category": "estadísticas",
+      "locations": {
+        "local": "statistic*.data:object2ObtainTime",
+        "cloud": "statisticData.object2ObtainTime"
+      },
+      "raw_types": [
+        "objeto ID → entero"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "correlación aislada con acción del cliente"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Mapa con 1.549 entradas en la muestra 8.6.0. Discord lo asocia a obtención y forja.",
+      "community_name": "object2obtaintime"
+    },
+    {
+      "internal_name": "object2PassTime",
+      "category": "estadísticas",
+      "locations": {
+        "local": "statistic*.data:object2PassTime",
+        "cloud": "statisticData.object2PassTime"
+      },
+      "raw_types": [
+        "objeto ID → entero"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "correlación aislada con acción del cliente"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Mapa con 1.831 entradas en la muestra 8.6.0. Asociación a partidas completadas según Discord.",
+      "community_name": "object2passtime"
+    },
+    {
+      "internal_name": "object2PassLevel",
+      "category": "estadísticas",
+      "locations": {
+        "local": "statistic*.data:object2PassLevel",
+        "cloud": "statisticData.object2PassLevel"
+      },
+      "raw_types": [
+        "objeto ID → entero"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "correlación aislada con acción del cliente"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Mapa con 1.831 entradas en la muestra 8.6.0. Los estados de marcos citados en Discord son E1.",
+      "community_name": "object2passlevel"
+    },
+    {
+      "internal_name": "event2Count",
+      "category": "estadísticas",
+      "locations": {
+        "local": "statistic*.data:event2Count",
+        "cloud": "statisticData.event2Count"
+      },
+      "raw_types": [
+        "objeto ID → entero"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "correlación aislada con acción del cliente"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Mapa observado en los dos archivos locales 8.8.0 y en el agregado. Las claves de eventos varían por perfil."
+    },
+    {
+      "internal_name": "materials",
+      "category": "inventario",
+      "locations": {
+        "local": "item_data*.data:materials",
+        "cloud": "itemData.materials"
+      },
+      "raw_types": [
+        "objeto ID → entero"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "consumo de materiales y copias locales"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Se observaron dos claves en nube 8.8.0 y 139 en el archivo 8.6.0."
+    },
+    {
+      "internal_name": "seeds",
+      "category": "inventario",
+      "locations": {
+        "local": "item_data*.data:seeds",
+        "cloud": "itemData.seeds"
+      },
+      "raw_types": [
+        "objeto ID → entero"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "adquisición, plantación y jardín"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Las 47 claves de 8.6.0 aparecen en items.decrypted.csv."
+    },
+    {
+      "internal_name": "tokenTickets",
+      "category": "inventario",
+      "locations": {
+        "local": "item_data*.data:tokenTickets",
+        "cloud": "itemData.tokenTickets"
+      },
+      "raw_types": [
+        "objeto ID → entero"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "variantes por subtipo y cupón consumido"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Solo 13 de 213 claves de 8.6.0 coinciden literalmente con el CSV 8.8.0."
+    },
+    {
+      "internal_name": "blueprints",
+      "category": "inventario",
+      "locations": {
+        "local": "item_data*.data:blueprints",
+        "cloud": "itemData.blueprints"
+      },
+      "raw_types": [
+        "objeto ID → texto (8.6.0)",
+        "objeto vacío (muestras 8.8.0)"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "transiciones por versión y requisitos de investigación"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "El mapa 8.6.0 tiene 275 entradas. Discord muestra estados enteros en 8.5.0."
+    },
+    {
+      "internal_name": "itemUnlock",
+      "category": "inventario",
+      "locations": {
+        "local": "item_data*.data:itemUnlock",
+        "cloud": "itemData.itemUnlock"
+      },
+      "raw_types": [
+        "lista de cadenas"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "mobiliario y jardín, procedencia del acceso"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Lista de seis entradas en 8.6.0. Está vacía en 8.8.0 inspeccionado."
+    },
+    {
+      "internal_name": "cumulativeFishCount",
+      "category": "inventario",
+      "locations": {
+        "local": "item_data*.data:cumulativeFishCount",
+        "cloud": "itemData.cumulativeFishCount"
+      },
+      "raw_types": [
+        "entero"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "relación con el premio de pesca E1"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Presente en ambos locales y en nube."
+    },
+    {
+      "internal_name": "weapons",
+      "category": "evolución de armas",
+      "locations": {
+        "local": "weapon_evolution_data*.data:weapons",
+        "cloud": "weaponEvolutionData.weapons"
+      },
+      "raw_types": [
+        "objeto ID → objeto"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "resultado de una evolución o selección legítima"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "167 entradas propias de 8.6.0, vacías en las muestras 8.8.0."
+    },
+    {
+      "internal_name": "CurrentSkinIndex",
+      "category": "evolución de armas",
+      "locations": {
+        "local": "weapon_evolution_data*.data:weapons.{id}.CurrentSkinIndex",
+        "cloud_candidate": "weaponEvolutionData.weapons.{id}.CurrentSkinIndex"
+      },
+      "raw_types": [
+        "entero"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local"
+      ],
+      "known_dependencies": [
+        "weapons"
+      ],
+      "pending_dependencies": [
+        "resultado de una evolución o selección legítima"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Miembro de cada objeto de arma. El catálogo genera sus propios valores."
+    },
+    {
+      "internal_name": "Level",
+      "category": "evolución de armas",
+      "locations": {
+        "local": "weapon_evolution_data*.data:weapons.{id}.Level",
+        "cloud_candidate": "weaponEvolutionData.weapons.{id}.Level"
+      },
+      "raw_types": [
+        "entero"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local"
+      ],
+      "known_dependencies": [
+        "weapons"
+      ],
+      "pending_dependencies": [
+        "resultado de una evolución o selección legítima"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Miembro de cada objeto de arma, identificado en una copia 8.6.0 poblada."
+    },
+    {
+      "internal_name": "Name",
+      "category": "evolución de armas",
+      "locations": {
+        "local": "weapon_evolution_data*.data:weapons.{id}.Name",
+        "cloud_candidate": "weaponEvolutionData.weapons.{id}.Name"
+      },
+      "raw_types": [
+        "cadena"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local"
+      ],
+      "known_dependencies": [
+        "weapons"
+      ],
+      "pending_dependencies": [
+        "resultado de una evolución o selección legítima"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Miembro de cada objeto de arma. Mantener identidad y grafía."
+    },
+    {
+      "internal_name": "UnlockedSkins",
+      "category": "evolución de armas",
+      "locations": {
+        "local": "weapon_evolution_data*.data:weapons.{id}.UnlockedSkins",
+        "cloud_candidate": "weaponEvolutionData.weapons.{id}.UnlockedSkins"
+      },
+      "raw_types": [
+        "lista de cadenas"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local"
+      ],
+      "known_dependencies": [
+        "weapons"
+      ],
+      "pending_dependencies": [
+        "resultado de una evolución o selección legítima"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "177 IDs únicos de skins también presentes en el catálogo 8.8.0."
+    },
+    {
+      "internal_name": "favorWeapons",
+      "category": "evolución de armas",
+      "locations": {
+        "local": "weapon_evolution_data*.data:favorWeapons",
+        "cloud": "weaponEvolutionData.favorWeapons"
+      },
+      "raw_types": [
+        "lista vacía"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "resultado de una evolución o selección legítima"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Las muestras inspeccionadas tienen lista vacía."
+    },
+    {
+      "internal_name": "blindBoxOpenCount0",
+      "category": "evolución de armas",
+      "locations": {
+        "local": "weapon_evolution_data*.data:blindBoxOpenCount0",
+        "cloud": "weaponEvolutionData.blindBoxOpenCount0"
+      },
+      "raw_types": [
+        "entero"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "resultado de una evolución o selección legítima"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Presencia y tipo observados."
+    },
+    {
+      "internal_name": "lastOpenMachineHistoryStr0",
+      "category": "evolución de armas",
+      "locations": {
+        "local": "weapon_evolution_data*.data:lastOpenMachineHistoryStr0"
+      },
+      "raw_types": [
+        "cadena (8.6.0)",
+        "null (8.8.0 local)"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "resultado de una evolución o selección legítima"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "El miembro se omite en los agregados 8.8.0 examinados."
+    },
+    {
+      "internal_name": "coin",
+      "category": "temporada",
+      "locations": {
+        "local": "season_data*.data:coin",
+        "cloud": "seasonData.coin"
+      },
+      "raw_types": [
+        "entero"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "temporada activa y cambios correlacionados"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "El campo está presente en archivos de ambas versiones y en el agregado."
+    },
+    {
+      "internal_name": "gainedCoinToday",
+      "category": "temporada",
+      "locations": {
+        "local": "season_data*.data:gainedCoinToday",
+        "cloud": "seasonData.gainedCoinToday"
+      },
+      "raw_types": [
+        "entero"
+      ],
+      "sources": [
+        "propia"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "temporada activa y cambios correlacionados"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "El campo está presente en archivos de ambas versiones y en el agregado."
+    },
+    {
+      "internal_name": "cumulativeCoinCount",
+      "category": "temporada",
+      "locations": {
+        "local": "season_data*.data:cumulativeCoinCount",
+        "cloud": "seasonData.cumulativeCoinCount"
+      },
+      "raw_types": [
+        "entero"
+      ],
+      "sources": [
+        "propia"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "temporada activa y cambios correlacionados"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "El campo está presente en archivos de ambas versiones y en el agregado."
+    },
+    {
+      "internal_name": "seasonData",
+      "category": "pase de batalla",
+      "locations": {
+        "local": "bp_data_<perfil>_.data:seasonData",
+        "cloud": "battlePassSaveData.seasonData"
+      },
+      "raw_types": [
+        "lista [{Key, Value}]",
+        "objeto vacío local 8.8.0",
+        "lista vacía nube 8.8.0"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local",
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "regla de selección de temporada activa"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Tres pares Key/Value en la muestra 8.6.0."
+    },
+    {
+      "internal_name": "seasonID",
+      "category": "pase de batalla",
+      "locations": {
+        "local": "bp_data_<perfil>_.data:seasonData[].Value.seasonID",
+        "cloud_candidate": "battlePassSaveData.seasonData[].Value.seasonID"
+      },
+      "raw_types": [
+        "entero"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local"
+      ],
+      "known_dependencies": [
+        "seasonData"
+      ],
+      "pending_dependencies": [
+        "forma de una temporada poblada en 8.8.0"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Presente en Value de los pares locales de 8.6.0. Las copias 8.8.0 de esta categoría están vacías."
+    },
+    {
+      "internal_name": "curLevel",
+      "category": "pase de batalla",
+      "locations": {
+        "local": "bp_data_<perfil>_.data:seasonData[].Value.curLevel",
+        "cloud_candidate": "battlePassSaveData.seasonData[].Value.curLevel"
+      },
+      "raw_types": [
+        "entero"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local"
+      ],
+      "known_dependencies": [
+        "seasonData"
+      ],
+      "pending_dependencies": [
+        "forma de una temporada poblada en 8.8.0"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Presente en Value de los pares locales de 8.6.0. Las copias 8.8.0 de esta categoría están vacías."
+    },
+    {
+      "internal_name": "curExp",
+      "category": "pase de batalla",
+      "locations": {
+        "local": "bp_data_<perfil>_.data:seasonData[].Value.curExp",
+        "cloud_candidate": "battlePassSaveData.seasonData[].Value.curExp"
+      },
+      "raw_types": [
+        "entero"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local"
+      ],
+      "known_dependencies": [
+        "seasonData"
+      ],
+      "pending_dependencies": [
+        "forma de una temporada poblada en 8.8.0"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Presente en Value de los pares locales de 8.6.0. Las copias 8.8.0 de esta categoría están vacías."
+    },
+    {
+      "internal_name": "hasBuy",
+      "category": "pase de batalla",
+      "locations": {
+        "local": "bp_data_<perfil>_.data:seasonData[].Value.hasBuy",
+        "cloud_candidate": "battlePassSaveData.seasonData[].Value.hasBuy"
+      },
+      "raw_types": [
+        "booleano"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local"
+      ],
+      "known_dependencies": [
+        "seasonData"
+      ],
+      "pending_dependencies": [
+        "forma de una temporada poblada en 8.8.0"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "protegido, solo lectura",
+      "experimental_evidence": "Presente en Value de los pares locales de 8.6.0. Las copias 8.8.0 de esta categoría están vacías."
+    },
+    {
+      "internal_name": "freeClaimedLevel",
+      "category": "pase de batalla",
+      "locations": {
+        "local": "bp_data_<perfil>_.data:seasonData[].Value.freeClaimedLevel",
+        "cloud_candidate": "battlePassSaveData.seasonData[].Value.freeClaimedLevel"
+      },
+      "raw_types": [
+        "entero"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local"
+      ],
+      "known_dependencies": [
+        "seasonData"
+      ],
+      "pending_dependencies": [
+        "forma de una temporada poblada en 8.8.0"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "protegido, solo lectura",
+      "experimental_evidence": "Presente en Value de los pares locales de 8.6.0. Las copias 8.8.0 de esta categoría están vacías."
+    },
+    {
+      "internal_name": "paidClaimedLevel",
+      "category": "pase de batalla",
+      "locations": {
+        "local": "bp_data_<perfil>_.data:seasonData[].Value.paidClaimedLevel",
+        "cloud_candidate": "battlePassSaveData.seasonData[].Value.paidClaimedLevel"
+      },
+      "raw_types": [
+        "entero"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android 8.6.0 local"
+      ],
+      "known_dependencies": [
+        "seasonData"
+      ],
+      "pending_dependencies": [
+        "forma de una temporada poblada en 8.8.0"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "protegido, solo lectura",
+      "experimental_evidence": "Presente en Value de los pares locales de 8.6.0. Las copias 8.8.0 de esta categoría están vacías."
+    },
+    {
+      "internal_name": "heroUnlock",
+      "category": "progreso y acceso",
+      "locations": {
+        "local": "files/game.data:heroUnlock",
+        "cloud": "gameData.heroUnlock",
+        "xml": "shared_prefs/com.ChillyRoom.DungeonShooter.v2.playerprefs.xml:{perfil}_c<ID>_unlock"
+      },
+      "raw_types": [
+        "objeto código → bool, XML string"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado",
+        "Android Global 8.8.0.11"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "fuente de cada desbloqueo"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "42 códigos en JSON y 42 claves por perfil en XML."
+    },
+    {
+      "internal_name": "heroLevel",
+      "category": "progreso y acceso",
+      "locations": {
+        "local": "files/game.data:heroLevel",
+        "cloud": "gameData.heroLevel",
+        "xml": "shared_prefs/com.ChillyRoom.DungeonShooter.v2.playerprefs.xml:{perfil}_c<ID>_level"
+      },
+      "raw_types": [
+        "objeto código → entero, XML int"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado",
+        "Android Global 8.8.0.11"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "otras clases y mejoras"
+      ],
+      "validation_level": "E3",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "La mejora de c0 coincide con Knight y el cargo de gemas."
+    },
+    {
+      "internal_name": "petUnlock",
+      "category": "progreso y acceso",
+      "locations": {
+        "local": "files/game.data:petUnlock",
+        "cloud": "gameData.petUnlock",
+        "xml": "shared_prefs/com.ChillyRoom.DungeonShooter.v2.playerprefs.xml:{perfil}_p<ID>_unlock"
+      },
+      "raw_types": [
+        "objeto código → bool, XML string"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado",
+        "Android Global 8.8.0.11"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "relación completa por índice y origen del acceso"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "58 códigos y claves por perfil. 57 aparecen en SKDFE."
+    },
+    {
+      "internal_name": "skinLock",
+      "category": "progreso y acceso",
+      "locations": {
+        "local": "files/game.data:skinLock",
+        "cloud": "gameData.skinLock",
+        "xml": "shared_prefs/com.ChillyRoom.DungeonShooter.v2.playerprefs.xml:{perfil}_c<ID>_skin<N>"
+      },
+      "raw_types": [
+        "objeto JSON, XML int"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado",
+        "Android Global 8.8.0.11"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "semántica de cada valor de desbloqueo"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "802 claves XML por perfil y 802 coincidencias de ID en SKDFE."
+    },
+    {
+      "internal_name": "currentSkinDatas",
+      "category": "progreso y acceso",
+      "locations": {
+        "local": "files/game.data:currentSkinDatas",
+        "cloud": "gameData.currentSkinDatas"
+      },
+      "raw_types": [
+        "objeto código → entero"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado",
+        "Android Global 8.8.0.11"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "correspondencia con la selección oficial"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Valores de selección presentes en seis héroes en el agregado de 5.8."
+    },
+    {
+      "internal_name": "heroSkillUnlock",
+      "category": "progreso y acceso",
+      "locations": {
+        "local": "files/game.data:heroSkillUnlock",
+        "cloud": "gameData.heroSkillUnlock",
+        "xml": "shared_prefs/com.ChillyRoom.DungeonShooter.v2.playerprefs.xml:{perfil}_c_<código>_skill_<N>_unlock"
+      },
+      "raw_types": [
+        "objeto JSON, XML int"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado",
+        "Android Global 8.8.0.11"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "cómo materializa cada estado heroSkillUnlock y si intervienen planos o compras"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "105 claves materializadas tras recuperación."
+    },
+    {
+      "internal_name": "heroSkill",
+      "category": "progreso y acceso",
+      "locations": {
+        "local": "files/game.data:heroSkill",
+        "cloud": "gameData.heroSkill"
+      },
+      "raw_types": [
+        "objeto JSON"
+      ],
+      "sources": [
+        "propia",
+        "discord",
+        "skdfe"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado",
+        "Android Global 8.8.0.11"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "correspondencia con la selección oficial"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "Mapa observado en el agregado de laboratorio."
+    },
+    {
+      "internal_name": "rebornCard",
+      "category": "progreso y acceso",
+      "locations": {
+        "local": "files/game.data:rebornCard",
+        "cloud": "gameData.rebornCard",
+        "xml": "shared_prefs/com.ChillyRoom.DungeonShooter.v2.playerprefs.xml:{perfil}_reborn_card"
+      },
+      "raw_types": [
+        "booleano JSON, XML int"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0 local",
+        "Android Global 8.8.0 agregado",
+        "Android Global 8.8.0.11"
+      ],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "dependencia de derechos de compra"
+      ],
+      "validation_level": "E2",
+      "edit_policy": "protegido, solo lectura",
+      "experimental_evidence": "Bandera en JSON y entero con prefijo tras la recuperación."
+    },
+    {
+      "internal_name": "OpenRijTest_Id",
+      "category": "preferencia interna",
+      "locations": {
+        "xml_candidate": "shared_prefs/com.ChillyRoom.DungeonShooter.v2.playerprefs.xml:OpenRijTest_Id"
+      },
+      "raw_types": [
+        "entero aparente"
+      ],
+      "sources": [
+        "discord"
+      ],
+      "observed_versions": [],
+      "known_dependencies": [],
+      "pending_dependencies": [
+        "tipo, ámbito y función"
+      ],
+      "validation_level": "E1",
+      "edit_policy": "protegido, solo lectura",
+      "experimental_evidence": "Discord lo menciona. Las capturas propias inspeccionadas carecen del campo."
+    },
+    {
+      "internal_name": "furniture_chest",
+      "category": "vestíbulo",
+      "locations": {
+        "xml": "shared_prefs/com.ChillyRoom.DungeonShooter.v2.playerprefs.xml:{perfil}_furniture_chest"
+      },
+      "raw_types": [
+        "XML int"
+      ],
+      "sources": [
+        "propia",
+        "discord"
+      ],
+      "observed_versions": [
+        "Android Global 8.8.0.11"
+      ],
+      "known_dependencies": [
+        "gems"
+      ],
+      "pending_dependencies": [
+        "proyección en archivos y nube"
+      ],
+      "validation_level": "E3",
+      "edit_policy": "solo lectura",
+      "experimental_evidence": "La única compra de cofre añadió esta clave y redujo las gemas en las preferencias."
+    }
+  ]
+}

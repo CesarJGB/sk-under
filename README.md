@@ -196,7 +196,7 @@ Para desarrollo, el backend y Vite leen el `.env` de la raíz. El backend tambi�
 
 ## Acceso nativo web (Fase 6.9)
 
-**Estado desde la Fase 6.11.** La edición de saldo de gemas está suspendida. El backend rechaza escrituras parciales que el cliente podría revertir al gastar. La descarga de partidas y la verificación y restauración de respaldos siguen disponibles. [Investigación y validación de consistencia](docs/research/phase6-11/README.md)
+**Estado desde la Fase 6.11.1.** El editor recupera la preparación y confirmación de gemas para agregados compatibles. En partidas con saldo coherente ajusta el saldo y su variación. En partidas con una discrepancia previa permite restaurar el saldo que indican los contadores. La escritura sigue deshabilitada por defecto. [Validación de la corrección](docs/save-research/validation-results.md) · [Investigación de guardados](docs/save-research/README.md)
 
 La página `/partida` permite iniciar sesión con una cuenta propia de ChillyRoom usando solo distribución, correo y contraseña. El flujo es: consulta del portal oficial → selección del jugador → generación y cifrado del par de instalación → login → verificación de identidad → descarga autorizada → edición → respaldo cifrado → confirmación explícita → subida → verificación. El flujo anterior por enlace de la Fase 6.3 sigue disponible en `/partida/vinculadas`.
 

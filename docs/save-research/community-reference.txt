@@ -1,0 +1,44 @@
+Referencia comunitaria para la fase 6.11.1
+
+Documento local consultado: SK-Under_Investigacion_Discord_2026-11-23.txt
+SHA-256: 71080bd514112358281c4b92e1611575028f5ecec70f0159da8edf5bcb4a99a3
+Revisión 1.0, recopilada el 23 de noviembre de 2026 a partir de tres tandas
+proporcionadas por el propietario. Este extracto conserva los hallazgos técnicos.
+
+Procedencia
+- Hilo «[WIP] Complete soul knight save editing tutorial.», canal materials,
+  publicaciones del 13 de agosto de 2026. El autor indica Soul Knight 8.5.0.
+- Hilo «Video Tutorials For Edit...», capturas del 16 de febrero de 2026.
+  Muestra PlayerPrefs en SKDEditor. La versión del juego queda sin identificar.
+- La captura de la wiki apunta a https://bweab.id.vn/wiki.html#/.
+
+Campos documentados por la comunidad (E1)
+- Preferencias de Android: {perfil}_c<ID>_unlock, {perfil}_p<ID>_unlock,
+  {perfil}_c<ID>_skin<ID>, patrones de habilidades con _unlock, gems,
+  last_gems, reborn_card y OpenRijTest_Id. La función de OpenRijTest_Id
+  queda como hipótesis. Los formatos ilustrados de iOS se parecen a un plist.
+- Estadísticas: object2obtaintime, object2passtime, object2passlevel y
+  event2Count. Se asocian con obtenciones, partidas completadas, marcos y
+  contadores de eventos/mobiliario. Los umbrales y el significado de los
+  estados de marcos requieren pruebas.
+- Inventario: materials, seeds, tokenTickets, blueprints, itemUnlock,
+  cumulativeFishCount. Los estados de planos y la relación entre pesca y
+  premios requieren confirmación por versión. La lista itemUnlock incluye
+  ejemplos de mobiliario, jardín y motocicleta.
+- Evolución de armas: weapons, CurrentSkinIndex, Level, Name, UnlockedSkins,
+  favorWeapons, blindBoxOpenCount0 y lastOpenMachineHistoryStr0. Queda abierta
+  la interpretación de selección y del historial de cajas.
+- Temporadas: coin. Pase de batalla: seasonData, seasonID, curLevel, curExp,
+  hasBuy, freeClaimedLevel y paidClaimedLevel. Compra y reclamaciones son de
+  solo lectura. La temporada activa requiere identificar el contexto.
+
+Contraste propio
+- Las estadísticas observadas usan object2ObtainTime, object2PassTime y
+  object2PassLevel. Preservar mayúsculas y ceros a la izquierda en los IDs.
+- Las muestras propias de blueprints de 8.6.0 contienen estados de texto.
+  El ejemplo comunitario describe enteros. La muestra 8.8.0 tiene el mapa vacío.
+- El contenedor de pase local puede ser objeto vacío mientras el agregado
+  contiene lista vacía. La muestra local 8.6.0 conserva Key y Value.
+- En Android 8.8.0 se observaron los cinco enteros de gemas por perfil.
+  Las comparaciones de obtención, consumo y recuperación sustentan las
+  equivalencias en playerprefs-research.md y el registro de campos.

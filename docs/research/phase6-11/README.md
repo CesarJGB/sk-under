@@ -1,5 +1,7 @@
 # Fase 6.11 — Consistencia del saldo de gemas
 
+La [fase 6.11.1](../../save-research/validation-results.md) corrigió el bloqueo de preparación descrito al final de este informe. Este documento conserva la evidencia de transacciones y las decisiones de la fase 6.11.
+
 La ruta local de consumo del APK Android Global 8.8.0 explica por qué un saldo que aparece tras recuperar de la nube puede revertirse al comprar. La recuperación puede aplicar `gameData.gems` al saldo mostrado y conservar los otros valores de la copia. Al gastar, el cliente compara el saldo de sus preferencias con el saldo anterior más la variación y restablece el saldo si difiere. Las recompensas y gastos legítimos reproducen la relación en el hotfix 8.8.0.11. El ensayo con saldo discrepante en el dispositivo del reporte sigue pendiente.
 
 ## Evidencia del cliente 8.8.0
