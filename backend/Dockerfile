@@ -24,6 +24,7 @@ ENV PATH="/opt/venv/bin:$PATH" \
 
 COPY --from=dependencies /opt/venv /opt/venv
 COPY app/ ./app/
+RUN python -m app.catalogs.verify
 RUN chmod -R a+rX /app/app \
     && mkdir -p "$HOME" /var/lib/sk-under/backups /var/lib/sk-under/accounts \
     /var/lib/sk-under/native /var/lib/sk-under/native-backups \

@@ -102,7 +102,13 @@ export type SaveCharacterReport = {
   counts: { characters: number; unlocked: number; selected_skins: number }
   level_status: 'not_validated'
   skins_status: 'not_validated'
-  catalog: { version: string | null; source: string | null; characters: number }
+  catalog: {
+    available: boolean
+    error: string | null
+    version: string | null
+    source: string | null
+    characters: number
+  }
   notes: string[]
   status: 'read_only'
 }

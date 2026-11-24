@@ -46,6 +46,8 @@ La [Fase 6.14](docs/research/phase6-14/README.md) habilitó la edición experime
 
 La [Fase 6.16](docs/research/phase6-16/README.md) consolida las fichas de pesca: el propietario confirmó en un dispositivo Android físico la subida y recuperación desde la nube, la visualización del saldo, la compra con descuento y el guardado posterior desde el cliente oficial. La interfaz deja de presentar las fichas como experimentales. La misma fase añade un editor para desbloquear personajes individualmente, por selección múltiple o en masa: solo activa `gameData.heroUnlock[código]`, conserva los personajes ya disponibles y no modifica niveles, habilidades ni skins. El flujo reutiliza respaldo cifrado, confirmación autenticada, verificación por descarga y restauración.
 
+La [corrección 6.16.1](docs/research/phase6-16/6.16.1-correccion-catalogo.md) empaqueta el catálogo de 42 personajes dentro del backend (`backend/app/catalogs/characters-880.json`), resuelve su ruta desde el módulo y valida su estructura y contenido durante el build de la imagen Docker. El frontend bloquea la preparación si el catálogo no está disponible; no se requieren variables ni montajes nuevos en Coolify.
+
 ## Arquitectura
 
 ```text
@@ -118,6 +120,10 @@ soul-knight-editor/
     │   │   ├── __init__.py
     │   │   └── demo.py
     │   ├── bridge.py
+    │   ├── catalogs/
+    │   │   ├── __init__.py
+    │   │   ├── characters-880.json
+    │   │   └── verify.py
     │   ├── engine.py
     │   ├── errors.py
     │   ├── local_save.py

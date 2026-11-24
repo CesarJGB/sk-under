@@ -77,7 +77,9 @@ const REPORT = {
     }))],
     counts: { characters: 42, unlocked: 1, selected_skins: 1 },
     level_status: 'not_validated', skins_status: 'not_validated',
-    catalog: { version: '8.8.0', source: 'SKDFE', characters: 42 },
+    catalog: {
+      available: true, error: null, version: '8.8.0', source: 'SKDFE', characters: 42,
+    },
     notes: ['El nivel se muestra tal como aparece en la partida; no hay máximo validado.'],
     status: 'read_only',
   },
@@ -524,6 +526,34 @@ test('rechaza valores inválidos de fichas antes de preparar la edición', async
   await expect(input).toHaveAttribute('aria-invalid', 'false')
   await expect(prepare).toBeEnabled()
 })
+
+test('bloquea la preparación cuando el catálogo de personajes no está disponible',
+  async ({ page }) => {
+    const unavailable = {
+      ...REPORT,
+      characters: {
+        ...REPORT.characters,
+        items: [],
+        counts: { characters: 0, unlocked: 0, selected_skins: 0 },
+        catalog: {
+          available: false, error: 'catalog_missing', version: null, source: null,
+          characters: 0,
+        },
+      },
+    }
+    await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: unavailable } } })
+    await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+    await page.goto('/partida')
+    await page.getByRole('link', { name: 'Abrir Editor' }).click()
+    await expect(page.getByTestId('character-catalog-unavailable')).toBeVisible()
+    await expect(page.getByTestId('character-catalog-unavailable')).toContainText(
+      'No está disponible el catálogo local de personajes',
+    )
+    await expect(page.getByRole('button', { name: 'Preparar desbloqueo de seleccionados' }))
+      .toBeDisabled()
+    await expect(page.getByRole('button', { name: 'Seleccionar todos los bloqueados' }))
+      .toBeDisabled()
+  })
 
 test('desbloquea un personaje individual con resumen y verificación', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })

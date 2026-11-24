@@ -15,7 +15,7 @@ El análisis utiliza los archivos originales de laboratorio. Las filas con colec
 
 ## Cruces con catálogos
 
-El catálogo saneado [characters-880.json](catalogs/characters-880.json) indexa 42 códigos de personaje, 105 habilidades y 802 skins a partir de SKDFE 8.8.0. Solo aporta el índice y el nombre: la presencia de un código en el catálogo no demuestra que la cuenta lo posea. Las claves de `skinLock` y `heroSkillUnlock` se conservan como entradas `Key`/`Value`; el índice de catálogo no sustituye ese estado.
+El catálogo saneado [characters-880.json](../../backend/app/catalogs/characters-880.json) indexa 42 códigos de personaje, 105 habilidades y 802 skins a partir de SKDFE 8.8.0. Solo aporta el índice y el nombre: la presencia de un código en el catálogo no demuestra que la cuenta lo posea. Las claves de `skinLock` y `heroSkillUnlock` se conservan como entradas `Key`/`Value`; el índice de catálogo no sustituye ese estado.
 
 Los cuatro mapas de inventario poblados de 8.6.0 contienen 139 claves de material, 47 de semillas, 213 de cupones y 275 de planos. El CSV 8.8.0 reconoce 133/139 materiales, 47/47 semillas, 13/213 cupones y 228/275 planos por igualdad de ID. Las dos claves de materiales del agregado 8.8.0 también coinciden. Los 167 códigos de evolución de la copia 8.6.0 están en `weapon_full.json` 8.8.0 y sus 177 IDs de skins están en el catálogo traducido. Estos cruces justifican nombres para inspección siempre que se conserve el ID crudo, incluso cuando falte una traducción. [SKDFE fijado](https://github.com/aznoobnam/skdfe/tree/57b9b86335c080caca55e178c8409cb67658ccf6)
 

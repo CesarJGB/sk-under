@@ -42,7 +42,9 @@ export function CharacterUnlockSection({
     .filter((character) => selected.has(character.code))
     .map((character) => character.code)
   const total = characters.counts.characters
-  const busy = disabled || operation.pending
+  const catalogUnavailable = characters.catalog.available === false
+    || characters.catalog.characters === 0
+  const busy = disabled || operation.pending || catalogUnavailable
 
   function clearPreview() {
     setPrepared(null)
@@ -96,6 +98,12 @@ export function CharacterUnlockSection({
     </Notice>
     {!writeReady && <Notice tone="warning">
       Puedes preparar el desbloqueo y su respaldo. La subida a la nube está deshabilitada.
+    </Notice>}
+    {catalogUnavailable && <Notice tone="warning">
+      <span data-testid="character-catalog-unavailable">
+        No está disponible el catálogo local de personajes. La preparación del desbloqueo
+        queda bloqueada hasta que el backend pueda leer el catálogo empaquetado.
+      </span>
     </Notice>}
 
     <div className="character-unlock-toolbar">

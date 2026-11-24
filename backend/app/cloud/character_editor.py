@@ -19,6 +19,7 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
 
+from ..catalogs import load_character_catalog
 from ..cloud_save import (
     MAX_INPUT_BYTES,
     AggregateFormatError,
@@ -29,7 +30,6 @@ from ..cloud_save import (
     unpack_cloud_save,
 )
 from ..parsers.json_document import parse_json
-from ..save_report import _load_character_catalog
 from .gems_editor import serialize_aggregate
 from .lab import BinaryDiff, binary_diff
 
@@ -77,7 +77,7 @@ class OutdatedCharacterDraft(CharacterEditError):
 
 def character_catalog_codes() -> tuple[str, ...]:
     """Códigos del catálogo local, sin depender del contenido de la partida."""
-    catalog = _load_character_catalog()
+    catalog = load_character_catalog()
     codes = catalog.get("codes")
     if not isinstance(codes, list) or not codes:
         raise CharacterCatalogMissing(

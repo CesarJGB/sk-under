@@ -5,6 +5,11 @@ primer editor de personajes. El cambio de fichas deja de ser experimental; el
 desbloqueo de personajes se publica como experimental hasta que el propietario
 complete la comprobación en un dispositivo Android físico.
 
+> **Corrección 6.16.1:** el catálogo de personajes ahora viaja dentro del
+> backend (`backend/app/catalogs/characters-880.json`), se resuelve desde el
+> módulo y se valida durante el build de la imagen. Consulta
+> [la corrección del catálogo](6.16.1-correccion-catalogo.md).
+
 ## 1. Consolidación de las fichas de pesca
 
 El propietario realizó la prueba manual pendiente con la modificación conjunta de
@@ -118,6 +123,12 @@ contador. Las pruebas de fichas se actualizaron para exigir la ausencia de la
 etiqueta experimental. También se ejecutan las pruebas completas de backend,
 `tsc --noEmit` y la suite de Playwright.
 
+La corrección 6.16.1 añade pruebas de regresión que verifican que el catálogo
+está dentro del paquete `app`, que el `.dockerignore` lo incluye, que el
+Dockerfile ejecuta `python -m app.catalogs.verify` y que un catálogo ausente no
+queda memorizado en la caché. La imagen Docker real se valida además con
+`backend/tests/verify_image_catalog.py`.
+
 ## 7. Validación pendiente
 
 | Capa | Estado |
@@ -127,6 +138,7 @@ etiqueta experimental. También se ejecutan las pruebas completas de backend,
 | Persistencia en la nube | Verificada por descarga posterior |
 | Desbloqueo visible dentro del juego | Pendiente de comprobación del propietario |
 | Niveles, habilidades y skins intactos en el cliente | Pendiente de comprobación del propietario |
+| Catálogo empaquetado en la imagen de producción | Validado en Docker local con `uid=10001`; pendiente el redespliegue en Coolify |
 
 La función se identifica como **Experimental · E2** en la interfaz para permitir
 una prueba controlada sin presentarla como definitiva.

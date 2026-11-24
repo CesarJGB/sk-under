@@ -8,24 +8,15 @@ módulo: todos los grupos se publican como ``read_only``.
 
 from __future__ import annotations
 
-from functools import lru_cache
-from pathlib import Path
 from typing import Any, Mapping
 
+from .catalogs import load_character_catalog
 from .cloud_save import reconstruct_cloud_save
 from .save_analysis import MISSING, character_report, fish_chip_report, kind_of
 
 REPORT_VERSION = 1
 MAX_ITEMS = 200
 MAX_TEXT = 120
-
-CHARACTER_CATALOG = (
-    Path(__file__).resolve().parents[2]
-    / "docs"
-    / "save-research"
-    / "catalogs"
-    / "characters-880.json"
-)
 
 READ_ONLY = "read_only"
 E2 = "E2: presencia y estructura observadas; comportamiento no validado."
@@ -61,46 +52,9 @@ def _state(value: object) -> str:
     return "present"
 
 
-@lru_cache(maxsize=1)
 def _load_character_catalog() -> dict[str, object]:
-    """Carga el catálogo local sin convertirlo en una dependencia obligatoria."""
-    try:
-        import json
-
-        document = json.loads(CHARACTER_CATALOG.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return {"codes": [], "characters": {}, "skins": {}, "skills": {}}
-    characters = document.get("characters") if isinstance(document, dict) else None
-    if not isinstance(characters, list):
-        return {"codes": [], "characters": {}, "skins": {}, "skills": {}}
-    by_code: dict[str, dict[str, object]] = {}
-    skins: dict[str, dict[str, str]] = {}
-    skills: dict[str, str] = {}
-    codes: list[str] = []
-    for entry in characters:
-        if not isinstance(entry, dict) or not isinstance(entry.get("code"), str):
-            continue
-        code = entry["code"]
-        codes.append(code)
-        by_code[code] = entry
-        index = entry.get("index")
-        group = f"c{index}" if type(index) is int else None
-        if group:
-            skins[group] = {}
-            for skin in entry.get("skins", []) if isinstance(entry.get("skins"), list) else []:
-                if isinstance(skin, dict) and isinstance(skin.get("key"), str):
-                    skins[group][skin["key"]] = _safe_text(skin.get("name"))
-        for skill in entry.get("skills", []) if isinstance(entry.get("skills"), list) else []:
-            if isinstance(skill, dict) and isinstance(skill.get("key"), str):
-                skills[skill["key"]] = _safe_text(skill.get("name"))
-    return {
-        "version": document.get("version") if isinstance(document.get("version"), str) else None,
-        "source": document.get("source") if isinstance(document.get("source"), str) else None,
-        "codes": codes,
-        "characters": by_code,
-        "skins": skins,
-        "skills": skills,
-    }
+    """Carga el catálogo empaquetado sin convertirlo en una dependencia obligatoria."""
+    return load_character_catalog()
 
 
 def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
@@ -152,6 +106,8 @@ def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
         "level_status": "not_validated",
         "skins_status": "not_validated",
         "catalog": {
+            "available": bool(catalog.get("available", bool(catalog.get("codes")))),
+            "error": catalog.get("error"),
             "version": catalog.get("version"),
             "source": catalog.get("source"),
             "characters": len(catalog["codes"]),

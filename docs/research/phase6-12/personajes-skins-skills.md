@@ -2,7 +2,7 @@
 
 ## Catálogo de referencia
 
-El catálogo versionado `docs/save-research/catalogs/characters-880.json`
+El catálogo versionado `backend/app/catalogs/characters-880.json`
 proviene de SKDFE en el commit fijado
 `57b9b86335c080caca55e178c8409cb67658ccf6` (8.8.0). Contiene:
 

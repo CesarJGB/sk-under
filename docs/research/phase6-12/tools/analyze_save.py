@@ -253,7 +253,7 @@ def compare_snapshots(
 
 def catalog_paths(directory: Path | None) -> tuple[list[str] | None, dict | None, dict | None]:
     if directory is None:
-        local = Path(__file__).resolve().parents[4] / "docs/save-research/catalogs/characters-880.json"
+        local = Path(__file__).resolve().parents[4] / "backend/app/catalogs/characters-880.json"
         if not local.exists():
             return None, None, None
         catalog = json.loads(local.read_text(encoding="utf-8"))

@@ -5,3 +5,6 @@
 !uv.lock
 !Dockerfile
 **/__pycache__/
+
+# El catálogo de personajes vive en app/catalogs/ y entra con !app/**.
+# No requiere montajes ni archivos externos al contexto de build backend/.
