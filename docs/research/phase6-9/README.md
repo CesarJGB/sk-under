@@ -134,6 +134,8 @@ npx playwright install chromium
 npm run test:browser
 ```
 
+La recuperación posterior volvió a ejecutar estas comprobaciones: 440 aprobadas y 16 omitidas en backend, 25 aprobadas en Chromium y build de producción con TypeScript. Las pruebas de navegador usan respuestas simuladas; no constituyen una nueva prueba real contra el proveedor. El repositorio no define una tarea de lint independiente ni un comprobador de tipos para Python.
+
 ## 9. Limitaciones restantes
 
 1. **Credenciales de las tres cuentas:** la contraseña facilitada es rechazada por el gateway y el portal. Sin credenciales válidas no se puede completar la validación multicuenta. No se intentó fuerza bruta ni recuperación de contraseña.
@@ -173,7 +175,7 @@ Rama `feature/phase6-9-autonomous-auth`, publicada en `origin`:
 | `e8f7918` | Reutilización de perfiles vinculados de la Fase 6.8 y pruebas de migración. |
 | `5bf43b7` | Pruebas con identificadores sintéticos; no se publican UUID reales. |
 
-No se hizo merge a `main` ni se desplegó públicamente. El commit que actualiza esta lista es posterior y no cambia código.
+Al cierre de la ejecución original no se había integrado en `main` ni desplegado públicamente. Los commits posteriores `e521a3c`, `e6eb32c` y `990c50b` ajustan documentación y referencias. La integración posterior se puede consultar en el historial de `main`.
 
 ## Documentos de la fase
 

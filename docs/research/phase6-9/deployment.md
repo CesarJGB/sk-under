@@ -4,7 +4,7 @@
 
 ## 1. Requisitos
 
-- Rama `feature/phase6-9-autonomous-auth` publicada.
+- Código de la Fase 6.9 publicado en la rama de despliegue.
 - Backend con la imagen `backend/Dockerfile`; frontend con `VITE_API_BASE_URL` apuntando al origen HTTPS exacto de la API.
 - Dominio privado, por ejemplo `sk.example.com`, con TLS terminado en el proxy de Coolify.
 - Volumen persistente montado en `/var/lib/sk-under`.
@@ -47,7 +47,7 @@ cd frontend
 VITE_API_BASE_URL=https://api.sk.example.com npm run build
 ```
 
-La CSP del HTML se genera con `connect-src 'self' https://api.sk.example.com`. Si el frontend y la API comparten origen, `VITE_API_BASE_URL` puede ser el mismo origen. Si cambia el dominio, recompila. `_headers` añade una CSP base y cabeceras; el proxy puede reforzarla.
+La CSP del HTML se genera con `connect-src 'self' https://api.sk.example.com`. Si el frontend y la API comparten origen, `VITE_API_BASE_URL` puede ser el mismo origen. Si cambia el dominio, recompila. `_headers` añade una CSP base y cabeceras; el proxy puede reforzarla. Para la sesión nativa, frontend y API deben usar HTTPS y pertenecer al mismo sitio, por ejemplo `sk.example.com` y `api.sk.example.com`: la cookie es `SameSite=Strict`. Una vista previa `*.pages.dev` frente a una API en otro dominio es cross-site y no permite ese flujo. El CORS del backend debe permitir el origen exacto del frontend con credenciales. Consulta los detalles en [despliegue de la Fase 6.8](../phase6-8/deployment.md).
 
 ## 4. Volumen y permisos
 
@@ -99,12 +99,12 @@ El comando cifra `original.json`, `candidate.json`, `record.json`, `confirmation
 
 - Un solo worker. SQLite, el rate limit y el bloqueo de descubrimiento son de proceso.
 - No se probó el despliegue real en Coolify desde esta sesión.
-- No se habilitó escritura ni se hizo merge a `main`.
+- No se habilitó ni se probó escritura real durante la validación de esta fase.
 - La autorización de ChillyRoom para uso de terceros sigue pendiente; mantén el servicio privado.
 
 ## 10. Checklist
 
-- [ ] Rama publicada y CI verde.
+- [ ] Commit de despliegue publicado y CI verificado.
 - [ ] `SK_NATIVE_STORE_KEY` y `SK_NATIVE_BACKUP_KEY` fuera del repositorio, respaldadas.
 - [ ] `SK_ALLOWED_ORIGINS` y `SK_NATIVE_ORIGIN` exactos, con HTTPS.
 - [ ] `SK_NATIVE_TRUSTED_PROXIES` con la red del proxy.

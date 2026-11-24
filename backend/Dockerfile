@@ -24,7 +24,8 @@ ENV PATH="/opt/venv/bin:$PATH" \
 
 COPY --from=dependencies /opt/venv /opt/venv
 COPY app/ ./app/
-RUN mkdir -p "$HOME" /var/lib/sk-under/backups /var/lib/sk-under/accounts \
+RUN chmod -R a+rX /app/app \
+    && mkdir -p "$HOME" /var/lib/sk-under/backups /var/lib/sk-under/accounts \
     /var/lib/sk-under/native /var/lib/sk-under/native-backups \
     && chown -R 10001:10001 "$HOME" /var/lib/sk-under \
     && chmod 700 /var/lib/sk-under/backups /var/lib/sk-under/accounts \
