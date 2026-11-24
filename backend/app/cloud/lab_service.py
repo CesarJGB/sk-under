@@ -18,6 +18,14 @@ from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError, CopyLimitError
 from ..save_report import read_save_report
 from .backup_store import BackupRecord, BackupStoreError, LabBackupStore
 from .blob_upload import UploadResult
+from .character_editor import (
+    CHARACTER_PATH,
+    CHARACTER_RECORD_FIELD,
+    CharacterEdit,
+    prepare_character_unlock_edit,
+    read_characters,
+    require_character_write_compatibility,
+)
 from .fish_chip_editor import (
     FISH_CHIP_PATH,
     FISH_CHIP_RECORD_FIELD,
@@ -105,7 +113,8 @@ class LabStatus:
             "max_gems": self.max_gems,
             "min_fish_chip": self.min_fish_chip,
             "max_fish_chip": self.max_fish_chip,
-            "fish_chip_write_policy": "experimental",
+            "fish_chip_write_policy": "confirmed_by_owner",
+            "character_write_policy": "experimental",
             "message": self.message,
         }
 
@@ -133,7 +142,8 @@ class LoadedSave:
             "fish_chip_path": FISH_CHIP_PATH,
             "material_fish": self.material_fish,
             "material_fish_path": MATERIAL_FISH_PATH,
-            "fish_chip_write_policy": "experimental",
+            "fish_chip_write_policy": "confirmed_by_owner",
+            "character_write_policy": "experimental",
             "size": self.size,
             "sha256": self.sha256,
             "serialzed_version": self.serialzed_version,
@@ -265,6 +275,61 @@ class PreparedFishChipEdit:
 
 
 @dataclass(frozen=True)
+class PreparedCharacterEdit:
+    """Resultado experimental de preparar un desbloqueo de personajes."""
+
+    backup: BackupRecord
+    edit: CharacterEdit
+    remote_source: str
+
+    @property
+    def changed(self) -> bool:
+        return self.edit.changed
+
+    @property
+    def candidate_sha256(self) -> str:
+        return self.edit.candidate_sha256
+
+    def summary(self) -> dict[str, object]:
+        return {
+            "field": CHARACTER_PATH,
+            "remote": {
+                "source": self.remote_source,
+                "size": self.edit.binary.original_size,
+                "sha256": self.edit.original_sha256,
+            },
+            "backup": self.backup.summary(),
+            "original_unlocked_count": len(self.edit.original_unlocked),
+            "new_unlocked_count": len(self.edit.new_unlocked),
+            "total_characters": self.edit.total,
+            "selected_codes": list(self.edit.selected_codes),
+            "newly_unlocked_codes": list(self.edit.newly_unlocked),
+            "original_value": len(self.edit.original_unlocked),
+            "new_value": len(self.edit.new_unlocked),
+            "changed": self.edit.changed,
+            "candidate_size": len(self.edit.candidate),
+            "candidate_sha256": self.edit.candidate_sha256,
+            "byte_diff": self.edit.binary.as_dict(),
+            "changed_fields": list(self.edit.changed_fields),
+            "experimental": True,
+            "validation": {
+                "valid": True,
+                "structure_valid": True,
+                "only_characters_changed": self.edit.changed
+                and all(path.startswith(CHARACTER_PATH + ".") for path in self.edit.changed_fields),
+                "experimental": True,
+                "evidence_level": "E2",
+                "message": (
+                    "Campos modificados: " + ", ".join(self.edit.changed_fields) + ". "
+                    "Niveles, habilidades y skins no se modifican."
+                    if self.edit.changed
+                    else "Los personajes seleccionados ya están disponibles; no hay cambios que subir."
+                ),
+            },
+        }
+
+
+@dataclass(frozen=True)
 class WriteResult:
     action: Literal["confirm", "restore"]
     backup_id: str
@@ -281,6 +346,7 @@ class WriteResult:
     field: str = "gems"
     remote_value: int | None = None
     remote_material_fish: int | None = None
+    remote_characters: int | None = None
 
     def summary(self) -> dict[str, object]:
         return {
@@ -297,6 +363,7 @@ class WriteResult:
             "remote_gems": self.remote_gems,
             "remote_value": self.remote_value,
             "remote_material_fish": self.remote_material_fish,
+            "remote_characters": self.remote_characters,
             "status": self.status,
             "message": self.message,
         }
@@ -316,6 +383,7 @@ class VerifyResult:
     field: str = "gems"
     remote_value: int | None = None
     remote_material_fish: int | None = None
+    remote_characters: int | None = None
 
     def summary(self) -> dict[str, object]:
         return {
@@ -328,6 +396,7 @@ class VerifyResult:
             "remote_gems": self.remote_gems,
             "remote_value": self.remote_value,
             "remote_material_fish": self.remote_material_fish,
+            "remote_characters": self.remote_characters,
             "expected_candidate_sha256": self.expected_candidate_sha256,
             "expected_original_sha256": self.expected_original_sha256,
             "message": self.message,
@@ -420,29 +489,64 @@ class CloudLabService:
 
     @staticmethod
     def _field_path(field: str) -> str:
-        return FISH_CHIP_PATH if field == FISH_CHIP_RECORD_FIELD else "gameData.gems"
+        if field == FISH_CHIP_RECORD_FIELD:
+            return FISH_CHIP_PATH
+        if field == CHARACTER_RECORD_FIELD:
+            return CHARACTER_PATH
+        return "gameData.gems"
+
+    @staticmethod
+    def _field_label(field: str) -> str:
+        if field == FISH_CHIP_RECORD_FIELD:
+            return "las fichas de pesca"
+        if field == CHARACTER_RECORD_FIELD:
+            return "los personajes"
+        return "las gemas"
+
+    @staticmethod
+    def _persisted_message(field: str, label: str) -> str:
+        if field == FISH_CHIP_RECORD_FIELD:
+            return (
+                f"La descarga posterior coincide con el agregado subido de {label}. "
+                "La efectividad dentro del juego fue confirmada por el propietario."
+            )
+        if field == CHARACTER_RECORD_FIELD:
+            return (
+                f"La descarga posterior coincide con el agregado subido de {label}. "
+                "Falta la comprobación manual del desbloqueo dentro del juego."
+            )
+        return (
+            f"La descarga posterior coincide con el agregado subido de {label}. "
+            "Las transacciones y la persistencia dentro del juego siguen sin verificarse."
+        )
 
     @staticmethod
     def _remote_values(
         payload: bytes, field: str
-    ) -> tuple[int | None, int | None, int | None]:
-        """Devuelve gemas, el valor del campo respaldado y material_fish."""
+    ) -> tuple[int | None, int | None, int | None, int | None]:
+        """Devuelve gemas, valor del campo, material_fish y personajes disponibles."""
         try:
             gems = read_gems(payload).gems
         except CloudSaveError:
             gems = None
+        material: int | None = None
+        characters: int | None = None
         if field == FISH_CHIP_RECORD_FIELD:
             try:
                 snapshot = read_fish_chip(payload)
                 value: int | None = snapshot.fish_chip
-                material: int | None = snapshot.material_fish
+                material = snapshot.material_fish
             except CloudSaveError:
                 value = None
-                material = None
+        elif field == CHARACTER_RECORD_FIELD:
+            try:
+                characters = len(read_characters(payload).unlocked)
+            except CloudSaveError:
+                characters = None
+            value = characters
         else:
             value = gems
-            material = None
-        return gems, value, material
+        return gems, value, material, characters
 
     def prepare(self, new_gems: object, *, expected_source: str | None = None) -> PreparedEdit:
         save = self.provider.download(self.max_input_bytes)
@@ -514,6 +618,48 @@ class CloudLabService:
         )
         return PreparedFishChipEdit(bundle.record, edit, save.metadata.source)
 
+    def prepare_characters(
+        self, codes: object, *, expected_source: str | None = None
+    ) -> PreparedCharacterEdit:
+        """Prepara el desbloqueo de los personajes seleccionados.
+
+        Solo activa las entradas correspondientes de ``gameData.heroUnlock``.
+        No crea ni modifica niveles, habilidades o skins, y conserva los
+        personajes que ya estaban disponibles.
+        """
+        save = self.provider.download(self.max_input_bytes)
+        if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
+            raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
+        edit = prepare_character_unlock_edit(save.payload, codes)
+        if edit.original_sha256 != save.metadata.sha256:
+            raise LabServiceError("El original preparado no coincide con la descarga.")
+        bundle = self.store.save(
+            edit,
+            remote_source=save.metadata.source,
+            remote_size=save.metadata.size,
+            remote_sha256=save.metadata.sha256,
+            field=CHARACTER_RECORD_FIELD,
+            original_value=len(edit.original_unlocked),
+            new_value=len(edit.new_unlocked),
+            character_codes=edit.newly_unlocked,
+        )
+        self.store.append_event(
+            bundle.record.id,
+            {
+                "action": "prepare",
+                "field": CHARACTER_PATH,
+                "experimental": True,
+                "changed": edit.changed,
+                "original_unlocked": len(edit.original_unlocked),
+                "new_unlocked": len(edit.new_unlocked),
+                "newly_unlocked_codes": list(edit.newly_unlocked),
+                "candidate_sha256": edit.candidate_sha256,
+                "changed_fields": list(edit.changed_fields),
+                "remote_source": save.metadata.source,
+            },
+        )
+        return PreparedCharacterEdit(bundle.record, edit, save.metadata.source)
+
     def confirm(self, backup_id: str, expected_sha256: str, *, single_attempt: bool = False) -> WriteResult:
         if not self.write_enabled or self.uploader is None:
             raise LabWriteDisabled("La escritura remota está deshabilitada en el servidor.")
@@ -521,7 +667,7 @@ class CloudLabService:
             raise LabHashMismatch("La huella esperada no es válida.")
         with self._write_lock:
             bundle = self.store.load(backup_id)
-            label = "las fichas de pesca" if bundle.record.field == FISH_CHIP_RECORD_FIELD else "las gemas"
+            label = self._field_label(bundle.record.field)
             if not bundle.record.changed:
                 raise LabNoChanges(f"La operación no cambia {label}; no se enviará nada a la nube.")
             if not compare_digest(expected_sha256, bundle.record.candidate_sha256):
@@ -531,6 +677,10 @@ class CloudLabService:
             if bundle.record.field == FISH_CHIP_RECORD_FIELD:
                 require_fish_chip_write_compatibility(
                     bundle.original, bundle.record.candidate_gems, bundle.candidate
+                )
+            elif bundle.record.field == CHARACTER_RECORD_FIELD:
+                require_character_write_compatibility(
+                    bundle.original, bundle.record.character_codes, bundle.candidate
                 )
             else:
                 require_gems_write_compatibility(bundle.original, bundle.record.candidate_gems, bundle.candidate)
@@ -547,7 +697,7 @@ class CloudLabService:
                 remote.metadata.size == bundle.record.candidate_size
                 and compare_digest(remote.metadata.sha256, bundle.record.candidate_sha256)
             )
-            remote_gems, remote_value, remote_material = self._remote_values(
+            remote_gems, remote_value, remote_material, remote_characters = self._remote_values(
                 remote.payload, bundle.record.field
             )
             result = WriteResult(
@@ -565,9 +715,9 @@ class CloudLabService:
                 field=self._field_path(bundle.record.field),
                 remote_value=remote_value,
                 remote_material_fish=remote_material,
+                remote_characters=remote_characters,
                 message=(
-                    f"La descarga posterior coincide con el agregado subido de {label}. "
-                    "Las transacciones y la persistencia dentro del juego siguen sin verificarse."
+                    self._persisted_message(bundle.record.field, label)
                     if persisted
                     else "La subida fue aceptada, pero la descarga posterior no coincide. No se declara persistencia."
                 ),
@@ -591,12 +741,12 @@ class CloudLabService:
             raise LabWriteDisabled("La escritura remota está deshabilitada en el servidor.")
         with self._write_lock:
             bundle = self.store.load(backup_id)
-            label = "las fichas de pesca" if bundle.record.field == FISH_CHIP_RECORD_FIELD else "las gemas"
+            label = self._field_label(bundle.record.field)
             if not bundle.record.changed:
                 raise LabNoChanges("El respaldo no contiene una modificación que restaurar.")
             current = self.provider.download(self.max_input_bytes)
             if current.metadata.sha256 == bundle.record.original_sha256:
-                remote_gems, remote_value, remote_material = self._remote_values(
+                remote_gems, remote_value, remote_material, remote_characters = self._remote_values(
                     current.payload, bundle.record.field
                 )
                 return WriteResult(
@@ -614,6 +764,7 @@ class CloudLabService:
                     field=self._field_path(bundle.record.field),
                     remote_value=remote_value,
                     remote_material_fish=remote_material,
+                    remote_characters=remote_characters,
                     message="La nube ya contiene el original; no se envió nada.",
                 )
             if current.metadata.sha256 != bundle.record.candidate_sha256:
@@ -626,7 +777,7 @@ class CloudLabService:
                 remote.metadata.size == bundle.record.original_size
                 and compare_digest(remote.metadata.sha256, bundle.record.original_sha256)
             )
-            remote_gems, remote_value, remote_material = self._remote_values(
+            remote_gems, remote_value, remote_material, remote_characters = self._remote_values(
                 remote.payload, bundle.record.field
             )
             result = WriteResult(
@@ -644,6 +795,7 @@ class CloudLabService:
                 field=self._field_path(bundle.record.field),
                 remote_value=remote_value,
                 remote_material_fish=remote_material,
+                remote_characters=remote_characters,
                 message=(
                     f"La descarga posterior coincide con el original respaldado de {label}."
                     if persisted
@@ -671,7 +823,7 @@ class CloudLabService:
             remote.metadata.size == bundle.record.original_size
             and compare_digest(remote.metadata.sha256, bundle.record.original_sha256)
         )
-        remote_gems, remote_value, remote_material = self._remote_values(
+        remote_gems, remote_value, remote_material, remote_characters = self._remote_values(
             remote.payload, bundle.record.field
         )
         self._event(
@@ -702,6 +854,7 @@ class CloudLabService:
             field=self._field_path(bundle.record.field),
             remote_value=remote_value,
             remote_material_fish=remote_material,
+            remote_characters=remote_characters,
         )
 
     def backups(self, limit: int = 25) -> list[BackupRecord]:

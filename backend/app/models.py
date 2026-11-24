@@ -112,7 +112,8 @@ class CloudLabStatus(BaseModel):
     max_gems: int
     min_fish_chip: int = 0
     max_fish_chip: int = 2_147_483_647
-    fish_chip_write_policy: Literal["experimental"] = "experimental"
+    fish_chip_write_policy: Literal["confirmed_by_owner"] = "confirmed_by_owner"
+    character_write_policy: Literal["experimental"] = "experimental"
     message: str
 
 
@@ -129,7 +130,8 @@ class CloudLabSave(BaseModel):
     fish_chip_path: str | None = None
     material_fish: int | None = None
     material_fish_path: str | None = None
-    fish_chip_write_policy: Literal["experimental"] | None = None
+    fish_chip_write_policy: Literal["confirmed_by_owner"] | None = None
+    character_write_policy: Literal["experimental"] | None = None
     size: int
     sha256: str
     serialzed_version: int
@@ -139,7 +141,7 @@ class CloudLabSave(BaseModel):
 class CloudBackupSummary(BaseModel):
     id: str
     created_at: str
-    field: Literal["gems", "fish_chip"] = "gems"
+    field: Literal["gems", "fish_chip", "characters"] = "gems"
     changed: bool
     original_size: int
     original_sha256: str
@@ -152,6 +154,7 @@ class CloudBackupSummary(BaseModel):
     remote_source: str
     remote_size: int
     remote_sha256: str
+    character_codes: list[str] = Field(default_factory=list)
 
 
 class CloudByteDiff(BaseModel):
@@ -209,6 +212,26 @@ class CloudLabFishChipPrepared(BaseModel):
     validation: dict[str, Any]
 
 
+class CloudLabCharacterPrepared(BaseModel):
+    remote: CloudRemoteInfo
+    backup: CloudBackupSummary
+    original_unlocked_count: int
+    new_unlocked_count: int
+    total_characters: int
+    selected_codes: list[str]
+    newly_unlocked_codes: list[str]
+    original_value: int | None = None
+    new_value: int | None = None
+    field: str
+    experimental: Literal[True] = True
+    changed: bool
+    candidate_size: int
+    candidate_sha256: str
+    byte_diff: CloudByteDiff
+    changed_fields: list[str]
+    validation: dict[str, Any]
+
+
 class CloudLabPrepareInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     new_gems: StrictInt
@@ -217,6 +240,11 @@ class CloudLabPrepareInput(BaseModel):
 class CloudLabFishChipPrepareInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     new_fish_chip: StrictInt
+
+
+class CloudLabCharacterPrepareInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    codes: list[StrictStr] = Field(min_length=1, max_length=42)
 
 
 class CloudLabConfirmInput(BaseModel):
@@ -251,6 +279,7 @@ class CloudLabWriteResult(BaseModel):
     remote_gems: int | None
     remote_value: int | None = None
     remote_material_fish: int | None = None
+    remote_characters: int | None = None
     status: int | None
     message: str
 
@@ -265,6 +294,7 @@ class CloudLabVerification(BaseModel):
     remote_gems: int | None
     remote_value: int | None = None
     remote_material_fish: int | None = None
+    remote_characters: int | None = None
     expected_candidate_sha256: str
     expected_original_sha256: str
     message: str

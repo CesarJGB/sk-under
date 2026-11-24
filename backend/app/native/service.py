@@ -190,7 +190,8 @@ class NativeAuthService:
             "max_gems": self.max_gems,
             "min_fish_chip": self.min_fish_chip,
             "max_fish_chip": self.max_fish_chip,
-            "fish_chip_write_policy": "experimental",
+            "fish_chip_write_policy": "confirmed_by_owner",
+            "character_write_policy": "experimental",
             "login_available": login_available,
             "auto_identity": self.auto_identity,
             "portal_enabled": self.portal_client is not None,
@@ -245,7 +246,8 @@ class NativeAuthService:
             "max_gems": self.max_gems,
             "min_fish_chip": self.min_fish_chip,
             "max_fish_chip": self.max_fish_chip,
-            "fish_chip_write_policy": "experimental",
+            "fish_chip_write_policy": "confirmed_by_owner",
+            "character_write_policy": "experimental",
         }
 
     # Inicio y cierre de sesión ---------------------------------------------
@@ -402,6 +404,21 @@ class NativeAuthService:
             session,
             lambda: self._lab(session).prepare_fish_chip(
                 new_fish_chip, expected_source=source_sha256
+            ).summary(),
+        )
+
+    def prepare_characters(
+        self, session: NativeSessionRecord, codes: list[str], source_sha256: str
+    ) -> dict[str, object]:
+        """Prepara el desbloqueo experimental de los personajes seleccionados.
+
+        Solo cambia ``gameData.heroUnlock`` para los códigos indicados. Los
+        niveles, habilidades, skins y el resto de la partida no se modifican.
+        """
+        return self._operate(
+            session,
+            lambda: self._lab(session).prepare_characters(
+                codes, expected_source=source_sha256
             ).summary(),
         )
 
@@ -758,7 +775,8 @@ class NativeAuthService:
             "fish_chip_path": "gameData.fishChip",
             "material_fish": material_fish,
             "material_fish_path": "itemData.materials.material_fish",
-            "fish_chip_write_policy": "experimental",
+            "fish_chip_write_policy": "confirmed_by_owner",
+            "character_write_policy": "experimental",
             "sections": None,
             "remote_source": save.metadata.source,
         }
@@ -902,7 +920,8 @@ class NativeAuthService:
             "fish_chip_path": "gameData.fishChip",
             "material_fish": material_fish,
             "material_fish_path": "itemData.materials.material_fish",
-            "fish_chip_write_policy": "experimental",
+            "fish_chip_write_policy": "confirmed_by_owner",
+            "character_write_policy": "experimental",
             "sections": None,
             "remote_source": save.metadata.source,
         }

@@ -10,6 +10,7 @@ import {
 } from '../api'
 import { formatSize } from '../session'
 import { Loading, Notice, PageTitle, Problem } from '../ui'
+import { CharacterUnlockSection } from './CharacterUnlockSection'
 import { HomePage } from './HomePage'
 import { SaveReportSections } from './SaveReportSections'
 import { useOperation } from '../useOperation'
@@ -63,11 +64,19 @@ const FRIENDLY: Record<string, string> = {
   outdated_gems_draft: 'El borrador usa una edición anterior. Prepara de nuevo la edición antes de subirla.',
   invalid_fish_chip_value: 'Introduce un número entero no negativo dentro del intervalo de fichas de pesca.',
   invalid_fish_material_value: 'itemData.materials.material_fish no es un entero; no se sobrescribe automáticamente.',
-  fish_chip_field_missing: 'La partida no contiene gameData.fishChip; la edición experimental no está disponible.',
-  fish_material_field_missing: 'La partida no contiene itemData.materials; la edición experimental no está disponible.',
+  fish_chip_field_missing: 'La partida no contiene gameData.fishChip; la edición de fichas no está disponible.',
+  fish_material_field_missing: 'La partida no contiene itemData.materials; la edición de fichas no está disponible.',
   fish_chip_verification_failed: 'La copia editada de fichas no superó la comprobación de integridad.',
-  fish_chip_edit: 'No se pudo preparar la edición experimental de fichas de pesca.',
+  fish_chip_edit: 'No se pudo preparar la edición de fichas de pesca.',
   outdated_fish_chip_draft: 'El borrador de fichas usa una edición anterior. Prepara de nuevo la edición antes de subirla.',
+  characters_edit: 'No se pudo preparar el desbloqueo de personajes.',
+  invalid_character_selection: 'Selecciona entre 1 y 42 personajes bloqueados, sin repetirlos.',
+  unknown_character: 'La selección contiene un personaje que no pertenece al catálogo.',
+  character_field_missing: 'La partida no contiene gameData.heroUnlock; el desbloqueo no está disponible.',
+  unsupported_characters_structure: 'gameData.heroUnlock no tiene la estructura booleana esperada; no se sobrescribe.',
+  character_catalog_missing: 'No está disponible el catálogo local de personajes.',
+  character_verification_failed: 'La copia editada de personajes no superó la comprobación de integridad.',
+  outdated_character_draft: 'El borrador de personajes usa una selección anterior. Prepara de nuevo el desbloqueo.',
   cloud_hash_mismatch: 'La huella del borrador no coincide con la del respaldo. Prepara de nuevo la edición.',
   backup_integrity: 'El respaldo no superó la comprobación de integridad.',
   backup_store: 'No se pudo guardar o leer el respaldo privado.',
@@ -602,7 +611,6 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
   <section className="cloud-section panel cloud-editor fish-chip-editor" aria-labelledby="edit-fish-chip-title">
     <div className="cloud-section-head">
       <div>
-        <span className="cloud-kicker">Experimental · E2</span>
         <h2 id="edit-fish-chip-title">Fichas de pesca</h2>
         <p className="cloud-state">gameData.fishChip + itemData.materials.material_fish · {accountLabel}</p>
       </div>
@@ -617,14 +625,15 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
         </strong>
       </div>
     </div>
-    <Notice tone="warning">
+    <p className="cloud-note">
       La escritura conjunta de <code>gameData.fishChip</code> y
-      <code>itemData.materials.material_fish</code> es una prueba experimental autorizada.
-      No se ha validado la autoridad del servidor, el gasto dentro del juego ni la persistencia
-      tras reiniciar. Prepara un respaldo antes de subir.
-    </Notice>
+      <code>itemData.materials.material_fish</code> fue confirmada por el propietario en un
+      dispositivo Android: el saldo se muestra en el juego, la compra descuenta el importe
+      correcto y el cliente oficial guarda el cambio. Se mantiene el respaldo y la verificación
+      antes de subir.
+    </p>
     {!session.write_ready && <Notice tone="warning">
-      Puedes preparar la edición experimental y su respaldo. La subida a la nube no está disponible.
+      Puedes preparar la edición y su respaldo. La subida a la nube no está disponible.
     </Notice>}
     {originalFishChip == null ? <p className="cloud-note">
       La partida descargada no contiene <code>gameData.fishChip</code>. La edición no está disponible.
@@ -651,11 +660,11 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
         </small>
       </label>
       <button className="button primary" disabled={disabled || !fishValid || fishAlreadyCurrent}>
-        Preparar cambio experimental
+        Preparar cambio de fichas
       </button>
     </form>}
     {fishCandidate && <div className="cloud-preview">
-      <h3>Revisar cambio experimental</h3>
+      <h3>Revisar cambio de fichas</h3>
       <dl className="cloud-preview-data">
         <div><dt>Fichas originales</dt><dd>{gemFormat.format(fishCandidate.original_fish_chip)}</dd></div>
         <div><dt>Fichas nuevas</dt><dd>{gemFormat.format(fishCandidate.new_fish_chip)}</dd></div>
@@ -670,7 +679,7 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
       {session.write_ready && !fishResult && <>
         <label className="cloud-check"><input type="checkbox" checked={fishConfirm} disabled={disabled}
           onChange={(event) => setFishConfirm(event.target.checked)} />
-          <span>Confirmo que quiero sobrescribir la partida en la nube de {accountLabel} con este cambio experimental.</span>
+          <span>Confirmo que quiero sobrescribir la partida en la nube de {accountLabel} con este cambio de fichas.</span>
         </label>
         <button className="button primary" disabled={disabled || !fishConfirm || !fishCandidate.changed}
           onClick={() => {
@@ -688,18 +697,29 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     </div>}
     {fishResult && <div role="status" className={`cloud-feedback ${fishResult.persisted ? 'verified' : 'uncertain'}`}>
       {fishResult.persisted
-        ? 'Cambio experimental subido y verificado en la nube. Falta la comprobación manual dentro del juego.'
+        ? 'Fichas de pesca subidas y verificadas en la nube.'
         : 'No se pudo confirmar la subida de fichas. Verifica el estado desde Partida.'}
     </div>}
     {operation.pending && fishAction && <Loading>
-      {fishAction === 'prepare' ? 'Preparando edición experimental…' : 'Subiendo fichas y verificando…'}
+      {fishAction === 'prepare' ? 'Preparando edición de fichas…' : 'Subiendo fichas y verificando…'}
     </Loading>}
     {operation.problem && fishAction && <Problem problem={friendly(operation.problem,
       fishAction === 'upload'
         ? 'No se pudo confirmar la subida de fichas. Verifica el estado desde Partida.'
-        : 'No se pudo preparar la edición experimental de fichas. Vuelve a intentarlo.')} />}
+        : 'No se pudo preparar la edición de fichas. Vuelve a intentarlo.')} />}
   </section>
-  {save.report ? <SaveReportSections report={save.report} /> : <section className="cloud-section panel cloud-empty" aria-labelledby="report-pending-title">
+  {save.report?.characters ? <CharacterUnlockSection
+    key={save.sha256}
+    characters={save.report.characters}
+    saveSha={save.sha256}
+    writeReady={Boolean(session.write_ready)}
+    accountLabel={accountLabel}
+    disabled={disabled}
+    formatProblem={friendly}
+    onExpired={onExpired}
+    onPrepared={() => void historyOperation.run(refreshHistory)}
+  /> : null}
+  {save.report ? <SaveReportSections report={save.report} showCharacters={false} /> : <section className="cloud-section panel cloud-empty" aria-labelledby="report-pending-title">
     <h2 id="report-pending-title">Recursos y personajes</h2>
     <p>Descarga la partida de nuevo para generar el informe de solo lectura.</p>
     <button className="button quiet" disabled={disabled} onClick={download}>
@@ -710,7 +730,9 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
 </>}
 
 function backupFieldLabel(backup: LabBackup) {
-  return backup.field === 'fish_chip' ? 'fichas de pesca' : 'gemas'
+  if (backup.field === 'fish_chip') return 'fichas de pesca'
+  if (backup.field === 'characters') return 'personajes disponibles'
+  return 'gemas'
 }
 
 function backupMessage(result: LabWriteResult | LabVerification) {

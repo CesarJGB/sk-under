@@ -30,6 +30,7 @@ CHARACTER_CATALOG = (
 READ_ONLY = "read_only"
 E2 = "E2: presencia y estructura observadas; comportamiento no validado."
 E3 = "E3: comportamiento validado en una muestra experimental."
+E4 = "E4: persistencia y consistencia confirmadas en un dispositivo físico."
 
 
 def _mapping(value: object) -> Mapping[str, Any] | None:
@@ -160,6 +161,7 @@ def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
             "Solo Knight tiene un cambio de nivel observado experimentalmente (E3).",
             "La posesión de skins no se deduce de skinLock; solo se muestra la skin equipada y el número de entradas registradas.",
             "Las habilidades se muestran con nombre de catálogo y el estado observado en heroSkillUnlock.",
+            "El desbloqueo experimental solo activa gameData.heroUnlock; conserva niveles, habilidades y skins.",
         ],
         "status": READ_ONLY,
     }
@@ -396,14 +398,15 @@ def build_save_report(document: Mapping[str, Any]) -> dict[str, object]:
     fish.update(
         {
             "status": READ_ONLY,
-            "evidence": E2,
-            "validation_level": "E2",
-            "write_policy": "experimental_authorized",
-            "transaction_validated": False,
+            "evidence": E4,
+            "validation_level": "E4",
+            "write_policy": "confirmed_by_owner",
+            "transaction_validated": True,
             "missing_proof": (
-                "No se observó una transacción legítima que obtenga o gaste fichas, "
-                "ni una recuperación tras reiniciar con saldo positivo. La escritura conjunta de "
-                "gameData.fishChip e itemData.materials.material_fish es experimental y no está validada."
+                "El propietario confirmó en Android la subida y recuperación desde la nube, "
+                "la visualización del saldo, la compra de paquetes con descuento correcto y "
+                "el guardado posterior desde el cliente oficial al modificar conjuntamente "
+                "gameData.fishChip e itemData.materials.material_fish."
             ),
         }
     )
@@ -415,9 +418,9 @@ def build_save_report(document: Mapping[str, Any]) -> dict[str, object]:
         "characters": _character_rows(game),
         "resources": _resources(document),
         "limitations": [
-            "Las fichas de pesca se muestran como saldo candidato; la autoridad local/remota no está confirmada.",
-            "La escritura conjunta de gameData.fishChip e itemData.materials.material_fish está autorizada solo como prueba experimental E2 y no se presenta como validada.",
-            "No se habilita la escritura de personajes, habilidades, skins ni recursos.",
+            "El propietario confirmó el saldo de fichas de pesca y la escritura conjunta de gameData.fishChip e itemData.materials.material_fish en un dispositivo Android físico.",
+            "El desbloqueo experimental de personajes solo modifica gameData.heroUnlock; no edita niveles, habilidades, skins ni recursos.",
+            "No se habilita la escritura de niveles, habilidades, skins ni recursos.",
             "Los valores de skinLock no se interpretan como posesión ni como desbloqueo.",
             "Los niveles máximos de personaje no están validados; no se muestran como si lo estuvieran.",
         ],

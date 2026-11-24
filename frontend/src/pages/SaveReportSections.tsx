@@ -87,7 +87,9 @@ function CharacterRow({ character }: { character: SaveCharacter }) {
   </li>
 }
 
-export function SaveReportSections({ report }: { report: SaveReport }) {
+export function SaveReportSections({
+  report, showCharacters = true,
+}: { report: SaveReport; showCharacters?: boolean }) {
   const fish = report.fish_chips
   const characters = [...report.characters.items].sort((left, right) => {
     const availability = Number(right.unlocked === true) - Number(left.unlocked === true)
@@ -100,22 +102,23 @@ export function SaveReportSections({ report }: { report: SaveReport }) {
           <span className="cloud-kicker">Solo consulta</span>
           <h2 id="report-resources-title">Recursos</h2>
           <p className="cloud-state">
-            Datos observados en la copia descargada. La edición de recursos y personajes no está habilitada.
+            Datos observados en la copia descargada. La edición de niveles, habilidades, skins y recursos no está habilitada.
           </p>
         </div>
         <span className="report-badge">Lectura</span>
       </div>
       <div className="report-fish">
         <div>
-          <span>Fichas de pesca <small className="report-badge">Experimental · E2</small></span>
+          <span>Fichas de pesca</span>
           <strong data-testid="fish-chip-balance">{fish.balance == null ? '—' : amountFormat.format(fish.balance)}</strong>
         </div>
         <p>
           {fish.balance_path ? `Campo candidato: ${fish.balance_path}. ` : 'No se encontró el campo candidato. '}
-          La escritura conjunta de gameData.fishChip e itemData.materials.material_fish está habilitada
-          solo como prueba experimental autorizada; no está validada.
+          La escritura conjunta de gameData.fishChip e itemData.materials.material_fish está
+          confirmada por el propietario en un dispositivo Android: el saldo se muestra en el juego,
+          la compra descuenta el importe correcto y el cliente oficial guarda el cambio.
         </p>
-        <p data-testid="fish-chip-missing-proof">{fish.missing_proof}</p>
+        <p data-testid="fish-chip-evidence">{fish.missing_proof}</p>
       </div>
       <div className="report-resource-grid">
         {report.resources.groups.map((group) => <ResourceGroup key={group.id} group={group} />)}
@@ -126,7 +129,7 @@ export function SaveReportSections({ report }: { report: SaveReport }) {
       </p>
     </section>
 
-    <section className="cloud-section panel report-section" aria-labelledby="report-characters-title">
+    {showCharacters && <section className="cloud-section panel report-section" aria-labelledby="report-characters-title">
       <div className="cloud-section-head">
         <div>
           <span className="cloud-kicker">Solo consulta</span>
@@ -147,6 +150,6 @@ export function SaveReportSections({ report }: { report: SaveReport }) {
           {[...report.characters.notes, ...report.limitations].map((note) => <li key={note}>{note}</li>)}
         </ul>
       </details>
-    </section>
+    </section>}
   </>
 }

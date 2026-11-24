@@ -31,6 +31,7 @@ from ..cloud.gems_editor import (
     InvalidGemsValue,
     UnsupportedAggregateSerialization,
 )
+from ..cloud.character_editor import CharacterEditError
 from ..cloud.fish_chip_editor import FishChipEditError
 from ..cloud.lab_service import (
     CloudLabService,
@@ -130,7 +131,7 @@ def _http_error(exc: CloudSaveError) -> EditorError:
         return EditorError(404, exc.code, str(exc))
     if isinstance(exc, (LabNoChanges, LabRemoteChanged, LabAlreadyConfirmed, BackupAlreadyConfirmed)):
         return EditorError(409, exc.code, str(exc))
-    if isinstance(exc, (InvalidBackupId, LabHashMismatch, GemsEditError, FishChipEditError)):
+    if isinstance(exc, (InvalidBackupId, LabHashMismatch, GemsEditError, FishChipEditError, CharacterEditError)):
         return EditorError(422, exc.code, str(exc))
     if isinstance(exc, CopyLimitError):
         return EditorError(413, exc.code, str(exc))

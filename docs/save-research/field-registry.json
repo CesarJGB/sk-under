@@ -14,7 +14,8 @@
     "phase6-12": "../research/phase6-12/README.md",
     "phase6-13": "../research/phase6-13/README.md",
     "phase6-14": "../research/phase6-14/README.md",
-    "phase6-15": "../research/phase6-15/README.md"
+    "phase6-15": "../research/phase6-15/README.md",
+    "phase6-16": "../research/phase6-16/README.md"
   },
   "fields": [
     {
@@ -450,18 +451,16 @@
         "Android Global 8.8.0.11"
       ],
       "known_dependencies": [
-        "itemData.materials.material_fish (H)"
+        "itemData.materials.material_fish (confirmado en dispositivo Android, Fase 6.16)"
       ],
       "pending_dependencies": [
-        "furniture_fish_chips (H)",
-        "fish_chips_count (PlayerPrefs, H)",
-        "fishChipStore* (H)",
-        "autoridad local/servidor",
-        "acción legítima de obtención/gasto"
+        "proyección en furniture_fish_chips (H)",
+        "historiales fishChipStore* (H)",
+        "origen de cada saldo"
       ],
-      "validation_level": "E2",
-      "edit_policy": "escritura experimental autorizada conjunta de gameData.fishChip e itemData.materials.material_fish; E2 sin validar",
-      "experimental_evidence": "34 ocurrencias de fishChip con valor 0 en 221 archivos JSON privados; ninguna positiva. La preferencia aparece con 0 tras recuperar. No se observó una transacción legítima. La Fase 6.13 lo muestra en el informe saneado de solo lectura y mantiene la escritura deshabilitada. La Fase 6.14 habilita la escritura experimental de gameData.fishChip con respaldo, confirmación autenticada y restauración. La prueba en Android confirmó persistencia remota, pero no aparición en el juego. La Fase 6.15 añade itemData.materials.material_fish al mismo candidato, conserva los demás materiales y no modifica cumulativeFishCount ni fishChipStore*; la efectividad dentro del cliente sigue pendiente de validación manual."
+      "validation_level": "E4",
+      "edit_policy": "escritura confirmada de gameData.fishChip junto con itemData.materials.material_fish; respaldo, confirmación, verificación por descarga y restauración",
+      "experimental_evidence": "La Fase 6.13 lo mostró en el informe saneado de solo lectura. La Fase 6.14 habilitó gameData.fishChip con respaldo y verificación remota. La Fase 6.15 añadió itemData.materials.material_fish al mismo candidato, conservó los demás materiales y no modificó cumulativeFishCount ni fishChipStore*. La Fase 6.16 consolida la evidencia: el propietario confirmó en un dispositivo Android físico la subida y recuperación desde la nube, la visualización del saldo dentro del juego, la compra de paquetes con las fichas, el descuento correcto y el guardado posterior desde el cliente oficial. Nivel E4 para el alcance probado; la implementación de ambos campos permanece sin cambios."
     },
     {
       "internal_name": "fishChipConfigId",
@@ -993,7 +992,7 @@
       ],
       "validation_level": "E2",
       "edit_policy": "solo lectura",
-      "experimental_evidence": "Mapa de cantidades. En 8.6.0 tiene 139 claves, incluidas material_fish, material_fertilize y fragmentos; la nube 8.8.0 inspeccionada solo tiene dos. No es una moneda. El informe de la Fase 6.13 agrupa materiales, semillas y tickets sin habilitar edición."
+      "experimental_evidence": "Mapa de cantidades. En 8.6.0 tiene 139 claves, incluidas material_fish, material_fertilize y fragmentos; la nube 8.8.0 inspeccionada solo tiene dos. No es una moneda. El informe de la Fase 6.13 agrupa materiales, semillas y tickets sin habilitar edición. La Fase 6.16 confirma que material_fish se puede escribir junto con gameData.fishChip mediante el flujo de fichas; el resto de materiales sigue siendo de solo lectura."
     },
     {
       "internal_name": "plants",
@@ -1485,11 +1484,12 @@
       ],
       "known_dependencies": [],
       "pending_dependencies": [
+        "confirmación del desbloqueo en un dispositivo Android físico",
         "fuente de cada desbloqueo"
       ],
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "experimental_evidence": "42 códigos en 8.8.0. Solo dos aparecen verdaderos en la copia de nube inspeccionada. No se distingue compra, progreso o tutorial sin una acción controlada."
+      "edit_policy": "escritura experimental autorizada de gameData.heroUnlock para los personajes seleccionados; solo cambia el código elegido a true y conserva niveles, habilidades, skins y el resto de la partida; pendiente de validación en dispositivo",
+      "experimental_evidence": "42 códigos en 8.8.0. En la copia de nube real solo Knight y CostumePrince aparecen como true. Los personajes bloqueados conservan heroLevel=0, heroSkill=0, heroSkillUnlock con la misma forma y currentSkinDatas vacío, igual que los disponibles; ninguna otra ruta diferencia la disponibilidad. La Fase 6.16 añade un editor que activa únicamente heroUnlock[código] para la selección, añade el código si faltara y conserva el resto del mapa y del agregado. La verificación inversa exige reproducir el original byte a byte. La persistencia y el efecto dentro del cliente están pendientes de la comprobación manual del propietario."
     },
     {
       "internal_name": "petUnlock",

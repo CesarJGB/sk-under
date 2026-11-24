@@ -40,9 +40,9 @@ def test_read_save_report_returns_sanitized_sections_and_no_private_ids():
     assert report["serialzed_version"] == 1
     assert report["fish_chips"]["balance"] == 7
     assert report["fish_chips"]["status"] == "read_only"
-    assert report["fish_chips"]["validation_level"] == "E2"
-    assert report["fish_chips"]["write_policy"] == "experimental_authorized"
-    assert report["fish_chips"]["transaction_validated"] is False
+    assert report["fish_chips"]["validation_level"] == "E4"
+    assert report["fish_chips"]["write_policy"] == "confirmed_by_owner"
+    assert report["fish_chips"]["transaction_validated"] is True
     assert "cloudSaveId" not in json.dumps(report)
     assert "privado-no-debe-salir" not in json.dumps(report)
     assert "plataforma-privada" not in json.dumps(report)

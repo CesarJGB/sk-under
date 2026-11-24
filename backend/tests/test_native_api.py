@@ -684,3 +684,152 @@ def test_native_reports_missing_fish_chip_without_creating_a_backup(tmp_path):
     )
     assert_error(response, 422, "fish_chip_field_missing")
     assert client.get(API + "/backups", headers=HEADERS).json()["backups"] == []
+
+
+def character_payload(unlocked=("Knight", "CostumePrince")) -> bytes:
+    from app.save_report import _load_character_catalog
+
+    codes = _load_character_catalog()["codes"]
+    data = json.loads(PAYLOAD_A)
+    data["gameData"]["heroUnlock"] = {code: code in unlocked for code in codes}
+    data["gameData"]["heroLevel"] = {code: 0 for code in codes}
+    data["gameData"]["heroLevel"]["Knight"] = 2
+    data["gameData"]["heroSkill"] = {code: 0 for code in codes}
+    data["gameData"]["heroSkillUnlock"] = {
+        code: [{"Key": 0, "Value": True}, {"Key": 1, "Value": False}, {"Key": 2, "Value": False}]
+        for code in codes
+    }
+    data["gameData"]["skinLock"] = {code: [0, 1, -1] for code in codes}
+    data["gameData"]["currentSkinDatas"] = {"Knight": 1}
+    data["gameData"]["fishChip"] = 3
+    data["itemData"]["materials"] = {"material_fish": 3, "material_ticket": 5}
+    return canonical(data)
+
+
+def prepare_characters(client, codes):
+    source = client.get(API + "/save", headers=HEADERS)
+    assert source.status_code == 200, source.text
+    response = client.post(
+        API + "/prepare-characters",
+        headers=HEADERS,
+        json={"codes": codes, "source_sha256": source.json()["sha256"]},
+    )
+    assert response.status_code == 200, response.text
+    return source.json(), response.json()
+
+
+def test_native_character_unlock_single_flow_preserves_progress_and_restores(tmp_path):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = character_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+
+    source, draft = prepare_characters(client, ["Ranger"])
+    assert source["character_write_policy"] == "experimental"
+    assert draft["field"] == "gameData.heroUnlock"
+    assert draft["experimental"] is True
+    assert draft["original_unlocked_count"] == 2
+    assert draft["new_unlocked_count"] == 3
+    assert draft["total_characters"] == 42
+    assert draft["selected_codes"] == ["Ranger"]
+    assert draft["newly_unlocked_codes"] == ["Ranger"]
+    assert draft["changed_fields"] == ["gameData.heroUnlock.Ranger"]
+    assert draft["backup"]["field"] == "characters"
+    assert draft["backup"]["character_codes"] == ["Ranger"]
+    assert draft["backup"]["original_value"] == 2
+    assert draft["backup"]["candidate_value"] == 3
+    assert draft["validation"]["only_characters_changed"] is True
+
+    confirmed = client.post(API + "/confirm", headers=HEADERS, json=confirmation(draft))
+    assert confirmed.status_code == 200, confirmed.text
+    result = confirmed.json()
+    assert result["persisted"] is True
+    assert result["field"] == "gameData.heroUnlock"
+    assert result["remote_characters"] == 3
+    assert result["remote_gems"] == 1000
+
+    uploaded = json.loads(env["providers"]["unique-a"].payload)
+    assert uploaded["gameData"]["heroUnlock"]["Knight"] is True
+    assert uploaded["gameData"]["heroUnlock"]["CostumePrince"] is True
+    assert uploaded["gameData"]["heroUnlock"]["Ranger"] is True
+    assert uploaded["gameData"]["heroUnlock"]["Mage"] is False
+    assert uploaded["gameData"]["heroLevel"]["Knight"] == 2
+    assert uploaded["gameData"]["heroSkill"] == {
+        code: 0 for code in uploaded["gameData"]["heroSkill"]
+    }
+    assert uploaded["gameData"]["skinLock"] == {
+        code: [0, 1, -1] for code in uploaded["gameData"]["skinLock"]
+    }
+    assert uploaded["gameData"]["gems"] == 1000
+    assert uploaded["gameData"]["fishChip"] == 3
+    assert uploaded["itemData"]["materials"] == {"material_fish": 3, "material_ticket": 5}
+
+    verified = client.post(API + "/verify", headers=HEADERS,
+                           json={"backup_id": draft["backup"]["id"]})
+    assert verified.status_code == 200, verified.text
+    assert verified.json()["matches_candidate"] is True
+    assert verified.json()["remote_characters"] == 3
+
+    restored = client.post(API + "/restore", headers=HEADERS,
+                           json={"backup_id": draft["backup"]["id"], "confirmation": "RESTAURAR"})
+    assert restored.status_code == 200, restored.text
+    assert restored.json()["persisted"] is True
+    assert restored.json()["remote_characters"] == 2
+    after = json.loads(env["providers"]["unique-a"].payload)
+    assert after["gameData"]["heroUnlock"]["Ranger"] is False
+    assert after["gameData"]["heroUnlock"]["Knight"] is True
+    assert after["gameData"]["heroLevel"]["Knight"] == 2
+
+
+def test_native_character_unlock_multiple_and_mass_keeps_previous_unlocks(tmp_path):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = character_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+
+    _, multiple = prepare_characters(client, ["Ranger", "Mage"])
+    assert multiple["newly_unlocked_codes"] == ["Ranger", "Mage"]
+    confirm_multiple = client.post(API + "/confirm", headers=HEADERS, json=confirmation(multiple))
+    assert confirm_multiple.status_code == 200, confirm_multiple.text
+    assert confirm_multiple.json()["remote_characters"] == 4
+
+    from app.save_report import _load_character_catalog
+
+    remaining = [
+        code for code in _load_character_catalog()["codes"]
+        if code not in {"Knight", "CostumePrince", "Ranger", "Mage"}
+    ]
+    _, mass = prepare_characters(client, remaining)
+    assert mass["original_unlocked_count"] == 4
+    assert mass["new_unlocked_count"] == 42
+    assert mass["newly_unlocked_codes"] == remaining
+    confirm_mass = client.post(API + "/confirm", headers=HEADERS, json=confirmation(mass))
+    assert confirm_mass.status_code == 200, confirm_mass.text
+    assert confirm_mass.json()["remote_characters"] == 42
+    uploaded = json.loads(env["providers"]["unique-a"].payload)
+    assert all(uploaded["gameData"]["heroUnlock"].values())
+    assert uploaded["gameData"]["heroLevel"]["Knight"] == 2
+    assert uploaded["gameData"]["gems"] == 1000
+
+
+@pytest.mark.parametrize(
+    "codes, code",
+    [
+        ([], "invalid_request"),
+        (["Knight", "Knight"], "invalid_character_selection"),
+        (["NoExiste"], "unknown_character"),
+    ],
+)
+def test_native_rejects_invalid_character_selections_before_backup(tmp_path, codes, code):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = character_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+    source = client.get(API + "/save", headers=HEADERS).json()
+    response = client.post(
+        API + "/prepare-characters",
+        headers=HEADERS,
+        json={"codes": codes, "source_sha256": source["sha256"]},
+    )
+    assert_error(response, 422, code)
+    assert client.get(API + "/backups", headers=HEADERS).json()["backups"] == []

@@ -268,7 +268,7 @@ def fish_chip_report(document: Mapping[str, Any]) -> dict[str, object]:
                 "type": kind_of(balance),
                 "value": balance,
                 "role": "saldo candidato",
-                "evidence": "E2: nombre y tipo en archivos propios; sin saldo positivo observado.",
+                "evidence": "E4: saldo y gasto confirmados por el propietario en Android 8.8.0.",
             }
         )
     materials = item.get("materials") if item is not None else None
@@ -281,8 +281,8 @@ def fish_chip_report(document: Mapping[str, Any]) -> dict[str, object]:
                 "value": material,
                 "role": "material de pesca (no es el saldo de fichas)",
                 "evidence": (
-                    "E2/H: el propietario recuerda que un editor anterior cambiaba este valor junto con "
-                    "gameData.fishChip; no hay validación dentro del cliente."
+                    "E4: confirmado por el propietario en Android; debe editarse junto con gameData.fishChip "
+                    "para que el saldo y el gasto coincidan."
                 ),
             }
         )

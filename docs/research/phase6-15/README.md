@@ -6,6 +6,12 @@ dentro del juego. El propietario recordó que un editor anterior requería cambi
 **dos** valores de pesca y que el segundo era `material_fish`. Esta fase convierte
 esa pista en una prueba experimental conjunta, sin presentarla como validada.
 
+> **Resultado posterior (Fase 6.16).** El propietario confirmó en un dispositivo
+> Android físico que la modificación conjunta funciona: la nube conserva la copia,
+> el saldo aparece dentro del juego, la compra de paquetes descuenta el importe
+> correcto y el cliente oficial guarda el cambio posterior. La etiqueta
+> experimental se retiró de la interfaz y el campo quedó en E4 para ese alcance.
+
 ## Alcance
 
 El editor **Experimental · E2** de `/partida` aplica el mismo entero introducido
@@ -63,16 +69,16 @@ mantuvo el tamaño y produjo un único tramo de diferencia binaria. La
 comprobación inversa reprodujo el original. No se subió esa copia durante la
 prueba automatizada.
 
-## Validación pendiente
+## Validación
 
-| Capa | Estado |
-| --- | --- |
-| Persistencia en la nube | Comprobada por descarga posterior |
-| Recuperación por el cliente oficial | Pendiente |
-| Aparición del saldo dentro del juego | Pendiente |
-| Capacidad de gastar las fichas | Pendiente |
-| Persistencia tras reiniciar | Pendiente |
-| Persistencia tras volver a guardar desde Android | Pendiente |
+| Capa | Estado en 6.15 | Confirmación en 6.16 |
+| --- | --- | --- |
+| Persistencia en la nube | Comprobada por descarga posterior | Confirmada |
+| Recuperación por el cliente oficial | Pendiente | Confirmada |
+| Aparición del saldo dentro del juego | Pendiente | Confirmada |
+| Capacidad de gastar las fichas | Pendiente | Confirmada con descuento correcto |
+| Persistencia tras reiniciar | Pendiente | No comprobada por separado; el guardado posterior conserva el valor |
+| Persistencia tras volver a guardar desde Android | Pendiente | Confirmada |
 
 ## Fuera de alcance
 

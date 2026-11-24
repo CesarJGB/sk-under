@@ -22,7 +22,7 @@ const SAVE = {
   verified: true, bytes: 505, sha256: SHA, gems: 1001, fish_chip: 3,
   fish_chip_path: 'gameData.fishChip', material_fish: 3,
   material_fish_path: 'itemData.materials.material_fish',
-  fish_chip_write_policy: 'experimental',
+  fish_chip_write_policy: 'confirmed_by_owner',
   sections: 17, remote_source: 'modern-cloud',
 }
 const ACTIVE = {
@@ -54,8 +54,9 @@ const REPORT = {
   version: 1, game_version: 80800, serialzed_version: 1, encoding: 'json',
   fish_chips: {
     balance_path: 'gameData.fishChip', balance: 3, balance_is_integer: true,
-    server_authority: 'unknown', status: 'read_only', evidence: 'E2',
-    transaction_validated: false, missing_proof: 'Falta una transacción legítima con saldo positivo.',
+    server_authority: 'unknown', status: 'read_only', evidence: 'E4',
+    validation_level: 'E4', write_policy: 'confirmed_by_owner', transaction_validated: true,
+    missing_proof: 'El propietario confirmó el saldo y el gasto en un dispositivo Android físico.',
     fields: [], distinct_collections: {},
   },
   characters: {
@@ -66,7 +67,14 @@ const REPORT = {
       skill_options: [{ index: 0, name: 'Dual Wield' }, { index: 1, name: 'Superior Fire' }],
       selected_skin: 0, equipped_skin: { key: 0, state: 1, name: 'Knight' },
       skins_recorded: 2, skins_status: 'not_validated',
-    }],
+    }, ...['Ranger', 'Mage', 'Alchemist'].map((name, index) => ({
+      code: name, name, catalog_index: index + 1, unlocked: false, level: 0,
+      level_max: null, level_status: 'not_validated', selected_skill: 0,
+      skills: [{ key: 0, unlocked: true, name: 'Habilidad' }],
+      skill_options: [{ index: 0, name: 'Habilidad' }],
+      selected_skin: '<missing>', equipped_skin: null,
+      skins_recorded: 0, skins_status: 'not_validated',
+    }))],
     counts: { characters: 42, unlocked: 1, selected_skins: 1 },
     level_status: 'not_validated', skins_status: 'not_validated',
     catalog: { version: '8.8.0', source: 'SKDFE', characters: 42 },
@@ -102,6 +110,32 @@ const PREPARED = {
 const FISH_BACKUP = {
   ...BACKUP, field: 'fish_chip', original_gems: 3, original_value: 3,
   candidate_gems: 7, candidate_value: 7,
+}
+const CHARACTER_BACKUP = {
+  ...BACKUP, field: 'characters', original_gems: 1, original_value: 1,
+  candidate_gems: 2, candidate_value: 2, character_codes: ['Ranger'],
+}
+function characterPrepared(codes: string[]) {
+  return {
+    remote: { source: 'modern-cloud', size: 505, sha256: SHA },
+    backup: {
+      ...CHARACTER_BACKUP,
+      candidate_gems: 1 + codes.length,
+      candidate_value: 1 + codes.length,
+      character_codes: codes,
+    },
+    field: 'gameData.heroUnlock', original_unlocked_count: 1,
+    new_unlocked_count: 1 + codes.length, total_characters: 42,
+    selected_codes: codes, newly_unlocked_codes: codes,
+    original_value: 1, new_value: 1 + codes.length, experimental: true, changed: true,
+    candidate_size: 505, candidate_sha256: CANDIDATE, byte_diff: PREPARED.byte_diff,
+    changed_fields: codes.map((code) => `gameData.heroUnlock.${code}`),
+    validation: {
+      valid: true, structure_valid: true, only_characters_changed: true,
+      experimental: true, evidence_level: 'E2',
+      message: `Campos modificados: ${codes.map((code) => `gameData.heroUnlock.${code}`).join(', ')}.`,
+    },
+  }
 }
 const FISH_PREPARED = {
   remote: { source: 'modern-cloud', size: 505, sha256: SHA }, backup: FISH_BACKUP,
@@ -413,17 +447,18 @@ test('muestra fichas, recursos y personajes del informe en solo lectura', async 
   await page.goto('/partida')
   await page.getByRole('link', { name: 'Abrir Editor' }).click()
   await expect(page.getByTestId('fish-chip-balance')).toHaveText('3')
-  await expect(page.getByText('Falta una transacción legítima con saldo positivo.')).toBeVisible()
+  await expect(page.getByTestId('fish-chip-evidence')).toContainText('propietario confirmó')
+  const fishSection = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Fichas de pesca' }) })
+  await expect(fishSection.getByText('Experimental · E2')).toHaveCount(0)
   await expect(page.getByTestId('resource-group-materials')).toContainText('wood × 4')
-  await expect(page.getByTestId('character-row-Knight')).toContainText('Disponible')
-  await expect(page.getByTestId('character-level-Knight')).toHaveText('2')
-  await expect(page.getByTestId('character-row-Knight')).toContainText('Dual Wield')
-  await expect(page.getByTestId('character-row-Knight')).toContainText('Knight')
+  await expect(page.getByTestId('character-unlocked-count')).toHaveText('1 / 42')
+  await expect(page.getByTestId('character-unlock-Knight')).toContainText('Disponible')
+  await expect(page.getByTestId('character-unlock-Ranger')).toContainText('Bloqueado')
   await expect(page.getByLabel('Nueva cantidad de gemas')).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 
-test('edita y sube el saldo experimental de fichas con el flujo autenticado', async ({ page }) => {
+test('edita y sube el saldo de fichas con el flujo autenticado', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: SAVE } })
   await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
     json: { backups: [{ ...FISH_BACKUP, confirmed: true }] },
@@ -450,19 +485,19 @@ test('edita y sube el saldo experimental de fichas con el flujo autenticado', as
   await page.getByRole('link', { name: 'Abrir Editor' }).click()
   await expect(page.getByTestId('native-current-fish-chip')).toHaveText('3')
   await expect(page.getByTestId('native-current-material-fish')).toHaveText('3')
-  await expect(page.getByText('Experimental · E2').first()).toBeVisible()
-  await expect(page.getByText('No se ha validado la autoridad del servidor', { exact: false })).toBeVisible()
+  await expect(page.getByText('Experimental · E2')).toHaveCount(0)
+  await expect(page.getByText('confirmada por el propietario', { exact: false })).toBeVisible()
   await page.getByLabel('Nuevo saldo de fichas de pesca').fill('7')
-  await page.getByRole('button', { name: 'Preparar cambio experimental' }).click()
-  await expect(page.getByRole('heading', { name: 'Revisar cambio experimental' })).toBeVisible()
+  await page.getByRole('button', { name: 'Preparar cambio de fichas' }).click()
+  await expect(page.getByRole('heading', { name: 'Revisar cambio de fichas' })).toBeVisible()
   const preview = page.locator('.cloud-preview-data')
   await expect(preview).toContainText('Fichas originales')
   await expect(preview).toContainText('Fichas nuevas')
   await expect(preview).toContainText('material_fish original')
   await expect(preview).toContainText('material_fish nuevo')
-  await page.getByLabel(/cambio experimental/).check()
+  await page.getByLabel(/cambio de fichas/).check()
   await page.getByRole('button', { name: 'Subir fichas y verificar' }).click()
-  await expect(page.getByText('Cambio experimental subido y verificado en la nube', { exact: false })).toBeVisible()
+  await expect(page.getByText('Fichas de pesca subidas y verificadas en la nube', { exact: false })).toBeVisible()
   await expect(page.getByTestId('native-current-fish-chip')).toHaveText('7')
   await expect(page.getByTestId('native-current-material-fish')).toHaveText('7')
 
@@ -477,7 +512,7 @@ test('rechaza valores inválidos de fichas antes de preparar la edición', async
   await page.goto('/partida')
   await page.getByRole('link', { name: 'Abrir Editor' }).click()
   const input = page.getByLabel('Nuevo saldo de fichas de pesca')
-  const prepare = page.getByRole('button', { name: 'Preparar cambio experimental' })
+  const prepare = page.getByRole('button', { name: 'Preparar cambio de fichas' })
 
   await input.fill('-1')
   await expect(input).toHaveAttribute('aria-invalid', 'true')
@@ -488,6 +523,104 @@ test('rechaza valores inválidos de fichas antes de preparar la edición', async
   await input.fill('4')
   await expect(input).toHaveAttribute('aria-invalid', 'false')
   await expect(prepare).toBeEnabled()
+})
+
+test('desbloquea un personaje individual con resumen y verificación', async ({ page }) => {
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  let selectedCodes: string[] = []
+  await page.route('**/api/v1/cloud/native/prepare-characters', (route) => {
+    const payload = route.request().postDataJSON()
+    expect(payload.source_sha256).toBe(SHA)
+    selectedCodes = payload.codes
+    return route.fulfill({ json: characterPrepared(payload.codes) })
+  })
+  await page.route('**/api/v1/cloud/native/confirm', (route) => {
+    expect(route.request().postDataJSON()).toEqual({
+      backup_id: CHARACTER_BACKUP.id, expected_sha256: CANDIDATE, confirmation: 'SUBIR',
+    })
+    return route.fulfill({ json: {
+      action: 'confirm', backup_id: CHARACTER_BACKUP.id, field: 'gameData.heroUnlock',
+      uploaded: true, accepted: true, persisted: true, already_original: false,
+      expected_sha256: CANDIDATE, remote_sha256: CANDIDATE, remote_size: 505,
+      remote_gems: 1001, remote_value: 2, remote_characters: 2, status: 200,
+      message: 'La descarga posterior coincide con el agregado subido de los personajes.',
+    } })
+  })
+
+  await page.goto('/partida')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await expect(page.getByTestId('character-unlock-section')).toBeVisible()
+  await page.getByLabel('Seleccionar Ranger').check()
+  await page.getByRole('button', { name: 'Preparar desbloqueo de seleccionados' }).click()
+  expect(selectedCodes).toEqual(['Ranger'])
+  await expect(page.getByRole('heading', { name: 'Revisar desbloqueo' })).toBeVisible()
+  await expect(page.getByTestId('character-unlock-preview')).toContainText('Ranger')
+  await expect(page.getByTestId('character-unlock-preview')).toContainText('gameData.heroUnlock.Ranger')
+  await page.getByLabel(/Confirmo que quiero desbloquear estos personajes/).check()
+  await page.getByRole('button', { name: 'Desbloquear y verificar' }).click()
+  await expect(page.getByText('Desbloqueo subido y verificado en la nube', { exact: false })).toBeVisible()
+  await expect(page.getByTestId('character-unlocked-count')).toHaveText('2 / 42')
+  await expect(page.getByTestId('character-unlock-Ranger')).toContainText('Disponible')
+  await expect(page.getByLabel('Seleccionar Knight')).toHaveCount(0)
+})
+
+test('desbloquea varios personajes seleccionados sin tocar los disponibles', async ({ page }) => {
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  let selectedCodes: string[] = []
+  await page.route('**/api/v1/cloud/native/prepare-characters', (route) => {
+    selectedCodes = route.request().postDataJSON().codes
+    return route.fulfill({ json: characterPrepared(selectedCodes) })
+  })
+
+  await page.goto('/partida')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await page.getByLabel('Seleccionar Ranger').check()
+  await page.getByLabel('Seleccionar Mage').check()
+  await expect(page.getByText('2 seleccionados de 3 bloqueados.')).toBeVisible()
+  await page.getByRole('button', { name: 'Preparar desbloqueo de seleccionados' }).click()
+  expect(selectedCodes).toEqual(['Ranger', 'Mage'])
+  const preview = page.getByTestId('character-unlock-preview')
+  await expect(preview).toContainText('Ranger, Mage')
+  await expect(preview).toContainText('Desbloqueados nuevos')
+  await expect(preview).toContainText('3 / 42')
+  await expect(page.getByLabel('Seleccionar Knight')).toHaveCount(0)
+})
+
+test('selecciona todos, deselecciona y desbloquea el resto en masa', async ({ page }) => {
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  let selectedCodes: string[] = []
+  await page.route('**/api/v1/cloud/native/prepare-characters', (route) => {
+    selectedCodes = route.request().postDataJSON().codes
+    return route.fulfill({ json: characterPrepared(selectedCodes) })
+  })
+  await page.route('**/api/v1/cloud/native/confirm', (route) => route.fulfill({ json: {
+    action: 'confirm', backup_id: CHARACTER_BACKUP.id, field: 'gameData.heroUnlock',
+    uploaded: true, accepted: true, persisted: true, already_original: false,
+    expected_sha256: CANDIDATE, remote_sha256: CANDIDATE, remote_size: 505,
+    remote_gems: 1001, remote_value: 4, remote_characters: 4, status: 200,
+    message: 'La descarga posterior coincide con el agregado subido de los personajes.',
+  } }))
+
+  await page.goto('/partida')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await page.getByRole('button', { name: 'Seleccionar todos los bloqueados' }).click()
+  await expect(page.getByLabel('Seleccionar Ranger')).toBeChecked()
+  await expect(page.getByLabel('Seleccionar Alchemist')).toBeChecked()
+  await expect(page.getByText('3 seleccionados de 3 bloqueados.')).toBeVisible()
+  await page.getByRole('button', { name: 'Deseleccionar todos' }).click()
+  await expect(page.getByLabel('Seleccionar Ranger')).not.toBeChecked()
+  await expect(page.getByRole('button', { name: 'Preparar desbloqueo de seleccionados' })).toBeDisabled()
+  await page.getByRole('button', { name: 'Seleccionar todos los bloqueados' }).click()
+  await page.getByRole('button', { name: 'Preparar desbloqueo de seleccionados' }).click()
+  expect(selectedCodes).toEqual(['Ranger', 'Mage', 'Alchemist'])
+  await page.getByLabel(/Confirmo que quiero desbloquear estos personajes/).check()
+  await page.getByRole('button', { name: 'Desbloquear y verificar' }).click()
+  await expect(page.getByText('Desbloqueo subido y verificado en la nube', { exact: false })).toBeVisible()
+  await expect(page.getByTestId('character-unlocked-count')).toHaveText('4 / 42')
+  await expect(page.getByTestId('character-unlock-Alchemist')).toContainText('Disponible')
 })
 
 test('las rutas antiguas llevan a Partida y no permiten cargar un archivo local', async ({ page }) => {

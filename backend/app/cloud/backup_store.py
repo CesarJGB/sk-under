@@ -24,6 +24,13 @@ from Crypto.Cipher import AES
 
 from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError, reconstruct_cloud_save
 from ..parsers.json_document import parse_json
+from .character_editor import (
+    CHARACTER_RECORD_FIELD,
+    MAX_CHARACTERS,
+    CharacterFieldMissing,
+    prepare_character_unlock_edit,
+    read_characters,
+)
 from .fish_chip_editor import (
     FISH_CHIP_RECORD_FIELD,
     FishChipEdit,
@@ -35,7 +42,7 @@ from .fish_chip_editor import (
 from .gems_editor import GemsEdit, GemsEditError, prepare_gems_edit, read_gems, replay_legacy_gems_edit
 
 _ID = re.compile(r"^[0-9a-f]{32}$")
-_FIELDS = frozenset({"gems", FISH_CHIP_RECORD_FIELD})
+_FIELDS = frozenset({"gems", FISH_CHIP_RECORD_FIELD, CHARACTER_RECORD_FIELD})
 _RECORD_LIMIT = 64 * 1024
 _SEAL_MAGIC = b"SKB1"
 _SEAL_TAG = 16
@@ -76,6 +83,7 @@ class BackupRecord:
     remote_size: int
     remote_sha256: str = field(repr=False)
     field: str = "gems"
+    character_codes: tuple[str, ...] = ()
 
     @property
     def original_value(self) -> int:
@@ -104,6 +112,7 @@ class BackupRecord:
             "remote_source": self.remote_source,
             "remote_size": self.remote_size,
             "remote_sha256": self.remote_sha256,
+            "character_codes": list(self.character_codes),
         }
 
 
@@ -134,6 +143,21 @@ def _require_text(value: object, name: str) -> str:
     if not isinstance(value, str) or not value or len(value) > 200:
         raise BackupIntegrityError(f"El registro de respaldo contiene {name} inválido.")
     return value
+
+
+def _require_codes(value: object) -> tuple[str, ...]:
+    if value is None:
+        return ()
+    if not isinstance(value, list) or len(value) > MAX_CHARACTERS:
+        raise BackupIntegrityError("El registro de respaldo contiene una selección de personajes inválida.")
+    codes: list[str] = []
+    for code in value:
+        if not isinstance(code, str) or not code or len(code) > 80 or code in codes:
+            raise BackupIntegrityError(
+                "El registro de respaldo contiene una selección de personajes inválida."
+            )
+        codes.append(code)
+    return tuple(codes)
 
 
 class LabBackupStore:
@@ -261,6 +285,7 @@ class LabBackupStore:
         field: str = "gems",
         original_value: int | None = None,
         new_value: int | None = None,
+        character_codes: tuple[str, ...] | None = None,
     ) -> BackupBundle:
         """Crea un respaldo y devuelve los bytes que quedaron en disco.
 
@@ -271,6 +296,12 @@ class LabBackupStore:
         """
         if field not in _FIELDS:
             raise BackupIntegrityError("El tipo de campo del respaldo no es válido.")
+        codes = _require_codes(list(character_codes) if character_codes is not None else None)
+        if field == CHARACTER_RECORD_FIELD:
+            if edit.changed and not codes:
+                raise BackupIntegrityError("El respaldo de personajes requiere la selección preparada.")
+        else:
+            codes = ()
         if remote_sha256 != edit.original_sha256 or remote_size != len(edit.original):
             raise BackupIntegrityError("La copia remota no coincide con el original preparado.")
         if original_value is None:
@@ -301,6 +332,7 @@ class LabBackupStore:
             remote_size=remote_size,
             remote_sha256=remote_sha256,
             field=field,
+            character_codes=codes,
         )
         try:
             self._write_private(directory / "original.json", edit.original)
@@ -417,6 +449,7 @@ class LabBackupStore:
             remote_size=_require_int(data.get("remote_size"), "remote_size"),
             remote_sha256=_require_hash(data.get("remote_sha256")),
             field=field,
+            character_codes=_require_codes(data.get("character_codes")),
         )
         if record.id != backup_id:
             raise BackupIntegrityError("El identificador del registro no coincide.")
@@ -437,6 +470,28 @@ class LabBackupStore:
         reconstruct_cloud_save(original)
         if record.changed != (original != candidate):
             raise BackupIntegrityError("El indicador de cambio del respaldo no coincide.")
+        if record.field == CHARACTER_RECORD_FIELD:
+            try:
+                original_unlocked = read_characters(original).unlocked
+            except CharacterFieldMissing:
+                raise BackupIntegrityError(
+                    "El original del respaldo no contiene los personajes."
+                ) from None
+            if len(original_unlocked) != record.original_gems:
+                raise BackupIntegrityError("El original del respaldo no conserva el valor registrado.")
+            if not record.changed:
+                return BackupBundle(record, original, candidate)
+            try:
+                current = prepare_character_unlock_edit(original, record.character_codes)
+            except CloudSaveError:
+                raise BackupIntegrityError(
+                    "El candidato del respaldo no es reproducible desde el original."
+                ) from None
+            if current.candidate != candidate or len(current.new_unlocked) != record.candidate_gems:
+                raise BackupIntegrityError(
+                    "El candidato del respaldo no es reproducible desde el original."
+                )
+            return BackupBundle(record, original, candidate)
         if record.field == FISH_CHIP_RECORD_FIELD:
             try:
                 original_fish_chip = read_fish_chip(original).fish_chip
