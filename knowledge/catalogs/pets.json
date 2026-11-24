@@ -1,0 +1,1588 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "pets",
+  "title": "Mascotas",
+  "description": "Códigos, identificadores numéricos y nombres disponibles.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "pet_code_name.json"
+    },
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "needed_data.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 58,
+  "items": [
+    {
+      "id": "Bat",
+      "name": {
+        "en": "Wayne",
+        "es": "Díaz",
+        "zh_cn": "来福"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 14,
+        "code": "Bat",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_14_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Bat"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Blagny",
+      "name": {
+        "en": "Blani",
+        "es": "Blani",
+        "zh_cn": "布拉尼"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 25,
+        "code": "Blagny",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_25_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Blagny"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Bug",
+      "name": {
+        "en": "Inherited Bug",
+        "es": "Bicho heredado",
+        "zh_cn": "祖传漏洞"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 13,
+        "code": "Bug",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_13_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Bug"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "CanPig",
+      "name": {
+        "en": "Can'bellied Pig",
+        "es": "Cerdo enlatado",
+        "zh_cn": "罐头猪"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 7,
+        "code": "CanPig",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_7_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.CanPig"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Capybara",
+      "name": {
+        "en": "Kapikapi",
+        "es": "Kapikapi",
+        "zh_cn": "小豚豚"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 49,
+        "code": "Capybara",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_49_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Capybara"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Cat",
+      "name": {
+        "en": "Chilly",
+        "es": "Fresco",
+        "zh_cn": "阿凉"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 0,
+        "code": "Cat",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_0_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Cat1",
+      "name": {
+        "en": "Smokey",
+        "es": "Humito",
+        "zh_cn": "冷喵"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 20,
+        "code": "Cat1",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_20_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat1"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Cat2",
+      "name": {
+        "en": "Snow",
+        "es": "Nieve",
+        "zh_cn": "雪诺"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 21,
+        "code": "Cat2",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_21_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat2"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Cat3",
+      "name": {
+        "en": "Pudding",
+        "es": "Budín",
+        "zh_cn": "布丁"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 29,
+        "code": "Cat3",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_29_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat3"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Cat4",
+      "name": {
+        "en": "Purpur",
+        "es": "Ronrón",
+        "zh_cn": "泡泡"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 30,
+        "code": "Cat4",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_30_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat4"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Cat5",
+      "name": {
+        "en": "Pepper",
+        "es": "Pimienta",
+        "zh_cn": "胡椒"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 34,
+        "code": "Cat5",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_34_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat5"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Cat6",
+      "name": {
+        "en": "Rosemary Cat",
+        "es": "Gato romero",
+        "zh_cn": "迷迭猫"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 35,
+        "code": "Cat6",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_35_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat6"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Cat7",
+      "name": {
+        "en": "Zhaocai",
+        "es": "Zhaocai",
+        "zh_cn": "招财"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 39,
+        "code": "Cat7",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_39_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Cat7"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "CatMecha",
+      "name": {
+        "en": "Mecha Chilly",
+        "es": "Mecafresco",
+        "zh_cn": "机甲阿凉"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 55,
+        "code": "CatMecha",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_55_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.CatMecha"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "ChillyGo",
+      "name": {
+        "en": "Chilly Cube",
+        "es": "Frescubo",
+        "zh_cn": "凉块"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 53,
+        "code": "ChillyGo",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_53_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.ChillyGo"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "CoinPig",
+      "name": {
+        "en": "",
+        "es": null,
+        "zh_cn": "财满满"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 44,
+        "code": "CoinPig",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_44_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.CoinPig"
+      ],
+      "notes": [
+        "Identificador numérico sin nombre en needed_data.json."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Corgi",
+      "name": {
+        "en": "Max",
+        "es": "Max",
+        "zh_cn": "黑麦"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 19,
+        "code": "Corgi",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_19_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Corgi"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Dog",
+      "name": {
+        "en": "Buddy",
+        "es": "Colega",
+        "zh_cn": "旺财"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 1,
+        "code": "Dog",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_1_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Dog"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Dog1",
+      "name": {
+        "en": "Taro",
+        "es": "Taro",
+        "zh_cn": "太郎"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 28,
+        "code": "Dog1",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_28_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Dog1"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Dog2",
+      "name": {
+        "en": "Pochi",
+        "es": "Pochi",
+        "zh_cn": "波奇"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 31,
+        "code": "Dog2",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_31_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Dog2"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Dog3",
+      "name": {
+        "en": "Chestnut",
+        "es": "Chestnut",
+        "zh_cn": "栗子"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 32,
+        "code": "Dog3",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_32_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Dog3"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "EscapeMonkey",
+      "name": {
+        "en": "Mad Monki",
+        "es": "Monki Loco",
+        "zh_cn": "小疯猴"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 56,
+        "code": "EscapeMonkey",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_56_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.EscapeMonkey"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "FeatureBug",
+      "name": {
+        "en": "Glitchy Roachy",
+        "es": "Cucaracha errática\\\\n",
+        "zh_cn": "进击的漏洞"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 43,
+        "code": "FeatureBug",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_43_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.FeatureBug"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "FireCat",
+      "name": {
+        "en": "Meower",
+        "es": "Michimortal",
+        "zh_cn": "火力喵"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 45,
+        "code": "FireCat",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_45_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.FireCat"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "FireSnowman",
+      "name": {
+        "en": "Toastie",
+        "es": "Tostadito",
+        "zh_cn": "火力雪人王"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 52,
+        "code": "FireSnowman",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_52_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.FireSnowman"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Gugu",
+      "name": {
+        "en": "Pigeon",
+        "es": "Paloma",
+        "zh_cn": "鸽子"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 10,
+        "code": "Gugu",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_10_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Gugu"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Hammer",
+      "name": {
+        "en": "Hammery",
+        "es": "Martillito",
+        "zh_cn": "小锤锤"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 40,
+        "code": "Hammer",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_40_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Hammer"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Hide",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 17,
+        "code": "Hide",
+        "has_config_name": false,
+        "has_code": true
+      },
+      "relations": {
+        "skills": []
+      },
+      "save_refs": [
+        "gameData.petUnlock.Hide"
+      ],
+      "notes": [
+        "Identificador numérico sin nombre en needed_data.json."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Hippo",
+      "name": {
+        "en": "Pinko Hippo",
+        "es": "Hipopótamo Rojo",
+        "zh_cn": "粉红小河马"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 15,
+        "code": "Hippo",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_15_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Hippo"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "JiaoDirector",
+      "name": {
+        "en": "Director Pepper",
+        "es": "Director Pimienta",
+        "zh_cn": "胡椒导演"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 42,
+        "code": "JiaoDirector",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_42_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.JiaoDirector"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "LiangSir",
+      "name": {
+        "en": "Officer Chilly",
+        "es": "Oficial Fresco",
+        "zh_cn": "阿凉长官"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 24,
+        "code": "LiangSir",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_24_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.LiangSir"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Mahhmot",
+      "name": {
+        "en": "Mahhmot",
+        "es": "Marmotaaah",
+        "zh_cn": "土嚎"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 48,
+        "code": "Mahhmot",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_48_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Mahhmot"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "MiniSlime",
+      "name": {
+        "en": "Slimy",
+        "es": "Viscoso",
+        "zh_cn": "小史莱姆"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 46,
+        "code": "MiniSlime",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_46_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.MiniSlime"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Nian",
+      "name": {
+        "en": "Lai Cai",
+        "es": "Lai Cai",
+        "zh_cn": "来财"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 54,
+        "code": "Nian",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_54_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Nian"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Owl",
+      "name": {
+        "en": "Flutter",
+        "es": "Revoloteador",
+        "zh_cn": "扑扑"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 11,
+        "code": "Owl",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_11_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Owl"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Panda",
+      "name": {
+        "en": "Panda",
+        "es": "Panda",
+        "zh_cn": "熊猫"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 5,
+        "code": "Panda",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_5_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Panda"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Pet4399",
+      "name": {
+        "en": "Douwa",
+        "es": "Douwa",
+        "zh_cn": "豆娃"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 9,
+        "code": "Pet4399",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_9_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Pet4399"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Pig",
+      "name": {
+        "en": "Hamm",
+        "es": "Jamoncín",
+        "zh_cn": "火腿"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 2,
+        "code": "Pig",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_2_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Pig"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Pig1",
+      "name": {
+        "en": "Cowboi",
+        "es": "Vaquero",
+        "zh_cn": "牛仔"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 23,
+        "code": "Pig1",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_23_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Pig1"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Pug",
+      "name": {
+        "en": "Peanut",
+        "es": "Cacahuete",
+        "zh_cn": "阿巴"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 18,
+        "code": "Pug",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_18_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Pug"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Rabbit",
+      "name": {
+        "en": "BonBon",
+        "es": "Bombón",
+        "zh_cn": "蹦蹦"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 6,
+        "code": "Rabbit",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_6_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Rabbit"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Rabbit1",
+      "name": {
+        "en": "Papa",
+        "es": "Papa",
+        "zh_cn": "趴趴"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 22,
+        "code": "Rabbit1",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_22_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Rabbit1"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Robot",
+      "name": {
+        "en": "Robo",
+        "es": "Robo",
+        "zh_cn": "萝卜卜"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 4,
+        "code": "Robot",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_4_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Robot"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "RushDuck",
+      "name": {
+        "en": "Quacky",
+        "es": "Patty",
+        "zh_cn": "冲鸭"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 37,
+        "code": "RushDuck",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_37_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.RushDuck"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "SacaSaca",
+      "name": {
+        "en": "Sacasaca",
+        "es": "Sacapez",
+        "zh_cn": "萨卡萨卡"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 38,
+        "code": "SacaSaca",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_38_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.SacaSaca"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Seal",
+      "name": {
+        "en": "Baby Seal",
+        "es": "Foca bebé",
+        "zh_cn": "海豹宝宝"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 12,
+        "code": "Seal",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_12_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Seal"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Serenade",
+      "name": {
+        "en": "Serenade",
+        "es": "Serenata",
+        "zh_cn": "夜歌"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 27,
+        "code": "Serenade",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_27_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Serenade"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "ShanghaiTower",
+      "name": {
+        "en": "Milktea Monitor Tower",
+        "es": "Torre Guardiana de Té de Burbujas",
+        "zh_cn": "珍珠防御塔"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 50,
+        "code": "ShanghaiTower",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_50_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.ShanghaiTower"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Slime",
+      "name": {
+        "en": "Blue",
+        "es": "Azul",
+        "zh_cn": "蓝色史莱姆"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 3,
+        "code": "Slime",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_3_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Slime"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "TapTap",
+      "name": {
+        "en": "Tap",
+        "es": "Tap",
+        "zh_cn": "嗒普"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 8,
+        "code": "TapTap",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_8_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.TapTap"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "TenOff",
+      "name": {
+        "en": "10% Off",
+        "es": "10 % de descuento",
+        "zh_cn": "九折"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 36,
+        "code": "TenOff",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_36_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.TenOff"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Tengo",
+      "name": {
+        "en": "Mini Tengu",
+        "es": "Minitengu",
+        "zh_cn": "小天狗"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 16,
+        "code": "Tengo",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_16_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Tengo"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Tortoise",
+      "name": {
+        "en": "Speedy",
+        "es": "Velocista",
+        "zh_cn": "小兲"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 26,
+        "code": "Tortoise",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_26_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Tortoise"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "TrainerRobot",
+      "name": {
+        "en": "Lil Drillmaster",
+        "es": "Instructorcito",
+        "zh_cn": "小小教官"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 51,
+        "code": "TrainerRobot",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_51_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.TrainerRobot"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "Zongzi",
+      "name": {
+        "en": "Zongzi Junior",
+        "es": "Zongzi Hijo",
+        "zh_cn": "粽小子"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 41,
+        "code": "Zongzi",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_41_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.Zongzi"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "ZongziBro",
+      "name": {
+        "en": "Zongzi Bro",
+        "es": "Zongzi Hermano",
+        "zh_cn": "粽大哥"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 47,
+        "code": "ZongziBro",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_47_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.ZongziBro"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "dragon",
+      "name": {
+        "en": "Yanyan",
+        "es": "Yanyan",
+        "zh_cn": "炎焱"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 33,
+        "code": "dragon",
+        "has_config_name": true,
+        "has_code": true
+      },
+      "relations": {
+        "skills": [
+          "pet_33_skill_0"
+        ]
+      },
+      "save_refs": [
+        "gameData.petUnlock.dragon"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    },
+    {
+      "id": "pet_id_57",
+      "name": {
+        "en": "Fish Chip King",
+        "es": "Rey de las fichas de pez",
+        "zh_cn": "鱼干之王"
+      },
+      "category": "pet",
+      "subcategory": "companion",
+      "attributes": {
+        "numeric_id": 57,
+        "code": null,
+        "has_config_name": true,
+        "has_code": false
+      },
+      "relations": {
+        "skills": [
+          "pet_57_skill_0"
+        ]
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:pet_code_name.json"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sk-under.local/schemas/manifest.schema.json",
+  "title": "Manifiesto del Save Knowledge Engine",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "knowledge_version",
+    "game_version",
+    "generated_by",
+    "artifacts",
+    "counts"
+  ],
+  "properties": {
+    "schema": {"const": "sk-knowledge/manifest@1"},
+    "schema_version": {"type": "integer", "minimum": 1},
+    "knowledge_version": {"type": "string"},
+    "game_version": {"type": "string"},
+    "generated_by": {"type": "string"},
+    "source_commits": {"type": "object"},
+    "counts": {"type": "object"},
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "kind", "sha256", "bytes", "count"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "kind": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "bytes": {"type": "integer", "minimum": 0},
+          "count": {"type": ["integer", "null"]}
+        }
+      }
+    }
+  }
+}

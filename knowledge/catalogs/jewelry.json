@@ -1,0 +1,363 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "jewelry",
+  "title": "Joyería",
+  "description": "Joyería observada en una muestra externa con forma de guardado.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "data.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 15,
+  "items": [
+    {
+      "id": "ArmorStunNecklace",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 97,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.ArmorStunNecklace"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "CritDamageRing",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 100,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.CritDamageRing"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "DestroyBox",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 100,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.DestroyBox"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "EatEnemy",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 100,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.EatEnemy"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "EnergyHealthRing",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 100,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.EnergyHealthRing"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "EnergyRegen",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 100,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.EnergyRegen"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "FirePoisonNecklace",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 100,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.FirePoisonNecklace"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "IcyRing",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 100,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.IcyRing"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "KillBoss",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 100,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.KillBoss"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "PetDefenceTalisman",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 100,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.PetDefenceTalisman"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "ProjectileDamageTotem",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 100,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.ProjectileDamageTotem"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "ReplaceWeapon",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 100,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.ReplaceWeapon"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "ShieldDamageBadge",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 100,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.ShieldDamageBadge"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "SkillEnhance",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 100,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.SkillEnhance"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "SpeedDamageRing",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "jewelry",
+      "subcategory": "accessory",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_durability": 100,
+        "sample_rune1": "None",
+        "sample_rune2": "None"
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.jewelryData.SpeedDamageRing"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    }
+  ]
+}

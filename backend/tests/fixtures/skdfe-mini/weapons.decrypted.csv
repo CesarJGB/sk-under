@@ -1,0 +1,7 @@
+Key,Path,OriginalWeapon,DisableUnlockByPick,ShowNum,Price,DropAdd,SupportItems,DecidedByWeaponConfig,Materials,FusionList,FusionRangeList,TalentList
+string,string,string,string,string,string,string,string,string,string,string,string,string
+weapon_000,RGPrefab/Weapon/weapon_000.prefab,,False,True,1,,[],False,"[{""item"":""material_iron"",""num"":2}]","[{""sourceWeapons"":[{""weapon"":""weapon_000""}],""targetWeapon"":{""weapon"":""weapon_001""}}]",[],"[{""talentName"":""MasterLaser""}]"
+weapon_001,RGPrefab/Weapon/weapon_001.prefab,,False,True,2,,[],False,[],[],[],[]
+weapon_002,RGPrefab/Weapon/weapon_002.prefab,weapon_000,False,True,3,,[],False,[],[],[],[]
+ring_0,RGPrefab/Weapon/ring_0.prefab,,False,True,4,,[],False,"[{""item"":""material_iron"",""num"":4}]",[],[],[]
+transform_weapon_ninja,RGPrefab/Weapon/transform_weapon_ninja.prefab,,False,True,0,,[],False,[],[],[],[]

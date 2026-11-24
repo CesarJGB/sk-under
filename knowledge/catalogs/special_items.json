@@ -1,0 +1,561 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "special_items",
+  "title": "Objetos especiales",
+  "description": "Objetos activos, otros y efectos de eliminación.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "item.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 29,
+  "items": [
+    {
+      "id": "active_star",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "active_weekly_point",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "customization_kill_effect_1",
+      "name": {
+        "en": "Starlight Sparkle",
+        "es": "Destello estelar",
+        "zh_cn": "星光闪闪"
+      },
+      "category": "special_item",
+      "subcategory": "kill_effect",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "customization_kill_effect_2",
+      "name": {
+        "en": "Zap!",
+        "es": "¡Zas!",
+        "zh_cn": "电你一下"
+      },
+      "category": "special_item",
+      "subcategory": "kill_effect",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "customization_kill_effect_3",
+      "name": {
+        "en": "Bring It On",
+        "es": "¡Adelante!",
+        "zh_cn": "你过来啊"
+      },
+      "category": "special_item",
+      "subcategory": "kill_effect",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "customization_kill_effect_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "kill_effect",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "customization_kill_effect_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "kill_effect",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "customization_kill_effect_6",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "kill_effect",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "customization_kill_effect_7",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "kill_effect",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "customization_kill_effect_8",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "kill_effect",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "desc_type_blueprint",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "desc_type_gold_frame",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "desc_type_jewelry_blueprint",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "desc_type_material",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "desc_type_seed",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "desc_type_silver_frame",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "desc_type_token_factor",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "desc_type_weapon_evolution_fragment",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "feature_more_bag_capacity",
+      "name": {
+        "en": "Gunfight Backpack Slot",
+        "es": "Ranura de mochila de Tiroteo",
+        "zh_cn": "枪斗背包格"
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "feature_more_select_seat",
+      "name": {
+        "en": "Rosemary Island - Additional Seat",
+        "es": "Isla Romero - Boleto adicional",
+        "zh_cn": "迷迭岛选人位"
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "feature_more_select_seat_season_troop2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "feature_season_troop2_auto_store_level_up",
+      "name": {
+        "en": "Automated Market",
+        "es": "Mercado automatizado",
+        "zh_cn": "自动化市场"
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "feature_season_troop2_extra_team_size",
+      "name": {
+        "en": "Performer Cap Boost",
+        "es": "Potenciación de límite de intérprete",
+        "zh_cn": "初始人口上限"
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "feature_season_troop2_init_present",
+      "name": {
+        "en": "Opening Gift",
+        "es": "Regalo de inicio",
+        "zh_cn": "开局礼物"
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "feature_season_troop2_skill_bonus",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "feature_season_troop2_skill_frostburst",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "feature_season_troop2_skill_haste",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "feature_season_troop2_skill_powerup",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "feature_season_troop2_skill_shield",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "special_item",
+      "subcategory": "active_or_other",
+      "attributes": {},
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.specialTickets"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    }
+  ]
+}

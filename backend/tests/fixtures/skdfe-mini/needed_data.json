@@ -1,0 +1,28 @@
+{
+  "character_skill": {
+    "Character0_skill_0_name": "Dual Wield",
+    "Character1_skill_0_name": "Precision"
+  },
+  "material": {
+    "material_iron": "Iron",
+    "material_wood": "Wood",
+    "material_gem": "Gem"
+  },
+  "pet": {
+    "0": "Chilly",
+    "1": "Buddy"
+  },
+  "skin": {
+    "c0": [
+      "c0_skin0",
+      "c0_skin1"
+    ],
+    "c1": [
+      "c1_skin0"
+    ]
+  },
+  "weapon_skin": {
+    "weapon_002_s_0": "Golden Pistol",
+    "weapon_002_s_1": "Silver Pistol"
+  }
+}

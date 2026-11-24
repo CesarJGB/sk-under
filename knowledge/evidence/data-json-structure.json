@@ -1,0 +1,387 @@
+{
+  "schema": "sk-knowledge/evidence@1",
+  "generated_by": "knowledge/tools/build_evidence.py (fase 7.0)",
+  "source": {
+    "repository": "https://github.com/aznoobnam/skdfe",
+    "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+    "file": "data.json",
+    "classification": "external_save_shaped_sample",
+    "evidence": "E1",
+    "warning": "No se ha demostrado que data.json sea un guardado auténtico de una cuenta real. Solo se usan recuentos, formas y claves; no se copian valores completos ni se infiere posesión."
+  },
+  "summary": {
+    "group_count": 21,
+    "groups": [
+      "5minutecraft",
+      "5minutescraft",
+      "NewTaskData",
+      "aramtrophy",
+      "blueprint",
+      "catseason",
+      "chips",
+      "enemy",
+      "furniture",
+      "irontrophy",
+      "itemUnlock",
+      "jewelryData",
+      "materialcustomamount",
+      "materialfixedamount",
+      "monsrise",
+      "mountData",
+      "mythicWeapons",
+      "seed",
+      "slaveData",
+      "token",
+      "visualtrophy"
+    ]
+  },
+  "groups": {
+    "5minutecraft": {
+      "type": "map",
+      "count": 13,
+      "value_kinds": [
+        "int"
+      ],
+      "sample_keys": [
+        "artifact/achieve_copper_02",
+        "artifact/achieve_golden_02",
+        "artifact/achieve_golden_02/Bow",
+        "artifact/achieve_golden_02/Staff",
+        "artifact/achieve_golden_02/Sword",
+        "artifact/achieve_golden_03",
+        "artifact/achieve_silver_01",
+        "artifact/achieve_silver_01/Bow"
+      ]
+    },
+    "5minutescraft": {
+      "type": "list",
+      "count": 152,
+      "element_kinds": [
+        "str"
+      ],
+      "sample_items": [
+        "artifact/achieve_golden_02/StaffBase_01",
+        "artifact/achieve_golden_02/StaffCore_01",
+        "artifact/achieve_golden_02/StaffHead_01",
+        "artifact/achieve_golden_02/Arrow_01",
+        "artifact/achieve_golden_02/BowString_01",
+        "artifact/achieve_golden_02/Bow_01",
+        "artifact/achieve_golden_02/Blade_01",
+        "artifact/achieve_golden_02/Grip_01"
+      ]
+    },
+    "NewTaskData": {
+      "type": "list",
+      "count": 29,
+      "element_kinds": [
+        "dict"
+      ],
+      "element_keys": [
+        "CompleteTime",
+        "CurrentProgress",
+        "HasGotReward",
+        "ID",
+        "ProgressCacheInfos",
+        "StartTime",
+        "Status",
+        "TargetProgress",
+        "TaskType"
+      ],
+      "sample_items": []
+    },
+    "aramtrophy": {
+      "type": "map",
+      "count": 85,
+      "value_kinds": [
+        "int"
+      ],
+      "sample_keys": [
+        "aram_drinks_count",
+        "aram_elem_dmg",
+        "aram_gold_cup_reward_claim",
+        "aram_kill",
+        "aram_kill_claim",
+        "aram_legendary_talent_count",
+        "aram_max_hp",
+        "aram_melee_dmg"
+      ]
+    },
+    "blueprint": {
+      "type": "map",
+      "count": 119,
+      "value_kinds": [
+        "str"
+      ],
+      "sample_keys": [
+        "Blueprint_weapon_370",
+        "blueprint_m_mech_2",
+        "blueprint_m_mech_3",
+        "blueprint_m_mech_4",
+        "blueprint_m_mech_5",
+        "blueprint_m_mech_6",
+        "blueprint_m_mech_7",
+        "blueprint_m_mecha_normal_2s"
+      ]
+    },
+    "catseason": {
+      "type": "list",
+      "count": 10,
+      "element_kinds": [
+        "str"
+      ],
+      "sample_items": [
+        "season/troop/bronze_2",
+        "season/troop/bronze_1",
+        "season/troop/bronze_3",
+        "season/troop/bronze_0",
+        "season/troop/silver_2",
+        "season/troop/silver_1",
+        "season/troop/gold_1",
+        "season/troop/silver_0"
+      ]
+    },
+    "chips": {
+      "type": "list",
+      "count": 18,
+      "element_kinds": [
+        "dict"
+      ],
+      "element_keys": [
+        "chipName",
+        "level",
+        "refineLevel"
+      ],
+      "sample_items": []
+    },
+    "enemy": {
+      "type": "list",
+      "count": 288,
+      "element_kinds": [
+        "str"
+      ],
+      "sample_items": [
+        "boss01",
+        "boss01_2",
+        "boss02",
+        "boss03",
+        "boss04",
+        "boss05",
+        "boss06",
+        "boss07"
+      ]
+    },
+    "furniture": {
+      "type": "list",
+      "count": 15,
+      "element_kinds": [
+        "str"
+      ],
+      "sample_items": [
+        "room_unlock_badass",
+        "room_unlock_book",
+        "room_unlock_cellar",
+        "room_unlock_defence_mode",
+        "room_unlock_garden",
+        "room_unlock_magic_area",
+        "room_unlock_monster_rise",
+        "room_unlock_pet_food"
+      ]
+    },
+    "irontrophy": {
+      "type": "map",
+      "count": 122,
+      "value_kinds": [
+        "int"
+      ],
+      "sample_keys": [
+        "iron_tide_clear_badass_Airbender",
+        "iron_tide_clear_badass_Airbender_0",
+        "iron_tide_clear_badass_Alchemist",
+        "iron_tide_clear_badass_Alchemist_11",
+        "iron_tide_clear_badass_Assassin",
+        "iron_tide_clear_badass_Assassin_0",
+        "iron_tide_clear_badass_Druid",
+        "iron_tide_clear_badass_Druid_0"
+      ]
+    },
+    "itemUnlock": {
+      "type": "list",
+      "count": 6,
+      "element_kinds": [
+        "str"
+      ],
+      "sample_items": [
+        "plant_pot3",
+        "plant_pot5",
+        "plant_pot4",
+        "Motorcycle",
+        "plant_pot6",
+        "plant_pot7"
+      ]
+    },
+    "jewelryData": {
+      "type": "object",
+      "keys": [
+        "ArmorStunNecklace",
+        "CritDamageRing",
+        "DestroyBox",
+        "EatEnemy",
+        "EnergyHealthRing",
+        "EnergyRegen",
+        "FirePoisonNecklace",
+        "IcyRing",
+        "KillBoss",
+        "PetDefenceTalisman",
+        "ProjectileDamageTotem",
+        "ReplaceWeapon",
+        "ShieldDamageBadge",
+        "SkillEnhance",
+        "SpeedDamageRing"
+      ],
+      "count": 15,
+      "sample_keys": [
+        "ArmorStunNecklace",
+        "CritDamageRing",
+        "DestroyBox",
+        "EatEnemy",
+        "EnergyHealthRing",
+        "EnergyRegen",
+        "FirePoisonNecklace",
+        "IcyRing"
+      ],
+      "child_keys": [
+        "durability",
+        "item",
+        "rune1",
+        "rune2"
+      ]
+    },
+    "materialcustomamount": {
+      "type": "list",
+      "count": 25,
+      "element_kinds": [
+        "str"
+      ],
+      "sample_items": [
+        "material_ancient_weapon_fragment",
+        "material_battery",
+        "material_cell",
+        "material_fertilize",
+        "material_fish",
+        "material_fragment_c6h8o6",
+        "material_fragment_zulan",
+        "material_fusion_fragment"
+      ]
+    },
+    "materialfixedamount": {
+      "type": "map",
+      "count": 81,
+      "value_kinds": [
+        "int"
+      ],
+      "sample_keys": [
+        "material_c17_book_1",
+        "material_c17_book_2",
+        "material_c18_book_1",
+        "material_c18_book_2",
+        "material_c20_book_1",
+        "material_c20_book_2",
+        "material_c21_book_1",
+        "material_c21_book_2"
+      ]
+    },
+    "monsrise": {
+      "type": "object",
+      "keys": [
+        "CollectedEmblems",
+        "CollectedMonsters",
+        "unlockedContents"
+      ],
+      "count": 3,
+      "sample_keys": [
+        "CollectedEmblems",
+        "CollectedMonsters",
+        "unlockedContents"
+      ]
+    },
+    "mountData": {
+      "type": "object",
+      "keys": [
+        "curSelectMount",
+        "mountList"
+      ],
+      "count": 2,
+      "sample_keys": [
+        "curSelectMount",
+        "mountList"
+      ]
+    },
+    "mythicWeapons": {
+      "type": "list",
+      "count": 15,
+      "element_kinds": [
+        "dict"
+      ],
+      "element_keys": [
+        "id",
+        "level"
+      ],
+      "sample_items": []
+    },
+    "seed": {
+      "type": "list",
+      "count": 39,
+      "element_kinds": [
+        "str"
+      ],
+      "sample_items": [
+        "plant_banboo_seed",
+        "plant_binary_tree_seed",
+        "plant_cactus_seed",
+        "plant_carrot_seed",
+        "plant_clivia_seed",
+        "plant_datura_seed",
+        "plant_defend_flower_seed",
+        "plant_dragon_tree_seed"
+      ]
+    },
+    "slaveData": {
+      "type": "object",
+      "keys": [
+        "followerList"
+      ],
+      "count": 1,
+      "sample_keys": [
+        "followerList"
+      ]
+    },
+    "token": {
+      "type": "object",
+      "keys": [
+        "factorvoucher",
+        "notcraftableweapon",
+        "wildvoucher"
+      ],
+      "count": 3,
+      "sample_keys": [
+        "factorvoucher",
+        "notcraftableweapon",
+        "wildvoucher"
+      ]
+    },
+    "visualtrophy": {
+      "type": "map",
+      "count": 5,
+      "value_kinds": [
+        "str"
+      ],
+      "sample_keys": [
+        "ARAM",
+        "Artifacts",
+        "ComboGun",
+        "IronTide",
+        "Troop"
+      ]
+    }
+  }
+}

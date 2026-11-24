@@ -1,0 +1,1740 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "collectibles",
+  "title": "Coleccionables de Monster Rise",
+  "description": "Contenidos, monstruos y emblemas observados.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "data.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 82,
+  "items": [
+    {
+      "id": "monsrise_content_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 1,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_10",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 10,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_11",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 11,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_12",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 12,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_13",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 13,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_14",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 14,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_15",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 15,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_16",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 16,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_17",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 17,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_18",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 18,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_19",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 19,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 2,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_20",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 20,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_22",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 22,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_23",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 23,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_24",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 24,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_25",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 25,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_26",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 26,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_28",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 28,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_29",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 29,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 3,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_30",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 30,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 4,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 5,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_6",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 6,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_7",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 7,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_8",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 8,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_content_9",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_content",
+      "attributes": {
+        "raw_id": 9,
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:Approach",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "Approach",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:BulletPenetrate",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "BulletPenetrate",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:ChiefCooker",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "ChiefCooker",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:Collaboration",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "Collaboration",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:CounterStrike",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "CounterStrike",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:DefenceBreaking",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "DefenceBreaking",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:Duel",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "Duel",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:ElementalSurge",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "ElementalSurge",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:FakeDeath",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "FakeDeath",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:GloriousEnding",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "GloriousEnding",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:HealingRing",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "HealingRing",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:Immolate",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "Immolate",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:LifeSteal",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "LifeSteal",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:LoneWolfDamage",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "LoneWolfDamage",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:LoneWolfResist",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "LoneWolfResist",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:MaxHealth",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "MaxHealth",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:Precaution",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "Precaution",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:QuenchingPoison",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "QuenchingPoison",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:RangeExtension",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "RangeExtension",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:Reckless",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "Reckless",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:Reinforcement",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "Reinforcement",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:Sage",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "Sage",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:ShadowOfForest",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "ShadowOfForest",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:SkillCharge",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "SkillCharge",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:Sniper",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "Sniper",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:Toughness",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "Toughness",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:UnifiedDamage",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "UnifiedDamage",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:UnifiedResist",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "UnifiedResist",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_emblem:Wither",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_emblem",
+      "attributes": {
+        "raw_id": "Wither",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Goblin_Executor",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Goblin_Executor",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Goblin_Mage_Royal",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Goblin_Mage_Royal",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Goblin_Mage_Sorcerer",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Goblin_Mage_Sorcerer",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Goblin_Shooter",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Goblin_Shooter",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Goblin_Support",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Goblin_Support",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Goblin_Warrior",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Goblin_Warrior",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Knight_Mage",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Knight_Mage",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Knight_Savior",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Knight_Savior",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Knight_Shooter",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Knight_Shooter",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Knight_Tank_Defender",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Knight_Tank_Defender",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Knight_Tank_Paladin",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Knight_Tank_Paladin",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Knight_Warrior",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Knight_Warrior",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Miner_Mage",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Miner_Mage",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Miner_Shooter",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Miner_Shooter",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Miner_Tank",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Miner_Tank",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Miner_Warrior",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Miner_Warrior",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Monkey_Armor",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Monkey_Armor",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Monkey_Assassin_Pirate",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Monkey_Assassin_Pirate",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Monkey_Assassin_Sorcerer",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Monkey_Assassin_Sorcerer",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Monkey_MaskFighter",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Monkey_MaskFighter",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Monkey_Monk",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Monkey_Monk",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Monkey_Shooter_Uzi",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Monkey_Shooter_Uzi",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Monkey_Warrior",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Monkey_Warrior",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Snowman_Shooter",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Snowman_Shooter",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "monsrise_monster:M_Snowman_Warrior",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "collectible",
+      "subcategory": "monsrise_monster",
+      "attributes": {
+        "raw_id": "M_Snowman_Warrior",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    }
+  ]
+}

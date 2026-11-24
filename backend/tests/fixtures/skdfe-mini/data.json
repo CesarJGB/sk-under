@@ -1,0 +1,102 @@
+{
+  "monsrise": {
+    "unlockedContents": [
+      1,
+      2
+    ],
+    "CollectedMonsters": {
+      "M_Goblin_Warrior": 4
+    },
+    "CollectedEmblems": {
+      "Approach": 9
+    }
+  },
+  "enemy": [
+    "enemy_slime"
+  ],
+  "furniture": [
+    "room_unlock_book"
+  ],
+  "visualtrophy": {
+    "ARAM": "Gold"
+  },
+  "5minutecraft": {
+    "mode_a": 1
+  },
+  "5minutescraft": [
+    "mode_a"
+  ],
+  "slaveData": {
+    "followerList": [
+      {
+        "followerConfigId": "follower_a",
+        "level": 1
+      }
+    ]
+  },
+  "mountData": {
+    "curSelectMount": "mount_a",
+    "mountList": [
+      {
+        "id": "mount_a",
+        "index": 0,
+        "level": 1
+      }
+    ]
+  },
+  "chips": [
+    {
+      "chipName": "Zealot",
+      "level": 2,
+      "refineLevel": 1
+    }
+  ],
+  "aramtrophy": {
+    "aram_kill": 3
+  },
+  "irontrophy": {
+    "iron_tide_clear_badass_Knight": 1
+  },
+  "seed": [
+    "plant_carrot_seed"
+  ],
+  "materialfixedamount": {
+    "material_iron": 4
+  },
+  "materialcustomamount": {
+    "material_wood": 2
+  },
+  "token": {
+    "factorvoucher": [
+      "voucher_a"
+    ],
+    "wildvoucher": [],
+    "notcraftableweapon": []
+  },
+  "jewelryData": {
+    "ring_a": {
+      "item": "ring_a",
+      "durability": 10,
+      "rune1": "None",
+      "rune2": "None"
+    }
+  },
+  "mythicWeapons": [
+    {
+      "id": 0,
+      "level": 1
+    }
+  ],
+  "NewTaskData": [
+    "task_a"
+  ],
+  "blueprint": {
+    "blueprint_evolution_weapon_000": "Got"
+  },
+  "itemUnlock": [
+    "plant_pot3"
+  ],
+  "catseason": [
+    "season/troop/bronze_0"
+  ]
+}

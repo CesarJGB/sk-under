@@ -1,0 +1,4263 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "trophies",
+  "title": "Trofeos y estadísticas de modo",
+  "description": "Claves de trofeos visuales, ARAM e Iron Tide.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "data.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 212,
+  "items": [
+    {
+      "id": "aramtrophy:aram_drinks_count",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_elem_dmg",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_gold_cup_reward_claim",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_kill",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_kill_claim",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_legendary_talent_count",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_max_hp",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_melee_dmg",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_one_pass_difficulty_3_claim",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficultyLV1_claim",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficultyLV2_claim",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficultyLV3_claim",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficultyLV4_claim",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficultyLV5_claim",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficultyLV6_claim",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_0_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_0_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_0_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_0_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_10_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_10_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_11_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_11_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_12_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_12_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_12_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_12_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_13_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_13_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_14_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_14_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_14_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_15_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_15_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_15_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_16_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_16_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_16_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_17_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_17_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_18_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_18_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_19_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_19_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_1_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_1_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_20_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_20_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_21_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_21_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_22_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_22_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_23_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_23_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_24_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_24_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_25_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_25_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_26_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_27_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_2_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_2_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_2_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_3_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_3_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_4_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_4_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_4_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_5_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_5_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_6_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_6_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_6_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_6_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_7_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_7_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_8_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_8_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_9_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_9_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_pass_difficulty_9_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_plant_plant_claim",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_range_dmg",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_skill_level",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "aramtrophy:aram_talent_count",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "aramtrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Airbender",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Airbender_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Alchemist",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Alchemist_11",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Assassin",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Assassin_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Druid",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Druid_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Elves",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Elves_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Engineer",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Engineer_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Knight",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Knight_16",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Mage",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Mage_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Necromancer",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Necromancer_9",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Officer",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Officer_9",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Paladin",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Paladin_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Priest",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Priest_14",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Ranger",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Ranger_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Robot",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Robot_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Taoist",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Taoist_10",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Vampire",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Vampire_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Viking",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Viking_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Warlock",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Warlock_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Werewolf",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_badass_Werewolf_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Airbender",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Airbender_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Alchemist",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Alchemist_11",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Assassin",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Assassin_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Druid",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Druid_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Elves",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Elves_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Engineer",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Engineer_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Knight",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Knight_16",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Mage",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Mage_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Necromancer",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Necromancer_9",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Officer",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Officer_9",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Paladin",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Paladin_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Priest",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Priest_14",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Ranger",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Ranger_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Robot",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Robot_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Taoist",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Taoist_10",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Vampire",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Vampire_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Viking",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Viking_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Warlock",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Warlock_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Werewolf",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_clear_normal_Werewolf_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_first_open_achievement_page",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_first_open_daily_page",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_pass_success_count",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_achievement_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_achievement_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Airbender",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Alchemist",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Assassin",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Druid",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Elves",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Engineer",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Knight",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Mage",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Necromancer",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Officer",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Paladin",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Priest",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Ranger",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Robot",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Taoist",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Vampire",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Viking",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Warlock",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_badass_Werewolf",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Airbender",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Alchemist",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Assassin",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Druid",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Elves",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Engineer",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Knight",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Mage",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Necromancer",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Officer",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Paladin",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Priest",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Ranger",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Robot",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Taoist",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Vampire",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Viking",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Warlock",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_normal_Werewolf",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_task_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:iron_tide_reward_task_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "irontrophy:send_irontide_season_coin_1000",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "irontrophy",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "visual:ARAM",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "visual",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_value": "Gold"
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "visual:Artifacts",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "visual",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_value": "Gold"
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "visual:ComboGun",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "visual",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_value": "NotAward"
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "visual:IronTide",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "visual",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_value": "Gold"
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "visual:Troop",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "trophy",
+      "subcategory": "visual",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_value": "Gold"
+      },
+      "relations": {},
+      "save_refs": [
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    }
+  ]
+}

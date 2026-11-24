@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sk-under.local/schemas/sources.schema.json",
+  "title": "Fuentes y procedencia del conocimiento",
+  "type": "object",
+  "required": ["schema", "schema_version", "count", "sources"],
+  "properties": {
+    "schema": {"const": "sk-knowledge/sources@1"},
+    "schema_version": {"type": "integer", "minimum": 1},
+    "generated_by": {"type": "string"},
+    "count": {"type": "integer", "minimum": 0},
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "title", "location", "evidence", "usage", "limitations"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "type": {"type": "string", "enum": ["external_repository", "internal_document", "internal_catalog", "static_metadata", "community_reference", "own_observation"]},
+          "title": {"type": "string", "minLength": 1},
+          "location": {"type": "string", "minLength": 1},
+          "commit": {"type": ["string", "null"]},
+          "version": {"type": ["string", "null"]},
+          "accessed": {"type": ["string", "null"]},
+          "license": {"type": ["string", "null"]},
+          "evidence": {"type": "string", "enum": ["H", "E1", "E2", "E3", "E4"]},
+          "usage": {"type": "string", "minLength": 1},
+          "limitations": {"type": "array", "items": {"type": "string"}},
+          "redistributed": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}

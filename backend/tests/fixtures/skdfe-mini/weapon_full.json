@@ -1,0 +1,39 @@
+{
+  "weapons": [
+    {
+      "name": "weapon_000",
+      "title": "破旧的手枪",
+      "level": 0,
+      "type": "Pistol",
+      "tags": [
+        "InitWeapon"
+      ],
+      "forgeable": true,
+      "dropLevel": 1,
+      "isMelle": false,
+      "cantExchangeByToken": false
+    },
+    {
+      "name": "weapon_001",
+      "title": "好步枪",
+      "level": 1,
+      "type": "Rifle",
+      "tags": [],
+      "forgeable": true,
+      "dropLevel": 2,
+      "isMelle": false,
+      "cantExchangeByToken": false
+    },
+    {
+      "name": "weapon_002",
+      "title": "金手枪",
+      "level": 2,
+      "type": "Pistol",
+      "tags": [],
+      "forgeable": false,
+      "dropLevel": 3,
+      "isMelle": false,
+      "cantExchangeByToken": true
+    }
+  ]
+}

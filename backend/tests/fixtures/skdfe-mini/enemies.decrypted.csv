@@ -1,0 +1,4 @@
+Key,Path,AssetBundle,LevelKey,EnemyId,SummonedEnemy,Intensive,CellarSprite,Hp,Speed,SpeedRate,Critical,IsBoss,ExtraAssetBundle,BossBgm,BossRoom,BossWeapon,SubspeciesBoss,DoubleBosses,DropOffsetX,DropOffsetY,Drops,DropGroups
+string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string,string
+boss01,RGPrefab/Enemy/boss01.prefab,enemy,level1,1,,False,,100,1,1,0,True,,bgm,room,weapon_000,,,0,0,"[{""item"":{""item"":""material_gem""},""probability"":1.0}]",
+enemy_slime,RGPrefab/Enemy/enemy_slime.prefab,enemy,level1,2,,False,,10,1,1,0,False,,,,,,,0,0,[],

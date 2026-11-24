@@ -1,0 +1,476 @@
+{
+  "schema": "sk-knowledge/dependencies@1",
+  "schema_version": 1,
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_dependencies.py (curaduría de fase 7.0)",
+  "notes": [
+    "Una coincidencia de nombres no se considera dependencia. Cada relación declara su nivel de evidencia y su estado.",
+    "Las relaciones confirmed solo reproducen conclusiones ya documentadas y verificadas en fases anteriores; no se elevaron niveles en esta fase.",
+    "Las relaciones observed describen coaparición estructural en muestras propias, sin demostrar causalidad.",
+    "Las relaciones hypothesis y negative existen para evitar que futuras fases confundan campos parecidos."
+  ],
+  "count": 26,
+  "dependencies": [
+    {
+      "id": "gems-balance-composition",
+      "from": "gameData.gems",
+      "to": "gameData.lastGems",
+      "relation": "gems = lastGems + varGems",
+      "status": "confirmed",
+      "evidence": "E4",
+      "scope": "8.8.0, rama de consumo de gemas, Android físico y agregado de nube",
+      "description": "La fase 6.16 verificó que el saldo visible se compone de lastGems más varGems. Editar solo gems sin ajustar la composición produce estados incoherentes.",
+      "sources": [
+        "docs/save-research/cross-file-dependencies.md",
+        "docs/research/phase6-16/README.md",
+        "docs/save-research/field-registry.json"
+      ],
+      "edit_implication": "Cualquier futura edición de saldo debe tratar lastGems y varGems como estructura, no como campos independientes.",
+      "experiments_required": [
+        "Repetir la comprobación en una versión posterior a 8.8.0 antes de ampliar compatibilidad."
+      ]
+    },
+    {
+      "id": "gems-var-gems-mirror",
+      "from": "gameData.varGems",
+      "to": "gameData.lastGems",
+      "relation": "componente_de_saldo",
+      "status": "confirmed",
+      "evidence": "E4",
+      "scope": "8.8.0, rama de consumo de gemas",
+      "description": "varGems es el componente variable del saldo; lastGems es el componente base. La relación se comprobó junto con la ecuación de gems.",
+      "sources": [
+        "docs/save-research/cross-file-dependencies.md"
+      ],
+      "edit_implication": "No editar varGems de forma aislada.",
+      "experiments_required": []
+    },
+    {
+      "id": "gems-cumulative-counters",
+      "from": "gameData.cumulativeGems",
+      "to": "gameData.gems",
+      "relation": "contador_historico_no_saldo",
+      "status": "observed",
+      "evidence": "E4",
+      "scope": "8.8.0, contadores acumulados",
+      "description": "cumulativeGems y cumulativeConsumeGems son contadores históricos. No son el saldo actual y no deben usarse para calcularlo sin una prueba controlada.",
+      "sources": [
+        "docs/save-research/field-registry.json",
+        "docs/research/phase6-12/evidencia-e-incognitas.md"
+      ],
+      "edit_implication": "Mantener separados saldo y contadores acumulados.",
+      "experiments_required": [
+        "Comprobar si el juego recalcula los acumulados al modificar el saldo."
+      ]
+    },
+    {
+      "id": "fish-chip-material-fish",
+      "from": "gameData.fishChip",
+      "to": "itemData.materials.material_fish",
+      "relation": "edicion_conjunta_confirmada",
+      "status": "confirmed",
+      "evidence": "E4",
+      "scope": "8.8.0, compra y persistencia en Android físico",
+      "description": "La fase 6.16 confirmó que editar fishChip junto con material_fish produce una compra coherente y persiste tras volver a guardar. cumulativeFishCount y los historiales de tienda quedaron fuera del alcance.",
+      "sources": [
+        "docs/research/phase6-16/README.md",
+        "docs/save-research/README.md",
+        "docs/research/phase6-12/fichas-de-pesca.md"
+      ],
+      "edit_implication": "fishChip y material_fish forman una unidad de edición validada; no ampliar el alcance a otros contadores sin experimento.",
+      "experiments_required": [
+        "Verificar si cumulativeFishCount debe acompañar la edición en compras posteriores.",
+        "Probar la relación en una versión posterior a 8.8.0."
+      ]
+    },
+    {
+      "id": "fish-chip-playerprefs-furniture",
+      "from": "gameData.fishChip",
+      "to": "playerprefs.furniture_fish_chips",
+      "relation": "posible_espejo_no_confirmado",
+      "status": "hypothesis",
+      "evidence": "H",
+      "scope": "PlayerPrefs y gameData",
+      "description": "El nombre sugiere una representación de fichas de pesca en PlayerPrefs, pero no se comprobó que sea un espejo del saldo ni que se sincronice con gameData.fishChip.",
+      "sources": [
+        "docs/save-research/community-reference.txt",
+        "docs/save-research/field-registry.json"
+      ],
+      "edit_implication": "No editar furniture_fish_chips como sustituto de fishChip.",
+      "experiments_required": [
+        "Comparar ambos valores antes y después de una compra de fichas."
+      ]
+    },
+    {
+      "id": "fish-chip-cumulative-count-independent",
+      "from": "itemData.cumulativeFishCount",
+      "to": "gameData.fishChip",
+      "relation": "campos_separados",
+      "status": "negative",
+      "evidence": "E2",
+      "scope": "8.8.0",
+      "description": "cumulativeFishCount apareció identificado por IL2CPP como contador de peces acumulados, no como saldo de fichas. La fase 6.20 lo dejó fuera del editor de fichas.",
+      "sources": [
+        "docs/research/phase6-20/README.md",
+        "docs/save-research/README.md"
+      ],
+      "edit_implication": "No tratar cumulativeFishCount como saldo ni como espejo de fishChip.",
+      "experiments_required": [
+        "Confirmar su semántica funcional con una modificación controlada."
+      ]
+    },
+    {
+      "id": "hero-unlock-skin-lock",
+      "from": "gameData.heroUnlock",
+      "to": "gameData.skinLock",
+      "relation": "estado_de_acceso_relacionado",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, estructura de personajes",
+      "description": "heroUnlock declara personajes desbloqueados y skinLock contiene una lista de 802 posiciones alineadas con el catálogo de skins. La alineación es estructural; no se demostró que desbloquear un personaje desbloquee sus skins.",
+      "sources": [
+        "docs/research/phase6-12/personajes-skins-skills.md",
+        "docs/save-research/save-file-mapping.md"
+      ],
+      "edit_implication": "Mantener heroUnlock y skinLock como estados separados.",
+      "experiments_required": [
+        "Probar la interacción al desbloquear un personaje con skins bloqueadas."
+      ]
+    },
+    {
+      "id": "hero-skill-unlock-skill",
+      "from": "gameData.heroSkillUnlock",
+      "to": "gameData.heroSkill",
+      "relation": "desbloqueo_y_seleccion",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, 105 habilidades",
+      "description": "heroSkillUnlock contiene 105 entradas Key/Value por habilidad; heroSkill contiene la selección por personaje. La fase 6.18 confirmó el desbloqueo de una habilidad, pero la persistencia tras volver a guardar quedó pendiente.",
+      "sources": [
+        "docs/research/phase6-18/README.md",
+        "docs/save-research/README.md"
+      ],
+      "edit_implication": "Un desbloqueo de habilidad no implica cambiar la habilidad equipada.",
+      "experiments_required": [
+        "Verificar persistencia de heroSkillUnlock tras re-guardado."
+      ]
+    },
+    {
+      "id": "skin-lock-current-skin",
+      "from": "gameData.skinLock",
+      "to": "gameData.currentSkinDatas",
+      "relation": "disponibilidad_y_seleccion",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0",
+      "description": "skinLock representa disponibilidad por personaje e índice; currentSkinDatas representa selecciones equipadas. La fase 6.19 confirmó un cambio de skinLock, sin demostrar que currentSkinDatas se actualice automáticamente.",
+      "sources": [
+        "docs/research/phase6-19/README.md",
+        "docs/save-research/README.md"
+      ],
+      "edit_implication": "No asumir que editar skinLock cambia la skin equipada.",
+      "experiments_required": [
+        "Comprobar la selección equipada después de desbloquear una skin."
+      ]
+    },
+    {
+      "id": "skin-lock-value-semantics",
+      "from": "gameData.skinLock",
+      "to": "gameData.skinLock",
+      "relation": "valores_reservados",
+      "status": "hypothesis",
+      "evidence": "E2",
+      "scope": "8.8.0, valores -13, -6, 12000 observados",
+      "description": "Los valores de skinLock no son solo booleanos. Se observaron 1, 0, -13, -6 y 12000, pero su significado funcional no está verificado.",
+      "sources": [
+        "docs/research/phase6-12/personajes-skins-skills.md"
+      ],
+      "edit_implication": "No normalizar ni interpretar los valores negativos o grandes sin un experimento.",
+      "experiments_required": [
+        "Mapear cada valor observado a disponibilidad, trial o evento."
+      ]
+    },
+    {
+      "id": "pet-unlock-catalog",
+      "from": "gameData.petUnlock",
+      "to": "catalog.pets",
+      "relation": "pertenencia_no_posesion",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, 58 entradas observadas",
+      "description": "petUnlock contiene 58 claves booleanas. El catálogo de mascotas tiene 58 identificadores, incluidos el id 17 sin nombre y el id 57 sin código. La presencia en el catálogo no demuestra desbloqueo.",
+      "sources": [
+        "docs/research/phase6-12/personajes-skins-skills.md",
+        "knowledge/catalogs/pets.json"
+      ],
+      "edit_implication": "Resolver siempre código e id numérico antes de editar petUnlock.",
+      "experiments_required": [
+        "Confirmar la correspondencia exacta entre las 58 claves de petUnlock y el catálogo."
+      ]
+    },
+    {
+      "id": "weapon-evolution-catalog",
+      "from": "weaponEvolutionData.weapons",
+      "to": "catalog.weapons",
+      "relation": "pertenencia_no_posesion",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, weaponEvolutionData",
+      "description": "Las claves de weaponEvolutionData.weapons se resuelven contra el catálogo de armas. La existencia en el catálogo no demuestra forja, nivel ni desbloqueo.",
+      "sources": [
+        "docs/save-research/save-file-mapping.md",
+        "knowledge/catalogs/weapons.json"
+      ],
+      "edit_implication": "Separar catálogo, registro de obtención y nivel de forja.",
+      "experiments_required": [
+        "Determinar qué campo registra obtención frente a evolución."
+      ]
+    },
+    {
+      "id": "weapon-evolution-skins",
+      "from": "weaponEvolutionData.weapons._.UnlockedSkins",
+      "to": "weaponEvolutionData.weapons._.CurrentSkinIndex",
+      "relation": "disponibilidad_y_seleccion",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, weaponEvolutionData",
+      "description": "UnlockedSkins enumera índices de skin y CurrentSkinIndex selecciona uno. No se comprobó si el juego acepta un índice no incluido en UnlockedSkins.",
+      "sources": [
+        "docs/save-research/save-file-mapping.md",
+        "knowledge/catalogs/weapon_skins.json"
+      ],
+      "edit_implication": "Mantener la coherencia entre UnlockedSkins y CurrentSkinIndex.",
+      "experiments_required": [
+        "Probar una skin no desbloqueada y observar la corrección del juego."
+      ]
+    },
+    {
+      "id": "blueprint-research-materials",
+      "from": "itemData.blueprints",
+      "to": "itemData.materials",
+      "relation": "consumo_de_materiales",
+      "status": "observed",
+      "evidence": "E1",
+      "scope": "8.8.0, items.decrypted.csv",
+      "description": "Cada plano declara ResearchMaterials con item y num. Es una estructura de configuración, no una prueba de que el guardado haya consumido esos materiales.",
+      "sources": [
+        "knowledge/catalogs/blueprints.json",
+        "knowledge/catalogs/materials.json"
+      ],
+      "edit_implication": "Validar que los materiales referenciados existan antes de cualquier futura edición de planos.",
+      "experiments_required": [
+        "Comprobar el descuento real de materiales al investigar un plano."
+      ]
+    },
+    {
+      "id": "blueprint-status-target",
+      "from": "itemData.blueprints",
+      "to": "catalog.blueprints",
+      "relation": "estado_por_plano",
+      "status": "observed",
+      "evidence": "E1",
+      "scope": "8.8.0, muestra externa con forma de guardado",
+      "description": "La muestra externa data.json contiene 119 claves de blueprint con estados Got/Researched. No se usó para editar ni se considera evidencia de posesión de la cuenta.",
+      "sources": [
+        "knowledge/evidence/data-json-structure.json",
+        "knowledge/catalogs/blueprints.json"
+      ],
+      "edit_implication": "No interpretar Got como desbloqueo universal sin una prueba propia.",
+      "experiments_required": [
+        "Reproducir los estados Got y Researched en un guardado propio."
+      ]
+    },
+    {
+      "id": "weapon-fusion-materials",
+      "from": "catalog.weapons",
+      "to": "catalog.materials",
+      "relation": "receta_de_fusion",
+      "status": "observed",
+      "evidence": "E1",
+      "scope": "8.8.0, weapons.decrypted.csv",
+      "description": "FusionList y Materials describen recetas y costes de configuración. OriginalWeapon se conserva como valor en bruto porque su semántica no está confirmada.",
+      "sources": [
+        "knowledge/catalogs/weapons.json"
+      ],
+      "edit_implication": "No etiquetar OriginalWeapon como evolución confirmada.",
+      "experiments_required": [
+        "Aclarar si OriginalWeapon es arma base, resultado o referencia histórica."
+      ]
+    },
+    {
+      "id": "enemy-drops-items",
+      "from": "catalog.enemies",
+      "to": "catalog.materials",
+      "relation": "drop_de_objeto",
+      "status": "observed",
+      "evidence": "E1",
+      "scope": "8.8.0, enemies.decrypted.csv",
+      "description": "Los campos Drops y DropGroups referencian claves de objetos. Son configuración estática, no una garantía de que el objeto se haya obtenido.",
+      "sources": [
+        "knowledge/catalogs/enemies.json"
+      ],
+      "edit_implication": "Validar las referencias de drop antes de editar registros de obtención.",
+      "experiments_required": [
+        "Comprobar cómo registra el guardado un drop observado."
+      ]
+    },
+    {
+      "id": "garden-seed-plant",
+      "from": "itemData.seeds",
+      "to": "itemData.plants",
+      "relation": "semilla_y_planta",
+      "status": "observed",
+      "evidence": "E1",
+      "scope": "8.8.0, item.json",
+      "description": "Las 47 semillas del catálogo se relacionan con 47 plantas mediante el prefijo plant_ y el sufijo _seed. La relación de catálogo no confirma el estado de crecimiento ni la posesión.",
+      "sources": [
+        "knowledge/catalogs/seeds.json",
+        "knowledge/catalogs/plants.json"
+      ],
+      "edit_implication": "Mantener inventario y jardín como estados separados.",
+      "experiments_required": [
+        "Mapear las claves reales de itemData.plants y su estado de crecimiento."
+      ]
+    },
+    {
+      "id": "lobby-unlock-decorate",
+      "from": "gameData.unlockRoomDecorate",
+      "to": "gameData.roomObjectLevel",
+      "relation": "desbloqueo_y_nivel",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, 15 muebles observados en muestra externa",
+      "description": "unlockRoomDecorate y roomObjectLevel aparecen como estados distintos del vestíbulo. La muestra externa data.json permite enumerar 15 muebles, pero no se comprobó su semántica.",
+      "sources": [
+        "docs/save-research/field-registry.json",
+        "knowledge/catalogs/lobby.json"
+      ],
+      "edit_implication": "No asumir que desbloquear un mueble establece su nivel.",
+      "experiments_required": [
+        "Probar desbloqueo y nivel de un mueble en un guardado propio."
+      ]
+    },
+    {
+      "id": "item-unlock-lobby",
+      "from": "itemData.itemUnlock",
+      "to": "catalog.lobby",
+      "relation": "desbloqueo_de_objeto",
+      "status": "observed",
+      "evidence": "E1",
+      "scope": "8.8.0, muestra externa con forma de guardado",
+      "description": "itemUnlock contiene 6 identificadores (macetas y Motorcycle) en la muestra externa. No se verificó que sea una lista de desbloqueos permanentes.",
+      "sources": [
+        "knowledge/evidence/data-json-structure.json",
+        "knowledge/catalogs/lobby.json"
+      ],
+      "edit_implication": "Tratar itemUnlock como candidato, no como estado confirmado.",
+      "experiments_required": [
+        "Reproducir la lista en un guardado propio y modificarla de forma controlada."
+      ]
+    },
+    {
+      "id": "season-coin-vs-chips",
+      "from": "seasonData.coin",
+      "to": "seasonData.chips",
+      "relation": "monedas_distintas",
+      "status": "negative",
+      "evidence": "E2",
+      "scope": "8.8.0, seasonData",
+      "description": "coin, cumulativeCoinCount y chips son estructuras distintas. chips no es el saldo de monedas de temporada ni el fishChip de la pesca.",
+      "sources": [
+        "docs/save-research/field-registry.json",
+        "knowledge/catalogs/chips.json"
+      ],
+      "edit_implication": "No convertir chips en coin ni viceversa.",
+      "experiments_required": [
+        "Confirmar la función de seasonData.chips con una modificación controlada."
+      ]
+    },
+    {
+      "id": "season-battlepass-local-cloud",
+      "from": "battlePassSaveData.seasonData",
+      "to": "battlePassSaveData.seasonData._.Value.curExp",
+      "relation": "proyeccion_local_y_nube",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, bp_data local y agregado de nube",
+      "description": "Los campos curExp, curLevel, freeClaimedLevel, hasBuy, paidClaimedLevel y seasonID se observaron en archivos locales bp_data y como candidatos en battlePassSaveData.seasonData[].Value. La correspondencia exacta entre ambas representaciones no está cerrada.",
+      "sources": [
+        "docs/save-research/save-file-mapping.md",
+        "docs/research/phase5-5/save-schema-880.md"
+      ],
+      "edit_implication": "Cambiar una representación sin la otra puede producir divergencia local/nube.",
+      "experiments_required": [
+        "Comparar el mismo guardado antes y después de sincronizar con la nube."
+      ]
+    },
+    {
+      "id": "local-cloud-game-data",
+      "from": "gameData",
+      "to": "cloud.gameData",
+      "relation": "proyeccion_local_y_agregado",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, files/game.data y agregado de nube",
+      "description": "El archivo local game.data y la sección gameData del agregado comparten claves, pero no se demostró una correspondencia byte a byte ni una regla de migración.",
+      "sources": [
+        "docs/save-research/save-file-mapping.md",
+        "docs/research/phase6-12/inventario-archivos.md"
+      ],
+      "edit_implication": "Mantener respaldo y comparación antes de cualquier edición futura.",
+      "experiments_required": [
+        "Diff controlado de ambos artefactos tras una acción de juego."
+      ]
+    },
+    {
+      "id": "reborn-card-representations",
+      "from": "gameData.rebornCard",
+      "to": "itemData.RebornCard",
+      "relation": "representaciones_no_equiparadas",
+      "status": "hypothesis",
+      "evidence": "E2",
+      "scope": "8.8.0",
+      "description": "rebornCard aparece como booleano de nube y también existen claves PlayerPrefs y itemData.RebornCard. La fase 6.20 concluyó que el estado de la tarjeta de resurrección no era editable porque la relación entre representaciones no estaba probada.",
+      "sources": [
+        "docs/research/phase6-20/README.md",
+        "docs/save-research/README.md"
+      ],
+      "edit_implication": "No editar rebornCard ni RebornCard sin resolver las tres representaciones.",
+      "experiments_required": [
+        "Identificar la representación autoritativa y su comportamiento tras reconectar."
+      ]
+    },
+    {
+      "id": "purchase-entitlements-external",
+      "from": "gameData.activeShopGemReceiptMarkers",
+      "to": "external.purchase-entitlements",
+      "relation": "derecho_gestionado_fuera_del_guardado",
+      "status": "hypothesis",
+      "evidence": "E1",
+      "scope": "Recibos, compras y servicios externos",
+      "description": "Los marcadores de recibos y derechos de compra no deben interpretarse como saldo local. Su autoridad probablemente reside en servicios externos; esta fase no realizó ninguna escritura ni consulta autenticada.",
+      "sources": [
+        "docs/save-research/community-reference.txt",
+        "docs/save-research/field-registry.json"
+      ],
+      "edit_implication": "Solo lectura descriptiva. Prohibido modificar recibos, derechos o estados de pago.",
+      "experiments_required": []
+    },
+    {
+      "id": "serialized-version-envelope",
+      "from": "cloud.serialzedVersion",
+      "to": "cloud",
+      "relation": "version_del_agregado",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, agregado de nube",
+      "description": "serialzedVersion declara la versión de serialización del agregado (1 en las muestras documentadas). No es la versión del juego ni sustituye a itemData.AppVersion.",
+      "sources": [
+        "docs/save-research/version-compatibility.md",
+        "docs/research/phase5-5/save-schema-880.md"
+      ],
+      "edit_implication": "No modificar el sobre de serialización al editar secciones.",
+      "experiments_required": []
+    }
+  ]
+}

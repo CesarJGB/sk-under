@@ -1,0 +1,114 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "mounts",
+  "title": "Monturas",
+  "description": "Monturas observadas en una muestra externa con forma de guardado.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "data.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 4,
+  "items": [
+    {
+      "id": "HuiYing",
+      "name": {
+        "en": "Gray Shadow",
+        "es": "Sombra Gris",
+        "zh_cn": "灰影"
+      },
+      "category": "mount",
+      "subcategory": "mount",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_index": 0,
+        "sample_level": 4,
+        "sample_selected": false
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "MengHuo",
+      "name": {
+        "en": "Meng Huo",
+        "es": "Meng Huo",
+        "zh_cn": "孟获"
+      },
+      "category": "mount",
+      "subcategory": "mount",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_index": 0,
+        "sample_level": 4,
+        "sample_selected": false
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "NanManXiang",
+      "name": {
+        "en": "Barbaric Elephant",
+        "es": "Elefanta Salvaje",
+        "zh_cn": "南蛮象"
+      },
+      "category": "mount",
+      "subcategory": "mount",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_index": 0,
+        "sample_level": 4,
+        "sample_selected": false
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "ZhuaHuangFeiDian",
+      "name": {
+        "en": "Yellow Lightning",
+        "es": "Rayo Amarillo",
+        "zh_cn": "爪黄飞电"
+      },
+      "category": "mount",
+      "subcategory": "mount",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_index": 0,
+        "sample_level": 4,
+        "sample_selected": true
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    }
+  ]
+}

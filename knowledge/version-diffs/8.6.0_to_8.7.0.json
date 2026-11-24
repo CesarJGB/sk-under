@@ -1,0 +1,119 @@
+{
+  "schema": "sk-knowledge/version-diff@1",
+  "from_version": "8.6.0",
+  "to_version": "8.7.0",
+  "from_commit": "e088a67",
+  "to_commit": "8cfa5d5",
+  "families": {
+    "blueprints": {
+      "count_before": 259,
+      "count_after": 262,
+      "added": [
+        "blueprint_evolution_weapon_018",
+        "blueprint_evolution_weapon_378",
+        "blueprint_evolution_weapon_388"
+      ],
+      "removed": []
+    },
+    "character_skills": {
+      "count_before": 103,
+      "count_after": 104,
+      "added": [
+        "Character31_skill_2_name"
+      ],
+      "removed": []
+    },
+    "character_skins": {
+      "count_before": 782,
+      "count_after": 792,
+      "added": [
+        "c10_skin30",
+        "c13_skin32",
+        "c14_skin26",
+        "c26_skin16",
+        "c27_skin13",
+        "c31_skin11",
+        "c36_skin9",
+        "c38_skin11",
+        "c4_skin27",
+        "c9_skin33"
+      ],
+      "removed": []
+    },
+    "characters": {
+      "count_before": 42,
+      "count_after": 42,
+      "added": [],
+      "removed": []
+    },
+    "enemies": {
+      "count_before": 592,
+      "count_after": 592,
+      "added": [],
+      "removed": []
+    },
+    "items": {
+      "count_before": 582,
+      "count_after": 589,
+      "added": [
+        "blueprint_evolution_weapon_018",
+        "blueprint_evolution_weapon_378",
+        "blueprint_evolution_weapon_388",
+        "material_activity_coin_talent2",
+        "material_weapon_fragment_weapon_018",
+        "material_weapon_fragment_weapon_378",
+        "material_weapon_fragment_weapon_388"
+      ],
+      "removed": []
+    },
+    "materials": {
+      "count_before": 130,
+      "count_after": 130,
+      "added": [],
+      "removed": []
+    },
+    "pets": {
+      "count_before": 56,
+      "count_after": 57,
+      "added": [
+        "EscapeMonkey"
+      ],
+      "removed": []
+    },
+    "tokens": {
+      "count_before": 19,
+      "count_after": 19,
+      "added": [],
+      "removed": []
+    },
+    "weapon_skins": {
+      "count_before": 177,
+      "count_after": 185,
+      "added": [
+        "weapon_002_s_1",
+        "weapon_018_s_1",
+        "weapon_172_s_1",
+        "weapon_237_s_1",
+        "weapon_268_s_1",
+        "weapon_292_s_1",
+        "weapon_378_s_1",
+        "weapon_388_s_1"
+      ],
+      "removed": []
+    },
+    "weapons": {
+      "count_before": 982,
+      "count_after": 989,
+      "added": [
+        "weapon_init_alchemistxx14",
+        "weapon_init_arcaneknightxx7",
+        "weapon_init_arcaneknightxx8",
+        "weapon_init_captainxx8",
+        "weapon_init_necromancerxx16",
+        "weapon_init_priestxx16",
+        "weapon_init_werewolfxx11"
+      ],
+      "removed": []
+    }
+  }
+}

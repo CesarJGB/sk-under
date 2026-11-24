@@ -1,0 +1,256 @@
+{
+  "schema": "sk-knowledge/sources@1",
+  "schema_version": 1,
+  "generated_by": "knowledge/tools/build_sources.py (curaduría de fase 7.0)",
+  "count": 15,
+  "sources": [
+    {
+      "id": "skdfe-main",
+      "type": "external_repository",
+      "title": "aznoobnam/skdfe — catálogos y derivaciones de Soul Knight",
+      "location": "https://github.com/aznoobnam/skdfe",
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "version": "8.8.0",
+      "accessed": "2026-11-23",
+      "license": null,
+      "evidence": "E1",
+      "usage": "Catálogos estáticos, nombres, identificadores, recuentos y relaciones de configuración. Se conserva el commit de origen en cada elemento generado.",
+      "limitations": [
+        "El repositorio no incluye archivo de licencia ni aviso de reutilización en el commit consultado.",
+        "Los datos derivan de una extracción del APK y de scripts propios; no son un guardado real.",
+        "No se redistribuyen CSV, HTML de la wiki, sprites ni volcados completos."
+      ],
+      "redistributed": false
+    },
+    {
+      "id": "skdfe-8.6.0",
+      "type": "external_repository",
+      "title": "SKDFE en la versión 8.6.0",
+      "location": "https://github.com/aznoobnam/skdfe/tree/e088a67",
+      "commit": "e088a67",
+      "version": "8.6.0",
+      "accessed": "2026-11-23",
+      "license": null,
+      "evidence": "E1",
+      "usage": "Comparación histórica de catálogos e identificadores.",
+      "limitations": [
+        "Commit histórico; no representa el estado actual del juego."
+      ],
+      "redistributed": false
+    },
+    {
+      "id": "skdfe-8.7.0",
+      "type": "external_repository",
+      "title": "SKDFE en la versión 8.7.0",
+      "location": "https://github.com/aznoobnam/skdfe/tree/8cfa5d5",
+      "commit": "8cfa5d5",
+      "version": "8.7.0",
+      "accessed": "2026-11-23",
+      "license": null,
+      "evidence": "E1",
+      "usage": "Comparación histórica de catálogos e identificadores.",
+      "limitations": [
+        "Commit histórico; no representa el estado actual del juego."
+      ],
+      "redistributed": false
+    },
+    {
+      "id": "skdfe-data-json",
+      "type": "external_repository",
+      "title": "data.json de SKDFE — muestra externa con forma de guardado",
+      "location": "https://github.com/aznoobnam/skdfe/blob/57b9b86335c080caca55e178c8409cb67658ccf6/data.json",
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "version": "8.8.0",
+      "accessed": "2026-11-23",
+      "license": null,
+      "evidence": "E1",
+      "usage": "Enumeración de claves y estructuras para vestíbulo, vales, joyería, chips, monturas, seguidores, trofeos, temporada y Monster Rise.",
+      "limitations": [
+        "No se ha demostrado que sea un guardado auténtico de una cuenta real.",
+        "Sus valores no se usan como evidencia de posesión ni como estado inicial confirmado.",
+        "Solo se conservan recuentos, formas y claves; no se copia el archivo completo."
+      ],
+      "redistributed": false
+    },
+    {
+      "id": "internal-field-registry",
+      "type": "internal_catalog",
+      "title": "Registro de campos de docs/save-research",
+      "location": "docs/save-research/field-registry.json",
+      "commit": null,
+      "version": "8.8.0",
+      "accessed": "2026-11-24",
+      "license": "Uso interno del proyecto",
+      "evidence": "E2",
+      "usage": "Base canónica congelada de 66 campos; se proyecta de forma determinista desde knowledge/fields/fields.json.",
+      "limitations": [
+        "Solo cubre los campos investigados hasta la fase 6.20."
+      ],
+      "redistributed": true
+    },
+    {
+      "id": "internal-phase6-12",
+      "type": "internal_document",
+      "title": "Fase 6.12 — inventario, personajes, recursos y evidencias",
+      "location": "docs/research/phase6-12/",
+      "commit": null,
+      "version": "8.8.0",
+      "accessed": "2026-11-24",
+      "license": "Uso interno del proyecto",
+      "evidence": "E2",
+      "usage": "Claves observadas en el agregado de nube, estructura de personajes/skins/habilidades, inventario, recursos y contadores.",
+      "limitations": [
+        "Las muestras son privadas; el repositorio solo conserva resultados saneados."
+      ],
+      "redistributed": true
+    },
+    {
+      "id": "internal-phase6-16",
+      "type": "internal_document",
+      "title": "Fase 6.16 — fichas de pesca y material_fish",
+      "location": "docs/research/phase6-16/",
+      "commit": null,
+      "version": "8.8.0",
+      "accessed": "2026-11-24",
+      "license": "Uso interno del proyecto",
+      "evidence": "E4",
+      "usage": "Confirmación de edición conjunta y persistencia de fishChip y material_fish.",
+      "limitations": [
+        "No cubre cumulativeFishCount, historiales de tienda ni versiones posteriores."
+      ],
+      "redistributed": true
+    },
+    {
+      "id": "internal-phase6-17-19",
+      "type": "internal_document",
+      "title": "Fases 6.17, 6.18 y 6.19 — heroUnlock, heroSkillUnlock y skinLock",
+      "location": "docs/research/phase6-17",
+      "commit": null,
+      "version": "8.8.0",
+      "accessed": "2026-11-24",
+      "license": "Uso interno del proyecto",
+      "evidence": "E3",
+      "usage": "Evidencia de semántica por modificación controlada, con persistencia pendiente en varios casos.",
+      "limitations": [
+        "La persistencia tras volver a guardar no está cerrada para todas las estructuras."
+      ],
+      "redistributed": true
+    },
+    {
+      "id": "internal-phase6-20",
+      "type": "internal_document",
+      "title": "Fase 6.20 — cumulativeFishCount y tarjeta de resurrección",
+      "location": "docs/research/phase6-20/",
+      "commit": null,
+      "version": "8.8.0",
+      "accessed": "2026-11-24",
+      "license": "Uso interno del proyecto",
+      "evidence": "E2",
+      "usage": "Identificación estática de cumulativeFishCount y límites de la tarjeta de resurrección.",
+      "limitations": [
+        "La semántica de la tarjeta de resurrección y la relación entre sus representaciones siguen abiertas."
+      ],
+      "redistributed": true
+    },
+    {
+      "id": "internal-phase5-5-metadata",
+      "type": "static_metadata",
+      "title": "Inventario de metadata IL2CPP 8.8.0",
+      "location": "docs/research/phase5-5/metadata-880-inventory.json",
+      "commit": null,
+      "version": "8.8.0",
+      "accessed": "2026-11-24",
+      "license": "Uso interno del proyecto",
+      "evidence": "E1",
+      "usage": "Tipos y campos declarados para 14 tipos de guardado, más el sobre CloudSaveGameData.",
+      "limitations": [
+        "Los campos declarados no prueban que una partida real los use.",
+        "No se incluye el APK ni el metadata original en el repositorio."
+      ],
+      "redistributed": true
+    },
+    {
+      "id": "internal-phase5-5-diff",
+      "type": "internal_document",
+      "title": "Diferencia de esquema observada 8.6.0 → 8.8.0",
+      "location": "docs/research/phase5-5/schema-diff-860-880.json",
+      "commit": null,
+      "version": "8.6.0/8.8.0",
+      "accessed": "2026-11-24",
+      "license": "Uso interno del proyecto",
+      "evidence": "E2",
+      "usage": "Claves comunes y añadidas entre muestras locales de 8.6.0 y el esquema 8.8.0.",
+      "limitations": [
+        "Se basa en muestras locales; no cubre todas las cuentas ni todas las modalidades."
+      ],
+      "redistributed": true
+    },
+    {
+      "id": "internal-backend-catalog",
+      "type": "internal_catalog",
+      "title": "Catálogo empaquetado de personajes 8.8.0",
+      "location": "backend/app/catalogs/characters-880.json",
+      "commit": null,
+      "version": "8.8.0",
+      "accessed": "2026-11-24",
+      "license": "Uso interno del proyecto",
+      "evidence": "E1",
+      "usage": "Proyección backend de 42 personajes, 105 habilidades y 802 skins. Se mantiene sin cambios.",
+      "limitations": [
+        "Solo resuelve nombres e índices; no demuestra posesión."
+      ],
+      "redistributed": true
+    },
+    {
+      "id": "internal-discord",
+      "type": "community_reference",
+      "title": "Referencia comunitaria de Discord sobre 8.5.0",
+      "location": "docs/save-research/community-reference.txt",
+      "commit": null,
+      "version": "8.5.0",
+      "accessed": "2026-11-23",
+      "license": "Referencia comunitaria; no se redistribuye",
+      "evidence": "E1",
+      "usage": "Patrones de PlayerPrefs, nombres de estadísticas, inventario, evolución de armas, temporadas y advertencias.",
+      "limitations": [
+        "Procede de una versión anterior y de una fuente comunitaria no verificada.",
+        "No se copia el TXT al repositorio.",
+        "Una coincidencia estructural no confirma comportamiento."
+      ],
+      "redistributed": false
+    },
+    {
+      "id": "own-observations-8.8",
+      "type": "own_observation",
+      "title": "Observaciones propias saneadas de 8.8.0",
+      "location": "docs/save-research",
+      "commit": null,
+      "version": "8.8.0",
+      "accessed": "2026-11-24",
+      "license": "Uso interno del proyecto",
+      "evidence": "E2",
+      "usage": "Estructuras observadas en guardados propios y verificaciones controladas de fases anteriores.",
+      "limitations": [
+        "Los guardados originales, recibos e identificadores de cuenta no se versionan.",
+        "Solo se conservan resultados saneados y fixtures sintéticos."
+      ],
+      "redistributed": true
+    },
+    {
+      "id": "game-version-8.8.0",
+      "type": "internal_document",
+      "title": "Compatibilidad de versiones documentada",
+      "location": "docs/save-research/version-compatibility.md",
+      "commit": null,
+      "version": "8.5.0/8.6.0/8.8.0",
+      "accessed": "2026-11-24",
+      "license": "Uso interno del proyecto",
+      "evidence": "E2",
+      "usage": "Alcance de versiones analizadas, tamaño del agregado, número de claves y límites de compatibilidad.",
+      "limitations": [
+        "No se declara compatibilidad con versiones no probadas."
+      ],
+      "redistributed": true
+    }
+  ]
+}

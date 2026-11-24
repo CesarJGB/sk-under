@@ -1,0 +1,1386 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "pet_skills",
+  "title": "Habilidades de mascota",
+  "description": "Habilidades y descripciones localizadas.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "I2language.csv"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 57,
+  "items": [
+    {
+      "id": "pet_0_skill_0",
+      "name": {
+        "en": "Feeling Good",
+        "es": "Relajado",
+        "zh_cn": "心情愉悦"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 0,
+        "pet_code": "Cat",
+        "slot": 0,
+        "description_en": "When Chilly is by your side, you can restore some of your energy once in a while.",
+        "description_es": "Cuando Fresco está a tu lado, puedes recuperar un poco de tu energía de vez en cuando."
+      },
+      "relations": {
+        "pet": "Cat"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_10_skill_0",
+      "name": {
+        "en": "PIGEOFF",
+        "es": "PALOMENOS",
+        "zh_cn": "没有到场"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 10,
+        "pet_code": "Gugu",
+        "slot": 0,
+        "description_en": "It can dodge attacks from time to time.",
+        "description_es": "Puede evadir ataques de vez en cuando."
+      },
+      "relations": {
+        "pet": "Gugu"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_11_skill_0",
+      "name": {
+        "en": "Distance Attack",
+        "es": "Ataque a distancia",
+        "zh_cn": "远攻"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 11,
+        "pet_code": "Owl",
+        "slot": 0,
+        "description_en": "It always attacks the enemy furthest from you.",
+        "description_es": "Siempre ataca al enemigo que está más lejos de ti."
+      },
+      "relations": {
+        "pet": "Owl"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_12_skill_0",
+      "name": {
+        "en": "Wake Up!",
+        "es": "¡Despierta!",
+        "zh_cn": "唤醒"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 12,
+        "pet_code": "Seal",
+        "slot": 0,
+        "description_en": "Baby Seal pats on its belly to remove 1 abnormal status applied to you.",
+        "description_es": "Foca Bebé toca su pancita para eliminar 1 estado anormal que te hayan aplicado."
+      },
+      "relations": {
+        "pet": "Seal"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_13_skill_0",
+      "name": {
+        "en": "Eww. Disgusting.",
+        "es": "Uy, qué asco.",
+        "zh_cn": "咦~恶心"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 13,
+        "pet_code": "Bug",
+        "slot": 0,
+        "description_en": "Enemies are terrified! The bug weakens their desire to attack and the speed of their projectiles.",
+        "description_es": "¡Los enemigos están aterrados! El insecto reduce su deseo de atacar y la velocidad de sus proyectiles."
+      },
+      "relations": {
+        "pet": "Bug"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_14_skill_0",
+      "name": {
+        "en": "Lifesteal",
+        "es": "Robo de vida",
+        "zh_cn": "吸血"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 14,
+        "pet_code": "Bat",
+        "slot": 0,
+        "description_en": "The pet restores its own HP a bit every time it attacks an enemy.",
+        "description_es": "La mascota restaura un poco de su vida cada vez que ataca a un enemigo."
+      },
+      "relations": {
+        "pet": "Bat"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_15_skill_0",
+      "name": {
+        "en": "Slippery Poo-poo",
+        "es": "Caca resbaladiza",
+        "zh_cn": "滑溜溜大便"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 15,
+        "pet_code": "Hippo",
+        "slot": 0,
+        "description_en": "Pinko Hippo poops every 8 secs. Enemies who slip on its poo-poo will take 2 damage.",
+        "description_es": "El Hipopótamo Rojo hace caca cada 8 segundos. Los enemigos que se resbalen con su caca recibirán 2 de daño."
+      },
+      "relations": {
+        "pet": "Hippo"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_16_skill_0",
+      "name": {
+        "en": "Great Tengu",
+        "es": "Gran Tengu",
+        "zh_cn": "大天狗形态"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 16,
+        "pet_code": "Tengo",
+        "slot": 0,
+        "description_en": "Mini Tengu will transform into Great Tengu every once in a while and throw a punch real hard!",
+        "description_es": "¡El Minitengu se transforma en el Gran Tengu cada cierto tiempo y da un golpe muy fuerte!"
+      },
+      "relations": {
+        "pet": "Tengo"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_18_skill_0",
+      "name": {
+        "en": "Hey! Move!",
+        "es": "¡Oye! ¡Muévete!",
+        "zh_cn": "嘿！让开！"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 18,
+        "pet_code": "Pug",
+        "slot": 0,
+        "description_en": "Peanut will deal 1 collision damage to the enemy when it is by your side.",
+        "description_es": "Cacahuete causará 1 de daño de colisión al enemigo cuando esté a tu lado."
+      },
+      "relations": {
+        "pet": "Pug"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_19_skill_0",
+      "name": {
+        "en": "Assist",
+        "es": "Asistir",
+        "zh_cn": "协助"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 19,
+        "pet_code": "Corgi",
+        "slot": 0,
+        "description_en": "Your charge speed increases by 5%.",
+        "description_es": "Tu velocidad de carga aumenta en un 5 %."
+      },
+      "relations": {
+        "pet": "Corgi"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_1_skill_0",
+      "name": {
+        "en": "Lucky Dog",
+        "es": "Perro afortunado",
+        "zh_cn": "真的旺"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 1,
+        "pet_code": "Dog",
+        "slot": 0,
+        "description_en": "Extra coins are occasionally found in battle",
+        "description_es": "A veces se encuentran monedas adicionales durante la batalla"
+      },
+      "relations": {
+        "pet": "Dog"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_20_skill_0",
+      "name": {
+        "en": "Go Away!",
+        "es": "¡Lárgate!",
+        "zh_cn": "生人勿近"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 20,
+        "pet_code": "Cat1",
+        "slot": 0,
+        "description_en": "Enemies that try to approach you will stop moving due to the threats of Smokey.",
+        "description_es": "Los enemigos que intentan acercarse a ti se detendrán ante las amenazas de Humito."
+      },
+      "relations": {
+        "pet": "Cat1"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_21_skill_0",
+      "name": {
+        "en": "Soothing",
+        "es": "Relajante",
+        "zh_cn": "安心"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 21,
+        "pet_code": "Cat2",
+        "slot": 0,
+        "description_en": "When Snow is by your side, you are immune to freeze for a short time.",
+        "description_es": "Cuando Nieve está a tu lado, eres inmune a la congelación durante un breve periodo de tiempo."
+      },
+      "relations": {
+        "pet": "Cat2"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_22_skill_0",
+      "name": {
+        "en": "Secret Angel",
+        "es": "Ángel secreto",
+        "zh_cn": "默默关心"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 22,
+        "pet_code": "Rabbit1",
+        "slot": 0,
+        "description_en": "With every 20 or more points of energy that you have used, Papa restores 0-5 points of energy for you.",
+        "description_es": "Por cada 20 o más puntos de energía que hayas usado, Papa te restaura entre 0 y 5 puntos de energía."
+      },
+      "relations": {
+        "pet": "Rabbit1"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_23_skill_0",
+      "name": {
+        "en": "No Waste",
+        "es": "Sin desperdicio",
+        "zh_cn": "不浪费"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 23,
+        "pet_code": "Pig1",
+        "slot": 0,
+        "description_en": "If you consume a health potion when your HP is full, your energy increases by 10.",
+        "description_es": "Si consumes una poción de vida cuando tu vida esté al máximo, tu energía aumentará en 10."
+      },
+      "relations": {
+        "pet": "Pig1"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_24_skill_0",
+      "name": {
+        "en": "Lash",
+        "es": "Latigazo",
+        "zh_cn": "鞭策"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 24,
+        "pet_code": "LiangSir",
+        "slot": 0,
+        "description_en": "You are under the close supervision of Captain Chilly! When it is by your side, your crit hit rate +5.",
+        "description_es": "¡Estás bajo la supervisión del capitán Fresco! Cuando está a tu lado, tu tasa de golpe crítico aumenta en 5."
+      },
+      "relations": {
+        "pet": "LiangSir"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_25_skill_0",
+      "name": {
+        "en": "Burned Land",
+        "es": "Tierra quemada",
+        "zh_cn": "焦土"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 25,
+        "pet_code": "Blagny",
+        "slot": 0,
+        "description_en": "Blani burns anywhere that it stays.",
+        "description_es": "Blani quema el área donde esté."
+      },
+      "relations": {
+        "pet": "Blagny"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_26_skill_0",
+      "name": {
+        "en": "Defensive Stance",
+        "es": "Posición defensiva",
+        "zh_cn": "防御姿态"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 26,
+        "pet_code": "Tortoise",
+        "slot": 0,
+        "description_en": "When Speedy's HP is 0, it will shrink into its shell and enter the defense state. In the defense state, Speedy will block any attack like a wall.",
+        "description_es": "Cuando la vida de Velocista llega a 0, se esconderá en su caparazón y entrará en modo de defensa. En este estado, Velocista bloqueará todos los ataques como un muro."
+      },
+      "relations": {
+        "pet": "Tortoise"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_27_skill_0",
+      "name": {
+        "en": "Cell Seeker",
+        "es": "Buscador de células",
+        "zh_cn": "寻找细胞"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 27,
+        "pet_code": "Serenade",
+        "slot": 0,
+        "description_en": "The pet can find cells when it is fighting with the character.",
+        "description_es": "La mascota puede encontrar células cuando lucha con el personaje."
+      },
+      "relations": {
+        "pet": "Serenade"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_28_skill_0",
+      "name": {
+        "en": "Backpack",
+        "es": "Mochila",
+        "zh_cn": "行囊"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 28,
+        "pet_code": "Dog1",
+        "slot": 0,
+        "description_en": "The pet helps you pick up materials nearby.",
+        "description_es": "La mascota te ayuda a recoger materiales que estén cerca."
+      },
+      "relations": {
+        "pet": "Dog1"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_29_skill_0",
+      "name": {
+        "en": "Drumstick",
+        "es": "Baquetas",
+        "zh_cn": "飞毛腿"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 29,
+        "pet_code": "Cat3",
+        "slot": 0,
+        "description_en": "When Pudding is by your side, your movement speed increases for a short duration.",
+        "description_es": "Cuando Budín está a tu lado, tu velocidad de movimiento aumenta durante un breve periodo de tiempo."
+      },
+      "relations": {
+        "pet": "Cat3"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_2_skill_0",
+      "name": {
+        "en": "Hearty Eater",
+        "es": "Glotón",
+        "zh_cn": "不挑食"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 2,
+        "pet_code": "Pig",
+        "slot": 0,
+        "description_en": "If you consume an energy potion when your energy is full, your HP increases by 1.",
+        "description_es": "Si consumes una poción de energía cuando tu energía está al máximo, tu vida aumentará en 1."
+      },
+      "relations": {
+        "pet": "Pig"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_30_skill_0",
+      "name": {
+        "en": "Focus",
+        "es": "Enfoque",
+        "zh_cn": "专注"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 30,
+        "pet_code": "Cat4",
+        "slot": 0,
+        "description_en": "When Purpur is by your side, you charge much faster.",
+        "description_es": "Cuando tienes a Ronrón a tu lado, cargas mucho más rápido."
+      },
+      "relations": {
+        "pet": "Cat4"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_31_skill_0",
+      "name": {
+        "en": "Intimidate",
+        "es": "Intimidar",
+        "zh_cn": "吓阻"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 31,
+        "pet_code": "Dog2",
+        "slot": 0,
+        "description_en": "The pet inflicts damage to enemies in the circle while knocking them back.",
+        "description_es": "La mascota causa daño a los enemigos en el círculo y los derriba."
+      },
+      "relations": {
+        "pet": "Dog2"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_32_skill_0",
+      "name": {
+        "en": "Protect",
+        "es": "Proteger",
+        "zh_cn": "保护"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 32,
+        "pet_code": "Dog3",
+        "slot": 0,
+        "description_en": "When your armor is broken, Chestnut will block the projectiles from enemies.",
+        "description_es": "Cuando tu armadura se rompe, Chestnut bloquea los proyectiles de los enemigos."
+      },
+      "relations": {
+        "pet": "Dog3"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_33_skill_0",
+      "name": {
+        "en": "Dragon Fire",
+        "es": "Fuego de dragón",
+        "zh_cn": "龙炎"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 33,
+        "pet_code": "dragon",
+        "slot": 0,
+        "description_en": "It breathes mid-range flame.",
+        "description_es": "Exhala una llamarada de mediano alcance."
+      },
+      "relations": {
+        "pet": "dragon"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_34_skill_0",
+      "name": {
+        "en": "Behemoth",
+        "es": "Bégimo",
+        "zh_cn": "巨兽"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 34,
+        "pet_code": "Cat5",
+        "slot": 0,
+        "description_en": "The pet leaps forward from time to time to create a shockwave.",
+        "description_es": "La mascota salta hacia adelante de vez en cuando y crea una onda de choque."
+      },
+      "relations": {
+        "pet": "Cat5"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_35_skill_0",
+      "name": {
+        "en": "Schrödinger's Cat",
+        "es": "El gato de Schrödinger",
+        "zh_cn": "薛定谔的猫"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 35,
+        "pet_code": "Cat6",
+        "slot": 0,
+        "description_en": "After you cast a skill, Rosemary Cat takes a different form and helps you regain energy or armor.",
+        "description_es": "Después de lanzar una habilidad, Gato romero adopta otra forma y te ayuda a recuperar energía y armadura."
+      },
+      "relations": {
+        "pet": "Cat6"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_36_skill_0",
+      "name": {
+        "en": "Discount",
+        "es": "Descuento",
+        "zh_cn": "打折啦"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 36,
+        "pet_code": "TenOff",
+        "slot": 0,
+        "description_en": "Purchasing any item with coins in the Level Mode returns 10% of the coins spent.",
+        "description_es": "Comprar cualquier objeto con monedas en el modo de niveles devuelve el 10 % de las monedas gastadas."
+      },
+      "relations": {
+        "pet": "TenOff"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_37_skill_0",
+      "name": {
+        "en": "Formation",
+        "es": "Formación",
+        "zh_cn": "保持队形"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 37,
+        "pet_code": "RushDuck",
+        "slot": 0,
+        "description_en": "Quacky and little ducklings line up and charge at the nearest enemy.",
+        "description_es": "Patty y los patitos se alinean y cargan contra el enemigo más cercano."
+      },
+      "relations": {
+        "pet": "RushDuck"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_38_skill_0",
+      "name": {
+        "en": "Torpedo",
+        "es": "Torpedo",
+        "zh_cn": "鱼雷"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 38,
+        "pet_code": "SacaSaca",
+        "slot": 0,
+        "description_en": "Sacasaca charges at enemies like a torpedo and ricochets 3 times.",
+        "description_es": "Sacapez carga contra los enemigos como un torpedo y rebota 3 veces."
+      },
+      "relations": {
+        "pet": "SacaSaca"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_39_skill_0",
+      "name": {
+        "en": "Windfall",
+        "es": "Dinero del cielo",
+        "zh_cn": "招财进宝"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 39,
+        "pet_code": "Cat7",
+        "slot": 0,
+        "description_en": "Mark a random enemy. When defeated within the time limit, the marked enemy randomly drops coins.",
+        "description_es": "Marca a un enemigo aleatorio. Si lo derrotas dentro del límite de tiempo, entregará monedas al azar."
+      },
+      "relations": {
+        "pet": "Cat7"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_3_skill_0",
+      "name": {
+        "en": "Split Up!",
+        "es": "¡Sepárense!",
+        "zh_cn": "分头行动"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 3,
+        "pet_code": "Slime",
+        "slot": 0,
+        "description_en": "The slime splits into 2 once it is attacked. It can split up to 2 times. The attack damage of a split slime is reduced to 1.",
+        "description_es": "La baba se divide en 2 cuando la atacan. Se puede separar hasta 2 veces. El daño de ataque de una baba separada se reduce en 1."
+      },
+      "relations": {
+        "pet": "Slime"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_40_skill_0",
+      "name": {
+        "en": "Hammer Hammer!",
+        "es": "¡Martillo, martillo!",
+        "zh_cn": "小锤锤捶你哦！"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 40,
+        "pet_code": "Hammer",
+        "slot": 0,
+        "description_en": "Attacks have a chance to stun enemies.",
+        "description_es": "Los ataques tienen una probabilidad de aturdir a los enemigos."
+      },
+      "relations": {
+        "pet": "Hammer"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_41_skill_0",
+      "name": {
+        "en": "Wrap It Up!",
+        "es": "¡El gran cierre!",
+        "zh_cn": "成长吧！"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 41,
+        "pet_code": "Zongzi",
+        "slot": 0,
+        "description_en": "At the start of each game, Zongzi Junior gains a random flavor, each offering him a unique effect (for that particular run).\\\\nRed Bean Delight: Defense +{0}, HP +{1}, size increased by {2} time.\\\\nSalty Egg Surprise: Each attack launches {3} extra projectiles.\\\\nMeat Feast: Crit hit rate +{4}%,  attack speed +{5}%, movement speed + {6}%.\\\\nMushroom Magic: Attacks have a {7}% chance to trigger a random elemental effect.",
+        "description_es": "Al inicio de cada partida, Zongzi Hijo obtiene un sabor aleatorio. Cada uno le brinda un efecto único (para ese recorrido en particular).\\\\nDelicia de judías rojas: Defensa +{0}, Vida +{1}, aumento de tamaño de {2} veces.\\\\nHuevo salado sorpresa: Cada ataque lanza {3} proyectiles adicionales.\\\\nFestín de carne: Tasa de golpe crítico +{4} %, velocidad de ataque +{5} %, velocidad de movimiento +{6} %.\\\\nMagia de los hongos: Los ataques tienen un {7} % de probabilidad de activar un efecto elemental aleatorio."
+      },
+      "relations": {
+        "pet": "Zongzi"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_42_skill_0",
+      "name": {
+        "en": "Inspiration",
+        "es": "Inspiración",
+        "zh_cn": "灵感"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 42,
+        "pet_code": "JiaoDirector",
+        "slot": 0,
+        "description_en": "Director Pepper inspires creativity and produces unexpected items during battles.",
+        "description_es": "Director Pimienta inspira creatividad y otorga objetos inesperados durante las batallas."
+      },
+      "relations": {
+        "pet": "JiaoDirector"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_43_skill_0",
+      "name": {
+        "en": "Bugs Be Gone!",
+        "es": "¡Control de calidad!",
+        "zh_cn": "献出我的漏洞！"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 43,
+        "pet_code": "FeatureBug",
+        "slot": 0,
+        "description_en": "Pull out a laptop and quickly fix bugs. A successful attempt grants buffs, while a failed one inflicts debuffs.",
+        "description_es": "Saca una laptop y corrige errores rápidamente. Un intento exitoso otorga potenciadores, mientras que uno fallido aplica debilitadores."
+      },
+      "relations": {
+        "pet": "FeatureBug"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_44_skill_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": "金猪"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 44,
+        "pet_code": "CoinPig",
+        "slot": 0,
+        "description_en": null,
+        "description_es": null
+      },
+      "relations": {
+        "pet": "CoinPig"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_45_skill_0",
+      "name": {
+        "en": "Open Fire",
+        "es": "Abrir Fuego",
+        "zh_cn": "火力时刻"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 45,
+        "pet_code": "FireCat",
+        "slot": 0,
+        "description_en": "Gains bonuses to attack speed and movement speed, and fires more projectiles.",
+        "description_es": "Obtiene bonificaciones a la velocidad de ataque y la velocidad de movimiento, y dispara más proyectiles."
+      },
+      "relations": {
+        "pet": "FireCat"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_46_skill_0",
+      "name": {
+        "en": "Slime Thrive",
+        "es": "Ganancia viscosa",
+        "zh_cn": "变大变强"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 46,
+        "pet_code": "MiniSlime",
+        "slot": 0,
+        "description_en": "Expands into a medium-sized slime, attacking enemies within a larger area and burning nearby enemies.",
+        "description_es": "Se expande hasta convertirse en una baba de tamaño mediano, ataca a los enemigos que se encuentran en un área más amplia y quema a los oponentes cercanos."
+      },
+      "relations": {
+        "pet": "MiniSlime"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_47_skill_0",
+      "name": {
+        "en": "Hail to Salty Zongzi",
+        "es": "Viva Zongzi Amargado",
+        "zh_cn": "咸肉粽万岁"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 47,
+        "pet_code": "ZongziBro",
+        "slot": 0,
+        "description_en": "Enters a berserk state, wielding dual AK-47 rifles, gaining a substantial boost to critical hit rate, attack speed, and movement speed.",
+        "description_es": "Entra a un estado de frenesí, usa dos rifles AK-47 y obtiene un aumento sustancial de probabilidad de golpe crítico, velocidad de ataque y velocidad de movimiento."
+      },
+      "relations": {
+        "pet": "ZongziBro"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_48_skill_0",
+      "name": {
+        "en": "Ahh!",
+        "es": "¡Ahh!",
+        "zh_cn": "啊！"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 48,
+        "pet_code": "Mahhmot",
+        "slot": 0,
+        "description_en": "Unleash a wild scream, blasting out a shockwave that damages and knocks back all enemies within its area.",
+        "description_es": "Emite un grito salvaje y provoca una onda de choque que inflige daño y derriba a todos los enemigos en el área."
+      },
+      "relations": {
+        "pet": "Mahhmot"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_49_skill_0",
+      "name": {
+        "en": "Nap",
+        "es": "Siesta",
+        "zh_cn": "发呆"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 49,
+        "pet_code": "Capybara",
+        "slot": 0,
+        "description_en": "Kapikapi approaches enemies, entering a napping state and taunting nearby enemies in melee range. After taking multiple hits, it enters an enraged state, gaining increased attack speed, movement speed, and critical hit rate.",
+        "description_es": "Kapikapi se acerca a los enemigos, entra en estado de siesta y provoca a los enemigos cercanos que estén a una distancia cuerpo a cuerpo. Tras recibir varios golpes, entra en estado de furia y aumenta su velocidad de ataque, su velocidad de movimiento y su probabilidad de golpe crítico."
+      },
+      "relations": {
+        "pet": "Capybara"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_4_skill_0",
+      "name": {
+        "en": "Extra Battery",
+        "es": "Batería adicional",
+        "zh_cn": "备用电池"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 4,
+        "pet_code": "Robot",
+        "slot": 0,
+        "description_en": "Robo can enhance your armor mount. The max HP of your armor mount increases by 2.",
+        "description_es": "Robo puede mejorar tu montura blindada. La vida máx. de tu montura blindada aumenta en 2."
+      },
+      "relations": {
+        "pet": "Robot"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_50_skill_0",
+      "name": {
+        "en": "Laser Show",
+        "es": "Espectáculo láser",
+        "zh_cn": "激光秀"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 50,
+        "pet_code": "ShanghaiTower",
+        "slot": 0,
+        "description_en": "Switch to turret mode every 30s, rotating to fire a sweeping laser.",
+        "description_es": "Cambia al modo torreta cada 30 s y gira para disparar con el láser de forma continua."
+      },
+      "relations": {
+        "pet": "ShanghaiTower"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_51_skill_0",
+      "name": {
+        "en": "I've Got Your Back!",
+        "es": "¡Vine a ayudarte!",
+        "zh_cn": "我来助你！"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 51,
+        "pet_code": "TrainerRobot",
+        "slot": 0,
+        "description_en": "When your armor is depleted, the Lil Drillmaster will destroy all nearby projectiles and pull out his worn bazooka, attacking nearby enemies for {0}s.",
+        "description_es": "Cuando tu armadura se agota, Instructorcito destruye todos los proyectiles cercanos y saca su bazuca desgastada para atacar a los oponentes que estén cerca durante {0} s."
+      },
+      "relations": {
+        "pet": "TrainerRobot"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_52_skill_0",
+      "name": {
+        "en": "Burning Out",
+        "es": "Rabia Abrasadora",
+        "zh_cn": "燃尽了"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 52,
+        "pet_code": "FireSnowman",
+        "slot": 0,
+        "description_en": "Toastie ignites itself to launch a barrage of snowballs in all directions, draining health over time until depleted. Snowballs have a chance to freeze enemies.",
+        "description_es": "Tostadito se prende en llamas para lanzar una ráfaga de bolas de nieve en todas direcciones. Esto consume su vida hasta agotarla. Las bolas de nieve tienen una probabilidad de congelar a los enemigos."
+      },
+      "relations": {
+        "pet": "FireSnowman"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_53_skill_0",
+      "name": {
+        "en": "Magic Marble Go!",
+        "es": "¡Canicas mágicas al ataque!",
+        "zh_cn": "发射！元气弹！"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 53,
+        "pet_code": "ChillyGo",
+        "slot": 0,
+        "description_en": "Armed with the Marble Blaster, Chilly Cube draws strength from friends to safeguard the Magic Stone.",
+        "description_es": "Con la Ametralladora de Canicas, Frescubo obtiene fuerza de sus amigos para proteger la piedra mágica."
+      },
+      "relations": {
+        "pet": "ChillyGo"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_54_skill_0",
+      "name": {
+        "en": "True Form",
+        "es": "Forma verdadera",
+        "zh_cn": "本相觉醒"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 54,
+        "pet_code": "Nian",
+        "slot": 0,
+        "description_en": "When facing powerful foes, Lai Cai will briefly awaken its primal powers, revealing its true form.",
+        "description_es": "Al enfrentarse a enemigos poderosos, Lai Cai despierta brevemente sus poderes primigenios y revela su forma verdadera."
+      },
+      "relations": {
+        "pet": "Nian"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_55_skill_0",
+      "name": {
+        "en": "Mecha Fusion",
+        "es": "Mecafusión",
+        "zh_cn": "机甲附体"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 55,
+        "pet_code": "CatMecha",
+        "slot": 0,
+        "description_en": "Chilly merges with the summoned mecha to enter an enhanced form. While active, Chilly's movement speed, damage, and size are significantly increased.",
+        "description_es": "Fresco se fusiona con el meca invocado para adoptar una forma mejorada. En esta forma, la velocidad de movimiento, el daño y el tamaño de Fresco aumentan considerablemente."
+      },
+      "relations": {
+        "pet": "CatMecha"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_56_skill_0",
+      "name": {
+        "en": "Monkey Business",
+        "es": "Monerías",
+        "zh_cn": "致命狙击"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 56,
+        "pet_code": "EscapeMonkey",
+        "slot": 0,
+        "description_en": "Occasionally takes out the sniper rifle Soul Calibre to attack enemies during combat.",
+        "description_es": "A veces saca el rifle de francotirador Calibre del Alma para atacar a los enemigos durante el combate."
+      },
+      "relations": {
+        "pet": "EscapeMonkey"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_57_skill_0",
+      "name": {
+        "en": "Shoal Shield",
+        "es": "Escudo de cardumen",
+        "zh_cn": "鱼群之盾"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 57,
+        "pet_code": null,
+        "slot": 0,
+        "description_en": "Has a cooldown. When attacked, negates the attack and summons a school of fish to circle and protect the character, reflecting regular ranged projectiles for a duration. When hit by a melee attack, the fish knock back the attacker and deal damage.",
+        "description_es": "Tiene enfriamiento. Al recibir un ataque, lo anula e invoca un banco de peces que rodea y protege al personaje. Los peces reflejan proyectiles comunes a distancia durante un periodo. Al recibir un ataque cuerpo a cuerpo, los peces empujan al atacante e infligen daño."
+      },
+      "relations": {
+        "pet": "pet_id_57"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_5_skill_0",
+      "name": {
+        "en": "Awwww!",
+        "es": "¡Ayyyyyy!",
+        "zh_cn": "可爱到爆"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 5,
+        "pet_code": "Panda",
+        "slot": 0,
+        "description_en": "Monsters find the pet too adorable to attack and so target you instead.",
+        "description_es": "La mascota les resulta demasiado adorable a los monstruos como para atacarla, así que te fijan a ti como objetivo."
+      },
+      "relations": {
+        "pet": "Panda"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_6_skill_0",
+      "name": {
+        "en": "Fluffy",
+        "es": "Mullido",
+        "zh_cn": "毛茸茸"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 6,
+        "pet_code": "Rabbit",
+        "slot": 0,
+        "description_en": "Fluffy BonBon calms you down. When it is by your side, your weapon accuracy +5.",
+        "description_es": "Bombón te calma. Cuando está a tu lado, la precisión de tu arma aumenta en 5."
+      },
+      "relations": {
+        "pet": "Rabbit"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_7_skill_0",
+      "name": {
+        "en": "Iron Armor",
+        "es": "Armadura de acero",
+        "zh_cn": "铁质铠甲"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 7,
+        "pet_code": "CanPig",
+        "slot": 0,
+        "description_en": "The pet's HP +2.",
+        "description_es": "La vida de la mascota aumenta en 2."
+      },
+      "relations": {
+        "pet": "CanPig"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_8_skill_0",
+      "name": {
+        "en": "Tap Tap",
+        "es": "Toca, toca",
+        "zh_cn": "点击点击"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 8,
+        "pet_code": "TapTap",
+        "slot": 0,
+        "description_en": "Pet's current HP +1 when clicked",
+        "description_es": "Aumenta la vida actual de la mascota en 1 al hacer clic sobre ella"
+      },
+      "relations": {
+        "pet": "TapTap"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "pet_9_skill_0",
+      "name": {
+        "en": "Owooooo!!",
+        "es": "¡Ujuuuuuu!",
+        "zh_cn": "哦哦噢噢噢呜呜！！"
+      },
+      "category": "pet_skill",
+      "subcategory": "pet_skill",
+      "attributes": {
+        "pet_numeric_id": 9,
+        "pet_code": "Pet4399",
+        "slot": 0,
+        "description_en": "Douwa grows big and keeps attacking for a short duration.",
+        "description_es": "Douwa se agranda y sigue atacando durante un breve periodo de tiempo."
+      },
+      "relations": {
+        "pet": "Pet4399"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    }
+  ]
+}

@@ -1,0 +1,1193 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "seeds",
+  "title": "Semillas",
+  "description": "Semillas de jardín observadas en el catálogo de objetos.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "item.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 47,
+  "items": [
+    {
+      "id": "plant_banboo_seed",
+      "name": {
+        "en": "Bamboo",
+        "es": "Bambú",
+        "zh_cn": "竹子"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_banboo",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_banboo"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_banboo_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_binary_tree_seed",
+      "name": {
+        "en": "Binary Tree",
+        "es": "Árbol binario",
+        "zh_cn": "二叉树"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_binary_tree",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_binary_tree"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_binary_tree_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_blackrose_seed",
+      "name": {
+        "en": "Black Rose",
+        "es": "Rosa negra",
+        "zh_cn": "黑玫瑰"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_blackrose",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_blackrose"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_blackrose_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_cactus_seed",
+      "name": {
+        "en": "Cactus",
+        "es": "Cactus",
+        "zh_cn": "仙人掌"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_cactus",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_cactus"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_cactus_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_carrot_seed",
+      "name": {
+        "en": "Carrot",
+        "es": "Zanahoria",
+        "zh_cn": "萝卜"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_carrot",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_carrot"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_carrot_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_clivia_seed",
+      "name": {
+        "en": "Bush Lily",
+        "es": "Clivia",
+        "zh_cn": "君子兰"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_clivia",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_clivia"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_clivia_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_datura_seed",
+      "name": {
+        "en": "Devil's Snare",
+        "es": "Trampa del Demonio",
+        "zh_cn": "曼陀罗花"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_datura",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_datura"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_datura_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_defend_flower_seed",
+      "name": {
+        "en": "Guardian Flower",
+        "es": "Flor guardiana",
+        "zh_cn": "守护花"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_defend_flower",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_defend_flower"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_defend_flower_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_dragon_tree_seed",
+      "name": {
+        "en": "Dragon Fruit Tree",
+        "es": "Árbol de fruta del dragón",
+        "zh_cn": "火龙果树"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_dragon_tree",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_dragon_tree"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_dragon_tree_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_eator_seed",
+      "name": {
+        "en": "Titan arum",
+        "es": "Aro gigante",
+        "zh_cn": "食人花"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_eator",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_eator"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_eator_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_fantastic_flower_seed",
+      "name": {
+        "en": "Fantastic Flower",
+        "es": "Flor fantástica",
+        "zh_cn": "妙妙花"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_fantastic_flower",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_fantastic_flower"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_fantastic_flower_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_firecracker_seed",
+      "name": {
+        "en": "Firecracker",
+        "es": "Petardo",
+        "zh_cn": "爆竹"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_firecracker",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_firecracker"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_firecracker_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_flatpeach_seed",
+      "name": {
+        "en": "Heavenly Peach",
+        "es": "Durazno celestial",
+        "zh_cn": "蟠桃"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_flatpeach",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_flatpeach"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_flatpeach_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_gear_flower_seed",
+      "name": {
+        "en": "Gear Flower",
+        "es": "Flor de engranaje",
+        "zh_cn": "齿轮花"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_gear_flower",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_gear_flower"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_gear_flower_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_gem_flower_seed",
+      "name": {
+        "en": "Gem Flower",
+        "es": "Flor de gemas",
+        "zh_cn": "宝石花"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_gem_flower",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_gem_flower"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_gem_flower_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_gem_tree_seed",
+      "name": {
+        "en": "Gem Tree",
+        "es": "Árbol de gemas",
+        "zh_cn": "宝石树"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_gem_tree",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_gem_tree"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_gem_tree_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_ginseng_seed",
+      "name": {
+        "en": "Ginseng",
+        "es": "Ginseng",
+        "zh_cn": "人参"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_ginseng",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_ginseng"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_ginseng_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_heptacolor_seed",
+      "name": {
+        "en": "Heptacolor Viola",
+        "es": "Violeta heptacolor",
+        "zh_cn": "七色堇"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_heptacolor",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_heptacolor"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_heptacolor_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_icepear_seed",
+      "name": {
+        "en": "Frozen Pear",
+        "es": "Pera helada",
+        "zh_cn": "冻梨"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_icepear",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_icepear"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_icepear_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_iron_tree_seed",
+      "name": {
+        "en": "Ironwood",
+        "es": "Palo fierro",
+        "zh_cn": "铁树"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_iron_tree",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_iron_tree"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_iron_tree_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_lavender_seed",
+      "name": {
+        "en": "Lavender",
+        "es": "Lavanda",
+        "zh_cn": "薰衣草"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_lavender",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_lavender"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_lavender_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_lithiumflower_seed",
+      "name": {
+        "en": "Lithium Flower",
+        "es": "Flor de litio",
+        "zh_cn": "锂之花"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_lithiumflower",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_lithiumflower"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_lithiumflower_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_lotus_seed",
+      "name": {
+        "en": "Snow Lotus",
+        "es": "Loto de las nieves",
+        "zh_cn": "天山雪莲"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_lotus",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_lotus"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_lotus_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_lycoris_seed",
+      "name": {
+        "en": "Red Spider Lily",
+        "es": "Flor de infierno",
+        "zh_cn": "曼珠沙华"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_lycoris",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_lycoris"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_lycoris_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_magic_flower_seed",
+      "name": {
+        "en": "Magic Flower",
+        "es": "Flor mágica",
+        "zh_cn": "魔力花"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_magic_flower",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_magic_flower"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_magic_flower_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_mandrake_seed",
+      "name": {
+        "en": "Mandrake",
+        "es": "Mandrágora",
+        "zh_cn": "曼德拉草"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_mandrake",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_mandrake"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_mandrake_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_mirror_plane_flower_seed",
+      "name": {
+        "en": "Mirror Flower",
+        "es": "Flor espejo",
+        "zh_cn": "镜面花"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_mirror_plane_flower",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_mirror_plane_flower"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_mirror_plane_flower_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_monotropa_seed",
+      "name": {
+        "en": "Ghost Pipe",
+        "es": "Pipa fantasma",
+        "zh_cn": "水晶兰"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_monotropa",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_monotropa"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_monotropa_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_mushroom_gold_seed",
+      "name": {
+        "en": "Golden Mushroom",
+        "es": "Champiñón dorado",
+        "zh_cn": "黄金蘑菇"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_mushroom_gold",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_mushroom_gold"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_mushroom_gold_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_mushroom_seed",
+      "name": {
+        "en": "Crystal Mushroom",
+        "es": "Champiñón de cristal",
+        "zh_cn": "水晶蘑菇"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_mushroom",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_mushroom"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_mushroom_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_nepenthes_seed",
+      "name": {
+        "en": "Monkey Cup",
+        "es": "Copa de mono",
+        "zh_cn": "猪笼草"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_nepenthes",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_nepenthes"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_nepenthes_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_pumpkin_seed",
+      "name": {
+        "en": "Pumpkin",
+        "es": "Calabaza",
+        "zh_cn": "南瓜"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_pumpkin",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_pumpkin"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_pumpkin_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_qilixiang_seed",
+      "name": {
+        "en": "Daphne Odera",
+        "es": "Daphne odora",
+        "zh_cn": "七里香"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_qilixiang",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_qilixiang"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_qilixiang_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_radar_seed",
+      "name": {
+        "en": "Radar Flower",
+        "es": "Flor radar",
+        "zh_cn": "雷达花"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_radar",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_radar"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_radar_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_rainbow_grass_seed",
+      "name": {
+        "en": "Rainbow Grass",
+        "es": "Grama arcoíris",
+        "zh_cn": "彩虹草"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_rainbow_grass",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_rainbow_grass"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_rainbow_grass_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_roselle_seed",
+      "name": {
+        "en": "Roselle",
+        "es": "Flor de Jamaica",
+        "zh_cn": "洛神葵"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_roselle",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_roselle"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_roselle_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_rosemary_seed",
+      "name": {
+        "en": "Rosemary",
+        "es": "Romero",
+        "zh_cn": "迷迭香"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_rosemary",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_rosemary"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_rosemary_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_shallot_seed",
+      "name": {
+        "en": "Green Onions",
+        "es": "Cebollines",
+        "zh_cn": "大葱"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_shallot",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_shallot"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_shallot_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_silver_poplar_seed",
+      "name": {
+        "en": "Abele",
+        "es": "Álamo blanco",
+        "zh_cn": "银白杨"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_silver_poplar",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_silver_poplar"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_silver_poplar_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_strange_flower_seed",
+      "name": {
+        "en": "Strange Flower",
+        "es": "Flor extraña",
+        "zh_cn": "奇异花"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_strange_flower",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_strange_flower"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_strange_flower_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_tree_seed",
+      "name": {
+        "en": "Oak Tree",
+        "es": "Roble",
+        "zh_cn": "橡树"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_tree",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_tree"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_tree_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_trumpet_seed",
+      "name": {
+        "en": "Trumpet Flower",
+        "es": "Trompeta de ángel",
+        "zh_cn": "蓝藻花"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_trumpet",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_trumpet"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_trumpet_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_vine_seed",
+      "name": {
+        "en": "Vine",
+        "es": "Enredadera",
+        "zh_cn": "藤蔓"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_vine",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_vine"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_vine_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_watermelon_seed",
+      "name": {
+        "en": "Watermelon",
+        "es": "Sandía",
+        "zh_cn": "西瓜"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_watermelon",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_watermelon"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_watermelon_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_worm_seed",
+      "name": {
+        "en": "Caterpillar fungus",
+        "es": "Hongo oruga",
+        "zh_cn": "冬虫夏草"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_worm",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_worm"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_worm_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_xmas_seed",
+      "name": {
+        "en": "Xmas Tree",
+        "es": "Árbol de Navidad",
+        "zh_cn": "圣诞树"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_xmas",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_xmas"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_xmas_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "plant_zongzi_seed",
+      "name": {
+        "en": "Zongzi Flower",
+        "es": "Zongzi Flor",
+        "zh_cn": "粽子花"
+      },
+      "category": "seed",
+      "subcategory": "garden_seed",
+      "attributes": {
+        "plant_id": "plant_zongzi",
+        "seed_translation_available": false
+      },
+      "relations": {
+        "plant": "plant_zongzi"
+      },
+      "save_refs": [
+        "itemData.seeds.plant_zongzi_seed"
+      ],
+      "notes": [
+        "El nombre mostrado procede de la planta; no hay traducción propia para la semilla."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "schema": "sk-knowledge/version-diff@1",
+  "from_version": "8.7.0",
+  "to_version": "8.8.0",
+  "from_commit": "8cfa5d5",
+  "to_commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+  "families": {
+    "blueprints": {
+      "count_before": 262,
+      "count_after": 265,
+      "added": [
+        "blueprint_evolution_weapon_203",
+        "blueprint_evolution_weapon_250",
+        "blueprint_evolution_weapon_255"
+      ],
+      "removed": []
+    },
+    "character_skills": {
+      "count_before": 104,
+      "count_after": 105,
+      "added": [
+        "Character32_skill_2_name"
+      ],
+      "removed": []
+    },
+    "character_skins": {
+      "count_before": 792,
+      "count_after": 802,
+      "added": [
+        "c0_skin38",
+        "c18_skin5",
+        "c1_skin35",
+        "c2_skin33",
+        "c2_skin34",
+        "c32_skin10",
+        "c35_skin11",
+        "c38_skin12",
+        "c3_skin31",
+        "c9_skin34"
+      ],
+      "removed": []
+    },
+    "characters": {
+      "count_before": 42,
+      "count_after": 42,
+      "added": [],
+      "removed": []
+    },
+    "enemies": {
+      "count_before": 592,
+      "count_after": 593,
+      "added": [
+        "boss04_fire"
+      ],
+      "removed": []
+    },
+    "items": {
+      "count_before": 589,
+      "count_after": 596,
+      "added": [
+        "blueprint_evolution_weapon_203",
+        "blueprint_evolution_weapon_250",
+        "blueprint_evolution_weapon_255",
+        "material_activity_coin_fire3",
+        "material_weapon_fragment_weapon_203",
+        "material_weapon_fragment_weapon_250",
+        "material_weapon_fragment_weapon_255"
+      ],
+      "removed": []
+    },
+    "materials": {
+      "count_before": 130,
+      "count_after": 130,
+      "added": [],
+      "removed": []
+    },
+    "pets": {
+      "count_before": 57,
+      "count_after": 57,
+      "added": [],
+      "removed": []
+    },
+    "tokens": {
+      "count_before": 19,
+      "count_after": 19,
+      "added": [],
+      "removed": []
+    },
+    "weapon_skins": {
+      "count_before": 185,
+      "count_after": 192,
+      "added": [
+        "weapon_026_s_1",
+        "weapon_203_s_1",
+        "weapon_250_s_1",
+        "weapon_255_s_1",
+        "weapon_363_s_1",
+        "weapon_392_s_1",
+        "weapon_407_s_1"
+      ],
+      "removed": []
+    },
+    "weapons": {
+      "count_before": 989,
+      "count_after": 995,
+      "added": [
+        "weapon_init_astrologistxx6",
+        "weapon_init_bardxx7",
+        "weapon_init_captainxx9",
+        "weapon_init_envoyxx4",
+        "weapon_init_magexx16",
+        "weapon_init_werewolfxx12"
+      ],
+      "removed": []
+    }
+  }
+}

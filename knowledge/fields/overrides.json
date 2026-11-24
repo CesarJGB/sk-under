@@ -1,0 +1,366 @@
+{
+  "schema": "sk-knowledge/field-overrides@1",
+  "notes": [
+    "Las descripciones y relaciones de este archivo solo repiten conclusiones ya documentadas en docs/save-research o docs/research.",
+    "Los campos declarados por metadata sin observación propia conservan semántica H y política de solo lectura."
+  ],
+  "observed_game_data_keys": [
+    "activeShopGemReceiptMarkers",
+    "certificates",
+    "checkUnlockWorkShopTime",
+    "cumulativeConsumeGems",
+    "cumulativeGems",
+    "currentRoomDecorate",
+    "currentSkinDatas",
+    "firstInRoom",
+    "fishChip",
+    "fontSettingValue",
+    "gameVersion",
+    "gems",
+    "generalSeed",
+    "hasTutorial",
+    "heroLevel",
+    "heroSkill",
+    "heroSkillUnlock",
+    "heroUnlock",
+    "isWaveMachineUpgraded",
+    "lastGems",
+    "lastPlayTime",
+    "lastPlayTimeWithNetworkTime",
+    "lastTalentAdRefreshDay",
+    "normalModePassCertificates",
+    "petUnlock",
+    "promotions2RewardVersion",
+    "rebornCard",
+    "retiredKnightGotAdItemTime",
+    "roomLevel",
+    "roomObjectLevel",
+    "skinLock",
+    "superHeroInHeroRoom",
+    "totalGameTime",
+    "totalIndex",
+    "tutorialEndTime",
+    "unlockRoomDecorate",
+    "usedSecretKeys",
+    "varGems"
+  ],
+  "section_titles": {
+    "cloud": "Sobre de guardado",
+    "gameData": "Progreso y acceso",
+    "itemData": "Inventario",
+    "statisticData": "Estadísticas",
+    "settingData": "Configuración",
+    "taskData": "Tareas",
+    "seasonData": "Temporada",
+    "mallReloadData": "Tienda y compras",
+    "monsterRiseData": "Monster Rise",
+    "weaponEvolutionData": "Evolución de armas",
+    "miscData": "Datos varios",
+    "pvpData": "PvP",
+    "battlePassSaveData": "Pase de batalla",
+    "escapeSeasonData": "Escape"
+  },
+  "field_overrides": {
+    "gameData.gems": {
+      "description": "Saldo local de gemas que el cliente muestra y consume.",
+      "known_value_semantics": [
+        "Saldo actual de gemas en la partida local.",
+        "La rama de consumo de 8.8.0 aplica gems = lastGems + varGems."
+      ],
+      "limits": {"type": "int32", "observed": "Incluye valores no negativos en las muestras propias.", "functional": "El límite funcional no está documentado."},
+      "related_ids": ["gameData.lastGems", "gameData.varGems", "gameData.cumulativeGems"],
+      "known_dependencies": ["gems = lastGems + varGems (rama de consumo 8.8.0, E4)"],
+      "evidence": {"semantics": "E4", "relations": "E4", "persistence": "E4"},
+      "open_questions": ["Confirmar si el servidor recalcula el saldo al recuperar la nube."]
+    },
+    "gameData.lastGems": {
+      "description": "Componente base del saldo local de gemas.",
+      "known_value_semantics": ["Sumando de gems en la rama de consumo 8.8.0."],
+      "related_ids": ["gameData.gems", "gameData.varGems"],
+      "known_dependencies": ["gems = lastGems + varGems (E4)"],
+      "evidence": {"semantics": "E4", "relations": "E4", "persistence": "E4"}
+    },
+    "gameData.varGems": {
+      "description": "Componente variable del saldo local de gemas.",
+      "known_value_semantics": ["Sumando de gems en la rama de consumo 8.8.0."],
+      "related_ids": ["gameData.gems", "gameData.lastGems"],
+      "known_dependencies": ["gems = lastGems + varGems (E4)"],
+      "evidence": {"semantics": "E4", "relations": "E4", "persistence": "E4"}
+    },
+    "gameData.cumulativeGems": {
+      "description": "Contador acumulado de gemas; no es el saldo disponible.",
+      "known_value_semantics": ["Acumulado histórico de gemas."],
+      "related_ids": ["gameData.gems"],
+      "evidence": {"semantics": "E4", "persistence": "E4"}
+    },
+    "gameData.cumulativeConsumeGems": {
+      "description": "Contador acumulado de gemas consumidas.",
+      "known_value_semantics": ["Acumulado histórico de consumo."],
+      "related_ids": ["gameData.gems"],
+      "evidence": {"semantics": "E4", "persistence": "E4"}
+    },
+    "gameData.fishChip": {
+      "description": "Saldo local de fichas de pesca.",
+      "known_value_semantics": [
+        "Saldo que el cliente descuenta al comprar en la tienda de peces.",
+        "Se escribe junto con itemData.materials.material_fish en el flujo confirmado."
+      ],
+      "limits": {"type": "int32", "observed": "0 en las muestras de solo lectura previas a la fase 6.14.", "functional": "El límite funcional no está documentado."},
+      "related_ids": ["itemData.materials", "playerprefs.furniture_fish_chips", "itemData.cumulativeFishCount"],
+      "known_dependencies": ["itemData.materials.material_fish (E4, Fase 6.16)"],
+      "pending_dependencies": ["Proyección en furniture_fish_chips (H)", "Historiales fishChipStore* (H)"],
+      "evidence": {"semantics": "E4", "relations": "E4", "persistence": "E4"},
+      "open_questions": ["Separar el saldo de fichas del progreso acumulado de recompensas."]
+    },
+    "playerprefs.furniture_fish_chips": {
+      "description": "Prefijo de PlayerPrefs relacionado con fichas de pesca del mueble.",
+      "known_value_semantics": ["Proyección local candidata del saldo de fichas (H)."],
+      "related_ids": ["gameData.fishChip"],
+      "pending_dependencies": ["Confirmar correspondencia exacta con gameData.fishChip."],
+      "evidence": {"semantics": "H", "relations": "H", "persistence": "H"}
+    },
+    "itemData.cumulativeFishCount": {
+      "description": "Progreso acumulado de recompensas de pesca; campo separado del saldo.",
+      "known_value_semantics": ["Identificado en FishChipPurchaseController de 8.8.0 como contador de progreso (Fase 6.20, E2)."],
+      "related_ids": ["gameData.fishChip"],
+      "evidence": {"semantics": "E2", "relations": "E2"},
+      "open_questions": ["Confirmar qué recompensas consume este contador."]
+    },
+    "gameData.heroUnlock": {
+      "description": "Mapa de disponibilidad de personajes por código interno.",
+      "known_value_semantics": ["true indica personaje disponible; la ausencia o false no se interpreta como bloqueo definitivo sin más evidencia."],
+      "related_ids": ["gameData.heroLevel", "gameData.heroSkill", "gameData.heroSkillUnlock", "gameData.skinLock"],
+      "known_dependencies": ["Catálogo de personajes para resolver códigos."],
+      "evidence": {"semantics": "E3", "relations": "E2", "persistence": "E2"},
+      "constraints": ["La activación masiva se confirmó en dispositivo Android; no se declaró persistencia tras volver a guardar desde el cliente."],
+      "open_questions": ["Confirmar la persistencia después de un guardado posterior del cliente oficial."]
+    },
+    "gameData.heroLevel": {
+      "description": "Nivel de mejora de cada personaje.",
+      "known_value_semantics": ["Proyección del nivel de héroe observada en XML y JSON."],
+      "related_ids": ["gameData.heroUnlock"],
+      "evidence": {"semantics": "E3", "relations": "E2", "persistence": "E2"},
+      "open_questions": ["Confirmar el límite funcional por personaje."]
+    },
+    "gameData.heroSkill": {
+      "description": "Selección o nivel de habilidad por personaje.",
+      "known_value_semantics": ["Estructura observada; el significado exacto de cada valor no está confirmado."],
+      "related_ids": ["gameData.heroSkillUnlock", "gameData.heroUnlock"],
+      "evidence": {"semantics": "H", "relations": "E2", "persistence": "H"},
+      "open_questions": ["Distinguir habilidad equipada de nivel de habilidad."]
+    },
+    "gameData.heroSkillUnlock": {
+      "description": "Disponibilidad de habilidades por personaje e índice.",
+      "known_value_semantics": ["Los valores observados incluyen Key 0/1/2 y Value booleano; se interpreta como desbloqueo de la habilidad en ese slot."],
+      "related_ids": ["gameData.heroSkill", "gameData.heroUnlock"],
+      "evidence": {"semantics": "E3", "relations": "E2", "persistence": "E2"},
+      "open_questions": ["Confirmar persistencia tras guardar de nuevo desde el cliente."]
+    },
+    "gameData.skinLock": {
+      "description": "Disponibilidad de skins por personaje, con una lista de pares Key/Value.",
+      "known_value_semantics": ["Value=1 se interpreta como skin desbloqueada; otros valores se conservan sin reinterpretar."],
+      "related_ids": ["gameData.currentSkinDatas", "gameData.heroUnlock"],
+      "known_dependencies": ["Catálogo de skins por personaje e índice."],
+      "evidence": {"semantics": "E3", "relations": "E2", "persistence": "E2"},
+      "constraints": ["No crear listas ni posiciones; solo se probó cambiar Value a 1 en posiciones existentes."],
+      "open_questions": ["Confirmar la semántica de valores distintos de 0 y 1.", "Confirmar persistencia después de guardar de nuevo desde el cliente."]
+    },
+    "gameData.currentSkinDatas": {
+      "description": "Selección de skins equipadas; estructura dispersa.",
+      "known_value_semantics": ["No es una lista completa de posesión; solo registra selecciones."],
+      "related_ids": ["gameData.skinLock"],
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"},
+      "open_questions": ["Confirmar la correspondencia exacta entre currentSkinDatas y la skin equipada."]
+    },
+    "gameData.certificates": {
+      "description": "Certificados de progreso y logros del jugador.",
+      "known_value_semantics": ["Estructura observada; la semántica de cada certificado no está resuelta."],
+      "evidence": {"semantics": "H", "relations": "H", "persistence": "H"}
+    },
+    "gameData.petUnlock": {
+      "description": "Mapa de disponibilidad de mascotas por código interno.",
+      "related_ids": ["knowledge.catalogs.pets"],
+      "associated_catalog": "pets",
+      "known_dependencies": ["Catálogo de mascotas para resolver códigos."],
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"},
+      "open_questions": ["Confirmar la correspondencia entre códigos de petUnlock y los identificadores numéricos de mascota."]
+    },
+    "gameData.rebornCard": {
+      "description": "Bandera de la tarjeta de resurrección en el agregado de nube.",
+      "known_value_semantics": ["No se demostró que editar solo este booleano active la tarjeta; el cliente consulta además PlayerPrefs y datos de objeto."],
+      "pending_dependencies": ["PlayerPrefs entero de reborn_card", "CPPlayerItemData.GetItemUnlock", "Derechos gestionados por servicios externos"],
+      "evidence": {"semantics": "H", "relations": "E2", "persistence": "H"},
+      "constraints": ["Protegido y de solo lectura; no modificar derechos ni estados de pago."],
+      "open_questions": ["Determinar si el booleano representa derecho permanente, cantidad o estado temporal."]
+    },
+    "itemData.materials": {
+      "description": "Mapa de material o fragmento a cantidad.",
+      "known_value_semantics": ["Cantidad poseída por identificador de material.", "material_fish se escribe junto con gameData.fishChip en el flujo confirmado."],
+      "related_ids": ["knowledge.catalogs.materials", "gameData.fishChip"],
+      "associated_catalog": "materials",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"},
+      "constraints": ["El resto de materiales sigue en solo lectura."],
+      "open_questions": ["Confirmar el consumo y la persistencia de cada familia de materiales."]
+    },
+    "itemData.blueprints": {
+      "description": "Estado de planos investigados o disponibles.",
+      "known_value_semantics": ["Las muestras usan estados Got/Researched; la semántica completa no está confirmada."],
+      "related_ids": ["knowledge.catalogs.blueprints"],
+      "associated_catalog": "blueprints",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"},
+      "open_questions": ["Confirmar los estados válidos y su efecto en el cliente."]
+    },
+    "itemData.seeds": {
+      "description": "Cantidad de semillas poseídas por identificador.",
+      "related_ids": ["knowledge.catalogs.seeds", "knowledge.catalogs.plants", "itemData.plants"],
+      "associated_catalog": "seeds",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"},
+      "open_questions": ["Confirmar la relación entre semillas de inventario y estados de crecimiento del jardín."]
+    },
+    "itemData.plants": {
+      "description": "Estado de plantas del jardín.",
+      "related_ids": ["knowledge.catalogs.plants", "itemData.seeds"],
+      "associated_catalog": "plants",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "itemData.itemUnlock": {
+      "description": "Desbloqueos de objetos del vestíbulo.",
+      "related_ids": ["knowledge.catalogs.lobby"],
+      "associated_catalog": "lobby",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "itemData.jewelryData": {
+      "description": "Joyería poseída, con durabilidad y runas.",
+      "related_ids": ["knowledge.catalogs.jewelry"],
+      "associated_catalog": "jewelry",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "itemData.forgeWeapons": {
+      "description": "Progreso de forja por arma.",
+      "related_ids": ["knowledge.catalogs.weapons"],
+      "associated_catalog": "weapons",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "itemData.commodities": {
+      "description": "Objetos consumibles o mercancías poseídas.",
+      "related_ids": ["knowledge.catalogs.special_items"],
+      "associated_catalog": "special_items",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "itemData.specialTickets": {
+      "description": "Tickets especiales poseídos.",
+      "related_ids": ["knowledge.catalogs.tokens"],
+      "associated_catalog": "tokens",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "itemData.tokenTickets": {
+      "description": "Tickets o tokens poseídos.",
+      "related_ids": ["knowledge.catalogs.tokens", "knowledge.catalogs.vouchers"],
+      "associated_catalog": "tokens",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "weaponEvolutionData.weapons": {
+      "description": "Estado de evolución y skins por arma.",
+      "related_ids": ["knowledge.catalogs.weapons", "knowledge.catalogs.weapon_skins"],
+      "associated_catalog": "weapons",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "weaponEvolutionData.weapons.*.CurrentSkinIndex": {
+      "description": "Índice de skin equipada para un arma.",
+      "related_ids": ["knowledge.catalogs.weapon_skins"],
+      "associated_catalog": "weapon_skins",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "weaponEvolutionData.weapons.*.UnlockedSkins": {
+      "description": "Lista de skins desbloqueadas para un arma.",
+      "related_ids": ["knowledge.catalogs.weapon_skins"],
+      "associated_catalog": "weapon_skins",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "weaponEvolutionData.weapons.*.Level": {
+      "description": "Nivel o progreso de evolución de un arma.",
+      "related_ids": ["knowledge.catalogs.weapons"],
+      "associated_catalog": "weapons",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "weaponEvolutionData.favorWeapons": {
+      "description": "Armas marcadas como favoritas.",
+      "related_ids": ["knowledge.catalogs.weapons"],
+      "associated_catalog": "weapons",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "seasonData.chips": {
+      "description": "Chips de habilidad de temporada.",
+      "known_value_semantics": ["No son fichas de pesca ni chips de Monster Rise."],
+      "related_ids": ["knowledge.catalogs.season_content"],
+      "associated_catalog": "season_content",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "seasonData.coin": {
+      "description": "Moneda de la temporada.",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "seasonData.cumulativeCoinCount": {
+      "description": "Contador acumulado de moneda de temporada.",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "seasonData.gainedCoinToday": {
+      "description": "Moneda de temporada ganada en el día.",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "itemData.seasonStorePurchaseHistoryIndexed": {
+      "description": "Historial indexado de compras de la tienda de temporada.",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"},
+      "constraints": ["Historial de compras: solo lectura descriptiva."]
+    },
+    "escapeSeasonData.money": {
+      "description": "Moneda de la temporada Escape.",
+      "evidence": {"semantics": "E2", "relations": "H", "persistence": "H"}
+    },
+    "gameData.roomObjectLevel": {
+      "description": "Nivel de objetos del vestíbulo.",
+      "related_ids": ["knowledge.catalogs.lobby"],
+      "associated_catalog": "lobby",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "gameData.unlockRoomDecorate": {
+      "description": "Decoraciones del vestíbulo desbloqueadas.",
+      "related_ids": ["knowledge.catalogs.lobby"],
+      "associated_catalog": "lobby",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "itemData.roomDecorateDic": {
+      "description": "Diccionario de decoraciones de sala.",
+      "related_ids": ["knowledge.catalogs.lobby"],
+      "associated_catalog": "lobby",
+      "evidence": {"semantics": "E2", "relations": "E2", "persistence": "H"}
+    },
+    "playerprefs.furniture_chest": {
+      "description": "Estado del cofre de muebles en PlayerPrefs.",
+      "related_ids": ["knowledge.catalogs.lobby"],
+      "associated_catalog": "lobby",
+      "evidence": {"semantics": "E3", "relations": "E2", "persistence": "H"}
+    },
+    "playerprefs.OpenRijTest_Id": {
+      "description": "Preferencia interna de prueba; no es una función de juego confirmada.",
+      "evidence": {"semantics": "H", "relations": "H", "persistence": "H"},
+      "constraints": ["No usar como control experimental ni como identificador de cuenta."]
+    },
+    "statisticData.achieve_record": {
+      "description": "Registro de logros del jugador.",
+      "evidence": {"semantics": "H", "relations": "H", "persistence": "H"}
+    },
+    "statisticData.object2ObtainTime": {
+      "description": "Tiempo de obtención por objeto.",
+      "evidence": {"semantics": "H", "relations": "H", "persistence": "H"}
+    },
+    "statisticData.object2PassLevel": {
+      "description": "Nivel de superación por objeto.",
+      "evidence": {"semantics": "H", "relations": "H", "persistence": "H"}
+    },
+    "statisticData.object2PassTime": {
+      "description": "Tiempo de superación por objeto.",
+      "evidence": {"semantics": "H", "relations": "H", "persistence": "H"}
+    }
+  }
+}

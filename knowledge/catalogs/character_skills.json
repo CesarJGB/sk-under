@@ -1,0 +1,2643 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "character_skills",
+  "title": "Habilidades de personaje",
+  "description": "Habilidades por personaje e índice de slot.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "needed_data.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 105,
+  "items": [
+    {
+      "id": "Character0_skill_0_name",
+      "name": {
+        "en": "Dual Wield",
+        "es": "Empuñadura dual",
+        "zh_cn": "火力全开"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Knight",
+        "character_index": 0,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Knight"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Knight",
+        "gameData.heroSkillUnlock.Knight[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character0_skill_1_name",
+      "name": {
+        "en": "Superior Fire",
+        "es": "Fuego superior",
+        "zh_cn": "全力攻击"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Knight",
+        "character_index": 0,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Knight"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Knight",
+        "gameData.heroSkillUnlock.Knight[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character0_skill_2_name",
+      "name": {
+        "en": "Chaotic Strike",
+        "es": "Golpe caótico",
+        "zh_cn": "混沌打击"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Knight",
+        "character_index": 0,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Knight"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Knight",
+        "gameData.heroSkillUnlock.Knight[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character10_skill_0_name",
+      "name": {
+        "en": "Regeneration Pact",
+        "es": "Pacto de regeneración",
+        "zh_cn": "恢复法阵"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Priest",
+        "character_index": 10,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Priest"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Priest",
+        "gameData.heroSkillUnlock.Priest[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character10_skill_1_name",
+      "name": {
+        "en": "Pray",
+        "es": "Rezar",
+        "zh_cn": "祈祷"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Priest",
+        "character_index": 10,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Priest"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Priest",
+        "gameData.heroSkillUnlock.Priest[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character10_skill_2_name",
+      "name": {
+        "en": "Moon Shadow",
+        "es": "Sombra lunar",
+        "zh_cn": "月影之息"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Priest",
+        "character_index": 10,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Priest"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Priest",
+        "gameData.heroSkillUnlock.Priest[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character11_skill_0_name",
+      "name": {
+        "en": "Frostfire Wolves",
+        "es": "Lobos de fuego helado",
+        "zh_cn": "霜烬狼袭"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Druid",
+        "character_index": 11,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Druid"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Druid",
+        "gameData.heroSkillUnlock.Druid[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character11_skill_1_name",
+      "name": {
+        "en": "Venom Vines",
+        "es": "Enredaderas venenosas",
+        "zh_cn": "剧毒藤蔓"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Druid",
+        "character_index": 11,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Druid"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Druid",
+        "gameData.heroSkillUnlock.Druid[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character11_skill_2_name",
+      "name": {
+        "en": "Fuzzy Bear",
+        "es": "Osito peludito",
+        "zh_cn": "召唤巨熊"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Druid",
+        "character_index": 11,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Druid"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Druid",
+        "gameData.heroSkillUnlock.Druid[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character12_skill_0_name",
+      "name": {
+        "en": "Electric Overload",
+        "es": "Sobrecarga eléctrica",
+        "zh_cn": "电能过载"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Robot",
+        "character_index": 12,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Robot"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Robot",
+        "gameData.heroSkillUnlock.Robot[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character12_skill_1_name",
+      "name": {
+        "en": "Drone Swarm",
+        "es": "Enjambre de drones",
+        "zh_cn": "无人机集群"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Robot",
+        "character_index": 12,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Robot"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Robot",
+        "gameData.heroSkillUnlock.Robot[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character12_skill_2_name",
+      "name": {
+        "en": "EMP",
+        "es": "PEM",
+        "zh_cn": "电磁脉冲"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Robot",
+        "character_index": 12,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Robot"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Robot",
+        "gameData.heroSkillUnlock.Robot[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character13_skill_0_name",
+      "name": {
+        "en": "Rage",
+        "es": "Rabia",
+        "zh_cn": "狂暴"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Viking",
+        "character_index": 13,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Viking"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Viking",
+        "gameData.heroSkillUnlock.Viking[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character13_skill_1_name",
+      "name": {
+        "en": "Free Style",
+        "es": "Estilo libre",
+        "zh_cn": "散打"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Viking",
+        "character_index": 13,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Viking"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Viking",
+        "gameData.heroSkillUnlock.Viking[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character13_skill_2_name",
+      "name": {
+        "en": "Leap",
+        "es": "Salto",
+        "zh_cn": "跳跃"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Viking",
+        "character_index": 13,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Viking"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Viking",
+        "gameData.heroSkillUnlock.Viking[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character14_skill_0_name",
+      "name": {
+        "en": "Nightmare",
+        "es": "Pesadilla",
+        "zh_cn": "噩梦印记"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Necromancer",
+        "character_index": 14,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Necromancer"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Necromancer",
+        "gameData.heroSkillUnlock.Necromancer[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character14_skill_1_name",
+      "name": {
+        "en": "Omen Stone",
+        "es": "Augurio de piedra",
+        "zh_cn": "灾祸之石"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Necromancer",
+        "character_index": 14,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Necromancer"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Necromancer",
+        "gameData.heroSkillUnlock.Necromancer[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character14_skill_2_name",
+      "name": {
+        "en": "Souls Resurrect",
+        "es": "Resurrección de las almas",
+        "zh_cn": "亡灵复生"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Necromancer",
+        "character_index": 14,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Necromancer"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Necromancer",
+        "gameData.heroSkillUnlock.Necromancer[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character15_skill_0_name",
+      "name": {
+        "en": "Gun Spin",
+        "es": "Giro de arma",
+        "zh_cn": "转枪"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Officer",
+        "character_index": 15,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Officer"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Officer",
+        "gameData.heroSkillUnlock.Officer[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character15_skill_1_name",
+      "name": {
+        "en": "Bounty Tag",
+        "es": "Marca de botín",
+        "zh_cn": "赏金标记"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Officer",
+        "character_index": 15,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Officer"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Officer",
+        "gameData.heroSkillUnlock.Officer[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character15_skill_2_name",
+      "name": {
+        "en": "Close Air Support",
+        "es": "Apoyo aéreo cercano",
+        "zh_cn": "空中支援"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Officer",
+        "character_index": 15,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Officer"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Officer",
+        "gameData.heroSkillUnlock.Officer[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character16_skill_0_name",
+      "name": {
+        "en": "Genesis of Swords",
+        "es": "Génesis de espadas",
+        "zh_cn": "万剑归宗"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Taoist",
+        "character_index": 16,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Taoist"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Taoist",
+        "gameData.heroSkillUnlock.Taoist[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character16_skill_1_name",
+      "name": {
+        "en": "Bagua",
+        "es": "Ba gua",
+        "zh_cn": "乾坤大挪移"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Taoist",
+        "character_index": 16,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Taoist"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Taoist",
+        "gameData.heroSkillUnlock.Taoist[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character16_skill_2_name",
+      "name": {
+        "en": "Sword Fly",
+        "es": "Vuelo de la espada",
+        "zh_cn": "御剑术"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Taoist",
+        "character_index": 16,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Taoist"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Taoist",
+        "gameData.heroSkillUnlock.Taoist[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character17_skill_0_name",
+      "name": {
+        "en": "Dimension Jumping",
+        "es": "Salto dimensional",
+        "zh_cn": "维度跃迁"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Transcendent",
+        "character_index": 17,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Transcendent"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Transcendent",
+        "gameData.heroSkillUnlock.Transcendent[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character17_skill_1_name",
+      "name": {
+        "en": "Blackhole Refract / Blackhole Burst",
+        "es": "Refracción de Agujero Negro / Ráfaga de Agujero Negro",
+        "zh_cn": "黑洞折射/黑洞爆裂"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Transcendent",
+        "character_index": 17,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Transcendent"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Transcendent",
+        "gameData.heroSkillUnlock.Transcendent[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character18_skill_0_name",
+      "name": {
+        "en": "Elemental Affinity",
+        "es": "Afinidad Elemental",
+        "zh_cn": "元素亲和"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Envoy",
+        "character_index": 18,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Envoy"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Envoy",
+        "gameData.heroSkillUnlock.Envoy[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character19_skill_0_name",
+      "name": {
+        "en": "Spartan Sandals",
+        "es": "Sandalias de espartano",
+        "zh_cn": "斯巴达飞踢"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Beheaded",
+        "character_index": 19,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Beheaded"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Beheaded",
+        "gameData.heroSkillUnlock.Beheaded[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character1_skill_0_name",
+      "name": {
+        "en": "Dodge",
+        "es": "Esquivar",
+        "zh_cn": "翻滚"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Ranger",
+        "character_index": 1,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Ranger"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Ranger",
+        "gameData.heroSkillUnlock.Ranger[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character1_skill_1_name",
+      "name": {
+        "en": "Iaido",
+        "es": "Iaidō",
+        "zh_cn": "居合斩"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Ranger",
+        "character_index": 1,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Ranger"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Ranger",
+        "gameData.heroSkillUnlock.Ranger[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character1_skill_2_name",
+      "name": {
+        "en": "Cartwheel",
+        "es": "Voltereta lateral",
+        "zh_cn": "地堂刀"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Ranger",
+        "character_index": 1,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Ranger"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Ranger",
+        "gameData.heroSkillUnlock.Ranger[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character20_skill_0_name",
+      "name": {
+        "en": "Time-space Shuriken",
+        "es": "Shuriken espaciotemporal",
+        "zh_cn": "时空间手里剑"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Ninja",
+        "character_index": 20,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Ninja"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Ninja",
+        "gameData.heroSkillUnlock.Ninja[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character20_skill_1_name",
+      "name": {
+        "en": "Chrono Hunt",
+        "es": "Cacería Temporal",
+        "zh_cn": "超时空猎杀"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Ninja",
+        "character_index": 20,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Ninja"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Ninja",
+        "gameData.heroSkillUnlock.Ninja[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character21_skill_0_name",
+      "name": {
+        "en": "Special Operation",
+        "es": "Operación especial",
+        "zh_cn": "特种作战配合"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "SpecialForces",
+        "character_index": 21,
+        "slot": 0
+      },
+      "relations": {
+        "character": "SpecialForces"
+      },
+      "save_refs": [
+        "gameData.heroSkill.SpecialForces",
+        "gameData.heroSkillUnlock.SpecialForces[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character22_skill_0_name",
+      "name": {
+        "en": "Pulsating Blow",
+        "es": "Golpe vibrante",
+        "zh_cn": "冲脉拳"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Airbender",
+        "character_index": 22,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Airbender"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Airbender",
+        "gameData.heroSkillUnlock.Airbender[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character22_skill_1_name",
+      "name": {
+        "en": "Orbiting Stars",
+        "es": "Estrella orbital",
+        "zh_cn": "斗转星移"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Airbender",
+        "character_index": 22,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Airbender"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Airbender",
+        "gameData.heroSkillUnlock.Airbender[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character22_skill_2_name",
+      "name": {
+        "en": "Meridian Sword",
+        "es": "Espada meridional",
+        "zh_cn": "六脉神剑"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Airbender",
+        "character_index": 22,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Airbender"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Airbender",
+        "gameData.heroSkillUnlock.Airbender[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character23_skill_0_name",
+      "name": {
+        "en": "Amii's Burning Body",
+        "es": "Cuerpo ardiente de Amii",
+        "zh_cn": "阿米的燃烧之躯"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Warlock",
+        "character_index": 23,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Warlock"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Warlock",
+        "gameData.heroSkillUnlock.Warlock[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character23_skill_1_name",
+      "name": {
+        "en": "Helping Hand: Eligos",
+        "es": "Mano amiga: Eligos",
+        "zh_cn": "协力：艾利欧格"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Warlock",
+        "character_index": 23,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Warlock"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Warlock",
+        "gameData.heroSkillUnlock.Warlock[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character23_skill_2_name",
+      "name": {
+        "en": "Amon's Protection",
+        "es": "Protección de Amon",
+        "zh_cn": "阿蒙的庇护"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Warlock",
+        "character_index": 23,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Warlock"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Warlock",
+        "gameData.heroSkillUnlock.Warlock[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character24_skill_0_name",
+      "name": {
+        "en": "Underground Operations",
+        "es": "Operaciones subterráneas",
+        "zh_cn": "地底行动"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Miner",
+        "character_index": 24,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Miner"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Miner",
+        "gameData.heroSkillUnlock.Miner[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character24_skill_1_name",
+      "name": {
+        "en": "Cart Delivery",
+        "es": "Entrega en vagón",
+        "zh_cn": "矿车速递"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Miner",
+        "character_index": 24,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Miner"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Miner",
+        "gameData.heroSkillUnlock.Miner[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character24_skill_2_name",
+      "name": {
+        "en": "Sandworm Storm",
+        "es": "Tormenta de Gusano de Arena",
+        "zh_cn": "沙虫来袭"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Miner",
+        "character_index": 24,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Miner"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Miner",
+        "gameData.heroSkillUnlock.Miner[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character25_skill_0_name",
+      "name": {
+        "en": "Telecontrolled Bomb",
+        "es": "Bomba teledirigida",
+        "zh_cn": "遥控炸弹"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "TrapMaster",
+        "character_index": 25,
+        "slot": 0
+      },
+      "relations": {
+        "character": "TrapMaster"
+      },
+      "save_refs": [
+        "gameData.heroSkill.TrapMaster",
+        "gameData.heroSkillUnlock.TrapMaster[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character25_skill_1_name",
+      "name": {
+        "en": "Master's Trick",
+        "es": "Truco del maestro",
+        "zh_cn": "大变活人"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "TrapMaster",
+        "character_index": 25,
+        "slot": 1
+      },
+      "relations": {
+        "character": "TrapMaster"
+      },
+      "save_refs": [
+        "gameData.heroSkill.TrapMaster",
+        "gameData.heroSkillUnlock.TrapMaster[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character25_skill_2_name",
+      "name": {
+        "en": "Hat Trick",
+        "es": "Truco del sombrero",
+        "zh_cn": "帽子戏法"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "TrapMaster",
+        "character_index": 25,
+        "slot": 2
+      },
+      "relations": {
+        "character": "TrapMaster"
+      },
+      "save_refs": [
+        "gameData.heroSkill.TrapMaster",
+        "gameData.heroSkillUnlock.TrapMaster[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character26_skill_0_name",
+      "name": {
+        "en": "Transform! Slime King!",
+        "es": "¡Transformación! ¡Rey Baba!",
+        "zh_cn": "化身！史莱姆王！"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "CostumePrince",
+        "character_index": 26,
+        "slot": 0
+      },
+      "relations": {
+        "character": "CostumePrince"
+      },
+      "save_refs": [
+        "gameData.heroSkill.CostumePrince",
+        "gameData.heroSkillUnlock.CostumePrince[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character26_skill_1_name",
+      "name": {
+        "en": "Forward! Crystal Crab King!",
+        "es": "¡Adelante! ¡Rey cangrejo de cristal!",
+        "zh_cn": "进击！水晶王蟹！"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "CostumePrince",
+        "character_index": 26,
+        "slot": 1
+      },
+      "relations": {
+        "character": "CostumePrince"
+      },
+      "save_refs": [
+        "gameData.heroSkill.CostumePrince",
+        "gameData.heroSkillUnlock.CostumePrince[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character26_skill_2_name",
+      "name": {
+        "en": "Manifest! King Violet!",
+        "es": "¡Rey Violeta, manifiéstate!",
+        "zh_cn": "降临！紫爵士！"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "CostumePrince",
+        "character_index": 26,
+        "slot": 2
+      },
+      "relations": {
+        "character": "CostumePrince"
+      },
+      "save_refs": [
+        "gameData.heroSkill.CostumePrince",
+        "gameData.heroSkillUnlock.CostumePrince[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character27_skill_0_name",
+      "name": {
+        "en": "EM Field Device",
+        "es": "Dispositivo de campo EM",
+        "zh_cn": "电磁场装置"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Doctor",
+        "character_index": 27,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Doctor"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Doctor",
+        "gameData.heroSkillUnlock.Doctor[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character27_skill_1_name",
+      "name": {
+        "en": "HE Electric Orb",
+        "es": "Orbe eléctrico cargado",
+        "zh_cn": "高能电球"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Doctor",
+        "character_index": 27,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Doctor"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Doctor",
+        "gameData.heroSkillUnlock.Doctor[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character27_skill_2_name",
+      "name": {
+        "en": "Quantum Translocator",
+        "es": "Translocalizador Cuántico",
+        "zh_cn": "量子跃迁器"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Doctor",
+        "character_index": 27,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Doctor"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Doctor",
+        "gameData.heroSkillUnlock.Doctor[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character28_skill_0_name",
+      "name": {
+        "en": "Tempest Blade",
+        "es": "Hoja tempestuosa",
+        "zh_cn": "疾风剑刃"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "SwordMaster",
+        "character_index": 28,
+        "slot": 0
+      },
+      "relations": {
+        "character": "SwordMaster"
+      },
+      "save_refs": [
+        "gameData.heroSkill.SwordMaster",
+        "gameData.heroSkillUnlock.SwordMaster[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character28_skill_1_name",
+      "name": {
+        "en": "Wisps of Clouds",
+        "es": "Hilos de nubes",
+        "zh_cn": "流云飞剑"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "SwordMaster",
+        "character_index": 28,
+        "slot": 1
+      },
+      "relations": {
+        "character": "SwordMaster"
+      },
+      "save_refs": [
+        "gameData.heroSkill.SwordMaster",
+        "gameData.heroSkillUnlock.SwordMaster[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character28_skill_2_name",
+      "name": {
+        "en": "Blinkblade Codex",
+        "es": "Códice de Espada Fugaz",
+        "zh_cn": "瞬步剑诀"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "SwordMaster",
+        "character_index": 28,
+        "slot": 2
+      },
+      "relations": {
+        "character": "SwordMaster"
+      },
+      "save_refs": [
+        "gameData.heroSkill.SwordMaster",
+        "gameData.heroSkillUnlock.SwordMaster[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character29_skill_0_name",
+      "name": {
+        "en": "Dragon Lance",
+        "es": "Lanza dracónica",
+        "zh_cn": "斗阵枪术"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Lancer",
+        "character_index": 29,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Lancer"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Lancer",
+        "gameData.heroSkillUnlock.Lancer[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character29_skill_1_name",
+      "name": {
+        "en": "Thunder Presence",
+        "es": "Presencia estruendosa",
+        "zh_cn": "龙枪圣临"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Lancer",
+        "character_index": 29,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Lancer"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Lancer",
+        "gameData.heroSkillUnlock.Lancer[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character29_skill_2_name",
+      "name": {
+        "en": "Lance Doctrine",
+        "es": "Doctrina de la Lanza",
+        "zh_cn": "陷阵枪诀"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Lancer",
+        "character_index": 29,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Lancer"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Lancer",
+        "gameData.heroSkillUnlock.Lancer[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character2_skill_0_name",
+      "name": {
+        "en": "Lightning Strike",
+        "es": "Golpe Relámpago",
+        "zh_cn": "奥术闪电"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Mage",
+        "character_index": 2,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Mage"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Mage",
+        "gameData.heroSkillUnlock.Mage[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character2_skill_1_name",
+      "name": {
+        "en": "Piercing Frost",
+        "es": "Escarcha penetrante",
+        "zh_cn": "寒冰穿刺"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Mage",
+        "character_index": 2,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Mage"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Mage",
+        "gameData.heroSkillUnlock.Mage[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character2_skill_2_name",
+      "name": {
+        "en": "Firestorm",
+        "es": "Tormenta de fuego",
+        "zh_cn": "火焰飓风"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Mage",
+        "character_index": 2,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Mage"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Mage",
+        "gameData.heroSkillUnlock.Mage[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character30_skill_0_name",
+      "name": {
+        "en": "Battle Storm",
+        "es": "Tormenta bélica",
+        "zh_cn": "战意风暴"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Warliege",
+        "character_index": 30,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Warliege"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Warliege",
+        "gameData.heroSkillUnlock.Warliege[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character30_skill_1_name",
+      "name": {
+        "en": "Resolute Rush",
+        "es": "Carrera Decidida",
+        "zh_cn": "决心猛冲"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Warliege",
+        "character_index": 30,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Warliege"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Warliege",
+        "gameData.heroSkillUnlock.Warliege[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character30_skill_2_name",
+      "name": {
+        "en": "Dark Sovereign",
+        "es": "Soberano Oscuro",
+        "zh_cn": "黑暗领主"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Warliege",
+        "character_index": 30,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Warliege"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Warliege",
+        "gameData.heroSkillUnlock.Warliege[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character31_skill_0_name",
+      "name": {
+        "en": "Power Burst",
+        "es": "Explosión de poder",
+        "zh_cn": "能量迸涌"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "ArcaneKnight",
+        "character_index": 31,
+        "slot": 0
+      },
+      "relations": {
+        "character": "ArcaneKnight"
+      },
+      "save_refs": [
+        "gameData.heroSkill.ArcaneKnight",
+        "gameData.heroSkillUnlock.ArcaneKnight[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character31_skill_1_name",
+      "name": {
+        "en": "Aegis Circle",
+        "es": "Círculo de Égida",
+        "zh_cn": "庇护法阵"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "ArcaneKnight",
+        "character_index": 31,
+        "slot": 1
+      },
+      "relations": {
+        "character": "ArcaneKnight"
+      },
+      "save_refs": [
+        "gameData.heroSkill.ArcaneKnight",
+        "gameData.heroSkillUnlock.ArcaneKnight[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character31_skill_2_name",
+      "name": {
+        "en": "Arcane Missile",
+        "es": "Misil Arcano",
+        "zh_cn": "奥术飞弹"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "ArcaneKnight",
+        "character_index": 31,
+        "slot": 2
+      },
+      "relations": {
+        "character": "ArcaneKnight"
+      },
+      "save_refs": [
+        "gameData.heroSkill.ArcaneKnight",
+        "gameData.heroSkillUnlock.ArcaneKnight[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character32_skill_0_name",
+      "name": {
+        "en": "Starfall Surge",
+        "es": "Oleada meteórica",
+        "zh_cn": "骤雨流星"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Astrologist",
+        "character_index": 32,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Astrologist"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Astrologist",
+        "gameData.heroSkillUnlock.Astrologist[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character32_skill_1_name",
+      "name": {
+        "en": "Rota Fortunae",
+        "es": "Rota Fortunae",
+        "zh_cn": "命运之轮"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Astrologist",
+        "character_index": 32,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Astrologist"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Astrologist",
+        "gameData.heroSkillUnlock.Astrologist[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character32_skill_2_name",
+      "name": {
+        "en": "Stellar Streak",
+        "es": "Racha Estelar",
+        "zh_cn": "逐星掠影"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Astrologist",
+        "character_index": 32,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Astrologist"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Astrologist",
+        "gameData.heroSkillUnlock.Astrologist[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character33_skill_0_name",
+      "name": {
+        "en": "Tiger Punch",
+        "es": "Golpe del tigre",
+        "zh_cn": "猛虎拳"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Fighter",
+        "character_index": 33,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Fighter"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Fighter",
+        "gameData.heroSkillUnlock.Fighter[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character33_skill_1_name",
+      "name": {
+        "en": "Whirlwind Kick",
+        "es": "Patada torbellino",
+        "zh_cn": "旋风腿"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Fighter",
+        "character_index": 33,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Fighter"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Fighter",
+        "gameData.heroSkillUnlock.Fighter[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character34_skill_0_name",
+      "name": {
+        "en": "Shadow Crescendo",
+        "es": "Crescendo sombrío",
+        "zh_cn": "戏影剑舞"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Joker",
+        "character_index": 34,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Joker"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Joker",
+        "gameData.heroSkillUnlock.Joker[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character34_skill_1_name",
+      "name": {
+        "en": "Mirage Masque",
+        "es": "Máscara del Espejismo",
+        "zh_cn": "幻幕戏法"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Joker",
+        "character_index": 34,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Joker"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Joker",
+        "gameData.heroSkillUnlock.Joker[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character35_skill_0_name",
+      "name": {
+        "en": "Melodic Pulse",
+        "es": "Pulso Melódico",
+        "zh_cn": "音律节拍"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Bard",
+        "character_index": 35,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Bard"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Bard",
+        "gameData.heroSkillUnlock.Bard[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character35_skill_1_name",
+      "name": {
+        "en": "Resonant Symphony",
+        "es": "Sinfonía Resonante",
+        "zh_cn": "共振乐章"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Bard",
+        "character_index": 35,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Bard"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Bard",
+        "gameData.heroSkillUnlock.Bard[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character36_skill_0_name",
+      "name": {
+        "en": "Marksman's Mastery",
+        "es": "Dominio del Tirador",
+        "zh_cn": "枪神降临"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Shooter",
+        "character_index": 36,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Shooter"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Shooter",
+        "gameData.heroSkillUnlock.Shooter[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character36_skill_1_name",
+      "name": {
+        "en": "Deadeye Domain",
+        "es": "Dominio de Tiro Certero",
+        "zh_cn": "狩猎领域"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Shooter",
+        "character_index": 36,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Shooter"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Shooter",
+        "gameData.heroSkillUnlock.Shooter[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character37_skill_0_name",
+      "name": {
+        "en": "Iridescent Resonance",
+        "es": "Resonancia iridiscente",
+        "zh_cn": "虹烬共鸣"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "AiGirl",
+        "character_index": 37,
+        "slot": 0
+      },
+      "relations": {
+        "character": "AiGirl"
+      },
+      "save_refs": [
+        "gameData.heroSkill.AiGirl",
+        "gameData.heroSkillUnlock.AiGirl[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character38_skill_0_name",
+      "name": {
+        "en": "Barrel Blowout",
+        "es": "Gran fiesta explosiva",
+        "zh_cn": "炸桶派对"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Captain",
+        "character_index": 38,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Captain"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Captain",
+        "gameData.heroSkillUnlock.Captain[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character38_skill_1_name",
+      "name": {
+        "en": "Onward, Wavecutter!",
+        "es": "¡Adelante, Cortaolas!",
+        "zh_cn": "冲啊！逐浪号！"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Captain",
+        "character_index": 38,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Captain"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Captain",
+        "gameData.heroSkillUnlock.Captain[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character39_skill_0_name",
+      "name": {
+        "en": "Duskbell Talisman / Dawnflare Fist",
+        "es": "Talismán del Ocaso / Puño del Alba",
+        "zh_cn": "夜铃符/明昼拳"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "YinYang",
+        "character_index": 39,
+        "slot": 0
+      },
+      "relations": {
+        "character": "YinYang"
+      },
+      "save_refs": [
+        "gameData.heroSkill.YinYang",
+        "gameData.heroSkillUnlock.YinYang[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character3_skill_0_name",
+      "name": {
+        "en": "Dark Blade",
+        "es": "Cuchilla oscura",
+        "zh_cn": "暗影之刃"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Assassin",
+        "character_index": 3,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Assassin"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Assassin",
+        "gameData.heroSkillUnlock.Assassin[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character3_skill_1_name",
+      "name": {
+        "en": "Doppelgänger",
+        "es": "Doppelgänger",
+        "zh_cn": "分身术"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Assassin",
+        "character_index": 3,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Assassin"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Assassin",
+        "gameData.heroSkillUnlock.Assassin[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character3_skill_2_name",
+      "name": {
+        "en": "Invisibility",
+        "es": "Invisibilidad",
+        "zh_cn": "影遁"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Assassin",
+        "character_index": 3,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Assassin"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Assassin",
+        "gameData.heroSkillUnlock.Assassin[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character40_skill_0_name",
+      "name": {
+        "en": "Call to Arms",
+        "es": "Grito de Guerra",
+        "zh_cn": "火力增援"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "GunsExpert",
+        "character_index": 40,
+        "slot": 0
+      },
+      "relations": {
+        "character": "GunsExpert"
+      },
+      "save_refs": [
+        "gameData.heroSkill.GunsExpert",
+        "gameData.heroSkillUnlock.GunsExpert[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character41_skill_0_name",
+      "name": {
+        "en": "Mystic Stewpot",
+        "es": "Olla Mística",
+        "zh_cn": "神秘炖锅"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "LadyChef",
+        "character_index": 41,
+        "slot": 0
+      },
+      "relations": {
+        "character": "LadyChef"
+      },
+      "save_refs": [
+        "gameData.heroSkill.LadyChef",
+        "gameData.heroSkillUnlock.LadyChef[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character4_skill_0_name",
+      "name": {
+        "en": "Gas Grenade",
+        "es": "Granada de gas",
+        "zh_cn": "毒气炸弹"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Alchemist",
+        "character_index": 4,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Alchemist"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Alchemist",
+        "gameData.heroSkillUnlock.Alchemist[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character4_skill_1_name",
+      "name": {
+        "en": "Elemental Potions",
+        "es": "Pociones elementales",
+        "zh_cn": "元素药剂"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Alchemist",
+        "character_index": 4,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Alchemist"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Alchemist",
+        "gameData.heroSkillUnlock.Alchemist[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character4_skill_2_name",
+      "name": {
+        "en": "Concoction",
+        "es": "Brebaje",
+        "zh_cn": "蜜汁饮剂"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Alchemist",
+        "character_index": 4,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Alchemist"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Alchemist",
+        "gameData.heroSkillUnlock.Alchemist[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character5_skill_0_name",
+      "name": {
+        "en": "Gun Turret",
+        "es": "Torreta",
+        "zh_cn": "工程炮台"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Engineer",
+        "character_index": 5,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Engineer"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Engineer",
+        "gameData.heroSkillUnlock.Engineer[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character5_skill_1_name",
+      "name": {
+        "en": "Armor Mount",
+        "es": "Montura blindada",
+        "zh_cn": "机甲武装"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Engineer",
+        "character_index": 5,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Engineer"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Engineer",
+        "gameData.heroSkillUnlock.Engineer[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character5_skill_2_name",
+      "name": {
+        "en": "Interceptor",
+        "es": "Interceptación",
+        "zh_cn": "迎击炮台"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Engineer",
+        "character_index": 5,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Engineer"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Engineer",
+        "gameData.heroSkillUnlock.Engineer[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character6_skill_0_name",
+      "name": {
+        "en": "Bat Swarm",
+        "es": "Colonia de murciélagos",
+        "zh_cn": "蝙蝠突袭"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Vampire",
+        "character_index": 6,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Vampire"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Vampire",
+        "gameData.heroSkillUnlock.Vampire[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character6_skill_1_name",
+      "name": {
+        "en": "Alien Swirl",
+        "es": "Remolino alienígena",
+        "zh_cn": "异界旋涡"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Vampire",
+        "character_index": 6,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Vampire"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Vampire",
+        "gameData.heroSkillUnlock.Vampire[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character6_skill_2_name",
+      "name": {
+        "en": "Immortal",
+        "es": "Inmortal",
+        "zh_cn": "不朽之躯"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Vampire",
+        "character_index": 6,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Vampire"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Vampire",
+        "gameData.heroSkillUnlock.Vampire[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character7_skill_0_name",
+      "name": {
+        "en": "Energy Shield",
+        "es": "Escudo de energía",
+        "zh_cn": "能量护盾"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Paladin",
+        "character_index": 7,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Paladin"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Paladin",
+        "gameData.heroSkillUnlock.Paladin[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character7_skill_1_name",
+      "name": {
+        "en": "Holy Warrior",
+        "es": "Guerrero sagrado",
+        "zh_cn": "神化"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Paladin",
+        "character_index": 7,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Paladin"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Paladin",
+        "gameData.heroSkillUnlock.Paladin[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character7_skill_2_name",
+      "name": {
+        "en": "Splash & Bash",
+        "es": "Salpica y golpea",
+        "zh_cn": "爆裂飞盾"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Paladin",
+        "character_index": 7,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Paladin"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Paladin",
+        "gameData.heroSkillUnlock.Paladin[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character8_skill_0_name",
+      "name": {
+        "en": "Focus Fire",
+        "es": "Fuego concentrado",
+        "zh_cn": "专注射击"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Elves",
+        "character_index": 8,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Elves"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Elves",
+        "gameData.heroSkillUnlock.Elves[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character8_skill_1_name",
+      "name": {
+        "en": "Arrow Rain",
+        "es": "Lluvia de flechas",
+        "zh_cn": "箭雨"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Elves",
+        "character_index": 8,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Elves"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Elves",
+        "gameData.heroSkillUnlock.Elves[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character8_skill_2_name",
+      "name": {
+        "en": "Guardian Elf",
+        "es": "Elfa guardiana",
+        "zh_cn": "守护精灵"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Elves",
+        "character_index": 8,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Elves"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Elves",
+        "gameData.heroSkillUnlock.Elves[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character9_skill_0_name",
+      "name": {
+        "en": "Berserk",
+        "es": "Frenético",
+        "zh_cn": "狂化"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Werewolf",
+        "character_index": 9,
+        "slot": 0
+      },
+      "relations": {
+        "character": "Werewolf"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Werewolf",
+        "gameData.heroSkillUnlock.Werewolf[0]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character9_skill_1_name",
+      "name": {
+        "en": "Blood Thirst",
+        "es": "Sed de sangre",
+        "zh_cn": "嗜血斩击"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Werewolf",
+        "character_index": 9,
+        "slot": 1
+      },
+      "relations": {
+        "character": "Werewolf"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Werewolf",
+        "gameData.heroSkillUnlock.Werewolf[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "Character9_skill_2_name",
+      "name": {
+        "en": "Devour",
+        "es": "Devorar",
+        "zh_cn": "吞噬"
+      },
+      "category": "character_skill",
+      "subcategory": "active_or_passive_slot",
+      "attributes": {
+        "character": "Werewolf",
+        "character_index": 9,
+        "slot": 2
+      },
+      "relations": {
+        "character": "Werewolf"
+      },
+      "save_refs": [
+        "gameData.heroSkill.Werewolf",
+        "gameData.heroSkillUnlock.Werewolf[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    }
+  ]
+}

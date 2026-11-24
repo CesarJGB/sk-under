@@ -1,0 +1,1124 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "lobby",
+  "title": "Vestíbulo y decoraciones",
+  "description": "Muebles, desbloqueos, skins de sala y de jardín.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "data.json"
+    },
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "I2language.csv"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 49,
+  "items": [
+    {
+      "id": "Motorcycle",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "item_unlock",
+      "attributes": {
+        "kind": "item_unlock",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.itemUnlock"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "garden_skin_0",
+      "name": {
+        "en": "Garden",
+        "es": "Jardín",
+        "zh_cn": "花园"
+      },
+      "category": "lobby",
+      "subcategory": "garden_skin",
+      "attributes": {
+        "kind": "garden_skin",
+        "index": "0"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "garden_skin_1",
+      "name": {
+        "en": "Cascade Cavern's Courtyard",
+        "es": "Patio de la cueva de la cascada",
+        "zh_cn": "水帘洞露天庭院"
+      },
+      "category": "lobby",
+      "subcategory": "garden_skin",
+      "attributes": {
+        "kind": "garden_skin",
+        "index": "1"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "garden_skin_2",
+      "name": {
+        "en": "Stargaze Realm – Meteor Altar",
+        "es": "Reino Estelar - Altar de meteoros",
+        "zh_cn": "观星领域-坠星坛"
+      },
+      "category": "lobby",
+      "subcategory": "garden_skin",
+      "attributes": {
+        "kind": "garden_skin",
+        "index": "2"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "garden_skin_3",
+      "name": {
+        "en": "Mighty Army",
+        "es": "Ejército poderoso",
+        "zh_cn": "整装待渡"
+      },
+      "category": "lobby",
+      "subcategory": "garden_skin",
+      "attributes": {
+        "kind": "garden_skin",
+        "index": "3"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "garden_skin_4",
+      "name": {
+        "en": "Dr. O's Factory",
+        "es": "Fábrica del Dr. O",
+        "zh_cn": "欧博士的制造厂"
+      },
+      "category": "lobby",
+      "subcategory": "garden_skin",
+      "attributes": {
+        "kind": "garden_skin",
+        "index": "4"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_pot3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "item_unlock",
+      "attributes": {
+        "kind": "item_unlock",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.itemUnlock"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "plant_pot4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "item_unlock",
+      "attributes": {
+        "kind": "item_unlock",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.itemUnlock"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "plant_pot5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "item_unlock",
+      "attributes": {
+        "kind": "item_unlock",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.itemUnlock"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "plant_pot6",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "item_unlock",
+      "attributes": {
+        "kind": "item_unlock",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.itemUnlock"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "plant_pot7",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "item_unlock",
+      "attributes": {
+        "kind": "item_unlock",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.itemUnlock"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_skin_-1",
+      "name": {
+        "en": "Random",
+        "es": "Aleatorio",
+        "zh_cn": "随机"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "-1"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_0",
+      "name": {
+        "en": "Default",
+        "es": "Predeterminados",
+        "zh_cn": "默认"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "0"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_1",
+      "name": {
+        "en": "Finest Spectacle",
+        "es": "Espectáculo refinado",
+        "zh_cn": "一出好戏"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "1"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_10",
+      "name": {
+        "en": "Bastion: Tideway",
+        "es": "Bastión: Canal de Marea",
+        "zh_cn": "据点：浪潮"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "10"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_11",
+      "name": {
+        "en": "Dr. O's Hideout",
+        "es": "Escondite del Dr. O",
+        "zh_cn": "欧博士的秘密基地"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "11"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_12",
+      "name": {
+        "en": "Xunder Fest",
+        "es": "Festival Truenox",
+        "zh_cn": "雷霆派对"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "12"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_13",
+      "name": {
+        "en": "Tale of Heaven Reaching River",
+        "es": "Historia del río que llega al cielo",
+        "zh_cn": "通天河的故事"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "13"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_14",
+      "name": {
+        "en": "Oracle Temple",
+        "es": "Templo del oráculo",
+        "zh_cn": "神谕圣殿"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "14"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_15",
+      "name": {
+        "en": "Sea Breeze Vacation",
+        "es": "Vacaciones veraniegas",
+        "zh_cn": "海风假日"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "15"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_16",
+      "name": {
+        "en": "Calligraphy Practice",
+        "es": "Práctica de caligrafía",
+        "zh_cn": "练字时间"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "16"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_17",
+      "name": {
+        "en": "Final Showdown",
+        "es": "Enfrentamiento final",
+        "zh_cn": "决战将至"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "17"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_18",
+      "name": {
+        "en": "Shenlong Domain",
+        "es": "Dominio de Shenlong",
+        "zh_cn": "龙之仙域"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "18"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_19",
+      "name": {
+        "en": "Rocking Night",
+        "es": "Noche Rockera",
+        "zh_cn": "摇滚之夜"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "19"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_2",
+      "name": {
+        "en": "Patio of Crystal Clear Clouds",
+        "es": "Patio de nubes claras",
+        "zh_cn": "清云台"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "2"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_20",
+      "name": {
+        "en": "Endgame Enclosure",
+        "es": "Confinamiento Final",
+        "zh_cn": "残局时廊"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "20"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_21",
+      "name": {
+        "en": "Dreamcycle Isle",
+        "es": "Isla del Ciclo Onírico",
+        "zh_cn": "四季梦屿"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "21"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_3",
+      "name": {
+        "en": "Lost Altar",
+        "es": "Altar perdido",
+        "zh_cn": "失落祭坛"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "3"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_4",
+      "name": {
+        "en": "Lava Workshop",
+        "es": "Taller de lava",
+        "zh_cn": "赤红的铸锻间"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "4"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_5",
+      "name": {
+        "en": "After School!",
+        "es": "¡Después de clases!",
+        "zh_cn": "天台见"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "5"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_6",
+      "name": {
+        "en": "Snowland Mine",
+        "es": "Mina de tierra nevada",
+        "zh_cn": "雪地矿山"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "6"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_7",
+      "name": {
+        "en": "Council of War",
+        "es": "Consejo de guerra",
+        "zh_cn": "作战会议"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "7"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_8",
+      "name": {
+        "en": "Big Big World",
+        "es": "Un mundo muy grande",
+        "zh_cn": "世界大观"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "8"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_skin_9",
+      "name": {
+        "en": "Temple of Termination",
+        "es": "Templo de Conclusión",
+        "zh_cn": "终末圣殿"
+      },
+      "category": "lobby",
+      "subcategory": "room_skin",
+      "attributes": {
+        "kind": "room_skin",
+        "index": "9"
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.currentRoomDecorate",
+        "gameData.roomLevel"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "room_unlock_badass",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_unlock_book",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_unlock_cellar",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_unlock_defence_mode",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_unlock_garden",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_unlock_magic_area",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_unlock_monster_rise",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_unlock_pet_food",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_unlock_plant",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_unlock_quest_board",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_unlock_safe",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_unlock_season_mode",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_unlock_statements_count",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_unlock_trash_can",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "room_unlock_work_shop",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "furniture",
+      "attributes": {
+        "kind": "furniture",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "gameData.roomObjectLevel",
+        "gameData.unlockRoomDecorate"
+      ],
+      "notes": [
+        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sk-under.local/schemas/dependencies.schema.json",
+  "title": "Mapa de dependencias entre campos y secciones",
+  "type": "object",
+  "required": ["schema", "schema_version", "game_version", "count", "dependencies"],
+  "properties": {
+    "schema": {"const": "sk-knowledge/dependencies@1"},
+    "schema_version": {"type": "integer", "minimum": 1},
+    "game_version": {"type": "string"},
+    "generated_by": {"type": "string"},
+    "notes": {"type": "array", "items": {"type": "string"}},
+    "count": {"type": "integer", "minimum": 0},
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "from",
+          "to",
+          "relation",
+          "status",
+          "evidence",
+          "scope",
+          "sources",
+          "experiments_required"
+        ],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "from": {"type": "string", "minLength": 1},
+          "to": {"type": "string", "minLength": 1},
+          "relation": {"type": "string", "minLength": 1},
+          "status": {"type": "string", "enum": ["confirmed", "observed", "hypothesis", "negative"]},
+          "evidence": {"type": "string", "enum": ["H", "E1", "E2", "E3", "E4"]},
+          "scope": {"type": "string", "minLength": 1},
+          "description": {"type": ["string", "null"]},
+          "sources": {"type": "array", "items": {"type": "string"}},
+          "edit_implication": {"type": ["string", "null"]},
+          "experiments_required": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}

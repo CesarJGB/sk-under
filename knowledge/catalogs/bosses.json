@@ -1,0 +1,1498 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "bosses",
+  "title": "Jefes",
+  "description": "Subconjunto de enemigos con IsBoss=true.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "enemies.decrypted.csv"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 74,
+  "items": [
+    {
+      "id": "alien_carrier_root",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "alien_carrier_root"
+      },
+      "relations": {
+        "enemy": "alien_carrier_root"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss01",
+      "name": {
+        "en": "Grand Knight",
+        "es": "Gran Caballero",
+        "zh_cn": "大骑士"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss01"
+      },
+      "relations": {
+        "enemy": "boss01"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss01_2",
+      "name": {
+        "en": "Dark Grand Knight",
+        "es": "Gran caballero oscuro",
+        "zh_cn": "暗黑大骑士"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss01_2"
+      },
+      "relations": {
+        "enemy": "boss01_2"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss02",
+      "name": {
+        "en": "Grand Wizard",
+        "es": "Gran Mago",
+        "zh_cn": "大巫师"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss02"
+      },
+      "relations": {
+        "enemy": "boss02"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss03",
+      "name": {
+        "en": "Skeleton King",
+        "es": "Rey Esqueleto",
+        "zh_cn": "骷髅王"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss03"
+      },
+      "relations": {
+        "enemy": "boss03"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss03_plant",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss03_plant"
+      },
+      "relations": {
+        "enemy": "boss03_plant"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss04",
+      "name": {
+        "en": "C6H8O6",
+        "es": "C6H8O6",
+        "zh_cn": "维C机甲"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss04"
+      },
+      "relations": {
+        "enemy": "boss04"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss04_fire",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss04_fire"
+      },
+      "relations": {
+        "enemy": "boss04_fire"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss05",
+      "name": {
+        "en": "Varkolyn Leader",
+        "es": "Líder Varkolyn",
+        "zh_cn": "瓦克恩头目"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss05"
+      },
+      "relations": {
+        "enemy": "boss05"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss05_plant",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss05_plant"
+      },
+      "relations": {
+        "enemy": "boss05_plant"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss06",
+      "name": {
+        "en": "Zulan The Colossus",
+        "es": "Zulan, el Coloso",
+        "zh_cn": "巨像 祖兰"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss06"
+      },
+      "relations": {
+        "enemy": "boss06"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss07",
+      "name": {
+        "en": "Devil's Snare",
+        "es": "Trampa del Demonio",
+        "zh_cn": "曼陀罗魔花"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss07"
+      },
+      "relations": {
+        "enemy": "boss07"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss08",
+      "name": {
+        "en": "Goblin Priest",
+        "es": "Sacerdote Duende",
+        "zh_cn": "哥布林祭师"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss08"
+      },
+      "relations": {
+        "enemy": "boss08"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss09",
+      "name": {
+        "en": "King Snow Ape",
+        "es": "Rey Mono Nevado",
+        "zh_cn": "雪山大猿王"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss09"
+      },
+      "relations": {
+        "enemy": "boss09"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss10",
+      "name": {
+        "en": "Giant Crystal Crab",
+        "es": "Cangrejo de Cristal Gigante",
+        "zh_cn": "水晶巨蟹"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss10"
+      },
+      "relations": {
+        "enemy": "boss10"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss10_2",
+      "name": {
+        "en": "Giant Golden Crab",
+        "es": "Cangrejo de oro gigante",
+        "zh_cn": "黄金巨蟹"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss10_2"
+      },
+      "relations": {
+        "enemy": "boss10_2"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss11",
+      "name": {
+        "en": "Volcanic Sandworm",
+        "es": "Gusano de Arena Volcánico",
+        "zh_cn": "火山沙虫"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss11"
+      },
+      "relations": {
+        "enemy": "boss11"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss12_1",
+      "name": {
+        "en": "Baby Dragon Bros",
+        "es": "Hermanitos Dragón",
+        "zh_cn": "飞龙幼崽"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss12_1"
+      },
+      "relations": {
+        "enemy": "boss12_1"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss12_2",
+      "name": {
+        "en": "Baby Dragon Bros",
+        "es": "Hermanitos Dragón",
+        "zh_cn": "飞龙幼崽"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss12_2"
+      },
+      "relations": {
+        "enemy": "boss12_2"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss12_parent",
+      "name": {
+        "en": "Baby Dragon Bros",
+        "es": "Hermanitos Dragón",
+        "zh_cn": "飞龙幼崽"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss12_parent"
+      },
+      "relations": {
+        "enemy": "boss12_parent"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss13",
+      "name": {
+        "en": "Snowman King",
+        "es": "Muñeco de Nieve Rey",
+        "zh_cn": "雪人王"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss13"
+      },
+      "relations": {
+        "enemy": "boss13"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss13_fire",
+      "name": {
+        "en": "Festival Snowman King",
+        "es": "Muñeco de Nieve Rey Festivo",
+        "zh_cn": "庆典雪人王"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss13_fire"
+      },
+      "relations": {
+        "enemy": "boss13_fire"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss14",
+      "name": {
+        "en": "Christmas Treant",
+        "es": "Treant Navideño",
+        "zh_cn": "圣诞树人"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss14"
+      },
+      "relations": {
+        "enemy": "boss14"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss14_garden",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss14_garden"
+      },
+      "relations": {
+        "enemy": "boss14_garden"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss14_garden_fire",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss14_garden_fire"
+      },
+      "relations": {
+        "enemy": "boss14_garden_fire"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss14_garden_old",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss14_garden_old"
+      },
+      "relations": {
+        "enemy": "boss14_garden_old"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss15",
+      "name": {
+        "en": "Phantom King",
+        "es": "Rey Fantasma",
+        "zh_cn": "幽灵王"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss15"
+      },
+      "relations": {
+        "enemy": "boss15"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss16",
+      "name": {
+        "en": "Headless Knight",
+        "es": "Caballero Sin Cabeza",
+        "zh_cn": "无头骑士"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss16"
+      },
+      "relations": {
+        "enemy": "boss16"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss16_horse",
+      "name": {
+        "en": "His Horse",
+        "es": "Su caballo",
+        "zh_cn": "他的马"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss16_horse"
+      },
+      "relations": {
+        "enemy": "boss16_horse"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss18",
+      "name": {
+        "en": "Anubis",
+        "es": "Anubis",
+        "zh_cn": "阿努比斯"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss18"
+      },
+      "relations": {
+        "enemy": "boss18"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss19",
+      "name": {
+        "en": "Easter Bunny",
+        "es": "Conejo de Pascua",
+        "zh_cn": "彩蛋兔"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss19"
+      },
+      "relations": {
+        "enemy": "boss19"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss19_plant",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss19_plant"
+      },
+      "relations": {
+        "enemy": "boss19_plant"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss20",
+      "name": {
+        "en": "Grand Slime",
+        "es": "Gran Slime",
+        "zh_cn": "大史莱姆"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss20"
+      },
+      "relations": {
+        "enemy": "boss20"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss21",
+      "name": {
+        "en": "Floating Laser UFO",
+        "es": "OVNI Láser Flotante",
+        "zh_cn": "镭射幽浮"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss21"
+      },
+      "relations": {
+        "enemy": "boss21"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss21_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss21_1"
+      },
+      "relations": {
+        "enemy": "boss21_1"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss22",
+      "name": {
+        "en": "Prehistoric Colossus",
+        "es": "Coloso Prehistórico",
+        "zh_cn": "远古巨像"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss22"
+      },
+      "relations": {
+        "enemy": "boss22"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss23",
+      "name": {
+        "en": "Gold Mask",
+        "es": "Máscara de oro",
+        "zh_cn": "金面猴王"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss23"
+      },
+      "relations": {
+        "enemy": "boss23"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss24",
+      "name": {
+        "en": "Cave Ice Bug",
+        "es": "Bicho de hielo de cueva",
+        "zh_cn": "溶洞冰虫"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss24"
+      },
+      "relations": {
+        "enemy": "boss24"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss25",
+      "name": {
+        "en": "Goblin Priest",
+        "es": "Sacerdote Duende",
+        "zh_cn": "哥布林祭师"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss25"
+      },
+      "relations": {
+        "enemy": "boss25"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss26",
+      "name": {
+        "en": "⊿卝⊙ϟ‡",
+        "es": "⊿卝⊙ϟ‡",
+        "zh_cn": "⊿卝⊙ϟ‡"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss26"
+      },
+      "relations": {
+        "enemy": "boss26"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss27",
+      "name": {
+        "en": "Grave Guard Scarab Archon",
+        "es": "Arconte escarabajo guardián de tumbas",
+        "zh_cn": "守墓甲虫王"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss27"
+      },
+      "relations": {
+        "enemy": "boss27"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss28",
+      "name": {
+        "en": "Iron Pirate King Level",
+        "es": "Nivel del rey pirata de hierro",
+        "zh_cn": "“大王级”钢铁海盗"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss28"
+      },
+      "relations": {
+        "enemy": "boss28"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss28_plant",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss28_plant"
+      },
+      "relations": {
+        "enemy": "boss28_plant"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss29",
+      "name": {
+        "en": "Iron Will Wavebreaker",
+        "es": "Rompeolas Inquebrantable",
+        "zh_cn": "钢铁破浪者号"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss29"
+      },
+      "relations": {
+        "enemy": "boss29"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss30",
+      "name": {
+        "en": "Zulan in Ruins",
+        "es": "Zulan en ruinas",
+        "zh_cn": "遗迹 祖兰"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss30"
+      },
+      "relations": {
+        "enemy": "boss30"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_abyssal_submariner",
+      "name": {
+        "en": "Abyssal Submariner",
+        "es": "Submarino Abismal",
+        "zh_cn": "深渊潜航者"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_abyssal_submariner"
+      },
+      "relations": {
+        "enemy": "boss_abyssal_submariner"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_airbender",
+      "name": {
+        "en": "Airbender",
+        "es": "Maestro Eólico",
+        "zh_cn": "气宗"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_airbender"
+      },
+      "relations": {
+        "enemy": "boss_airbender"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_bossrush_final",
+      "name": {
+        "en": "Sir Sangria",
+        "es": "Sir Sangría",
+        "zh_cn": "红爵士"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_bossrush_final"
+      },
+      "relations": {
+        "enemy": "boss_bossrush_final"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_bossrush_final_badass",
+      "name": {
+        "en": "Sir Violet",
+        "es": "Sir Violeta",
+        "zh_cn": "紫爵士"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_bossrush_final_badass"
+      },
+      "relations": {
+        "enemy": "boss_bossrush_final_badass"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_dead_cell_giant",
+      "name": {
+        "en": "The Giant",
+        "es": "El Gigante",
+        "zh_cn": "巨人"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_dead_cell_giant"
+      },
+      "relations": {
+        "enemy": "boss_dead_cell_giant"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_ditto",
+      "name": {
+        "en": "TV Tyrant",
+        "es": "Tirano Televisivo",
+        "zh_cn": "电视大王"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_ditto"
+      },
+      "relations": {
+        "enemy": "boss_ditto"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_dongzhuo",
+      "name": {
+        "en": "Dong Zhuo",
+        "es": "Dong Zhuo",
+        "zh_cn": "董卓"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_dongzhuo"
+      },
+      "relations": {
+        "enemy": "boss_dongzhuo"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_dream_dog",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": "贵宾导购"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_dream_dog"
+      },
+      "relations": {
+        "enemy": "boss_dream_dog"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_fel_lord",
+      "name": {
+        "en": "Sir Verdant",
+        "es": "Lord Esmeralda",
+        "zh_cn": "绿爵士"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_fel_lord"
+      },
+      "relations": {
+        "enemy": "boss_fel_lord"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_huaxiong",
+      "name": {
+        "en": "Hua Xiong",
+        "es": "Hua Xiong",
+        "zh_cn": "华雄"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_huaxiong"
+      },
+      "relations": {
+        "enemy": "boss_huaxiong"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_lijue",
+      "name": {
+        "en": "Li Jue",
+        "es": "Li Jue",
+        "zh_cn": "李傕"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_lijue"
+      },
+      "relations": {
+        "enemy": "boss_lijue"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_lvbu",
+      "name": {
+        "en": "Ultimate Weapon: Code 01",
+        "es": "Arma suprema: código 01",
+        "zh_cn": "最终兵器·〇一号机"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_lvbu"
+      },
+      "relations": {
+        "enemy": "boss_lvbu"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_mist_witch",
+      "name": {
+        "en": "Witch of the Mist",
+        "es": "Bruja de la bruma",
+        "zh_cn": "迷雾女巫"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_mist_witch"
+      },
+      "relations": {
+        "enemy": "boss_mist_witch"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_monolith_lower",
+      "name": {
+        "en": "Ancestor's Legs",
+        "es": "Piernas de Ancestro",
+        "zh_cn": "岩祖之胫"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_monolith_lower"
+      },
+      "relations": {
+        "enemy": "boss_monolith_lower"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_noc_walker",
+      "name": {
+        "en": "Night Wanderer",
+        "es": "Errante Nocturno",
+        "zh_cn": "夜游神"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_noc_walker"
+      },
+      "relations": {
+        "enemy": "boss_noc_walker"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_robot_king",
+      "name": {
+        "en": "King",
+        "es": "Rey",
+        "zh_cn": "机械皇帝"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_robot_king"
+      },
+      "relations": {
+        "enemy": "boss_robot_king"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_robot_queen",
+      "name": {
+        "en": "Queen",
+        "es": "Reina",
+        "zh_cn": "机械皇后"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_robot_queen"
+      },
+      "relations": {
+        "enemy": "boss_robot_queen"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_stone_dragon",
+      "name": {
+        "en": "Golem - Mist Dragon",
+        "es": "Gólem - Dragón de la niebla",
+        "zh_cn": "石械·雾影龙"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_stone_dragon"
+      },
+      "relations": {
+        "enemy": "boss_stone_dragon"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_stone_man",
+      "name": {
+        "en": "Golem - Ancestor",
+        "es": "Gólem - Ancestro",
+        "zh_cn": "石械 · 岩祖"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_stone_man"
+      },
+      "relations": {
+        "enemy": "boss_stone_man"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_treant_king",
+      "name": {
+        "en": "Dendroid King",
+        "es": "Rey Dendroide",
+        "zh_cn": "树妖王"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_treant_king"
+      },
+      "relations": {
+        "enemy": "boss_treant_king"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_tutorial",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_tutorial"
+      },
+      "relations": {
+        "enemy": "boss_tutorial"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_tvproducer",
+      "name": {
+        "en": "Pretentious Producer",
+        "es": "Productor pretencioso",
+        "zh_cn": "黑心制片人"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_tvproducer"
+      },
+      "relations": {
+        "enemy": "boss_tvproducer"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_void",
+      "name": {
+        "en": "The Void",
+        "es": "El Vacío",
+        "zh_cn": "虚空"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_void"
+      },
+      "relations": {
+        "enemy": "boss_void"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_void_origin",
+      "name": {
+        "en": "The True Void",
+        "es": "El vacío verdadero",
+        "zh_cn": "虚空本相"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_void_origin"
+      },
+      "relations": {
+        "enemy": "boss_void_origin"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_warlord",
+      "name": {
+        "en": "Captain Hulala Morley",
+        "es": "Capitán Hulala Morley",
+        "zh_cn": "呼啦啦冲锋队长-末力"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_warlord"
+      },
+      "relations": {
+        "enemy": "boss_warlord"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "boss_werewolf",
+      "name": {
+        "en": "Greedfang Warwolf",
+        "es": "Lobo de Guerra Sanguinario",
+        "zh_cn": "蚀月魔狼"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "boss_werewolf"
+      },
+      "relations": {
+        "enemy": "boss_werewolf"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "bossnian",
+      "name": {
+        "en": "Nian",
+        "es": "Nian",
+        "zh_cn": "年兽"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "bossnian"
+      },
+      "relations": {
+        "enemy": "bossnian"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "bossxi",
+      "name": {
+        "en": "Mutant Nian",
+        "es": "Nian mutante",
+        "zh_cn": "变异年兽"
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "bossxi"
+      },
+      "relations": {
+        "enemy": "bossxi"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    },
+    {
+      "id": "mecha2_boss06",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "boss",
+      "subcategory": "enemy",
+      "attributes": {
+        "enemy_id": "mecha2_boss06"
+      },
+      "relations": {
+        "enemy": "mecha2_boss06"
+      },
+      "save_refs": [],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:enemies.decrypted.csv"
+    }
+  ]
+}

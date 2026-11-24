@@ -1,0 +1,3418 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "vouchers",
+  "title": "Cupones y vales",
+  "description": "Vales agrupados observados en una muestra externa con forma de guardado.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "data.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 136,
+  "items": [
+    {
+      "id": "factorvoucher:token_factor_AggressiveEnemy_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_AggressiveEnemy_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_AllAlone_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_AllAlone_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_BadLuck_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_BadLuck_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_BlackFog_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_BlackFog_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Blessing_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Blessing_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_BombGift_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_BombGift_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_BoomBoomBoom_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_BoomBoomBoom_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_BoxMutation_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_BoxMutation_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Cruel_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Cruel_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Curse_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Curse_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Dark_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Dark_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Dejavu_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Dejavu_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_DoubleBoss_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_DoubleBoss_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_DoubleCd_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_DoubleCd_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_DoubleCritic_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_DoubleCritic_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Endurance_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Endurance_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_EnemyBuffImmune_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_EnemyBuffImmune_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_EnemyDefence_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_EnemyDefence_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_EnemyDoubleHp_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_EnemyDoubleHp_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_EnemyFlash_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_EnemyFlash_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_EnemySplit_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_EnemySplit_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_ExEnemy_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_ExEnemy_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Exception_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Exception_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_FastEnemyBullet_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_FastEnemyBullet_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_FastEnemy_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_FastEnemy_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_FloorCrack_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_FloorCrack_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Frozen_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Frozen_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_FullHouse_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_FullHouse_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_GainMount_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_GainMount_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_GoodLuck_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_GoodLuck_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_HalfCd_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_HalfCd_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_HardShield_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_HardShield_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_HugePet_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_HugePet_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Huge_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Huge_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_IncreaseEnemyBuffImmune_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_IncreaseEnemyBuffImmune_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_InferiorMedicine_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_InferiorMedicine_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_InfiniteEnergy_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_InfiniteEnergy_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Inflation_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Inflation_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Intensive_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Intensive_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_ItIsFate_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_ItIsFate_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_KillEnemyRebornTeammate_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_KillEnemyRebornTeammate_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_LackHp_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_LackHp_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_LessBuff_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_LessBuff_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_LessChoice_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_LessChoice_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_LongMap_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_LongMap_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Loop_6",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Loop_6",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_MelleOnly_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_MelleOnly_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_MeridianDisorder_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_MeridianDisorder_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Might_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Might_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_MonsterAircraft_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_MonsterAircraft_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_MoreBrave_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_MoreBrave_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_MoreBuff_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_MoreBuff_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_MoreChoice_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_MoreChoice_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_MoreGeneEnemy_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_MoreGeneEnemy_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_MultiStatue_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_MultiStatue_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_OneWeapon_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_OneWeapon_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Painless_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Painless_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Psyche_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Psyche_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_RandomCharactor_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_RandomCharactor_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_RebornTwice_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_RebornTwice_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_ReduceEnemyBuffImmune_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_ReduceEnemyBuffImmune_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_ReduceEnemyMoveSpeed_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_ReduceEnemyMoveSpeed_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_ReforgeWeapon_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_ReforgeWeapon_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_RenduErmai_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_RenduErmai_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_SaleDay_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_SaleDay_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_SleepWalking_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_SleepWalking_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_SlowShooter_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_SlowShooter_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_SpaceDistortion_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_SpaceDistortion_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Tenacious_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Tenacious_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_TimeDistortion_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_TimeDistortion_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_TimeRacing_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_TimeRacing_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_Tiny_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_Tiny_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_TopWanted_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_TopWanted_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_TrackingLaser_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_TrackingLaser_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_VolcanoEruption_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_VolcanoEruption_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_WeaponEquip_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_WeaponEquip_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_WeaponOverheating_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_WeaponOverheating_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "factorvoucher:token_factor_WrongConfig_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "factorvoucher",
+      "attributes": {
+        "voucher_group": "factorvoucher",
+        "raw_id": "token_factor_WrongConfig_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_245_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_245_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_246_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_246_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_247_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_247_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_248_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_248_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_249_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_249_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_250_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_250_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_25hammer_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_25hammer_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_268_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_268_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_274_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_274_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_278_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_278_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_279_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_279_2",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_280_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_280_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_281_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_281_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_282_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_282_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_283_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_283_2",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_284_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_284_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_286_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_286_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_287_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_287_2",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_288_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_288_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_289_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_289_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_290_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_290_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_295_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_295_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_296_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_296_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_297_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_297_2",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_298_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_298_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_309_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_309_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_312_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_312_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_314_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_314_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_319_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_319_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_336_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_336_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_337_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_337_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_369_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_369_2",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_376_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_376_2",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_377_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_377_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_378_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_378_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_379_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_379_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_banana_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_banana_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_bladefish_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_bladefish_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_coop_tennis_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_coop_tennis_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_crabclaw_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_crabclaw_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_deepwaterlaserfish_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_deepwaterlaserfish_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_globefish_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_globefish_2",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_inkfish_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_inkfish_2",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_laserfishee_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_laserfishee_2",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "notcraftableweapon:token_weapon_weapon_pet_10_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "notcraftableweapon",
+      "attributes": {
+        "voucher_group": "notcraftableweapon",
+        "raw_id": "token_weapon_weapon_pet_10_0",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "wildvoucher:token_equipment_none_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "wildvoucher",
+      "attributes": {
+        "voucher_group": "wildvoucher",
+        "raw_id": "token_equipment_none_0",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "wildvoucher:token_seed_none_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "wildvoucher",
+      "attributes": {
+        "voucher_group": "wildvoucher",
+        "raw_id": "token_seed_none_0",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "wildvoucher:token_seed_none_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "wildvoucher",
+      "attributes": {
+        "voucher_group": "wildvoucher",
+        "raw_id": "token_seed_none_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "wildvoucher:token_seed_none_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "wildvoucher",
+      "attributes": {
+        "voucher_group": "wildvoucher",
+        "raw_id": "token_seed_none_2",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "wildvoucher:token_seed_none_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "wildvoucher",
+      "attributes": {
+        "voucher_group": "wildvoucher",
+        "raw_id": "token_seed_none_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "wildvoucher:token_seed_none_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "wildvoucher",
+      "attributes": {
+        "voucher_group": "wildvoucher",
+        "raw_id": "token_seed_none_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "wildvoucher:token_seed_none_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "wildvoucher",
+      "attributes": {
+        "voucher_group": "wildvoucher",
+        "raw_id": "token_seed_none_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "wildvoucher:token_weapon_none_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "wildvoucher",
+      "attributes": {
+        "voucher_group": "wildvoucher",
+        "raw_id": "token_weapon_none_0",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "wildvoucher:token_weapon_none_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "wildvoucher",
+      "attributes": {
+        "voucher_group": "wildvoucher",
+        "raw_id": "token_weapon_none_1",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "wildvoucher:token_weapon_none_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "wildvoucher",
+      "attributes": {
+        "voucher_group": "wildvoucher",
+        "raw_id": "token_weapon_none_2",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "wildvoucher:token_weapon_none_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "wildvoucher",
+      "attributes": {
+        "voucher_group": "wildvoucher",
+        "raw_id": "token_weapon_none_3",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "wildvoucher:token_weapon_none_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "wildvoucher",
+      "attributes": {
+        "voucher_group": "wildvoucher",
+        "raw_id": "token_weapon_none_4",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "wildvoucher:token_weapon_none_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "voucher",
+      "subcategory": "wildvoucher",
+      "attributes": {
+        "voucher_group": "wildvoucher",
+        "raw_id": "token_weapon_none_5",
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.commodities",
+        "itemData.tokenTickets"
+      ],
+      "notes": [
+        "El valor aparece en una muestra externa con forma de guardado; el catálogo no prueba posesión."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    }
+  ]
+}

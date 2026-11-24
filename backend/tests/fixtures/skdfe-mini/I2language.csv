@@ -1,0 +1,38 @@
+id,English,Chinese (Traditional),Chinese (Simplified),Japanese,Korean,Spanish,German,Portuguese,French,Russian,Polish,Persian,Arabic,Thai,Vietnamese
+Character0_name_skin0,Knight,騎士,骑士,騎士,기사,Caballero,Ritter,Cavaleiro,Chevalier,Рыцарь,Rycerz,شوالیه,فارس,อัศวิน,Hiệp sĩ
+Character0_name_skin1,Elite Knight,精英騎士,精英骑士,エリート騎士,정예 기사,Caballero de élite,Eliteritter,Cavaleiro de elite,Chevalier élite,Элитный рыцарь,Elitarny rycerz,شوالیه نخبه,فارس النخبة,อัศวินชั้นสูง,Hiệp sĩ tinh nhuệ
+Character1_name_skin0,Ranger,遊俠,游侠,レンジャー,레인저,Guardabosques,Waldläufer,Patrulheiro,Rôdeur,Следопыт,Strzelec,تکاور,حارس,พรานป่า,Kiểm lâm
+Character0_skill_0_name,Dual Wield,雙持,双持,二刀流,이도류,Empuñadura doble,Doppelklingen,Empunhadura dupla,Double maniement,Двойное оружие,Podwójna broń,دوطبقه,سلاح مزدوج,ถือสองมือ,Song đao
+Character1_skill_0_name,Precision,精準,精准,精密,정밀,Precisión,Präzision,Precisão,Précision,Точность,Precyzja,دقت,دقة,ความแม่นยำ,Chính xác
+c0_skin0,Knight,騎士,骑士,騎士,기사,Caballero,Ritter,Cavaleiro,Chevalier,Рыцарь,Rycerz,شوالیه,فارس,อัศวิน,Hiệp sĩ
+c0_skin1,Elite Knight,精英騎士,精英骑士,エリート騎士,정예 기사,Caballero de élite,Eliteritter,Cavaleiro de elite,Chevalier élite,Элитный рыцарь,Elitarny rycerz,شوالیه نخبه,فارس النخبة,อัศวินชั้นสูง,Hiệp sĩ tinh nhuệ
+c1_skin0,Ranger,遊俠,游侠,レンジャー,레인저,Guardabosques,Waldläufer,Patrulheiro,Rôdeur,Следопыт,Strzelec,تکاور,حارس,พรานป่า,Kiểm lâm
+material_iron,Iron,鐵,铁,鉄,철,Hierro,Eisen,Ferro,Fer,Железо,Żelazo,آهن,حديد,เหล็ก,Sắt
+material_wood,Wood,木材,木材,木材,목재,Madera,Holz,Madeira,Bois,Дерево,Drewno,چوب,خشب,ไม้,Gỗ
+material_gem,Gem,寶石,宝石,宝石,보석,Gema,Edelstein,Gema,Gemme,Самоцвет,Klejnot,جواهر,جوهرة,อัญมณี,Đá quý
+Pet_name_0,Chilly,冰貓,冰猫,チリー,칠리,Frío,Frostig,Gelado,Glacial,Морозко,Chłodny,سرد,بارد,หนาว,Lạnh
+Pet_name_1,Buddy,夥伴,伙伴,バディ,버디,Amigo,Kumpel,Amigo,Copain,Друг,Kumpel,رفیق,رفيق,เพื่อน,Bạn
+pet_0_skill_0_name,Ice Shard,冰片,冰片,アイスシャード,얼음 조각,Esquirla de hielo,Eissplitter,Fragmento de gelo,Éclat de glace,Ледяной осколок,Odłamek lodu,تکه یخ,شظية جليد,เกล็ดน้ำแข็ง,Mảnh băng
+pet_0_skill_0_desc,Fires an ice shard.,發射冰片。,发射冰片。,アイスシャードを放つ。,얼음 조각을 발사한다.,Dispara una esquirla de hielo.,Feuert einen Eissplitter ab.,Dispara um fragmento de gelo.,Tire un éclat de glace.,Стреляет ледяным осколком.,Wystrzeliwuje odłamek lodu.,یک تکه یخ شلیک می‌کند.,يطلق شظية جليد.,ยิงเกล็ดน้ำแข็ง,Bắn mảnh băng.
+pet_1_skill_0_name,Fetch,撿回,捡回,フェッチ,가져오기,Recoger,Apportieren,Buscar,Rapporter,Принести,Aport,آوردن,إحضار,เก็บ,Nhặt
+pet_1_skill_0_desc,Fetches an item.,撿回物品。,捡回物品。,アイテムを拾う。,아이템을 가져온다.,Recoge un objeto.,Bringt einen Gegenstand.,Busca um item.,Rapporte un objet.,Приносит предмет.,Przynosi przedmiot.,یک شیء می‌آورد.,يحضر عنصرًا.,เก็บไอเท็ม,Nhặt một vật phẩm.
+weapon/weapon_000,Bad Pistol,破舊的手槍,破旧的手枪,旧式ピストル,낡은 권총,Pistola mala,Schlechte Pistole,Pistola ruim,Pistolet usé,Плохой пистолет,Zły pistolet,تپانچه بد,مسدس سيئ,ปืนพกแย่,Súng lục tồi
+weapon/weapon_001,Good Rifle,好步槍,好步枪,良いライフル,좋은 소총,Rifle bueno,Gutes Gewehr,Rifle bom,Bon fusil,Хорошая винтовка,Dobry karabin,تفنگ خوب,بندقية جيدة,ไรเฟิลดี,Súng trường tốt
+weapon/weapon_002,Golden Pistol,金手槍,金手枪,黄金ピストル,황금 권총,Pistola dorada,Goldene Pistole,Pistola dourada,Pistolet doré,Золотой пистолет,Złoty pistolet,تپانچه طلایی,مسدس ذهبي,ปืนพกทอง,Súng lục vàng
+weapon_002_s_0,Golden Pistol,金手槍,金手枪,黄金ピストル,황금 권총,Pistola dorada,Goldene Pistole,Pistola dourada,Pistolet doré,Золотой пистолет,Złoty pistolet,تپانچه طلایی,مسدس ذهبي,ปืนพกทอง,Súng lục vàng
+weapon_002_s_1,Silver Pistol,銀手槍,银手枪,銀ピストル,은 권총,Pistola plateada,Silberne Pistole,Pistola prateada,Pistolet argenté,Серебряный пистолет,Srebrny pistolet,تپانچه نقره‌ای,مسدس فضي,ปืนพกเงิน,Súng lục bạc
+weapon/ring_0,Ring blue,藍戒指,蓝戒指,青い指輪,푸른 반지,Anillo azul,Blauer Ring,Anel azul,Anneau bleu,Синее кольцо,Niebieski pierścień,انگشتر آبی,خاتم أزرق,แหวนน้ำเงิน,Nhẫn xanh
+weapon/transform_weapon_ninja,Time Traveler's Gadget,時空旅人裝置,时空旅人装置,時空旅行者の装置,시간 여행자의 장치,Artefacto de viajero del tiempo,Zeitreisegerät,Dispositivo do viajante do tempo,Gadget du voyageur temporel,Устройство путешественника,Gadżet podróżnika,ابزار مسافر زمان,أداة مسافر الزمن,อุปกรณ์นักเดินทางเวลา,Thiết bị du hành thời gian
+plant_carrot,Carrot,胡蘿蔔,胡萝卜,ニンジン,당근,Zanahoria,Karotte,Cenoura,Carotte,Морковь,Marchew,هویج,جزرة,แครอท,Cà rốt
+plant_banboo,Bamboo,竹子,竹子,竹,대나무,Bambú,Bambus,Bambu,Bambou,Бамбук,Bambus,بامبو,خيزران,ไผ่,Tre
+object/drink_seller,Beverage Vending Machine,飲料販賣機,饮料贩卖机,飲料自販機,음료 자판기,Máquina expendedora de bebidas,Getränkeautomat,Máquina de bebidas,Distributeur de boissons,Автомат с напитками,Automat z napojami,دستگاه نوشیدنی,آلة مشروبات,ตู้เครื่องดื่ม,Máy bán đồ uống
+boss01,Grand Knight,大騎士,大骑士,グランドナイト,대기사,Gran Caballero,Großritter,Grande Cavaleiro,Grand Chevalier,Великий рыцарь,Wielki Rycerz,شوالیه بزرگ,الفارس الأعظم,อัศวินใหญ่,Đại Hiệp Sĩ
+enemy_slime,Slime,史萊姆,史莱姆,スライム,슬라임,Limo,Schleim,Gosma,Gelée,Слизь,Szlam,لیز,وحل,สไลม์,Nhớt
+follower/follower_a,Follower A,隨從甲,随从甲,従者A,수행자 A,Seguidor A,Gefolgsmann A,Seguidor A,Suiveur A,Спутник A,Opiekun A,همراه A,تابع A,ผู้ติดตาม A,Tùy tùng A
+mount/mount_a/name,Mount A,坐騎甲,坐骑甲,乗騎A,탈것 A,Montura A,Reittier A,Montaria A,Monture A,Скакун A,Wierzchowiec A,مرکب A,مطية A,พาหนะ A,Thú cưỡi A
+jewelry/ring_a,Ring A,戒指甲,戒指甲,指輪A,반지 A,Anillo A,Ring A,Anel A,Anneau A,Кольцо A,Pierścień A,انگشتر A,خاتم A,แหวน A,Nhẫn A
+chip/Zealot,Zealot,狂熱,狂热,熱狂,광신도,Fanático,Fanatiker,Fanático,Zélote,Фанатик,Fanatyk,متعصب,متعصب,ผู้คลั่งไคล้,Cuồng tín
+item/voucher_a,Voucher A,憑證甲,凭证甲,引換券A,교환권 A,Vale A,Gutschein A,Vale A,Bon A,Ваучер A,Kupon A,کوپن A,قسيمة A,บัตรกำนัล A,Phiếu A
+M_Goblin_Warrior,Goblin Warrior,哥布林戰士,哥布林战士,ゴブリン戦士,고블린 전사,Guerrero goblin,Goblin-Krieger,Guerreiro goblin,Guerrier gobelin,Гоблин-воин,Wojownik goblinów,جنگجوی گابلین,محارب غوبلن,นักรบก็อบลิน,Chiến binh Goblin
+multi_room_skin_name_0,Default,預設,默认,デフォルト,기본,Predeterminada,Standard,Padrão,Par défaut,По умолчанию,Domyślny,پیش‌فرض,افتراضي,ค่าเริ่มต้น,Mặc định
+garden_skin_name_0,Garden,花園,花园,庭園,정원,Jardín,Garten,Jardim,Jardin,Сад,Ogród,باغ,حديقة,สวน,Khu vườn

@@ -1,0 +1,228 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "season_content",
+  "title": "Contenido de temporada",
+  "description": "Claves de contenido de temporada observadas.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "data.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 10,
+  "items": [
+    {
+      "id": "season/troop/bronze_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "season_content",
+      "subcategory": "cat_season",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "battlePassSaveData",
+        "seasonData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "season/troop/bronze_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "season_content",
+      "subcategory": "cat_season",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "battlePassSaveData",
+        "seasonData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "season/troop/bronze_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "season_content",
+      "subcategory": "cat_season",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "battlePassSaveData",
+        "seasonData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "season/troop/bronze_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "season_content",
+      "subcategory": "cat_season",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "battlePassSaveData",
+        "seasonData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "season/troop/gold_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "season_content",
+      "subcategory": "cat_season",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "battlePassSaveData",
+        "seasonData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "season/troop/gold_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "season_content",
+      "subcategory": "cat_season",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "battlePassSaveData",
+        "seasonData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "season/troop/silver_0",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "season_content",
+      "subcategory": "cat_season",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "battlePassSaveData",
+        "seasonData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "season/troop/silver_1",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "season_content",
+      "subcategory": "cat_season",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "battlePassSaveData",
+        "seasonData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "season/troop/silver_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "season_content",
+      "subcategory": "cat_season",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "battlePassSaveData",
+        "seasonData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "troop_rewarded",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "season_content",
+      "subcategory": "cat_season",
+      "attributes": {
+        "observed_in_reference_sample": true
+      },
+      "relations": {},
+      "save_refs": [
+        "battlePassSaveData",
+        "seasonData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    }
+  ]
+}

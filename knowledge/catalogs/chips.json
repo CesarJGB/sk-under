@@ -1,0 +1,468 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "chips",
+  "title": "Chips de Monster Rise",
+  "description": "Chips observados; no son las fichas de temporada.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "data.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 18,
+  "items": [
+    {
+      "id": "Abundant",
+      "name": {
+        "en": "Abundant",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Barrier",
+      "name": {
+        "en": "Barrier",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Burst",
+      "name": {
+        "en": "Burst",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Concerto",
+      "name": {
+        "en": "Concerto",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Fatal",
+      "name": {
+        "en": "Fatal",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Flexible",
+      "name": {
+        "en": "Flexible",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Gritty",
+      "name": {
+        "en": "Gritty",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Light",
+      "name": {
+        "en": "Light",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "ProofOfHero",
+      "name": {
+        "en": "ProofOfHero",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "ProofOfTyrant",
+      "name": {
+        "en": "ProofOfTyrant",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Raven",
+      "name": {
+        "en": "Raven",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Regen",
+      "name": {
+        "en": "Regen",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Rhythm",
+      "name": {
+        "en": "Rhythm",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Shock",
+      "name": {
+        "en": "Shock",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Surge",
+      "name": {
+        "en": "Surge",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Thorns",
+      "name": {
+        "en": "Thorns",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Vigorous",
+      "name": {
+        "en": "Vigorous",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "Zealot",
+      "name": {
+        "en": "Zealot",
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "chip",
+      "subcategory": "monster_rise_chip",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 10,
+        "sample_refine_level": 10
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [
+        "No confundir con seasonData.chips, que representa fichas de temporada."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    }
+  ]
+}

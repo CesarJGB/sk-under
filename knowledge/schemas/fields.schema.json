@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sk-under.local/schemas/fields.schema.json",
+  "title": "Registro técnico ampliado de campos del guardado",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "game_version",
+    "evidence_levels",
+    "evidence_aspects",
+    "field_count",
+    "fields"
+  ],
+  "properties": {
+    "schema": {"const": "sk-knowledge/fields@1"},
+    "schema_version": {"type": "integer", "minimum": 1},
+    "game_version": {"type": "string", "minLength": 1},
+    "generated_by": {"type": "string"},
+    "notes": {"type": "array", "items": {"type": "string"}},
+    "evidence_levels": {"type": "object"},
+    "evidence_aspects": {"type": "array", "items": {"type": "string"}},
+    "field_count": {"type": "integer", "minimum": 0},
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "internal_name",
+          "category",
+          "description",
+          "locations",
+          "raw_types",
+          "declared_type",
+          "structure",
+          "observed_values",
+          "known_value_semantics",
+          "initial_values",
+          "limits",
+          "related_ids",
+          "associated_catalog",
+          "sources",
+          "observed_versions",
+          "known_dependencies",
+          "pending_dependencies",
+          "preserve",
+          "evidence",
+          "validation_level",
+          "edit_policy",
+          "constraints",
+          "open_questions",
+          "experiments_required",
+          "registry_tier"
+        ],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "internal_name": {"type": "string", "minLength": 1},
+          "category": {"type": "string", "minLength": 1},
+          "description": {"type": ["string", "null"]},
+          "locations": {"type": "object"},
+          "raw_types": {"type": "array", "items": {"type": "string"}},
+          "declared_type": {"type": ["string", "null"]},
+          "metadata_token": {"type": ["string", "null"]},
+          "type_definition": {"type": ["string", "null"]},
+          "structure": {"type": ["object", "array", "string", "null"]},
+          "observed_values": {"type": ["object", "array", "string", "null"]},
+          "known_value_semantics": {"type": "array", "items": {"type": "string"}},
+          "initial_values": {"type": ["object", "array", "string", "null"]},
+          "limits": {"type": "object"},
+          "related_ids": {"type": "array", "items": {"type": "string"}},
+          "associated_catalog": {"type": ["string", "null"]},
+          "sources": {"type": "array", "minItems": 1},
+          "observed_versions": {"type": "array", "items": {"type": "string"}},
+          "known_dependencies": {"type": "array"},
+          "pending_dependencies": {"type": "array"},
+          "preserve": {"type": "array", "items": {"type": "string"}},
+          "evidence": {
+            "type": "object",
+            "required": [
+              "existence",
+              "data_type",
+              "semantics",
+              "version_compatibility",
+              "relations",
+              "persistence"
+            ],
+            "additionalProperties": {
+              "type": "string",
+              "enum": ["H", "E1", "E2", "E3", "E4"]
+            }
+          },
+          "validation_level": {"type": "string", "enum": ["H", "E1", "E2", "E3", "E4"]},
+          "edit_policy": {"type": "string", "minLength": 1},
+          "constraints": {"type": "array", "items": {"type": "string"}},
+          "open_questions": {"type": "array", "items": {"type": "string"}},
+          "experiments_required": {"type": "array", "items": {"type": "string"}},
+          "registry_tier": {"type": "string", "enum": ["legacy", "declared"]},
+          "legacy_record": {"type": ["object", "null"]}
+        }
+      }
+    }
+  }
+}

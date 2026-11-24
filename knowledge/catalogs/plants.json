@@ -1,0 +1,1099 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "plants",
+  "title": "Plantas",
+  "description": "Plantas de jardín y su semilla asociada.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "I2language.csv"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 47,
+  "items": [
+    {
+      "id": "plant_banboo",
+      "name": {
+        "en": "Bamboo",
+        "es": "Bambú",
+        "zh_cn": "竹子"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_banboo_seed"
+      },
+      "relations": {
+        "seed": "plant_banboo_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_banboo",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_binary_tree",
+      "name": {
+        "en": "Binary Tree",
+        "es": "Árbol binario",
+        "zh_cn": "二叉树"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_binary_tree_seed"
+      },
+      "relations": {
+        "seed": "plant_binary_tree_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_binary_tree",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_blackrose",
+      "name": {
+        "en": "Black Rose",
+        "es": "Rosa negra",
+        "zh_cn": "黑玫瑰"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_blackrose_seed"
+      },
+      "relations": {
+        "seed": "plant_blackrose_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_blackrose",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_cactus",
+      "name": {
+        "en": "Cactus",
+        "es": "Cactus",
+        "zh_cn": "仙人掌"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_cactus_seed"
+      },
+      "relations": {
+        "seed": "plant_cactus_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_cactus",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_carrot",
+      "name": {
+        "en": "Carrot",
+        "es": "Zanahoria",
+        "zh_cn": "萝卜"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_carrot_seed"
+      },
+      "relations": {
+        "seed": "plant_carrot_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_carrot",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_clivia",
+      "name": {
+        "en": "Bush Lily",
+        "es": "Clivia",
+        "zh_cn": "君子兰"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_clivia_seed"
+      },
+      "relations": {
+        "seed": "plant_clivia_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_clivia",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_datura",
+      "name": {
+        "en": "Devil's Snare",
+        "es": "Trampa del Demonio",
+        "zh_cn": "曼陀罗花"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_datura_seed"
+      },
+      "relations": {
+        "seed": "plant_datura_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_datura",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_defend_flower",
+      "name": {
+        "en": "Guardian Flower",
+        "es": "Flor guardiana",
+        "zh_cn": "守护花"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_defend_flower_seed"
+      },
+      "relations": {
+        "seed": "plant_defend_flower_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_defend_flower",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_dragon_tree",
+      "name": {
+        "en": "Dragon Fruit Tree",
+        "es": "Árbol de fruta del dragón",
+        "zh_cn": "火龙果树"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_dragon_tree_seed"
+      },
+      "relations": {
+        "seed": "plant_dragon_tree_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_dragon_tree",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_eator",
+      "name": {
+        "en": "Titan arum",
+        "es": "Aro gigante",
+        "zh_cn": "食人花"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_eator_seed"
+      },
+      "relations": {
+        "seed": "plant_eator_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_eator",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_fantastic_flower",
+      "name": {
+        "en": "Fantastic Flower",
+        "es": "Flor fantástica",
+        "zh_cn": "妙妙花"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_fantastic_flower_seed"
+      },
+      "relations": {
+        "seed": "plant_fantastic_flower_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_fantastic_flower",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_firecracker",
+      "name": {
+        "en": "Firecracker",
+        "es": "Petardo",
+        "zh_cn": "爆竹"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_firecracker_seed"
+      },
+      "relations": {
+        "seed": "plant_firecracker_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_firecracker",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_flatpeach",
+      "name": {
+        "en": "Heavenly Peach",
+        "es": "Durazno celestial",
+        "zh_cn": "蟠桃"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_flatpeach_seed"
+      },
+      "relations": {
+        "seed": "plant_flatpeach_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_flatpeach",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_gear_flower",
+      "name": {
+        "en": "Gear Flower",
+        "es": "Flor de engranaje",
+        "zh_cn": "齿轮花"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_gear_flower_seed"
+      },
+      "relations": {
+        "seed": "plant_gear_flower_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_gear_flower",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_gem_flower",
+      "name": {
+        "en": "Gem Flower",
+        "es": "Flor de gemas",
+        "zh_cn": "宝石花"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_gem_flower_seed"
+      },
+      "relations": {
+        "seed": "plant_gem_flower_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_gem_flower",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_gem_tree",
+      "name": {
+        "en": "Gem Tree",
+        "es": "Árbol de gemas",
+        "zh_cn": "宝石树"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_gem_tree_seed"
+      },
+      "relations": {
+        "seed": "plant_gem_tree_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_gem_tree",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_ginseng",
+      "name": {
+        "en": "Ginseng",
+        "es": "Ginseng",
+        "zh_cn": "人参"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_ginseng_seed"
+      },
+      "relations": {
+        "seed": "plant_ginseng_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_ginseng",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_heptacolor",
+      "name": {
+        "en": "Heptacolor Viola",
+        "es": "Violeta heptacolor",
+        "zh_cn": "七色堇"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_heptacolor_seed"
+      },
+      "relations": {
+        "seed": "plant_heptacolor_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_heptacolor",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_icepear",
+      "name": {
+        "en": "Frozen Pear",
+        "es": "Pera helada",
+        "zh_cn": "冻梨"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_icepear_seed"
+      },
+      "relations": {
+        "seed": "plant_icepear_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_icepear",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_iron_tree",
+      "name": {
+        "en": "Ironwood",
+        "es": "Palo fierro",
+        "zh_cn": "铁树"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_iron_tree_seed"
+      },
+      "relations": {
+        "seed": "plant_iron_tree_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_iron_tree",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_lavender",
+      "name": {
+        "en": "Lavender",
+        "es": "Lavanda",
+        "zh_cn": "薰衣草"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_lavender_seed"
+      },
+      "relations": {
+        "seed": "plant_lavender_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_lavender",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_lithiumflower",
+      "name": {
+        "en": "Lithium Flower",
+        "es": "Flor de litio",
+        "zh_cn": "锂之花"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_lithiumflower_seed"
+      },
+      "relations": {
+        "seed": "plant_lithiumflower_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_lithiumflower",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_lotus",
+      "name": {
+        "en": "Snow Lotus",
+        "es": "Loto de las nieves",
+        "zh_cn": "天山雪莲"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_lotus_seed"
+      },
+      "relations": {
+        "seed": "plant_lotus_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_lotus",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_lycoris",
+      "name": {
+        "en": "Red Spider Lily",
+        "es": "Flor de infierno",
+        "zh_cn": "曼珠沙华"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_lycoris_seed"
+      },
+      "relations": {
+        "seed": "plant_lycoris_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_lycoris",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_magic_flower",
+      "name": {
+        "en": "Magic Flower",
+        "es": "Flor mágica",
+        "zh_cn": "魔力花"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_magic_flower_seed"
+      },
+      "relations": {
+        "seed": "plant_magic_flower_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_magic_flower",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_mandrake",
+      "name": {
+        "en": "Mandrake",
+        "es": "Mandrágora",
+        "zh_cn": "曼德拉草"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_mandrake_seed"
+      },
+      "relations": {
+        "seed": "plant_mandrake_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_mandrake",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_mirror_plane_flower",
+      "name": {
+        "en": "Mirror Flower",
+        "es": "Flor espejo",
+        "zh_cn": "镜面花"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_mirror_plane_flower_seed"
+      },
+      "relations": {
+        "seed": "plant_mirror_plane_flower_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_mirror_plane_flower",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_monotropa",
+      "name": {
+        "en": "Ghost Pipe",
+        "es": "Pipa fantasma",
+        "zh_cn": "水晶兰"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_monotropa_seed"
+      },
+      "relations": {
+        "seed": "plant_monotropa_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_monotropa",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_mushroom",
+      "name": {
+        "en": "Crystal Mushroom",
+        "es": "Champiñón de cristal",
+        "zh_cn": "水晶蘑菇"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_mushroom_seed"
+      },
+      "relations": {
+        "seed": "plant_mushroom_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_mushroom",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_mushroom_gold",
+      "name": {
+        "en": "Golden Mushroom",
+        "es": "Champiñón dorado",
+        "zh_cn": "黄金蘑菇"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_mushroom_gold_seed"
+      },
+      "relations": {
+        "seed": "plant_mushroom_gold_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_mushroom_gold",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_nepenthes",
+      "name": {
+        "en": "Monkey Cup",
+        "es": "Copa de mono",
+        "zh_cn": "猪笼草"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_nepenthes_seed"
+      },
+      "relations": {
+        "seed": "plant_nepenthes_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_nepenthes",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_pumpkin",
+      "name": {
+        "en": "Pumpkin",
+        "es": "Calabaza",
+        "zh_cn": "南瓜"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_pumpkin_seed"
+      },
+      "relations": {
+        "seed": "plant_pumpkin_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_pumpkin",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_qilixiang",
+      "name": {
+        "en": "Daphne Odera",
+        "es": "Daphne odora",
+        "zh_cn": "七里香"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_qilixiang_seed"
+      },
+      "relations": {
+        "seed": "plant_qilixiang_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_qilixiang",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_radar",
+      "name": {
+        "en": "Radar Flower",
+        "es": "Flor radar",
+        "zh_cn": "雷达花"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_radar_seed"
+      },
+      "relations": {
+        "seed": "plant_radar_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_radar",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_rainbow_grass",
+      "name": {
+        "en": "Rainbow Grass",
+        "es": "Grama arcoíris",
+        "zh_cn": "彩虹草"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_rainbow_grass_seed"
+      },
+      "relations": {
+        "seed": "plant_rainbow_grass_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_rainbow_grass",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_roselle",
+      "name": {
+        "en": "Roselle",
+        "es": "Flor de Jamaica",
+        "zh_cn": "洛神葵"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_roselle_seed"
+      },
+      "relations": {
+        "seed": "plant_roselle_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_roselle",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_rosemary",
+      "name": {
+        "en": "Rosemary",
+        "es": "Romero",
+        "zh_cn": "迷迭香"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_rosemary_seed"
+      },
+      "relations": {
+        "seed": "plant_rosemary_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_rosemary",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_shallot",
+      "name": {
+        "en": "Green Onions",
+        "es": "Cebollines",
+        "zh_cn": "大葱"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_shallot_seed"
+      },
+      "relations": {
+        "seed": "plant_shallot_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_shallot",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_silver_poplar",
+      "name": {
+        "en": "Abele",
+        "es": "Álamo blanco",
+        "zh_cn": "银白杨"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_silver_poplar_seed"
+      },
+      "relations": {
+        "seed": "plant_silver_poplar_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_silver_poplar",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_strange_flower",
+      "name": {
+        "en": "Strange Flower",
+        "es": "Flor extraña",
+        "zh_cn": "奇异花"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_strange_flower_seed"
+      },
+      "relations": {
+        "seed": "plant_strange_flower_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_strange_flower",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_tree",
+      "name": {
+        "en": "Oak Tree",
+        "es": "Roble",
+        "zh_cn": "橡树"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_tree_seed"
+      },
+      "relations": {
+        "seed": "plant_tree_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_tree",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_trumpet",
+      "name": {
+        "en": "Trumpet Flower",
+        "es": "Trompeta de ángel",
+        "zh_cn": "蓝藻花"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_trumpet_seed"
+      },
+      "relations": {
+        "seed": "plant_trumpet_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_trumpet",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_vine",
+      "name": {
+        "en": "Vine",
+        "es": "Enredadera",
+        "zh_cn": "藤蔓"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_vine_seed"
+      },
+      "relations": {
+        "seed": "plant_vine_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_vine",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_watermelon",
+      "name": {
+        "en": "Watermelon",
+        "es": "Sandía",
+        "zh_cn": "西瓜"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_watermelon_seed"
+      },
+      "relations": {
+        "seed": "plant_watermelon_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_watermelon",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_worm",
+      "name": {
+        "en": "Caterpillar fungus",
+        "es": "Hongo oruga",
+        "zh_cn": "冬虫夏草"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_worm_seed"
+      },
+      "relations": {
+        "seed": "plant_worm_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_worm",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_xmas",
+      "name": {
+        "en": "Xmas Tree",
+        "es": "Árbol de Navidad",
+        "zh_cn": "圣诞树"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_xmas_seed"
+      },
+      "relations": {
+        "seed": "plant_xmas_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_xmas",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "plant_zongzi",
+      "name": {
+        "en": "Zongzi Flower",
+        "es": "Zongzi Flor",
+        "zh_cn": "粽子花"
+      },
+      "category": "plant",
+      "subcategory": "garden",
+      "attributes": {
+        "seed_item": "plant_zongzi_seed"
+      },
+      "relations": {
+        "seed": "plant_zongzi_seed"
+      },
+      "save_refs": [
+        "gameData.roomLevel.plant_zongzi",
+        "itemData.plants"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    }
+  ]
+}

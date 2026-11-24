@@ -2,7 +2,8 @@
 
 | Documento | Contenido |
 | --- | --- |
-| [Registro de campos](field-registry.json) | Rutas físicas y de nube, tipos, cobertura experimental y política de edición. |
+| [Save Knowledge Engine](../../knowledge/README.md) | Base de conocimiento ampliada: catálogos, campos, dependencias, fuentes y herramientas reutilizables. |
+| [Registro de campos](field-registry.json) | Proyección legada de los 66 campos con rutas físicas y de nube, cobertura experimental y política de edición. El registro canónico ampliado vive en `knowledge/fields/fields.json`. |
 | [Mapa de archivos](save-file-mapping.md) | Contraste estructural de las muestras propias y los catálogos. |
 | [Preferencias de Android](playerprefs-research.md) | Tipos XML, perfiles, identificadores y proyección tras recuperar. |
 | [Dependencias](cross-file-dependencies.md) | Relaciones comprobadas y experimentos pendientes. |

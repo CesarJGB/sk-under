@@ -1,0 +1,150 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "followers",
+  "title": "Seguidores",
+  "description": "Seguidores observados en una muestra externa con forma de guardado.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "data.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 6,
+  "items": [
+    {
+      "id": "HuangFuSong",
+      "name": {
+        "en": "Huangfu Song",
+        "es": "Huangfu Song",
+        "zh_cn": "皇甫嵩"
+      },
+      "category": "follower",
+      "subcategory": "follower",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 4
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "LvQiLing",
+      "name": {
+        "en": "Lu Lingqi",
+        "es": "Lu Lingqi",
+        "zh_cn": "吕玲绮"
+      },
+      "category": "follower",
+      "subcategory": "follower",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 4
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "MaYunLu",
+      "name": {
+        "en": "Ma Yunlu",
+        "es": "Ma Yunlu",
+        "zh_cn": "马云禄"
+      },
+      "category": "follower",
+      "subcategory": "follower",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 4
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "ShuiJing",
+      "name": {
+        "en": "Master Shuijing",
+        "es": "Maestro Shuijing",
+        "zh_cn": "水镜先生"
+      },
+      "category": "follower",
+      "subcategory": "follower",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 4
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "TaiShiCiMu",
+      "name": {
+        "en": "Taishi Ci's Mother",
+        "es": "Madre de Taishi Ci",
+        "zh_cn": "太史慈母"
+      },
+      "category": "follower",
+      "subcategory": "follower",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 4
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "WenYuan",
+      "name": {
+        "en": "Wenyuan",
+        "es": "Wenyuan",
+        "zh_cn": "文远"
+      },
+      "category": "follower",
+      "subcategory": "follower",
+      "attributes": {
+        "observed_in_reference_sample": true,
+        "sample_level": 4
+      },
+      "relations": {},
+      "save_refs": [
+        "monsterRiseData",
+        "statisticData"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    }
+  ]
+}

@@ -1,0 +1,215 @@
+{
+  "schema": "sk-knowledge/evidence@1",
+  "generated_by": "curaduría de fase 7.0",
+  "source": {
+    "repository": "https://github.com/aznoobnam/skdfe",
+    "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+    "version": "8.8.0",
+    "accessed": "2026-11-24"
+  },
+  "purpose": "Clasificar cada familia de archivos de SKDFE según lo que representa realmente, para no confundir catálogos generados con guardados auténticos.",
+  "classifications": [
+    {
+      "path": "char_code_name.json",
+      "classification": "catalog",
+      "content": "Lista ordenada de 42 códigos internos de personaje extraídos de CharacterSprites.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["El índice es el id numérico del personaje.", "El código puede diferir del nombre visible."]
+    },
+    {
+      "path": "pet_code_name.json",
+      "classification": "catalog",
+      "content": "Lista ordenada de 57 códigos de mascota; el índice coincide con el id numérico salvo las posiciones sin nombre.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["El id 17 (Hide) no tiene nombre en needed_data.json.", "El id 57 (Fish Chip King) no tiene código."]
+    },
+    {
+      "path": "highest_skin_ids.json",
+      "classification": "catalog",
+      "content": "Índice máximo de skin observado por personaje (c0..c41).",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["No implica que la cuenta tenga esas skins."]
+    },
+    {
+      "path": "needed_data.json",
+      "classification": "derived_translation_subset",
+      "content": "Subconjunto de nombres en inglés y chino usado por la wiki: habilidades, materiales filtrados, mascotas, skins y skins de arma.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["Derivado por skdfe/derivations.py desde I2language.csv y catálogos estáticos.", "No es una lista de posesión."]
+    },
+    {
+      "path": "needed_data_cn.json",
+      "classification": "derived_translation_subset",
+      "content": "Variante en chino de needed_data.json.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["Misma naturaleza derivada; no se usa como fuente primaria en esta fase."]
+    },
+    {
+      "path": "weapon_full.json",
+      "classification": "static_config_catalog",
+      "content": "995 armas con nivel, tipo, etiquetas, DropLevel, forja, melee y título chino.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["Procede de WeaponInfo serializado en el APK.", "No incluye estado de cuenta."]
+    },
+    {
+      "path": "weapon_skins.json",
+      "classification": "catalog_shaped_sample",
+      "content": "Objeto con forma de guardado: blindBoxOpenCount0, favorWeapons, lastOpenMachineHistoryStr0 y 182 armas con Level, CurrentSkinIndex y UnlockedSkins.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["Es una muestra generada, no un guardado auténtico propio.", "Se usa solo para contrastar nombres y posiciones de skins."]
+    },
+    {
+      "path": "item.json",
+      "classification": "derived_catalog",
+      "content": "Agrupación derivada de claves de objetos: materiales, planos, plantas, tokens, objetos activos y personalización.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["Derivado de items.decrypted.csv y sus prefijos.", "No demuestra que la cuenta posea ningún objeto."]
+    },
+    {
+      "path": "enemy.json",
+      "classification": "derived_catalog",
+      "content": "Lista de 593 claves de enemigo derivada de enemies.decrypted.csv.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["No incluye estado de cuenta ni progreso."]
+    },
+    {
+      "path": "I2language.csv",
+      "classification": "static_localization",
+      "content": "18.259 identificadores de localización en 15 idiomas, incluidos inglés, español y chino simplificado.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["Fuente de nombres normalizados, no de estado.", "No se redistribuye el CSV completo."]
+    },
+    {
+      "path": "weapons.decrypted.csv",
+      "classification": "static_config",
+      "content": "1.058 filas de configuración de armas, anillos y transformaciones con materiales, fusión, talents y DropAdd.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["OriginalWeapon no se interpreta como evolución sin experimento.", "Incluye 86 variantes internas que no están en weapon_full.json."]
+    },
+    {
+      "path": "items.decrypted.csv",
+      "classification": "static_config",
+      "content": "691 objetos con Type, SubType y DataStr serializado: planos, materiales, semillas, tokens y personalización.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["ResearchMaterials declara costes, no posesión."]
+    },
+    {
+      "path": "enemies.decrypted.csv",
+      "classification": "static_config",
+      "content": "593 enemigos con HP, velocidad, IsBoss, Drops y DropGroups.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["Los drops son configuración; no se observó su aplicación en una cuenta."]
+    },
+    {
+      "path": "data.json",
+      "classification": "external_save_shaped_sample",
+      "content": "Agregado externo con 21 grupos con forma de guardado (monster rise, trophies, furniture, tokens, jewelry, mythic weapons, etc.).",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["No se ha demostrado que sea un guardado auténtico.", "Solo se usan recuentos, formas y claves; no se copian valores completos."]
+    },
+    {
+      "path": "Allinfo.txt",
+      "classification": "generated_wiki_text",
+      "content": "Volcado de texto generado por rendering.py para la wiki.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["Representación generada; no es una fuente primaria independiente."]
+    },
+    {
+      "path": "wiki.html",
+      "classification": "generated_wiki_frontend",
+      "content": "Aplicación estática que carga archivos del repositorio y muestra personajes, mascotas, armas, objetos y enemigos.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["Su mapeo pet.id = índice se contrastó con needed_data.json; es correcto salvo las posiciones sin nombre.", "No se copia su HTML."]
+    },
+    {
+      "path": "skdata.py",
+      "classification": "extraction_pipeline",
+      "content": "Orquestador: APK, AssetStudio, sprites, code names, descifrado, I2, CSV, Allinfo, weapon_full, evolución y needed_data.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["Documenta el origen y las transformaciones; no es un guardado."]
+    },
+    {
+      "path": "skdfe/config_exports.py",
+      "classification": "extraction_transform",
+      "content": "Descifra enemies.csv, items.csv y weapons.csv, escribe CSV descifrados y agrupa claves por prefijo.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["Explica por qué item.json es una agrupación derivada."]
+    },
+    {
+      "path": "skdfe/derivations.py",
+      "classification": "derivation_transform",
+      "content": "Construye needed_data EN/CN, información de evolución y diccionarios derivados.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["Los nombres de needed_data son un subconjunto filtrado, no el catálogo completo."]
+    },
+    {
+      "path": "skdfe/rendering.py",
+      "classification": "wiki_generator",
+      "content": "Genera Allinfo.txt para la wiki.",
+      "evidence": "E1",
+      "can_prove_possession": false,
+      "notes": ["Texto derivado; no se usa como evidencia primaria."]
+    }
+  ],
+  "historical_files": [
+    {
+      "path": "itemlist.json",
+      "status": "deleted",
+      "commits": ["4fb25ba", "8d1c88e", "6be6e48"],
+      "content": "Mapa histórico de identificadores de objeto a nombres.",
+      "usage": "Referencia histórica; no se usa para los catálogos actuales."
+    },
+    {
+      "path": "weaponlist.json",
+      "status": "deleted",
+      "commits": ["2edecfd", "a6f07c0", "1075182"],
+      "content": "Mapa histórico de armas.",
+      "usage": "Referencia histórica; reemplazado por weapon_full.json y los CSV."
+    },
+    {
+      "path": "weapons.json",
+      "status": "deleted",
+      "commits": ["presente hasta fc5798c"],
+      "content": "Catálogo histórico de armas anterior a weapon_full.json.",
+      "usage": "Referencia histórica."
+    },
+    {
+      "path": "weapon.aznoobnam",
+      "status": "deleted",
+      "commits": ["eab82b9", "6c1f435"],
+      "content": "Artefacto histórico de nombres de armas.",
+      "usage": "Referencia histórica; no aporta estructuras de guardado."
+    },
+    {
+      "path": "exportskdata.yml",
+      "status": "deleted",
+      "commits": ["2f9445d", "0b90673"],
+      "content": "Configuración histórica de exportación.",
+      "usage": "Referencia de proceso."
+    }
+  ],
+  "limitations": [
+    "Ninguna clasificación de este archivo demuestra posesión, desbloqueo ni progreso de una cuenta.",
+    "No se ha verificado la licencia de SKDFE; por eso no se redistribuyen archivos crudos.",
+    "data.json y weapon_skins.json tienen forma de guardado, pero su autenticidad no está demostrada."
+  ]
+}

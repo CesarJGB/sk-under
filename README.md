@@ -1,8 +1,8 @@
 # sk-under
 
-**Soul Knight Editor · Fase 6.16**
+**Soul Knight Editor · Fase 7.0**
 
-Editor web privado para inspeccionar copias locales y, con autorización expresa, autenticar una cuenta propia de ChillyRoom y editar sus gemas y fichas de pesca desde el navegador. La Fase 6.16 consolida las fichas de pesca y añade el **desbloqueo experimental de personajes**. La muestra sintética `.skdemo` permite edición y exportación. El adaptador opcional de la Fase 3 lee nueve estructuras `.data` observadas en muestras de Soul Knight 8.6.0 y permite descargar copias intactas. [Configuración y cobertura de la Fase 3](docs/phase3/IMPLEMENTATION.md)
+Editor web privado para inspeccionar copias locales y, con autorización expresa, autenticar una cuenta propia de ChillyRoom y editar sus gemas y fichas de pesca desde el navegador. La Fase 7.0 introduce el **Save Knowledge Engine**, una base de conocimiento técnica, trazable y reutilizable sobre los guardados de Soul Knight. La muestra sintética `.skdemo` permite edición y exportación. El adaptador opcional de la Fase 3 lee nueve estructuras `.data` observadas en muestras de Soul Knight 8.6.0 y permite descargar copias intactas. [Configuración y cobertura de la Fase 3](docs/phase3/IMPLEMENTATION.md)
 
 La Fase 4 documenta el análisis estático del APK 8.8.0 y las pruebas con las muestras de 8.6.0. [Informe de la Fase 4](docs/research/phase4/README.md)
 
@@ -54,6 +54,8 @@ La [Fase 6.18](docs/research/phase6-18/README.md) consolida las habilidades: el 
 
 La [Fase 6.19](docs/research/phase6-19/README.md) consolida las skins: el propietario confirmó en Android físico que las skins seleccionadas aparecieron desbloqueadas y disponibles tras editar, subir y recuperar la partida. La política pasa a `confirmed_by_owner` y la evidencia a E3, sin declarar E4. La misma fase investigó el progreso acumulado de compras de fichas y la tarjeta de resurrección superior: existen símbolos en el cliente, pero no se identificó un campo de guardado escribible con semántica confirmada, así que no se añadieron controles. El editor móvil se dividió en una vista rápida y rutas por categoría con selección compartida, menos texto y listas largas fuera de la pantalla principal.
 
+La [Fase 7.0](docs/research/phase7-0/README.md) construye el [Save Knowledge Engine](knowledge/README.md): 616 campos técnicos (66 históricos conservados y 550 declarados desde metadata), 24 catálogos normalizados con 4.286 elementos, 8.526 nombres en inglés/español/chino, 26 dependencias documentadas, 15 fuentes con procedencia y comparación determinista de 8.6.0, 8.7.0 y 8.8.0. Incluye herramientas CLI para generar catálogos, buscar, comparar versiones, validar evidencia y generar informes, además de una fixture sintética para pruebas. No añade controles de edición ni modifica autenticación, descarga, subida o compras. El [informe de oportunidades](docs/research/phase7-0/oportunidades.md) prioriza inventario, mascotas, niveles de personaje y armas para futuras validaciones controladas.
+
 ## Arquitectura
 
 ```text
@@ -86,7 +88,7 @@ soul-knight-editor/
 │           ├── CloudAccountsPage.tsx
 │           ├── EditorPage.tsx
 │           └── ExportPage.tsx
-└── backend/
+├── backend/
     ├── .dockerignore
     ├── Dockerfile
     ├── pyproject.toml
@@ -140,8 +142,23 @@ soul-knight-editor/
     └── tests/
         ├── conftest.py
         ├── fixtures/sintetico.skdemo
+        ├── fixtures/skdfe-mini/
         ├── test_api.py
-        └── test_engine.py
+        ├── test_engine.py
+        └── test_knowledge_*.py
+└── knowledge/
+    ├── README.md
+    ├── manifest.json
+    ├── schemas/
+    ├── catalogs/
+    ├── fields/
+    ├── dependencies/
+    ├── translations/
+    ├── version-diffs/
+    ├── evidence/
+    ├── sources/
+    ├── reports/
+    └── tools/
 ```
 
 - **Frontend.** React, TypeScript, Vite, Tailwind CSS y React Router. La SPA recibe las capacidades del backend y genera los campos de edición a partir del contrato. La copia cargada, los cambios pendientes y el token permanecen en memoria durante la sesión de la pestaña.
@@ -304,6 +321,9 @@ npx playwright install chromium
 npm run test:browser
 
 # Desde la raíz del monorepo
+python3 knowledge/tools/validate_knowledge.py
+python3 knowledge/tools/search_knowledge.py --field gameData.fishChip
+python3 knowledge/tools/generate_report.py
 docker build -t soul-knight-editor:local backend
 docker run --rm -p 127.0.0.1:8018:8000 soul-knight-editor:local
 ```

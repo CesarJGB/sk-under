@@ -1,0 +1,10 @@
+Key,Type,SubType,DataStr
+string,string,string,string
+blueprint_evolution_weapon_000,BluePrint,Blueprint,"{""BlueprintType"": 8, ""ItemName"": ""weapon_000"", ""ResearchMaterials"": [{""item"": ""material_iron"", ""num"": 2}], ""BluePrintLevel"": 1, ""WeaponDropLevel"": 1, ""Hero"": 0, ""SkinIndex"": 0, ""SkillIndex"": 0, ""NotRequiredInResearch"": false, ""NeedRecordConsume"": true, ""Localization"": """"}"
+blueprint_room_decorate_drink_seller,BluePrint,Blueprint,"{""BlueprintType"": 3, ""ItemName"": ""room_decorate_drink_seller"", ""ResearchMaterials"": [{""item"": ""material_wood"", ""num"": 1}], ""BluePrintLevel"": 0, ""WeaponDropLevel"": -1, ""Hero"": 0, ""SkinIndex"": 0, ""SkillIndex"": 0, ""NotRequiredInResearch"": false, ""NeedRecordConsume"": true, ""Localization"": ""object/drink_seller""}"
+material_iron,Material,Material,"{""Name"": ""material_iron"", ""Localization"": """", ""ItemValue"": 1, ""ItemLevel"": 1}"
+material_wood,Material,Material,"{""Name"": ""material_wood"", ""Localization"": """", ""ItemValue"": 1, ""ItemLevel"": 1}"
+material_gem,Material,Material,"{""Name"": ""material_gem"", ""Localization"": """", ""ItemValue"": 1, ""ItemLevel"": 1}"
+token_hero,TokenTicket,TokenTicket,"{""TokenType"": 1, ""Name"": ""token_hero"", ""ItemValue"": 10, ""ItemLevel"": 0}"
+plant_carrot_seed,Seed,Seed,"{""Name"": ""plant_carrot_seed"", ""Localization"": """", ""ItemValue"": 1, ""ItemLevel"": 1}"
+customization_kill_effect_1,Other,CustomizationKillEffect,"{""Name"": ""customization_kill_effect_1"", ""Localization"": """", ""ItemValue"": 1, ""ItemLevel"": 1}"

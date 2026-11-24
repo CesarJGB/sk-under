@@ -1,0 +1,424 @@
+{
+  "schema": "sk-knowledge/manifest@1",
+  "schema_version": 1,
+  "knowledge_version": "7.0.0",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/validate_knowledge.py --write-manifest",
+  "source_commits": {
+    "skdfe": "57b9b86335c080caca55e178c8409cb67658ccf6",
+    "skdfe_8.6.0": "e088a67",
+    "skdfe_8.7.0": "8cfa5d5"
+  },
+  "counts": {
+    "catalogs": 24,
+    "catalog_items": 4286,
+    "fields": 616,
+    "legacy_fields": 66,
+    "declared_fields": 550,
+    "fields_by_evidence": {
+      "E1": 194,
+      "E2": 411,
+      "E3": 5,
+      "E4": 6
+    },
+    "dependencies": 26,
+    "sources": 15,
+    "translations": 8526,
+    "versions_analyzed": 3,
+    "open_questions": 565
+  },
+  "artifacts": [
+    {
+      "path": "knowledge/README.md",
+      "kind": "knowledge",
+      "sha256": "7fc2ac30996a2b2c18dc9f3e650afedf28e242f9c8937dabc225f30d001e48ee",
+      "bytes": 8770,
+      "count": null
+    },
+    {
+      "path": "knowledge/catalogs/blueprints.json",
+      "kind": "catalogs",
+      "sha256": "c98dfef2ede3922fd082caeecb5d07b57539016714377fc3c28d0237d02f187c",
+      "bytes": 317337,
+      "count": 265
+    },
+    {
+      "path": "knowledge/catalogs/bosses.json",
+      "kind": "catalogs",
+      "sha256": "77d43be2d7942c6f6b45d775a50a2312845977504b89bc0c07257d6f66ba0921",
+      "bytes": 36985,
+      "count": 74
+    },
+    {
+      "path": "knowledge/catalogs/character_skills.json",
+      "kind": "catalogs",
+      "sha256": "8efa5ff2a31cfb9515a8ad233697a2a9aab38fdc284a959a6344a9cb00a17c34",
+      "bytes": 71507,
+      "count": 105
+    },
+    {
+      "path": "knowledge/catalogs/character_skins.json",
+      "kind": "catalogs",
+      "sha256": "12bc1f520f3514834dcf90267350b1246017b7deea01c2173006471c11acc9f7",
+      "bytes": 484113,
+      "count": 802
+    },
+    {
+      "path": "knowledge/catalogs/characters.json",
+      "kind": "catalogs",
+      "sha256": "edd76e465b5555a88c657434c614b260a17da396f67479feaab39022024aa382",
+      "bytes": 64840,
+      "count": 42
+    },
+    {
+      "path": "knowledge/catalogs/chips.json",
+      "kind": "catalogs",
+      "sha256": "f6df3c5aec33defd56d580d78385907a41a1481206480fe4e0a7bee9c38f982c",
+      "bytes": 12270,
+      "count": 18
+    },
+    {
+      "path": "knowledge/catalogs/collectibles.json",
+      "kind": "catalogs",
+      "sha256": "885f13f2f1279ed0b6fc59e7e0411ee0d6af3b9428f1a018b66524548d79ba7a",
+      "bytes": 43317,
+      "count": 82
+    },
+    {
+      "path": "knowledge/catalogs/enemies.json",
+      "kind": "catalogs",
+      "sha256": "ce33a6fb9f882f25e8b0cdbdd1cc040f5806d2027c0af535196cde9e5f9d6e9b",
+      "bytes": 542405,
+      "count": 593
+    },
+    {
+      "path": "knowledge/catalogs/followers.json",
+      "kind": "catalogs",
+      "sha256": "9495114b0a65fbb8d389977b9b2da128441f210a35761cab9643fcef97e7f30f",
+      "bytes": 3913,
+      "count": 6
+    },
+    {
+      "path": "knowledge/catalogs/jewelry.json",
+      "kind": "catalogs",
+      "sha256": "298e9b75719e8210bd9f8283ffc1c438c98932968961c774a72123a4f47003b5",
+      "bytes": 9421,
+      "count": 15
+    },
+    {
+      "path": "knowledge/catalogs/lobby.json",
+      "kind": "catalogs",
+      "sha256": "aece27f75c44e253c9631c37a3946d697251a9d4e1979f598bc2fb462d889644",
+      "bytes": 29412,
+      "count": 49
+    },
+    {
+      "path": "knowledge/catalogs/materials.json",
+      "kind": "catalogs",
+      "sha256": "697dd4236c1b0aa1b0a432aceb729f64e4fc4a8dc7f2febe30badb51529278d3",
+      "bytes": 268108,
+      "count": 343
+    },
+    {
+      "path": "knowledge/catalogs/mounts.json",
+      "kind": "catalogs",
+      "sha256": "44abb78c203f3d8fbd20523b468d5db1943ccc7d96d978d7692990d316db4b1b",
+      "bytes": 3056,
+      "count": 4
+    },
+    {
+      "path": "knowledge/catalogs/pet_skills.json",
+      "kind": "catalogs",
+      "sha256": "18a6f5d165c4f8fed9675f12ef6fd727a9a639487e203eb8c0f11ca39d5ef809",
+      "bytes": 45569,
+      "count": 57
+    },
+    {
+      "path": "knowledge/catalogs/pets.json",
+      "kind": "catalogs",
+      "sha256": "c87a0a2c1967490997050848542a4e6dd74b116310f42053be8b1202e9e9115e",
+      "bytes": 36860,
+      "count": 58
+    },
+    {
+      "path": "knowledge/catalogs/plants.json",
+      "kind": "catalogs",
+      "sha256": "cbcfafd5772694e407b713c8b0f891c794ce938377a7c4656bc18ed1dda63a32",
+      "bytes": 28054,
+      "count": 47
+    },
+    {
+      "path": "knowledge/catalogs/season_content.json",
+      "kind": "catalogs",
+      "sha256": "30bdd0db654033c7de487f8bb164cd0f282aa0e50ca05d0f9f3778212b46f977",
+      "bytes": 5722,
+      "count": 10
+    },
+    {
+      "path": "knowledge/catalogs/seeds.json",
+      "kind": "catalogs",
+      "sha256": "27eeb5e31203ad13eb13395021c941114eceeb4d90a88896b50760ee3d1a6cf0",
+      "bytes": 33424,
+      "count": 47
+    },
+    {
+      "path": "knowledge/catalogs/special_items.json",
+      "kind": "catalogs",
+      "sha256": "b17ba038f2bf9b2b2463695ef430e9fe1fe0eadeec2ab2ca39a7d97454ed8e1c",
+      "bytes": 14601,
+      "count": 29
+    },
+    {
+      "path": "knowledge/catalogs/tokens.json",
+      "kind": "catalogs",
+      "sha256": "61534b877c070eec4a44d9c63bf1ba3da0765ab93b51878e499fa15057cbab0a",
+      "bytes": 10636,
+      "count": 19
+    },
+    {
+      "path": "knowledge/catalogs/trophies.json",
+      "kind": "catalogs",
+      "sha256": "66da9e73b35a1a246b373a12875b62c5048edbe43e391a63993751cbc95983be",
+      "bytes": 104354,
+      "count": 212
+    },
+    {
+      "path": "knowledge/catalogs/vouchers.json",
+      "kind": "catalogs",
+      "sha256": "d41aaa41d40d56476ccd37e016cac666c0ef30beb3339857dd35226fdfae3558",
+      "bytes": 101392,
+      "count": 136
+    },
+    {
+      "path": "knowledge/catalogs/weapon_skins.json",
+      "kind": "catalogs",
+      "sha256": "def40e89150010ed47d774ce76e7d08eaa21212e9743ae1239b7560cc38e4fe7",
+      "bytes": 127081,
+      "count": 192
+    },
+    {
+      "path": "knowledge/catalogs/weapons.json",
+      "kind": "catalogs",
+      "sha256": "2d12bb44bf20c01cb7e92ffc7c1503303888144cb3f155becac254db49eb4b77",
+      "bytes": 1316652,
+      "count": 1081
+    },
+    {
+      "path": "knowledge/dependencies/dependencies.json",
+      "kind": "dependencies",
+      "sha256": "52550812e4d7c63ecc715fe516af561fb7182d27371a647156981d894acb9fa2",
+      "bytes": 21664,
+      "count": 26
+    },
+    {
+      "path": "knowledge/evidence/data-json-structure.json",
+      "kind": "evidence",
+      "sha256": "74db3453c5490125ae709671172757273b68f86a169cdfcfea8816565e722c6d",
+      "bytes": 8707,
+      "count": null
+    },
+    {
+      "path": "knowledge/evidence/internal-evidence.md",
+      "kind": "evidence",
+      "sha256": "0b52210d5f09398927bf19e1810a4049ed936a88e8f6d5991f1bc49de3f7320e",
+      "bytes": 3932,
+      "count": null
+    },
+    {
+      "path": "knowledge/evidence/limitations.md",
+      "kind": "evidence",
+      "sha256": "96714651d8822a5006b9373981d67fec0d32bcf5351141c5544f37ba75b43ecd",
+      "bytes": 2674,
+      "count": null
+    },
+    {
+      "path": "knowledge/evidence/skdfe-file-classification.json",
+      "kind": "evidence",
+      "sha256": "64884f983c2e8de131fee2beafcbac85a692015cd4d2e465d07e3729b4788b4c",
+      "bytes": 9436,
+      "count": null
+    },
+    {
+      "path": "knowledge/fields/fields.json",
+      "kind": "fields",
+      "sha256": "c1e2eebde3091bf5ee7a933e8d89b5a8938e41cf5cb88664f4a6810a7652ab7a",
+      "bytes": 1199593,
+      "count": 616
+    },
+    {
+      "path": "knowledge/fields/overrides.json",
+      "kind": "fields",
+      "sha256": "4ded10a68ffb8e0942a971219fe78e482c07c516b7adbec286bd043bdee89405",
+      "bytes": 18994,
+      "count": null
+    },
+    {
+      "path": "knowledge/reports/coverage.md",
+      "kind": "reports",
+      "sha256": "052de0920bb5708ac76ebe1965d041eb8a00f1f697407cbbc6aca71eb842b3a7",
+      "bytes": 2314,
+      "count": null
+    },
+    {
+      "path": "knowledge/schemas/catalog.schema.json",
+      "kind": "schemas",
+      "sha256": "6071aa67dff127cb68ad143b518a814dc5dbc56048f3818e5cad30457a126466",
+      "bytes": 1907,
+      "count": null
+    },
+    {
+      "path": "knowledge/schemas/dependencies.schema.json",
+      "kind": "schemas",
+      "sha256": "71014a8d6c133012b7e772ca75184e873951f87c70f5d0b07f6b368af2c41935",
+      "bytes": 1695,
+      "count": null
+    },
+    {
+      "path": "knowledge/schemas/fields.schema.json",
+      "kind": "schemas",
+      "sha256": "a966580637204259b972f40786714c37f808239056f3d41a12e56c05e373c594",
+      "bytes": 3913,
+      "count": null
+    },
+    {
+      "path": "knowledge/schemas/manifest.schema.json",
+      "kind": "schemas",
+      "sha256": "92cc46cc6b2b5e4909a7dd2c91060db69cbb790ec53ac802b5c87a6edec6c7e9",
+      "bytes": 1162,
+      "count": null
+    },
+    {
+      "path": "knowledge/schemas/sources.schema.json",
+      "kind": "schemas",
+      "sha256": "993264f78f82ccc501181eaec2257e121191c514bfa3fccd8d8bc6fdb77c3eff",
+      "bytes": 1504,
+      "count": null
+    },
+    {
+      "path": "knowledge/sources/discord.md",
+      "kind": "sources",
+      "sha256": "fe4f2a576fcb99d569190904f3eee9e35fa992e4f9cc238bc6344c917bc31c32",
+      "bytes": 1605,
+      "count": null
+    },
+    {
+      "path": "knowledge/sources/internal.md",
+      "kind": "sources",
+      "sha256": "713a7673a93b64151a67b2717eba5778c73313546473096b3702a22395cd2166",
+      "bytes": 4761,
+      "count": null
+    },
+    {
+      "path": "knowledge/sources/repository-history.md",
+      "kind": "sources",
+      "sha256": "678ca341fbc97a3eadb52b8b21d8009c09631c458fc3377ae7e477429d81cf5d",
+      "bytes": 1974,
+      "count": null
+    },
+    {
+      "path": "knowledge/sources/skdfe.md",
+      "kind": "sources",
+      "sha256": "5d0b514d40d98d69c775dfcbca26b28b600b3dec8a30b286ffd32c1d6456b7da",
+      "bytes": 5700,
+      "count": null
+    },
+    {
+      "path": "knowledge/sources/sources.json",
+      "kind": "sources",
+      "sha256": "ca2a7cfd7bf98d021434ce13111982b9b553db1b2f3b9aa6e0f450ca088faf9a",
+      "bytes": 10101,
+      "count": 15
+    },
+    {
+      "path": "knowledge/tools/README.md",
+      "kind": "tools",
+      "sha256": "3a1aa145a54a7fcf194932ee6ddbb7b9f1f5f80b2fe961747083297e28893159",
+      "bytes": 3086,
+      "count": null
+    },
+    {
+      "path": "knowledge/tools/build_catalog.py",
+      "kind": "tools",
+      "sha256": "0f2490d6acafbbc9497a7264131daf971a09c46c16b1eba889f7b75eb2f5ee59",
+      "bytes": 52236,
+      "count": null
+    },
+    {
+      "path": "knowledge/tools/build_fields.py",
+      "kind": "tools",
+      "sha256": "f1e0235a5b0878c01e9bc4b29f7e9e0cdde303d3ab99d188831c188450b665bc",
+      "bytes": 16853,
+      "count": null
+    },
+    {
+      "path": "knowledge/tools/compare_versions.py",
+      "kind": "tools",
+      "sha256": "afac2302fd1bdd831534680cb543e4d883bb2aa5e7d70fddf7c168a7b3af2e60",
+      "bytes": 5935,
+      "count": null
+    },
+    {
+      "path": "knowledge/tools/generate_report.py",
+      "kind": "tools",
+      "sha256": "e61184278dcedd777323dd05cc1b484b8a370172bcec6b292555360a87cca228",
+      "bytes": 11614,
+      "count": null
+    },
+    {
+      "path": "knowledge/tools/search_knowledge.py",
+      "kind": "tools",
+      "sha256": "5db8cef75b63aaa56e938bd5e917050eb3b98b68a1c1f7348f764373d134d22d",
+      "bytes": 8421,
+      "count": null
+    },
+    {
+      "path": "knowledge/tools/sk_knowledge/__init__.py",
+      "kind": "sk_knowledge",
+      "sha256": "b2d95b38c79158a853b8ee432f7a7b9658236ef40d038f3c3fba28518a864d33",
+      "bytes": 294,
+      "count": null
+    },
+    {
+      "path": "knowledge/tools/sk_knowledge/common.py",
+      "kind": "sk_knowledge",
+      "sha256": "8df0c7b99af0f23d4d6e11461e6b0c183370e64352b415d693197e981565145d",
+      "bytes": 7940,
+      "count": null
+    },
+    {
+      "path": "knowledge/tools/validate_knowledge.py",
+      "kind": "tools",
+      "sha256": "a577a46a2171e06e1e4f60263826ff56259a026a95faa55947663963387550c4",
+      "bytes": 18050,
+      "count": null
+    },
+    {
+      "path": "knowledge/translations/name-index.json",
+      "kind": "translations",
+      "sha256": "db889daad2f9d4fe3f39a8e5d8b22bfe4eb35a9e9d6836675222119619ae670e",
+      "bytes": 1144734,
+      "count": null
+    },
+    {
+      "path": "knowledge/version-diffs/8.6.0_to_8.7.0.json",
+      "kind": "version-diffs",
+      "sha256": "911671c14661f1e98704332b32061bd35ce752ffc6d4c37509b01bed7954f375",
+      "bytes": 2686,
+      "count": null
+    },
+    {
+      "path": "knowledge/version-diffs/8.7.0_to_8.8.0.json",
+      "kind": "version-diffs",
+      "sha256": "1df061da808d79c390cfd0597daec84c27d010dd8be851b33ddcd3d5131d105b",
+      "bytes": 2631,
+      "count": null
+    },
+    {
+      "path": "knowledge/version-diffs/snapshots.json",
+      "kind": "version-diffs",
+      "sha256": "714fa2852d573a8c63c8ad397722a1f3737c7ef9ec7696f4b9430d456dfbca56",
+      "bytes": 351588,
+      "count": null
+    }
+  ]
+}

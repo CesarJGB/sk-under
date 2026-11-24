@@ -1,0 +1,2483 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "characters",
+  "title": "Personajes jugables",
+  "description": "Códigos internos, nombres, habilidades y skins.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "char_code_name.json"
+    },
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "needed_data.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 42,
+  "items": [
+    {
+      "id": "AiGirl",
+      "name": {
+        "en": "Machina",
+        "es": "Machina",
+        "zh_cn": "机械姬"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 37,
+        "code": "AiGirl",
+        "max_skin_index": 9,
+        "skill_count": 1,
+        "skin_count": 10,
+        "base_skin_key": "c37_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character37_skill_0_name"
+        ],
+        "character_skins": [
+          "c37_skin0",
+          "c37_skin1",
+          "c37_skin2",
+          "c37_skin3",
+          "c37_skin4",
+          "c37_skin5",
+          "c37_skin6",
+          "c37_skin7",
+          "c37_skin8",
+          "c37_skin9"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.AiGirl",
+        "gameData.heroLevel.AiGirl",
+        "gameData.heroSkill.AiGirl",
+        "gameData.heroSkillUnlock.AiGirl",
+        "gameData.heroUnlock.AiGirl",
+        "gameData.skinLock.AiGirl"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Airbender",
+      "name": {
+        "en": "Airbender",
+        "es": "Maestro Eólico",
+        "zh_cn": "气宗"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 22,
+        "code": "Airbender",
+        "max_skin_index": 17,
+        "skill_count": 3,
+        "skin_count": 18,
+        "base_skin_key": "c22_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character22_skill_0_name",
+          "Character22_skill_1_name",
+          "Character22_skill_2_name"
+        ],
+        "character_skins": [
+          "c22_skin0",
+          "c22_skin1",
+          "c22_skin2",
+          "c22_skin3",
+          "c22_skin4",
+          "c22_skin5",
+          "c22_skin6",
+          "c22_skin7",
+          "c22_skin8",
+          "c22_skin9",
+          "c22_skin10",
+          "c22_skin11",
+          "c22_skin12",
+          "c22_skin13",
+          "c22_skin14",
+          "c22_skin15",
+          "c22_skin16",
+          "c22_skin17"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Airbender",
+        "gameData.heroLevel.Airbender",
+        "gameData.heroSkill.Airbender",
+        "gameData.heroSkillUnlock.Airbender",
+        "gameData.heroUnlock.Airbender",
+        "gameData.skinLock.Airbender"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Alchemist",
+      "name": {
+        "en": "Alchemist",
+        "es": "Alquimista",
+        "zh_cn": "炼金术士"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 4,
+        "code": "Alchemist",
+        "max_skin_index": 27,
+        "skill_count": 3,
+        "skin_count": 28,
+        "base_skin_key": "c4_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character4_skill_0_name",
+          "Character4_skill_1_name",
+          "Character4_skill_2_name"
+        ],
+        "character_skins": [
+          "c4_skin0",
+          "c4_skin1",
+          "c4_skin2",
+          "c4_skin3",
+          "c4_skin4",
+          "c4_skin5",
+          "c4_skin6",
+          "c4_skin7",
+          "c4_skin8",
+          "c4_skin9",
+          "c4_skin10",
+          "c4_skin11",
+          "c4_skin12",
+          "c4_skin13",
+          "c4_skin14",
+          "c4_skin15",
+          "c4_skin16",
+          "c4_skin17",
+          "c4_skin18",
+          "c4_skin19",
+          "c4_skin20",
+          "c4_skin21",
+          "c4_skin22",
+          "c4_skin23",
+          "c4_skin24",
+          "c4_skin25",
+          "c4_skin26",
+          "c4_skin27"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Alchemist",
+        "gameData.heroLevel.Alchemist",
+        "gameData.heroSkill.Alchemist",
+        "gameData.heroSkillUnlock.Alchemist",
+        "gameData.heroUnlock.Alchemist",
+        "gameData.skinLock.Alchemist"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "ArcaneKnight",
+      "name": {
+        "en": "Arcane Knight",
+        "es": "Caballero arcano",
+        "zh_cn": "咒法骑士"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 31,
+        "code": "ArcaneKnight",
+        "max_skin_index": 11,
+        "skill_count": 3,
+        "skin_count": 12,
+        "base_skin_key": "c31_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character31_skill_0_name",
+          "Character31_skill_1_name",
+          "Character31_skill_2_name"
+        ],
+        "character_skins": [
+          "c31_skin0",
+          "c31_skin1",
+          "c31_skin2",
+          "c31_skin3",
+          "c31_skin4",
+          "c31_skin5",
+          "c31_skin6",
+          "c31_skin7",
+          "c31_skin8",
+          "c31_skin9",
+          "c31_skin10",
+          "c31_skin11"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.ArcaneKnight",
+        "gameData.heroLevel.ArcaneKnight",
+        "gameData.heroSkill.ArcaneKnight",
+        "gameData.heroSkillUnlock.ArcaneKnight",
+        "gameData.heroUnlock.ArcaneKnight",
+        "gameData.skinLock.ArcaneKnight"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Assassin",
+      "name": {
+        "en": "Assassin",
+        "es": "Asesino",
+        "zh_cn": "刺客"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 3,
+        "code": "Assassin",
+        "max_skin_index": 31,
+        "skill_count": 3,
+        "skin_count": 32,
+        "base_skin_key": "c3_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character3_skill_0_name",
+          "Character3_skill_1_name",
+          "Character3_skill_2_name"
+        ],
+        "character_skins": [
+          "c3_skin0",
+          "c3_skin1",
+          "c3_skin2",
+          "c3_skin3",
+          "c3_skin4",
+          "c3_skin5",
+          "c3_skin6",
+          "c3_skin7",
+          "c3_skin8",
+          "c3_skin9",
+          "c3_skin10",
+          "c3_skin11",
+          "c3_skin12",
+          "c3_skin13",
+          "c3_skin14",
+          "c3_skin15",
+          "c3_skin16",
+          "c3_skin17",
+          "c3_skin18",
+          "c3_skin19",
+          "c3_skin20",
+          "c3_skin21",
+          "c3_skin22",
+          "c3_skin23",
+          "c3_skin24",
+          "c3_skin25",
+          "c3_skin26",
+          "c3_skin27",
+          "c3_skin28",
+          "c3_skin29",
+          "c3_skin30",
+          "c3_skin31"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Assassin",
+        "gameData.heroLevel.Assassin",
+        "gameData.heroSkill.Assassin",
+        "gameData.heroSkillUnlock.Assassin",
+        "gameData.heroUnlock.Assassin",
+        "gameData.skinLock.Assassin"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Astrologist",
+      "name": {
+        "en": "Astromancer",
+        "es": "Astromante",
+        "zh_cn": "占星师"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 32,
+        "code": "Astrologist",
+        "max_skin_index": 10,
+        "skill_count": 3,
+        "skin_count": 11,
+        "base_skin_key": "c32_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character32_skill_0_name",
+          "Character32_skill_1_name",
+          "Character32_skill_2_name"
+        ],
+        "character_skins": [
+          "c32_skin0",
+          "c32_skin1",
+          "c32_skin2",
+          "c32_skin3",
+          "c32_skin4",
+          "c32_skin5",
+          "c32_skin6",
+          "c32_skin7",
+          "c32_skin8",
+          "c32_skin9",
+          "c32_skin10"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Astrologist",
+        "gameData.heroLevel.Astrologist",
+        "gameData.heroSkill.Astrologist",
+        "gameData.heroSkillUnlock.Astrologist",
+        "gameData.heroUnlock.Astrologist",
+        "gameData.skinLock.Astrologist"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Bard",
+      "name": {
+        "en": "Bard",
+        "es": "Barda",
+        "zh_cn": "吟游诗人"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 35,
+        "code": "Bard",
+        "max_skin_index": 11,
+        "skill_count": 2,
+        "skin_count": 12,
+        "base_skin_key": "c35_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character35_skill_0_name",
+          "Character35_skill_1_name"
+        ],
+        "character_skins": [
+          "c35_skin0",
+          "c35_skin1",
+          "c35_skin2",
+          "c35_skin3",
+          "c35_skin4",
+          "c35_skin5",
+          "c35_skin6",
+          "c35_skin7",
+          "c35_skin8",
+          "c35_skin9",
+          "c35_skin10",
+          "c35_skin11"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Bard",
+        "gameData.heroLevel.Bard",
+        "gameData.heroSkill.Bard",
+        "gameData.heroSkillUnlock.Bard",
+        "gameData.heroUnlock.Bard",
+        "gameData.skinLock.Bard"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Beheaded",
+      "name": {
+        "en": "The Beheaded",
+        "es": "El decapitado",
+        "zh_cn": "枭首者"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 19,
+        "code": "Beheaded",
+        "max_skin_index": 0,
+        "skill_count": 1,
+        "skin_count": 1,
+        "base_skin_key": "c19_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character19_skill_0_name"
+        ],
+        "character_skins": [
+          "c19_skin0"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Beheaded",
+        "gameData.heroLevel.Beheaded",
+        "gameData.heroSkill.Beheaded",
+        "gameData.heroSkillUnlock.Beheaded",
+        "gameData.heroUnlock.Beheaded",
+        "gameData.skinLock.Beheaded"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Captain",
+      "name": {
+        "en": "Captain",
+        "es": "Capitán",
+        "zh_cn": "船长"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 38,
+        "code": "Captain",
+        "max_skin_index": 12,
+        "skill_count": 2,
+        "skin_count": 13,
+        "base_skin_key": "c38_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character38_skill_0_name",
+          "Character38_skill_1_name"
+        ],
+        "character_skins": [
+          "c38_skin0",
+          "c38_skin1",
+          "c38_skin2",
+          "c38_skin3",
+          "c38_skin4",
+          "c38_skin5",
+          "c38_skin6",
+          "c38_skin7",
+          "c38_skin8",
+          "c38_skin9",
+          "c38_skin10",
+          "c38_skin11",
+          "c38_skin12"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Captain",
+        "gameData.heroLevel.Captain",
+        "gameData.heroSkill.Captain",
+        "gameData.heroSkillUnlock.Captain",
+        "gameData.heroUnlock.Captain",
+        "gameData.skinLock.Captain"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "CostumePrince",
+      "name": {
+        "en": "Costume Prince",
+        "es": "Príncipe del disfraz",
+        "zh_cn": "皮套王子"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 26,
+        "code": "CostumePrince",
+        "max_skin_index": 16,
+        "skill_count": 3,
+        "skin_count": 17,
+        "base_skin_key": "c26_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character26_skill_0_name",
+          "Character26_skill_1_name",
+          "Character26_skill_2_name"
+        ],
+        "character_skins": [
+          "c26_skin0",
+          "c26_skin1",
+          "c26_skin2",
+          "c26_skin3",
+          "c26_skin4",
+          "c26_skin5",
+          "c26_skin6",
+          "c26_skin7",
+          "c26_skin8",
+          "c26_skin9",
+          "c26_skin10",
+          "c26_skin11",
+          "c26_skin12",
+          "c26_skin13",
+          "c26_skin14",
+          "c26_skin15",
+          "c26_skin16"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.CostumePrince",
+        "gameData.heroLevel.CostumePrince",
+        "gameData.heroSkill.CostumePrince",
+        "gameData.heroSkillUnlock.CostumePrince",
+        "gameData.heroUnlock.CostumePrince",
+        "gameData.skinLock.CostumePrince"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Doctor",
+      "name": {
+        "en": "Physicist",
+        "es": "Física",
+        "zh_cn": "博士"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 27,
+        "code": "Doctor",
+        "max_skin_index": 13,
+        "skill_count": 3,
+        "skin_count": 14,
+        "base_skin_key": "c27_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character27_skill_0_name",
+          "Character27_skill_1_name",
+          "Character27_skill_2_name"
+        ],
+        "character_skins": [
+          "c27_skin0",
+          "c27_skin1",
+          "c27_skin2",
+          "c27_skin3",
+          "c27_skin4",
+          "c27_skin5",
+          "c27_skin6",
+          "c27_skin7",
+          "c27_skin8",
+          "c27_skin9",
+          "c27_skin10",
+          "c27_skin11",
+          "c27_skin12",
+          "c27_skin13"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Doctor",
+        "gameData.heroLevel.Doctor",
+        "gameData.heroSkill.Doctor",
+        "gameData.heroSkillUnlock.Doctor",
+        "gameData.heroUnlock.Doctor",
+        "gameData.skinLock.Doctor"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Druid",
+      "name": {
+        "en": "Druid",
+        "es": "Druida",
+        "zh_cn": "德鲁伊"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 11,
+        "code": "Druid",
+        "max_skin_index": 29,
+        "skill_count": 3,
+        "skin_count": 30,
+        "base_skin_key": "c11_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character11_skill_0_name",
+          "Character11_skill_1_name",
+          "Character11_skill_2_name"
+        ],
+        "character_skins": [
+          "c11_skin0",
+          "c11_skin1",
+          "c11_skin2",
+          "c11_skin3",
+          "c11_skin4",
+          "c11_skin5",
+          "c11_skin6",
+          "c11_skin7",
+          "c11_skin8",
+          "c11_skin9",
+          "c11_skin10",
+          "c11_skin11",
+          "c11_skin12",
+          "c11_skin13",
+          "c11_skin14",
+          "c11_skin15",
+          "c11_skin16",
+          "c11_skin17",
+          "c11_skin18",
+          "c11_skin19",
+          "c11_skin20",
+          "c11_skin21",
+          "c11_skin22",
+          "c11_skin23",
+          "c11_skin24",
+          "c11_skin25",
+          "c11_skin26",
+          "c11_skin27",
+          "c11_skin28",
+          "c11_skin29"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Druid",
+        "gameData.heroLevel.Druid",
+        "gameData.heroSkill.Druid",
+        "gameData.heroSkillUnlock.Druid",
+        "gameData.heroUnlock.Druid",
+        "gameData.skinLock.Druid"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Elves",
+      "name": {
+        "en": "Elf",
+        "es": "Elfa",
+        "zh_cn": "精灵"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 8,
+        "code": "Elves",
+        "max_skin_index": 27,
+        "skill_count": 3,
+        "skin_count": 28,
+        "base_skin_key": "c8_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character8_skill_0_name",
+          "Character8_skill_1_name",
+          "Character8_skill_2_name"
+        ],
+        "character_skins": [
+          "c8_skin0",
+          "c8_skin1",
+          "c8_skin2",
+          "c8_skin3",
+          "c8_skin4",
+          "c8_skin5",
+          "c8_skin6",
+          "c8_skin7",
+          "c8_skin8",
+          "c8_skin9",
+          "c8_skin10",
+          "c8_skin11",
+          "c8_skin12",
+          "c8_skin13",
+          "c8_skin14",
+          "c8_skin15",
+          "c8_skin16",
+          "c8_skin17",
+          "c8_skin18",
+          "c8_skin19",
+          "c8_skin20",
+          "c8_skin21",
+          "c8_skin22",
+          "c8_skin23",
+          "c8_skin24",
+          "c8_skin25",
+          "c8_skin26",
+          "c8_skin27"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Elves",
+        "gameData.heroLevel.Elves",
+        "gameData.heroSkill.Elves",
+        "gameData.heroSkillUnlock.Elves",
+        "gameData.heroUnlock.Elves",
+        "gameData.skinLock.Elves"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Engineer",
+      "name": {
+        "en": "Engineer",
+        "es": "Ingeniero",
+        "zh_cn": "工程师"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 5,
+        "code": "Engineer",
+        "max_skin_index": 30,
+        "skill_count": 3,
+        "skin_count": 31,
+        "base_skin_key": "c5_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character5_skill_0_name",
+          "Character5_skill_1_name",
+          "Character5_skill_2_name"
+        ],
+        "character_skins": [
+          "c5_skin0",
+          "c5_skin1",
+          "c5_skin2",
+          "c5_skin3",
+          "c5_skin4",
+          "c5_skin5",
+          "c5_skin6",
+          "c5_skin7",
+          "c5_skin8",
+          "c5_skin9",
+          "c5_skin10",
+          "c5_skin11",
+          "c5_skin12",
+          "c5_skin13",
+          "c5_skin14",
+          "c5_skin15",
+          "c5_skin16",
+          "c5_skin17",
+          "c5_skin18",
+          "c5_skin19",
+          "c5_skin20",
+          "c5_skin21",
+          "c5_skin22",
+          "c5_skin23",
+          "c5_skin24",
+          "c5_skin25",
+          "c5_skin26",
+          "c5_skin27",
+          "c5_skin28",
+          "c5_skin29",
+          "c5_skin30"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Engineer",
+        "gameData.heroLevel.Engineer",
+        "gameData.heroSkill.Engineer",
+        "gameData.heroSkillUnlock.Engineer",
+        "gameData.heroUnlock.Engineer",
+        "gameData.skinLock.Engineer"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Envoy",
+      "name": {
+        "en": "Element Envoy",
+        "es": "Emisaria elemental",
+        "zh_cn": "古代元素使"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 18,
+        "code": "Envoy",
+        "max_skin_index": 5,
+        "skill_count": 1,
+        "skin_count": 6,
+        "base_skin_key": "c18_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character18_skill_0_name"
+        ],
+        "character_skins": [
+          "c18_skin0",
+          "c18_skin1",
+          "c18_skin2",
+          "c18_skin3",
+          "c18_skin4",
+          "c18_skin5"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Envoy",
+        "gameData.heroLevel.Envoy",
+        "gameData.heroSkill.Envoy",
+        "gameData.heroSkillUnlock.Envoy",
+        "gameData.heroUnlock.Envoy",
+        "gameData.skinLock.Envoy"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Fighter",
+      "name": {
+        "en": "Fighter",
+        "es": "Luchador",
+        "zh_cn": "武斗家"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 33,
+        "code": "Fighter",
+        "max_skin_index": 12,
+        "skill_count": 2,
+        "skin_count": 13,
+        "base_skin_key": "c33_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character33_skill_0_name",
+          "Character33_skill_1_name"
+        ],
+        "character_skins": [
+          "c33_skin0",
+          "c33_skin1",
+          "c33_skin2",
+          "c33_skin3",
+          "c33_skin4",
+          "c33_skin5",
+          "c33_skin6",
+          "c33_skin7",
+          "c33_skin8",
+          "c33_skin9",
+          "c33_skin10",
+          "c33_skin11",
+          "c33_skin12"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Fighter",
+        "gameData.heroLevel.Fighter",
+        "gameData.heroSkill.Fighter",
+        "gameData.heroSkillUnlock.Fighter",
+        "gameData.heroUnlock.Fighter",
+        "gameData.skinLock.Fighter"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "GunsExpert",
+      "name": {
+        "en": "Arms Expert",
+        "es": "Experta en Armas",
+        "zh_cn": "枪械专家"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 40,
+        "code": "GunsExpert",
+        "max_skin_index": 6,
+        "skill_count": 1,
+        "skin_count": 7,
+        "base_skin_key": "c40_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character40_skill_0_name"
+        ],
+        "character_skins": [
+          "c40_skin0",
+          "c40_skin1",
+          "c40_skin2",
+          "c40_skin3",
+          "c40_skin4",
+          "c40_skin5",
+          "c40_skin6"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.GunsExpert",
+        "gameData.heroLevel.GunsExpert",
+        "gameData.heroSkill.GunsExpert",
+        "gameData.heroSkillUnlock.GunsExpert",
+        "gameData.heroUnlock.GunsExpert",
+        "gameData.skinLock.GunsExpert"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Joker",
+      "name": {
+        "en": "Trickster",
+        "es": "Arlequín",
+        "zh_cn": "戏法师"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 34,
+        "code": "Joker",
+        "max_skin_index": 10,
+        "skill_count": 2,
+        "skin_count": 11,
+        "base_skin_key": "c34_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character34_skill_0_name",
+          "Character34_skill_1_name"
+        ],
+        "character_skins": [
+          "c34_skin0",
+          "c34_skin1",
+          "c34_skin2",
+          "c34_skin3",
+          "c34_skin4",
+          "c34_skin5",
+          "c34_skin6",
+          "c34_skin7",
+          "c34_skin8",
+          "c34_skin9",
+          "c34_skin10"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Joker",
+        "gameData.heroLevel.Joker",
+        "gameData.heroSkill.Joker",
+        "gameData.heroSkillUnlock.Joker",
+        "gameData.heroUnlock.Joker",
+        "gameData.skinLock.Joker"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Knight",
+      "name": {
+        "en": "Knight",
+        "es": "Caballero",
+        "zh_cn": "骑士"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 0,
+        "code": "Knight",
+        "max_skin_index": 38,
+        "skill_count": 3,
+        "skin_count": 39,
+        "base_skin_key": "c0_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character0_skill_0_name",
+          "Character0_skill_1_name",
+          "Character0_skill_2_name"
+        ],
+        "character_skins": [
+          "c0_skin0",
+          "c0_skin1",
+          "c0_skin2",
+          "c0_skin3",
+          "c0_skin4",
+          "c0_skin5",
+          "c0_skin6",
+          "c0_skin7",
+          "c0_skin8",
+          "c0_skin9",
+          "c0_skin10",
+          "c0_skin11",
+          "c0_skin12",
+          "c0_skin13",
+          "c0_skin14",
+          "c0_skin15",
+          "c0_skin16",
+          "c0_skin17",
+          "c0_skin18",
+          "c0_skin19",
+          "c0_skin20",
+          "c0_skin21",
+          "c0_skin22",
+          "c0_skin23",
+          "c0_skin24",
+          "c0_skin25",
+          "c0_skin26",
+          "c0_skin27",
+          "c0_skin28",
+          "c0_skin29",
+          "c0_skin30",
+          "c0_skin31",
+          "c0_skin32",
+          "c0_skin33",
+          "c0_skin34",
+          "c0_skin35",
+          "c0_skin36",
+          "c0_skin37",
+          "c0_skin38"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Knight",
+        "gameData.heroLevel.Knight",
+        "gameData.heroSkill.Knight",
+        "gameData.heroSkillUnlock.Knight",
+        "gameData.heroUnlock.Knight",
+        "gameData.skinLock.Knight"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "LadyChef",
+      "name": {
+        "en": "Lady Chef",
+        "es": "Srta. Chef",
+        "zh_cn": "厨娘"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 41,
+        "code": "LadyChef",
+        "max_skin_index": 3,
+        "skill_count": 1,
+        "skin_count": 4,
+        "base_skin_key": "c41_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character41_skill_0_name"
+        ],
+        "character_skins": [
+          "c41_skin0",
+          "c41_skin1",
+          "c41_skin2",
+          "c41_skin3"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.LadyChef",
+        "gameData.heroLevel.LadyChef",
+        "gameData.heroSkill.LadyChef",
+        "gameData.heroSkillUnlock.LadyChef",
+        "gameData.heroUnlock.LadyChef",
+        "gameData.skinLock.LadyChef"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Lancer",
+      "name": {
+        "en": "Lancer",
+        "es": "Lancero",
+        "zh_cn": "枪客"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 29,
+        "code": "Lancer",
+        "max_skin_index": 14,
+        "skill_count": 3,
+        "skin_count": 15,
+        "base_skin_key": "c29_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character29_skill_0_name",
+          "Character29_skill_1_name",
+          "Character29_skill_2_name"
+        ],
+        "character_skins": [
+          "c29_skin0",
+          "c29_skin1",
+          "c29_skin2",
+          "c29_skin3",
+          "c29_skin4",
+          "c29_skin5",
+          "c29_skin6",
+          "c29_skin7",
+          "c29_skin8",
+          "c29_skin9",
+          "c29_skin10",
+          "c29_skin11",
+          "c29_skin12",
+          "c29_skin13",
+          "c29_skin14"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Lancer",
+        "gameData.heroLevel.Lancer",
+        "gameData.heroSkill.Lancer",
+        "gameData.heroSkillUnlock.Lancer",
+        "gameData.heroUnlock.Lancer",
+        "gameData.skinLock.Lancer"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Mage",
+      "name": {
+        "en": "Witch",
+        "es": "Bruja",
+        "zh_cn": "法师"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 2,
+        "code": "Mage",
+        "max_skin_index": 34,
+        "skill_count": 3,
+        "skin_count": 35,
+        "base_skin_key": "c2_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character2_skill_0_name",
+          "Character2_skill_1_name",
+          "Character2_skill_2_name"
+        ],
+        "character_skins": [
+          "c2_skin0",
+          "c2_skin1",
+          "c2_skin2",
+          "c2_skin3",
+          "c2_skin4",
+          "c2_skin5",
+          "c2_skin6",
+          "c2_skin7",
+          "c2_skin8",
+          "c2_skin9",
+          "c2_skin10",
+          "c2_skin11",
+          "c2_skin12",
+          "c2_skin13",
+          "c2_skin14",
+          "c2_skin15",
+          "c2_skin16",
+          "c2_skin17",
+          "c2_skin18",
+          "c2_skin19",
+          "c2_skin20",
+          "c2_skin21",
+          "c2_skin22",
+          "c2_skin23",
+          "c2_skin24",
+          "c2_skin25",
+          "c2_skin26",
+          "c2_skin27",
+          "c2_skin28",
+          "c2_skin29",
+          "c2_skin30",
+          "c2_skin31",
+          "c2_skin32",
+          "c2_skin33",
+          "c2_skin34"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Mage",
+        "gameData.heroLevel.Mage",
+        "gameData.heroSkill.Mage",
+        "gameData.heroSkillUnlock.Mage",
+        "gameData.heroUnlock.Mage",
+        "gameData.skinLock.Mage"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Miner",
+      "name": {
+        "en": "Miner",
+        "es": "Minera",
+        "zh_cn": "矿工"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 24,
+        "code": "Miner",
+        "max_skin_index": 19,
+        "skill_count": 3,
+        "skin_count": 20,
+        "base_skin_key": "c24_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character24_skill_0_name",
+          "Character24_skill_1_name",
+          "Character24_skill_2_name"
+        ],
+        "character_skins": [
+          "c24_skin0",
+          "c24_skin1",
+          "c24_skin2",
+          "c24_skin3",
+          "c24_skin4",
+          "c24_skin5",
+          "c24_skin6",
+          "c24_skin7",
+          "c24_skin8",
+          "c24_skin9",
+          "c24_skin10",
+          "c24_skin11",
+          "c24_skin12",
+          "c24_skin13",
+          "c24_skin14",
+          "c24_skin15",
+          "c24_skin16",
+          "c24_skin17",
+          "c24_skin18",
+          "c24_skin19"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Miner",
+        "gameData.heroLevel.Miner",
+        "gameData.heroSkill.Miner",
+        "gameData.heroSkillUnlock.Miner",
+        "gameData.heroUnlock.Miner",
+        "gameData.skinLock.Miner"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Necromancer",
+      "name": {
+        "en": "Necromancer",
+        "es": "Nigromante",
+        "zh_cn": "死灵法师"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 14,
+        "code": "Necromancer",
+        "max_skin_index": 26,
+        "skill_count": 3,
+        "skin_count": 27,
+        "base_skin_key": "c14_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character14_skill_0_name",
+          "Character14_skill_1_name",
+          "Character14_skill_2_name"
+        ],
+        "character_skins": [
+          "c14_skin0",
+          "c14_skin1",
+          "c14_skin2",
+          "c14_skin3",
+          "c14_skin4",
+          "c14_skin5",
+          "c14_skin6",
+          "c14_skin7",
+          "c14_skin8",
+          "c14_skin9",
+          "c14_skin10",
+          "c14_skin11",
+          "c14_skin12",
+          "c14_skin13",
+          "c14_skin14",
+          "c14_skin15",
+          "c14_skin16",
+          "c14_skin17",
+          "c14_skin18",
+          "c14_skin19",
+          "c14_skin20",
+          "c14_skin21",
+          "c14_skin22",
+          "c14_skin23",
+          "c14_skin24",
+          "c14_skin25",
+          "c14_skin26"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Necromancer",
+        "gameData.heroLevel.Necromancer",
+        "gameData.heroSkill.Necromancer",
+        "gameData.heroSkillUnlock.Necromancer",
+        "gameData.heroUnlock.Necromancer",
+        "gameData.skinLock.Necromancer"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Ninja",
+      "name": {
+        "en": "Time Traveling Ninja",
+        "es": "Ninja viajero del tiempo",
+        "zh_cn": "超时空忍者"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 20,
+        "code": "Ninja",
+        "max_skin_index": 7,
+        "skill_count": 2,
+        "skin_count": 8,
+        "base_skin_key": "c20_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character20_skill_0_name",
+          "Character20_skill_1_name"
+        ],
+        "character_skins": [
+          "c20_skin0",
+          "c20_skin1",
+          "c20_skin2",
+          "c20_skin3",
+          "c20_skin4",
+          "c20_skin5",
+          "c20_skin6",
+          "c20_skin7"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Ninja",
+        "gameData.heroLevel.Ninja",
+        "gameData.heroSkill.Ninja",
+        "gameData.heroSkillUnlock.Ninja",
+        "gameData.heroUnlock.Ninja",
+        "gameData.skinLock.Ninja"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Officer",
+      "name": {
+        "en": "Officer",
+        "es": "Oficial",
+        "zh_cn": "警官"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 15,
+        "code": "Officer",
+        "max_skin_index": 24,
+        "skill_count": 3,
+        "skin_count": 25,
+        "base_skin_key": "c15_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character15_skill_0_name",
+          "Character15_skill_1_name",
+          "Character15_skill_2_name"
+        ],
+        "character_skins": [
+          "c15_skin0",
+          "c15_skin1",
+          "c15_skin2",
+          "c15_skin3",
+          "c15_skin4",
+          "c15_skin5",
+          "c15_skin6",
+          "c15_skin7",
+          "c15_skin8",
+          "c15_skin9",
+          "c15_skin10",
+          "c15_skin11",
+          "c15_skin12",
+          "c15_skin13",
+          "c15_skin14",
+          "c15_skin15",
+          "c15_skin16",
+          "c15_skin17",
+          "c15_skin18",
+          "c15_skin19",
+          "c15_skin20",
+          "c15_skin21",
+          "c15_skin22",
+          "c15_skin23",
+          "c15_skin24"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Officer",
+        "gameData.heroLevel.Officer",
+        "gameData.heroSkill.Officer",
+        "gameData.heroSkillUnlock.Officer",
+        "gameData.heroUnlock.Officer",
+        "gameData.skinLock.Officer"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Paladin",
+      "name": {
+        "en": "Paladin",
+        "es": "Paladín",
+        "zh_cn": "圣骑士"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 7,
+        "code": "Paladin",
+        "max_skin_index": 30,
+        "skill_count": 3,
+        "skin_count": 31,
+        "base_skin_key": "c7_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character7_skill_0_name",
+          "Character7_skill_1_name",
+          "Character7_skill_2_name"
+        ],
+        "character_skins": [
+          "c7_skin0",
+          "c7_skin1",
+          "c7_skin2",
+          "c7_skin3",
+          "c7_skin4",
+          "c7_skin5",
+          "c7_skin6",
+          "c7_skin7",
+          "c7_skin8",
+          "c7_skin9",
+          "c7_skin10",
+          "c7_skin11",
+          "c7_skin12",
+          "c7_skin13",
+          "c7_skin14",
+          "c7_skin15",
+          "c7_skin16",
+          "c7_skin17",
+          "c7_skin18",
+          "c7_skin19",
+          "c7_skin20",
+          "c7_skin21",
+          "c7_skin22",
+          "c7_skin23",
+          "c7_skin24",
+          "c7_skin25",
+          "c7_skin26",
+          "c7_skin27",
+          "c7_skin28",
+          "c7_skin29",
+          "c7_skin30"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Paladin",
+        "gameData.heroLevel.Paladin",
+        "gameData.heroSkill.Paladin",
+        "gameData.heroSkillUnlock.Paladin",
+        "gameData.heroUnlock.Paladin",
+        "gameData.skinLock.Paladin"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Priest",
+      "name": {
+        "en": "Priestess",
+        "es": "Sacerdotisa",
+        "zh_cn": "牧师"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 10,
+        "code": "Priest",
+        "max_skin_index": 30,
+        "skill_count": 3,
+        "skin_count": 31,
+        "base_skin_key": "c10_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character10_skill_0_name",
+          "Character10_skill_1_name",
+          "Character10_skill_2_name"
+        ],
+        "character_skins": [
+          "c10_skin0",
+          "c10_skin1",
+          "c10_skin2",
+          "c10_skin3",
+          "c10_skin4",
+          "c10_skin5",
+          "c10_skin6",
+          "c10_skin7",
+          "c10_skin8",
+          "c10_skin9",
+          "c10_skin10",
+          "c10_skin11",
+          "c10_skin12",
+          "c10_skin13",
+          "c10_skin14",
+          "c10_skin15",
+          "c10_skin16",
+          "c10_skin17",
+          "c10_skin18",
+          "c10_skin19",
+          "c10_skin20",
+          "c10_skin21",
+          "c10_skin22",
+          "c10_skin23",
+          "c10_skin24",
+          "c10_skin25",
+          "c10_skin26",
+          "c10_skin27",
+          "c10_skin28",
+          "c10_skin29",
+          "c10_skin30"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Priest",
+        "gameData.heroLevel.Priest",
+        "gameData.heroSkill.Priest",
+        "gameData.heroSkillUnlock.Priest",
+        "gameData.heroUnlock.Priest",
+        "gameData.skinLock.Priest"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Ranger",
+      "name": {
+        "en": "Rogue",
+        "es": "Pícaro",
+        "zh_cn": "游侠"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 1,
+        "code": "Ranger",
+        "max_skin_index": 35,
+        "skill_count": 3,
+        "skin_count": 36,
+        "base_skin_key": "c1_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character1_skill_0_name",
+          "Character1_skill_1_name",
+          "Character1_skill_2_name"
+        ],
+        "character_skins": [
+          "c1_skin0",
+          "c1_skin1",
+          "c1_skin2",
+          "c1_skin3",
+          "c1_skin4",
+          "c1_skin5",
+          "c1_skin6",
+          "c1_skin7",
+          "c1_skin8",
+          "c1_skin9",
+          "c1_skin10",
+          "c1_skin11",
+          "c1_skin12",
+          "c1_skin13",
+          "c1_skin14",
+          "c1_skin15",
+          "c1_skin16",
+          "c1_skin17",
+          "c1_skin18",
+          "c1_skin19",
+          "c1_skin20",
+          "c1_skin21",
+          "c1_skin22",
+          "c1_skin23",
+          "c1_skin24",
+          "c1_skin25",
+          "c1_skin26",
+          "c1_skin27",
+          "c1_skin28",
+          "c1_skin29",
+          "c1_skin30",
+          "c1_skin31",
+          "c1_skin32",
+          "c1_skin33",
+          "c1_skin34",
+          "c1_skin35"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Ranger",
+        "gameData.heroLevel.Ranger",
+        "gameData.heroSkill.Ranger",
+        "gameData.heroSkillUnlock.Ranger",
+        "gameData.heroUnlock.Ranger",
+        "gameData.skinLock.Ranger"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Robot",
+      "name": {
+        "en": "Robot",
+        "es": "Robot",
+        "zh_cn": "机器人"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 12,
+        "code": "Robot",
+        "max_skin_index": 26,
+        "skill_count": 3,
+        "skin_count": 27,
+        "base_skin_key": "c12_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character12_skill_0_name",
+          "Character12_skill_1_name",
+          "Character12_skill_2_name"
+        ],
+        "character_skins": [
+          "c12_skin0",
+          "c12_skin1",
+          "c12_skin2",
+          "c12_skin3",
+          "c12_skin4",
+          "c12_skin5",
+          "c12_skin6",
+          "c12_skin7",
+          "c12_skin8",
+          "c12_skin9",
+          "c12_skin10",
+          "c12_skin11",
+          "c12_skin12",
+          "c12_skin13",
+          "c12_skin14",
+          "c12_skin15",
+          "c12_skin16",
+          "c12_skin17",
+          "c12_skin18",
+          "c12_skin19",
+          "c12_skin20",
+          "c12_skin21",
+          "c12_skin22",
+          "c12_skin23",
+          "c12_skin24",
+          "c12_skin25",
+          "c12_skin26"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Robot",
+        "gameData.heroLevel.Robot",
+        "gameData.heroSkill.Robot",
+        "gameData.heroSkillUnlock.Robot",
+        "gameData.heroUnlock.Robot",
+        "gameData.skinLock.Robot"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Shooter",
+      "name": {
+        "en": "Gunner",
+        "es": "Artillero",
+        "zh_cn": "枪手"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 36,
+        "code": "Shooter",
+        "max_skin_index": 9,
+        "skill_count": 2,
+        "skin_count": 10,
+        "base_skin_key": "c36_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character36_skill_0_name",
+          "Character36_skill_1_name"
+        ],
+        "character_skins": [
+          "c36_skin0",
+          "c36_skin1",
+          "c36_skin2",
+          "c36_skin3",
+          "c36_skin4",
+          "c36_skin5",
+          "c36_skin6",
+          "c36_skin7",
+          "c36_skin8",
+          "c36_skin9"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Shooter",
+        "gameData.heroLevel.Shooter",
+        "gameData.heroSkill.Shooter",
+        "gameData.heroSkillUnlock.Shooter",
+        "gameData.heroUnlock.Shooter",
+        "gameData.skinLock.Shooter"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "SpecialForces",
+      "name": {
+        "en": "Special Forces",
+        "es": "Fuerzas especiales",
+        "zh_cn": "特种骑士部队"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 21,
+        "code": "SpecialForces",
+        "max_skin_index": 3,
+        "skill_count": 1,
+        "skin_count": 4,
+        "base_skin_key": "c21_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character21_skill_0_name"
+        ],
+        "character_skins": [
+          "c21_skin0",
+          "c21_skin1",
+          "c21_skin2",
+          "c21_skin3"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.SpecialForces",
+        "gameData.heroLevel.SpecialForces",
+        "gameData.heroSkill.SpecialForces",
+        "gameData.heroSkillUnlock.SpecialForces",
+        "gameData.heroUnlock.SpecialForces",
+        "gameData.skinLock.SpecialForces"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "SwordMaster",
+      "name": {
+        "en": "Sword Master",
+        "es": "Maestra de la espada",
+        "zh_cn": "剑宗"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 28,
+        "code": "SwordMaster",
+        "max_skin_index": 13,
+        "skill_count": 3,
+        "skin_count": 14,
+        "base_skin_key": "c28_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character28_skill_0_name",
+          "Character28_skill_1_name",
+          "Character28_skill_2_name"
+        ],
+        "character_skins": [
+          "c28_skin0",
+          "c28_skin1",
+          "c28_skin2",
+          "c28_skin3",
+          "c28_skin4",
+          "c28_skin5",
+          "c28_skin6",
+          "c28_skin7",
+          "c28_skin8",
+          "c28_skin9",
+          "c28_skin10",
+          "c28_skin11",
+          "c28_skin12",
+          "c28_skin13"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.SwordMaster",
+        "gameData.heroLevel.SwordMaster",
+        "gameData.heroSkill.SwordMaster",
+        "gameData.heroSkillUnlock.SwordMaster",
+        "gameData.heroUnlock.SwordMaster",
+        "gameData.skinLock.SwordMaster"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Taoist",
+      "name": {
+        "en": "Taoist",
+        "es": "Taoísta",
+        "zh_cn": "道士"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 16,
+        "code": "Taoist",
+        "max_skin_index": 26,
+        "skill_count": 3,
+        "skin_count": 27,
+        "base_skin_key": "c16_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character16_skill_0_name",
+          "Character16_skill_1_name",
+          "Character16_skill_2_name"
+        ],
+        "character_skins": [
+          "c16_skin0",
+          "c16_skin1",
+          "c16_skin2",
+          "c16_skin3",
+          "c16_skin4",
+          "c16_skin5",
+          "c16_skin6",
+          "c16_skin7",
+          "c16_skin8",
+          "c16_skin9",
+          "c16_skin10",
+          "c16_skin11",
+          "c16_skin12",
+          "c16_skin13",
+          "c16_skin14",
+          "c16_skin15",
+          "c16_skin16",
+          "c16_skin17",
+          "c16_skin18",
+          "c16_skin19",
+          "c16_skin20",
+          "c16_skin21",
+          "c16_skin22",
+          "c16_skin23",
+          "c16_skin24",
+          "c16_skin25",
+          "c16_skin26"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Taoist",
+        "gameData.heroLevel.Taoist",
+        "gameData.heroSkill.Taoist",
+        "gameData.heroSkillUnlock.Taoist",
+        "gameData.heroUnlock.Taoist",
+        "gameData.skinLock.Taoist"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Transcendent",
+      "name": {
+        "en": "Inter-dimension Traveler",
+        "es": "Viajero interdimensional",
+        "zh_cn": "超界者"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 17,
+        "code": "Transcendent",
+        "max_skin_index": 6,
+        "skill_count": 2,
+        "skin_count": 7,
+        "base_skin_key": "c17_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character17_skill_0_name",
+          "Character17_skill_1_name"
+        ],
+        "character_skins": [
+          "c17_skin0",
+          "c17_skin1",
+          "c17_skin2",
+          "c17_skin3",
+          "c17_skin4",
+          "c17_skin5",
+          "c17_skin6"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Transcendent",
+        "gameData.heroLevel.Transcendent",
+        "gameData.heroSkill.Transcendent",
+        "gameData.heroSkillUnlock.Transcendent",
+        "gameData.heroUnlock.Transcendent",
+        "gameData.skinLock.Transcendent"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "TrapMaster",
+      "name": {
+        "en": "Trap Master",
+        "es": "Maestro de Trampas",
+        "zh_cn": "陷阱大师"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 25,
+        "code": "TrapMaster",
+        "max_skin_index": 13,
+        "skill_count": 3,
+        "skin_count": 14,
+        "base_skin_key": "c25_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character25_skill_0_name",
+          "Character25_skill_1_name",
+          "Character25_skill_2_name"
+        ],
+        "character_skins": [
+          "c25_skin0",
+          "c25_skin1",
+          "c25_skin2",
+          "c25_skin3",
+          "c25_skin4",
+          "c25_skin5",
+          "c25_skin6",
+          "c25_skin7",
+          "c25_skin8",
+          "c25_skin9",
+          "c25_skin10",
+          "c25_skin11",
+          "c25_skin12",
+          "c25_skin13"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.TrapMaster",
+        "gameData.heroLevel.TrapMaster",
+        "gameData.heroSkill.TrapMaster",
+        "gameData.heroSkillUnlock.TrapMaster",
+        "gameData.heroUnlock.TrapMaster",
+        "gameData.skinLock.TrapMaster"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Vampire",
+      "name": {
+        "en": "Vampire",
+        "es": "Vampiro",
+        "zh_cn": "吸血鬼"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 6,
+        "code": "Vampire",
+        "max_skin_index": 26,
+        "skill_count": 3,
+        "skin_count": 27,
+        "base_skin_key": "c6_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character6_skill_0_name",
+          "Character6_skill_1_name",
+          "Character6_skill_2_name"
+        ],
+        "character_skins": [
+          "c6_skin0",
+          "c6_skin1",
+          "c6_skin2",
+          "c6_skin3",
+          "c6_skin4",
+          "c6_skin5",
+          "c6_skin6",
+          "c6_skin7",
+          "c6_skin8",
+          "c6_skin9",
+          "c6_skin10",
+          "c6_skin11",
+          "c6_skin12",
+          "c6_skin13",
+          "c6_skin14",
+          "c6_skin15",
+          "c6_skin16",
+          "c6_skin17",
+          "c6_skin18",
+          "c6_skin19",
+          "c6_skin20",
+          "c6_skin21",
+          "c6_skin22",
+          "c6_skin23",
+          "c6_skin24",
+          "c6_skin25",
+          "c6_skin26"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Vampire",
+        "gameData.heroLevel.Vampire",
+        "gameData.heroSkill.Vampire",
+        "gameData.heroSkillUnlock.Vampire",
+        "gameData.heroUnlock.Vampire",
+        "gameData.skinLock.Vampire"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Viking",
+      "name": {
+        "en": "Berserker",
+        "es": "Bersérker",
+        "zh_cn": "狂战士"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 13,
+        "code": "Viking",
+        "max_skin_index": 32,
+        "skill_count": 3,
+        "skin_count": 33,
+        "base_skin_key": "c13_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character13_skill_0_name",
+          "Character13_skill_1_name",
+          "Character13_skill_2_name"
+        ],
+        "character_skins": [
+          "c13_skin0",
+          "c13_skin1",
+          "c13_skin2",
+          "c13_skin3",
+          "c13_skin4",
+          "c13_skin5",
+          "c13_skin6",
+          "c13_skin7",
+          "c13_skin8",
+          "c13_skin9",
+          "c13_skin10",
+          "c13_skin11",
+          "c13_skin12",
+          "c13_skin13",
+          "c13_skin14",
+          "c13_skin15",
+          "c13_skin16",
+          "c13_skin17",
+          "c13_skin18",
+          "c13_skin19",
+          "c13_skin20",
+          "c13_skin21",
+          "c13_skin22",
+          "c13_skin23",
+          "c13_skin24",
+          "c13_skin25",
+          "c13_skin26",
+          "c13_skin27",
+          "c13_skin28",
+          "c13_skin29",
+          "c13_skin30",
+          "c13_skin31",
+          "c13_skin32"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Viking",
+        "gameData.heroLevel.Viking",
+        "gameData.heroSkill.Viking",
+        "gameData.heroSkillUnlock.Viking",
+        "gameData.heroUnlock.Viking",
+        "gameData.skinLock.Viking"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Warliege",
+      "name": {
+        "en": "Warliege",
+        "es": "Líder de guerra",
+        "zh_cn": "领主"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 30,
+        "code": "Warliege",
+        "max_skin_index": 13,
+        "skill_count": 3,
+        "skin_count": 14,
+        "base_skin_key": "c30_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character30_skill_0_name",
+          "Character30_skill_1_name",
+          "Character30_skill_2_name"
+        ],
+        "character_skins": [
+          "c30_skin0",
+          "c30_skin1",
+          "c30_skin2",
+          "c30_skin3",
+          "c30_skin4",
+          "c30_skin5",
+          "c30_skin6",
+          "c30_skin7",
+          "c30_skin8",
+          "c30_skin9",
+          "c30_skin10",
+          "c30_skin11",
+          "c30_skin12",
+          "c30_skin13"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Warliege",
+        "gameData.heroLevel.Warliege",
+        "gameData.heroSkill.Warliege",
+        "gameData.heroSkillUnlock.Warliege",
+        "gameData.heroUnlock.Warliege",
+        "gameData.skinLock.Warliege"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Warlock",
+      "name": {
+        "en": "Demonmancer",
+        "es": "Demonífaga",
+        "zh_cn": "恶魔术士"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 23,
+        "code": "Warlock",
+        "max_skin_index": 18,
+        "skill_count": 3,
+        "skin_count": 19,
+        "base_skin_key": "c23_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character23_skill_0_name",
+          "Character23_skill_1_name",
+          "Character23_skill_2_name"
+        ],
+        "character_skins": [
+          "c23_skin0",
+          "c23_skin1",
+          "c23_skin2",
+          "c23_skin3",
+          "c23_skin4",
+          "c23_skin5",
+          "c23_skin6",
+          "c23_skin7",
+          "c23_skin8",
+          "c23_skin9",
+          "c23_skin10",
+          "c23_skin11",
+          "c23_skin12",
+          "c23_skin13",
+          "c23_skin14",
+          "c23_skin15",
+          "c23_skin16",
+          "c23_skin17",
+          "c23_skin18"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Warlock",
+        "gameData.heroLevel.Warlock",
+        "gameData.heroSkill.Warlock",
+        "gameData.heroSkillUnlock.Warlock",
+        "gameData.heroUnlock.Warlock",
+        "gameData.skinLock.Warlock"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "Werewolf",
+      "name": {
+        "en": "Werewolf",
+        "es": "Hombre lobo",
+        "zh_cn": "狼人"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 9,
+        "code": "Werewolf",
+        "max_skin_index": 34,
+        "skill_count": 3,
+        "skin_count": 35,
+        "base_skin_key": "c9_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character9_skill_0_name",
+          "Character9_skill_1_name",
+          "Character9_skill_2_name"
+        ],
+        "character_skins": [
+          "c9_skin0",
+          "c9_skin1",
+          "c9_skin2",
+          "c9_skin3",
+          "c9_skin4",
+          "c9_skin5",
+          "c9_skin6",
+          "c9_skin7",
+          "c9_skin8",
+          "c9_skin9",
+          "c9_skin10",
+          "c9_skin11",
+          "c9_skin12",
+          "c9_skin13",
+          "c9_skin14",
+          "c9_skin15",
+          "c9_skin16",
+          "c9_skin17",
+          "c9_skin18",
+          "c9_skin19",
+          "c9_skin20",
+          "c9_skin21",
+          "c9_skin22",
+          "c9_skin23",
+          "c9_skin24",
+          "c9_skin25",
+          "c9_skin26",
+          "c9_skin27",
+          "c9_skin28",
+          "c9_skin29",
+          "c9_skin30",
+          "c9_skin31",
+          "c9_skin32",
+          "c9_skin33",
+          "c9_skin34"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.Werewolf",
+        "gameData.heroLevel.Werewolf",
+        "gameData.heroSkill.Werewolf",
+        "gameData.heroSkillUnlock.Werewolf",
+        "gameData.heroUnlock.Werewolf",
+        "gameData.skinLock.Werewolf"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    },
+    {
+      "id": "YinYang",
+      "name": {
+        "en": "Yin-Yang Adept",
+        "es": "Maestra Yin Yang",
+        "zh_cn": "阴阳家"
+      },
+      "category": "character",
+      "subcategory": "playable",
+      "attributes": {
+        "index": 39,
+        "code": "YinYang",
+        "max_skin_index": 5,
+        "skill_count": 1,
+        "skin_count": 6,
+        "base_skin_key": "c39_skin0"
+      },
+      "relations": {
+        "character_skills": [
+          "Character39_skill_0_name"
+        ],
+        "character_skins": [
+          "c39_skin0",
+          "c39_skin1",
+          "c39_skin2",
+          "c39_skin3",
+          "c39_skin4",
+          "c39_skin5"
+        ]
+      },
+      "save_refs": [
+        "gameData.currentSkinDatas.YinYang",
+        "gameData.heroLevel.YinYang",
+        "gameData.heroSkill.YinYang",
+        "gameData.heroSkillUnlock.YinYang",
+        "gameData.heroUnlock.YinYang",
+        "gameData.skinLock.YinYang"
+      ],
+      "notes": [
+        "El código interno y el nombre visible pueden diferir."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:char_code_name.json"
+    }
+  ]
+}

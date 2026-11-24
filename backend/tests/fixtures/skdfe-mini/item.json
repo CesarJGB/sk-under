@@ -1,0 +1,37 @@
+{
+  "active": [
+    "active_star"
+  ],
+  "blueprint": {
+    "evolution": [
+      "blueprint_evolution_weapon_000"
+    ],
+    "others": [
+      "blueprint_room_decorate_drink_seller"
+    ]
+  },
+  "customization": {
+    "kill_effect": [
+      "customization_kill_effect_1"
+    ]
+  },
+  "material": {
+    "others": [
+      "material_iron",
+      "material_wood"
+    ],
+    "gem": [
+      "material_gem"
+    ]
+  },
+  "others": [
+    "desc_type_blueprint"
+  ],
+  "plant": [
+    "plant_carrot_seed",
+    "plant_banboo_seed"
+  ],
+  "token": [
+    "token_hero"
+  ]
+}

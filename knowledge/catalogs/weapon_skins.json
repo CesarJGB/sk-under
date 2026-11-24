@@ -1,0 +1,4626 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "weapon_skins",
+  "title": "Skins de arma",
+  "description": "Skins indexadas por arma.",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_catalog.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "needed_data.json"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 192,
+  "items": [
+    {
+      "id": "weapon_002_s_1",
+      "name": {
+        "en": "Husky",
+        "es": "Husky",
+        "zh_cn": "哈士奇"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_002",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_002"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_002.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_002.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_003_s_1",
+      "name": {
+        "en": "Darksilver",
+        "es": "Plata Oscura",
+        "zh_cn": "黯银"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_003",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_003"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_003.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_003.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_006_s_1",
+      "name": {
+        "en": "Emberwrath",
+        "es": "Furia Ardiente",
+        "zh_cn": "橙火"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_006",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_006"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_006.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_006.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_006_s_2",
+      "name": {
+        "en": "Riftbringer",
+        "es": "Heraldo de la Grieta",
+        "zh_cn": "裂空"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_006",
+        "skin_index": 2
+      },
+      "relations": {
+        "weapon": "weapon_006"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_006.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_006.UnlockedSkins[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_007_s_1",
+      "name": {
+        "en": "Frostfae",
+        "es": "Hadagélida",
+        "zh_cn": "冰玑"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_007",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_007"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_007.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_007.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_007_s_2",
+      "name": {
+        "en": "M1$$!NG_TE#TUR3",
+        "es": "T3XTUR4_F4LT4NT3",
+        "zh_cn": "材^质丢*失&……"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_007",
+        "skin_index": 2
+      },
+      "relations": {
+        "weapon": "weapon_007"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_007.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_007.UnlockedSkins[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_008_s_1",
+      "name": {
+        "en": "Whitebane",
+        "es": "Pesadilla Blanca",
+        "zh_cn": "白劫"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_008",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_008"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_008.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_008.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_009_s_1",
+      "name": {
+        "en": "Flarefox",
+        "es": "Zorro Ígneo",
+        "zh_cn": "焰狐"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_009",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_009"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_009.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_009.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_010_s_1",
+      "name": {
+        "en": "Gildtalon",
+        "es": "Garra Dorada",
+        "zh_cn": "烁金"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_010",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_010"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_010.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_010.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_011_s_1",
+      "name": {
+        "en": "Ionspark",
+        "es": "Chispa Iónica",
+        "zh_cn": "离子之光"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_011",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_011"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_011.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_011.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_015_s_1",
+      "name": {
+        "en": "Goldvolver",
+        "es": "Doravólver",
+        "zh_cn": "金轮"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_015",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_015"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_015.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_015.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_018_s_1",
+      "name": {
+        "en": "PRO-03 Protocol",
+        "es": "Protocolo PRO-03",
+        "zh_cn": "PRO-03「协议」"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_018",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_018"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_018.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_018.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_025_s_1",
+      "name": {
+        "en": "Wasp",
+        "es": "Avispa",
+        "zh_cn": "黄蜂"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_025",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_025"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_025.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_025.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_026_s_1",
+      "name": {
+        "en": "Venomclad",
+        "es": "Revestimiento Venenoso",
+        "zh_cn": "表面淬毒"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_026",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_026"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_026.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_026.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_028_s_1",
+      "name": {
+        "en": "Stillpoint",
+        "es": "Punto Muerto",
+        "zh_cn": "静默核心"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_028",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_028"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_028.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_028.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_029_s_1",
+      "name": {
+        "en": "Torrent",
+        "es": "Torrente",
+        "zh_cn": "湍流"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_029",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_029"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_029.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_029.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_033_s_1",
+      "name": {
+        "en": "Galepiercer",
+        "es": "Perforador de Vendaval",
+        "zh_cn": "岚"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_033",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_033"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_033.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_033.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_034_s_1",
+      "name": {
+        "en": "Whiteout",
+        "es": "Ventisca",
+        "zh_cn": "地平线"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_034",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_034"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_034.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_034.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_036_s_1",
+      "name": {
+        "en": "Medium Well",
+        "es": "Término Medio",
+        "zh_cn": "八分熟"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_036",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_036"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_036.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_036.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_038_s_1",
+      "name": {
+        "en": "Hexbane",
+        "es": "Maleficio",
+        "zh_cn": "魅煞"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_038",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_038"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_038.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_038.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_038_s_2",
+      "name": {
+        "en": "Tigeroar",
+        "es": "Puño del Tigre",
+        "zh_cn": "虎啸"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_038",
+        "skin_index": 2
+      },
+      "relations": {
+        "weapon": "weapon_038"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_038.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_038.UnlockedSkins[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_039_s_1",
+      "name": {
+        "en": "Belladonna",
+        "es": "Belladona",
+        "zh_cn": "颠茄"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_039",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_039"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_039.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_039.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_040_s_1",
+      "name": {
+        "en": "Crimson Rain",
+        "es": "Lluvia Carmesí",
+        "zh_cn": "绯雨"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_040",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_040"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_040.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_040.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_041_s_1",
+      "name": {
+        "en": "Voltflow",
+        "es": "Alto Voltaje",
+        "zh_cn": "电流"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_041",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_041"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_041.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_041.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_043_s_1",
+      "name": {
+        "en": "Deepfreeze",
+        "es": "Congelación Profunda",
+        "zh_cn": "极寒"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_043",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_043"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_043.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_043.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_044_s_1",
+      "name": {
+        "en": "Bloodlotus",
+        "es": "Loto de Sangre",
+        "zh_cn": "红莲"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_044",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_044"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_044.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_044.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_050_s_1",
+      "name": {
+        "en": "Lightchaser",
+        "es": "Cazaluz",
+        "zh_cn": "逐光者"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_050",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_050"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_050.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_050.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_055_s_1",
+      "name": {
+        "en": "Polyhedron",
+        "es": "Poliedro",
+        "zh_cn": "光棱"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_055",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_055"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_055.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_055.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_059_s_1",
+      "name": {
+        "en": "AHHH",
+        "es": "AHHH",
+        "zh_cn": "《群青》"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_059",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_059"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_059.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_059.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_060_s_1",
+      "name": {
+        "en": "Nexus",
+        "es": "Nexo",
+        "zh_cn": "未来"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_060",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_060"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_060.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_060.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_061_s_1",
+      "name": {
+        "en": "Melta",
+        "es": "Fundición",
+        "zh_cn": "热熔"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_061",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_061"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_061.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_061.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_064_s_1",
+      "name": {
+        "en": "Galaxy",
+        "es": "Galaxia",
+        "zh_cn": "星空"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_064",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_064"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_064.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_064.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_072_s_1",
+      "name": {
+        "en": "Autumntine",
+        "es": "Espina Otoñal",
+        "zh_cn": "丰收"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_072",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_072"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_072.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_072.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_076_s_1",
+      "name": {
+        "en": "Tidecleave",
+        "es": "Dominamareas",
+        "zh_cn": "裂涛"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_076",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_076"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_076.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_076.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_078_s_1",
+      "name": {
+        "en": "Flamepeak",
+        "es": "Pico de Fuego",
+        "zh_cn": "焱山"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_078",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_078"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_078.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_078.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_079_s_1",
+      "name": {
+        "en": "Frostspine",
+        "es": "Punta Helada",
+        "zh_cn": "冰骨"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_079",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_079"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_079.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_079.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_083_s_1",
+      "name": {
+        "en": "Malison",
+        "es": "Maldición",
+        "zh_cn": "诅咒"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_083",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_083"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_083.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_083.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_084_s_1",
+      "name": {
+        "en": "Agate",
+        "es": "Ágata",
+        "zh_cn": "玛瑙"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_084",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_084"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_084.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_084.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_089_s_1",
+      "name": {
+        "en": "Fantastring",
+        "es": "Arcotástico",
+        "zh_cn": "幻弦"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_089",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_089"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_089.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_089.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_091_s_1",
+      "name": {
+        "en": "Nimbus",
+        "es": "Nimbus",
+        "zh_cn": "飞天扫帚"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_091",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_091"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_091.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_091.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_093_s_1",
+      "name": {
+        "en": "Fintastic",
+        "es": "Aletástico",
+        "zh_cn": "深溪"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_093",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_093"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_093.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_093.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_094_s_1",
+      "name": {
+        "en": "Inkredible",
+        "es": "Tintavilloso",
+        "zh_cn": "鱿鱼"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_094",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_094"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_094.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_094.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_095_s_1",
+      "name": {
+        "en": "Pulse Matrix",
+        "es": "Matriz de Pulso",
+        "zh_cn": "脉冲矩阵"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_095",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_095"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_095.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_095.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_096_s_1",
+      "name": {
+        "en": "Limited Edition",
+        "es": "Edición limitada",
+        "zh_cn": "限量款"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_096",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_096"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_096.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_096.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_097_s_1",
+      "name": {
+        "en": "Appless",
+        "es": "Manzagol",
+        "zh_cn": "不是苹果"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_097",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_097"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_097.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_097.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_099_s_1",
+      "name": {
+        "en": "Tomahawk Steak",
+        "es": "Costilla de Ternera",
+        "zh_cn": "战斧牛排"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_099",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_099"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_099.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_099.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_100_s_1",
+      "name": {
+        "en": "Windplume",
+        "es": "Pluma Ligera",
+        "zh_cn": "风羽"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_100",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_100"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_100.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_100.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_104_s_1",
+      "name": {
+        "en": "Blues",
+        "es": "Depresión",
+        "zh_cn": "蓝调"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_104",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_104"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_104.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_104.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_105_s_1",
+      "name": {
+        "en": "Redfall",
+        "es": "Caída Roja",
+        "zh_cn": "赤雨"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_105",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_105"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_105.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_105.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_108_s_1",
+      "name": {
+        "en": "Neonlusion",
+        "es": "Ilusión Neón",
+        "zh_cn": "霓虹"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_108",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_108"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_108.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_108.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_109_s_1",
+      "name": {
+        "en": "Silverwave",
+        "es": "Ola Plateada",
+        "zh_cn": "银浪"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_109",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_109"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_109.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_109.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_111_s_1",
+      "name": {
+        "en": "Pyroblast",
+        "es": "Piroexplosión",
+        "zh_cn": "红岩"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_111",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_111"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_111.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_111.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_114_s_1",
+      "name": {
+        "en": "Luminarc",
+        "es": "Arco Lumínico",
+        "zh_cn": "曜芒"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_114",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_114"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_114.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_114.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_115_s_1",
+      "name": {
+        "en": "Evergold",
+        "es": "Oro Eterno",
+        "zh_cn": "黄金树"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_115",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_115"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_115.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_115.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_120_s_1",
+      "name": {
+        "en": "Demonlord's Oath",
+        "es": "Juramento del Señor Demonio",
+        "zh_cn": "魔王之誓"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_120",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_120"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_120.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_120.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_121_s_1",
+      "name": {
+        "en": "Sapphire",
+        "es": "Zafiro",
+        "zh_cn": "蓝珀"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_121",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_121"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_121.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_121.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_122_s_1",
+      "name": {
+        "en": "Deus Ex Machina",
+        "es": "Deus Ex Machina",
+        "zh_cn": "械神诏"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_122",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_122"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_122.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_122.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_124_s_1",
+      "name": {
+        "en": "C4",
+        "es": "C4",
+        "zh_cn": "C4"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_124",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_124"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_124.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_124.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_125_s_1",
+      "name": {
+        "en": "Coral Cobra",
+        "es": "Cobra Coral",
+        "zh_cn": "珊瑚蛇"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_125",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_125"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_125.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_125.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_126_s_1",
+      "name": {
+        "en": "Lava",
+        "es": "Lava",
+        "zh_cn": "熔岩"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_126",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_126"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_126.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_126.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_127_s_1",
+      "name": {
+        "en": "Doomflame",
+        "es": "Llama Mortal",
+        "zh_cn": "魔焰"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_127",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_127"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_127.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_127.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_128_s_1",
+      "name": {
+        "en": "Wyrmfang",
+        "es": "Colmillo de Dragón",
+        "zh_cn": "獠牙"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_128",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_128"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_128.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_128.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_129_s_1",
+      "name": {
+        "en": "Ignisteel",
+        "es": "Acero Ígneo",
+        "zh_cn": "赤械"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_129",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_129"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_129.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_129.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_129_s_2",
+      "name": {
+        "en": "Teal Dragon",
+        "es": "Dragón Turquesa",
+        "zh_cn": "青龙"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_129",
+        "skin_index": 2
+      },
+      "relations": {
+        "weapon": "weapon_129"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_129.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_129.UnlockedSkins[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_131_s_1",
+      "name": {
+        "en": "Nihility Nadir",
+        "es": "Nadir de la Nada",
+        "zh_cn": "坍域终端"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_131",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_131"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_131.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_131.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_132_s_1",
+      "name": {
+        "en": "Chaos Covenant",
+        "es": "Pacto de Caos",
+        "zh_cn": "混沌契约"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_132",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_132"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_132.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_132.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_134_s_1",
+      "name": {
+        "en": "Carnivine",
+        "es": "Viticarnívora",
+        "zh_cn": "毒藤"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_134",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_134"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_134.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_134.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_135_s_1",
+      "name": {
+        "en": "Oblivium",
+        "es": "Olvido",
+        "zh_cn": "湮能"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_135",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_135"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_135.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_135.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_139_s_1",
+      "name": {
+        "en": "Emberblast",
+        "es": "Ráfaga de Ascuas",
+        "zh_cn": "烈焰"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_139",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_139"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_139.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_139.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_140_s_1",
+      "name": {
+        "en": "Phantasy",
+        "es": "Fantasía",
+        "zh_cn": "幻影"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_140",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_140"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_140.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_140.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_140_s_2",
+      "name": {
+        "en": "Winter Solstice",
+        "es": "Solsticio de Invierno",
+        "zh_cn": "冬至"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_140",
+        "skin_index": 2
+      },
+      "relations": {
+        "weapon": "weapon_140"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_140.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_140.UnlockedSkins[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_141_s_1",
+      "name": {
+        "en": "Greenfiend",
+        "es": "Demonio Verde",
+        "zh_cn": "绿魔"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_141",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_141"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_141.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_141.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_145_s_1",
+      "name": {
+        "en": "Aether Oracle",
+        "es": "Oráculo Etéreo",
+        "zh_cn": "以太圣谕"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_145",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_145"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_145.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_145.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_146_s_1",
+      "name": {
+        "en": "Household",
+        "es": "Arma Casera",
+        "zh_cn": "家用"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_146",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_146"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_146.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_146.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_147_s_1",
+      "name": {
+        "en": "Supercharge",
+        "es": "Supercarga",
+        "zh_cn": "超导"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_147",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_147"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_147.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_147.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_148_s_1",
+      "name": {
+        "en": "Skyglow",
+        "es": "Resplandor Celeste",
+        "zh_cn": "霞光"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_148",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_148"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_148.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_148.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_154_s_1",
+      "name": {
+        "en": "Crimson Comet",
+        "es": "Cometa Carmesí",
+        "zh_cn": "赤星"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_154",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_154"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_154.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_154.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_156_s_1",
+      "name": {
+        "en": "Violetveil",
+        "es": "Velo Violeta",
+        "zh_cn": "紫朔"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_156",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_156"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_156.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_156.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_159_s_1",
+      "name": {
+        "en": "Doomsday Beacon",
+        "es": "Faro del Juicio Final",
+        "zh_cn": "末日信标"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_159",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_159"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_159.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_159.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_160_s_1",
+      "name": {
+        "en": "Event Horizon",
+        "es": "Horizonte de Sucesos",
+        "zh_cn": "事件视界"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_160",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_160"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_160.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_160.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_161_s_1",
+      "name": {
+        "en": "Catfish",
+        "es": "Bagre",
+        "zh_cn": "喵喵"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_161",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_161"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_161.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_161.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_164_s_1",
+      "name": {
+        "en": "Fruit Knife",
+        "es": "Cuchillo de Fruta",
+        "zh_cn": "水果刀"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_164",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_164"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_164.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_164.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_165_s_1",
+      "name": {
+        "en": "Nyx's Embrace",
+        "es": "Abrazo de Nyx",
+        "zh_cn": "暗夜之影"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_165",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_165"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_165.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_165.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_167_s_1",
+      "name": {
+        "en": "Boom Frog",
+        "es": "Rana Explosiva",
+        "zh_cn": "爆炸蛙"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_167",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_167"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_167.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_167.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_169_s_1",
+      "name": {
+        "en": "Cleaver",
+        "es": "Cuchilla",
+        "zh_cn": "宰牛刀"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_169",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_169"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_169.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_169.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_170_s_1",
+      "name": {
+        "en": "Eyas",
+        "es": "Águila Joven",
+        "zh_cn": "雏鹰"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_170",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_170"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_170.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_170.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_171_s_1",
+      "name": {
+        "en": "Talisman",
+        "es": "Talismán",
+        "zh_cn": "驱邪符"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_171",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_171"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_171.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_171.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_172_s_1",
+      "name": {
+        "en": "Patrol 5-860X",
+        "es": "Patrulla 5-860X",
+        "zh_cn": "疾巡5-860X"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_172",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_172"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_172.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_172.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_175_s_1",
+      "name": {
+        "en": "Plasma Sharkannon",
+        "es": "Tiburcañón de Plasma",
+        "zh_cn": "等离子脉冲鲨鱼炮"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_175",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_175"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_175.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_175.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_177_s_1",
+      "name": {
+        "en": "Chunky",
+        "es": "Betacarotenosa",
+        "zh_cn": "胖墩"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_177",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_177"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_177.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_177.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_179_s_1",
+      "name": {
+        "en": "Steelguard",
+        "es": "Guardia de Acero",
+        "zh_cn": "钢铁骑士"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_179",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_179"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_179.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_179.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_180_s_1",
+      "name": {
+        "en": "CWRBY",
+        "es": "CRAA",
+        "zh_cn": "《红、蓝、黄的构图》"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_180",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_180"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_180.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_180.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_181_s_1",
+      "name": {
+        "en": "Onyx Tempest",
+        "es": "Tempestad Ónice",
+        "zh_cn": "黑金风暴"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_181",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_181"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_181.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_181.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_183_s_1",
+      "name": {
+        "en": "Scarletine",
+        "es": "Escarlatín",
+        "zh_cn": "绯弹"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_183",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_183"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_183.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_183.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_190_s_1",
+      "name": {
+        "en": "Cull",
+        "es": "Sacrificio",
+        "zh_cn": "收割"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_190",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_190"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_190.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_190.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_192_s_1",
+      "name": {
+        "en": "Gravity Node",
+        "es": "Nodo de Gravedad",
+        "zh_cn": "引力节点"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_192",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_192"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_192.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_192.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_194_s_1",
+      "name": {
+        "en": "Windbreaker",
+        "es": "Rompevientos",
+        "zh_cn": "风声"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_194",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_194"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_194.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_194.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_195_s_1",
+      "name": {
+        "en": "Viridian",
+        "es": "Viridián",
+        "zh_cn": "翠莹"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_195",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_195"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_195.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_195.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_197_s_1",
+      "name": {
+        "en": "Larimar",
+        "es": "Larimar",
+        "zh_cn": "水晶"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_197",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_197"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_197.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_197.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_200_s_1",
+      "name": {
+        "en": "Amethyst",
+        "es": "Amatista",
+        "zh_cn": "紫晶"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_200",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_200"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_200.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_200.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_203_s_1",
+      "name": {
+        "en": "Bamboo Blade",
+        "es": "Hoja de Bambú",
+        "zh_cn": "竹刀"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_203",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_203"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_203.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_203.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_205_s_1",
+      "name": {
+        "en": "Magma",
+        "es": "Magma",
+        "zh_cn": "岩浆"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_205",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_205"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_205.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_205.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_207_s_1",
+      "name": {
+        "en": "Frostedge",
+        "es": "Filo Escarchado",
+        "zh_cn": "寒光"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_207",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_207"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_207.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_207.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_210_s_1",
+      "name": {
+        "en": "Corallure",
+        "es": "Encanto Coralino",
+        "zh_cn": "珊瑚"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_210",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_210"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_210.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_210.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_215_s_1",
+      "name": {
+        "en": "Regalia",
+        "es": "Insignia Real",
+        "zh_cn": "戎耀"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_215",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_215"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_215.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_215.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_216_s_1",
+      "name": {
+        "en": "Syringe",
+        "es": "Jeringa",
+        "zh_cn": "净化"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_216",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_216"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_216.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_216.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_220_s_1",
+      "name": {
+        "en": "Nailshot",
+        "es": "Pistola de Clavos",
+        "zh_cn": "钉子"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_220",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_220"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_220.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_220.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_223_s_1",
+      "name": {
+        "en": "Nonburger",
+        "es": "Inhamburguesa",
+        "zh_cn": "不是汉堡"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_223",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_223"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_223.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_223.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_223_s_2",
+      "name": {
+        "en": "Santa Hat",
+        "es": "Gorro de Papá Noel",
+        "zh_cn": "圣诞帽"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_223",
+        "skin_index": 2
+      },
+      "relations": {
+        "weapon": "weapon_223"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_223.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_223.UnlockedSkins[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_223_s_3",
+      "name": {
+        "en": "Reindeer Antler",
+        "es": "Cuerno de reno",
+        "zh_cn": "驯鹿圣诞帽"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_223",
+        "skin_index": 3
+      },
+      "relations": {
+        "weapon": "weapon_223"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_223.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_223.UnlockedSkins[3]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_224_s_1",
+      "name": {
+        "en": "Raiden",
+        "es": "Raiden",
+        "zh_cn": "雷隐"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_224",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_224"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_224.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_224.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_231_s_1",
+      "name": {
+        "en": "Jungleblaze",
+        "es": "Incendio Forestal",
+        "zh_cn": "苍霆"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_231",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_231"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_231.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_231.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_233_s_1",
+      "name": {
+        "en": "Starshine",
+        "es": "Brillo Estelar",
+        "zh_cn": "星光"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_233",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_233"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_233.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_233.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_237_s_1",
+      "name": {
+        "en": "Chatbox",
+        "es": "Chatbox",
+        "zh_cn": "聊天工具"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_237",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_237"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_237.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_237.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_239_s_1",
+      "name": {
+        "en": "Greentide",
+        "es": "Marea Verde",
+        "zh_cn": "长青"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_239",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_239"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_239.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_239.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_243_s_1",
+      "name": {
+        "en": "Turquoise",
+        "es": "Turquesa",
+        "zh_cn": "青石"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_243",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_243"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_243.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_243.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_243_s_2",
+      "name": {
+        "en": "Apep's Oculus",
+        "es": "Ojo de Apep",
+        "zh_cn": "蛇皇之眼"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_243",
+        "skin_index": 2
+      },
+      "relations": {
+        "weapon": "weapon_243"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_243.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_243.UnlockedSkins[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_246_s_1",
+      "name": {
+        "en": "Divinarchy",
+        "es": "Divinarquía",
+        "zh_cn": "神罗"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_246",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_246"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_246.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_246.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_247_s_1",
+      "name": {
+        "en": "Ex Astris",
+        "es": "Ex Astris",
+        "zh_cn": "曜光"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_247",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_247"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_247.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_247.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_250_s_1",
+      "name": {
+        "en": "Ronin",
+        "es": "Ronin",
+        "zh_cn": "浪客"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_250",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_250"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_250.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_250.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_253_s_1",
+      "name": {
+        "en": "Void Grasp",
+        "es": "Manos del Vacío",
+        "zh_cn": "湮灭之握"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_253",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_253"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_253.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_253.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_255_s_1",
+      "name": {
+        "en": "Astrophage",
+        "es": "Astrófago",
+        "zh_cn": "噬星异骸"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_255",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_255"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_255.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_255.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_260_s_1",
+      "name": {
+        "en": "Thunderclap",
+        "es": "Trueno",
+        "zh_cn": "轰鸣"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_260",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_260"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_260.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_260.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_268_s_1",
+      "name": {
+        "en": "Resplendence",
+        "es": "Resplandor",
+        "zh_cn": "圣辉"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_268",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_268"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_268.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_268.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_270_s_1",
+      "name": {
+        "en": "Everforge",
+        "es": "Forja Eterna",
+        "zh_cn": "百炼"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_270",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_270"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_270.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_270.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_274_s_1",
+      "name": {
+        "en": "Zero Protocol",
+        "es": "Protocolo Cero",
+        "zh_cn": "零号清除计划"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_274",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_274"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_274.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_274.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_275_s_1",
+      "name": {
+        "en": "Gatorbite",
+        "es": "Fauces de Caimán",
+        "zh_cn": "鳄噬"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_275",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_275"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_275.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_275.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_277_s_1",
+      "name": {
+        "en": "Xenoray",
+        "es": "Xenorayo",
+        "zh_cn": "异芒"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_277",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_277"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_277.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_277.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_278_s_1",
+      "name": {
+        "en": "Thunderlord",
+        "es": "Señor de los Truenos",
+        "zh_cn": "雷电法王"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_278",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_278"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_278.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_278.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_292_s_1",
+      "name": {
+        "en": "Raw Protein",
+        "es": "Proteína Viva",
+        "zh_cn": "野生蛋白"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_292",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_292"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_292.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_292.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_298_s_1",
+      "name": {
+        "en": "Hyperflux",
+        "es": "Hiperflujo",
+        "zh_cn": "超导枢核"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_298",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_298"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_298.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_298.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_299_s_1",
+      "name": {
+        "en": "Sanguine",
+        "es": "Sanguinaria",
+        "zh_cn": "猩红"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_299",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_299"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_299.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_299.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_302_s_1",
+      "name": {
+        "en": "Wildfire",
+        "es": "Fuego Salvaje",
+        "zh_cn": "野火"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_302",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_302"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_302.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_302.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_306_s_1",
+      "name": {
+        "en": "Verdant Wrath",
+        "es": "Ira Esmeralda",
+        "zh_cn": "苍辉之怒"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_306",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_306"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_306.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_306.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_307_s_1",
+      "name": {
+        "en": "Eschaton",
+        "es": "Escatón",
+        "zh_cn": "终焉"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_307",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_307"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_307.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_307.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_309_s_1",
+      "name": {
+        "en": "Fusion Vortex",
+        "es": "Vórtice de Fusión",
+        "zh_cn": "聚变回旋"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_309",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_309"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_309.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_309.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_310_s_1",
+      "name": {
+        "en": "Godslayer",
+        "es": "Matadioses",
+        "zh_cn": "弑神者"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_310",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_310"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_310.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_310.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_310_s_2",
+      "name": {
+        "en": "Felblade",
+        "es": "Cuchilla Diabólica",
+        "zh_cn": "邪能之刃"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_310",
+        "skin_index": 2
+      },
+      "relations": {
+        "weapon": "weapon_310"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_310.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_310.UnlockedSkins[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_311_s_1",
+      "name": {
+        "en": "Divinestorm",
+        "es": "Tormenta Divina",
+        "zh_cn": "神怒"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_311",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_311"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_311.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_311.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_314_s_1",
+      "name": {
+        "en": "Gaze of Thunder",
+        "es": "Mirada del Trueno",
+        "zh_cn": "雷霆之眼"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_314",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_314"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_314.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_314.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_315_s_1",
+      "name": {
+        "en": "Neonburst",
+        "es": "Explosión Neón",
+        "zh_cn": "萤火"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_315",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_315"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_315.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_315.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_316_s_1",
+      "name": {
+        "en": "Glintgear",
+        "es": "Balista Brillante",
+        "zh_cn": "耀轮"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_316",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_316"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_316.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_316.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_316_s_2",
+      "name": {
+        "en": "Toy Crossbow",
+        "es": "Ballesta de Juguete",
+        "zh_cn": "玩具弩"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_316",
+        "skin_index": 2
+      },
+      "relations": {
+        "weapon": "weapon_316"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_316.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_316.UnlockedSkins[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_317_s_1",
+      "name": {
+        "en": "Flamevoid",
+        "es": "Vacío Ígneo",
+        "zh_cn": "噬焱"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_317",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_317"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_317.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_317.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_320_s_1",
+      "name": {
+        "en": "Harlequin",
+        "es": "Arlequín",
+        "zh_cn": "心魇"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_320",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_320"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_320.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_320.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_323_s_1",
+      "name": {
+        "en": "Dirgemourne",
+        "es": "Canto Mortuorio",
+        "zh_cn": "怨灵之焰"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_323",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_323"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_323.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_323.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_324_s_1",
+      "name": {
+        "en": "Adder",
+        "es": "Víbora",
+        "zh_cn": "蝮蛇"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_324",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_324"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_324.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_324.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_325_s_1",
+      "name": {
+        "en": "Dómrend",
+        "es": "Veredicto Desgarrador",
+        "zh_cn": "多姆伦德之刃"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_325",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_325"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_325.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_325.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_326_s_1",
+      "name": {
+        "en": "Winterland",
+        "es": "Inviernolandia",
+        "zh_cn": "凛冬"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_326",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_326"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_326.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_326.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_327_s_1",
+      "name": {
+        "en": "Nightwatch",
+        "es": "Guardia Nocturna",
+        "zh_cn": "夜巡"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_327",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_327"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_327.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_327.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_329_s_1",
+      "name": {
+        "en": "Darkmist",
+        "es": "Niebla Oscura",
+        "zh_cn": "黑烟"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_329",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_329"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_329.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_329.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_330_s_1",
+      "name": {
+        "en": "Flare Flux",
+        "es": "Flujo Resplandeciente",
+        "zh_cn": "炽轨"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_330",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_330"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_330.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_330.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_332_s_1",
+      "name": {
+        "en": "Soul Packet",
+        "es": "Paquete de Alma",
+        "zh_cn": "元气红包"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_332",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_332"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_332.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_332.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_339_s_1",
+      "name": {
+        "en": "Colorplay",
+        "es": "Juego de Colores",
+        "zh_cn": "缤纷"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_339",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_339"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_339.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_339.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_343_s_1",
+      "name": {
+        "en": "Blazefall",
+        "es": "Lluvia de Fuego",
+        "zh_cn": "赤潮"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_343",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_343"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_343.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_343.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_345_s_1",
+      "name": {
+        "en": "Wingflare",
+        "es": "Fulgor Alado",
+        "zh_cn": "飞翼"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_345",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_345"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_345.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_345.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_346_s_1",
+      "name": {
+        "en": "AE86",
+        "es": "AE86",
+        "zh_cn": "艾伊86"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_346",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_346"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_346.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_346.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_351_s_1",
+      "name": {
+        "en": "Bonecleaver",
+        "es": "Cortahuesos",
+        "zh_cn": "碎牙"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_351",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_351"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_351.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_351.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_357_s_1",
+      "name": {
+        "en": "Luna's Beamcannon",
+        "es": "Cañón de Rayos de Luna",
+        "zh_cn": "露娜的光束炮"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_357",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_357"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_357.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_357.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_358_s_1",
+      "name": {
+        "en": "Luna's Lightblade",
+        "es": "Espada de Luz de Luna",
+        "zh_cn": "露娜的光刃"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_358",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_358"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_358.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_358.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_361_s_1",
+      "name": {
+        "en": "Vindicator",
+        "es": "Vindicador",
+        "zh_cn": "赤焰裁决者"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_361",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_361"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_361.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_361.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_363_s_1",
+      "name": {
+        "en": "Creed of Greed",
+        "es": "Credo de la Codicia",
+        "zh_cn": "贪欲邪典"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_363",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_363"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_363.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_363.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_365_s_1",
+      "name": {
+        "en": "Candyhood",
+        "es": "Caramelo de la Violencia",
+        "zh_cn": "童年"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_365",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_365"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_365.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_365.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_366_s_1",
+      "name": {
+        "en": "Caelum Codex",
+        "es": "Códice Caelum",
+        "zh_cn": "苍穹圣契"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_366",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_366"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_366.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_366.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_367_s_1",
+      "name": {
+        "en": "Animus Grimoire",
+        "es": "Grimorio de Animus",
+        "zh_cn": "蚀魂秘简"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_367",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_367"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_367.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_367.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_370_s_1",
+      "name": {
+        "en": "Daybreak",
+        "es": "Alba",
+        "zh_cn": "曙光"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_370",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_370"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_370.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_370.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_371_s_1",
+      "name": {
+        "en": "Sabletide",
+        "es": "Marea de Sables",
+        "zh_cn": "黑帆"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_371",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_371"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_371.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_371.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_372_s_1",
+      "name": {
+        "en": "Cosmos",
+        "es": "Cosmos",
+        "zh_cn": "宇宙"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_372",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_372"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_372.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_372.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_374_s_1",
+      "name": {
+        "en": "Flamaple",
+        "es": "Flamarce",
+        "zh_cn": "红枫"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_374",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_374"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_374.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_374.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_374_s_2",
+      "name": {
+        "en": "Phoenix Plume",
+        "es": "Pluma de Fénix",
+        "zh_cn": "凤翎扇"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_374",
+        "skin_index": 2
+      },
+      "relations": {
+        "weapon": "weapon_374"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_374.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_374.UnlockedSkins[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_375_s_1",
+      "name": {
+        "en": "Shadowchaser",
+        "es": "Cazador de Sombras",
+        "zh_cn": "逐影"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_375",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_375"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_375.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_375.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_376_s_1",
+      "name": {
+        "en": "Handmade",
+        "es": "Espada Artesanal",
+        "zh_cn": "手工"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_376",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_376"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_376.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_376.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_377_s_1",
+      "name": {
+        "en": "Regalcrest",
+        "es": "Cresta Real",
+        "zh_cn": "皇座"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_377",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_377"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_377.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_377.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_378_s_1",
+      "name": {
+        "en": "Soulsnatcher",
+        "es": "Robaalmas",
+        "zh_cn": "狩魂之焰"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_378",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_378"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_378.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_378.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_388_s_1",
+      "name": {
+        "en": "Wolfram Warhammer",
+        "es": "Martillo de Guerra de Wolframio",
+        "zh_cn": "钨基超合金战锤"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_388",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_388"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_388.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_388.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_392_s_1",
+      "name": {
+        "en": "Portable Fan",
+        "es": "Ventilador Portátil",
+        "zh_cn": "便携风扇"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_392",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_392"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_392.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_392.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_399_s_1",
+      "name": {
+        "en": "Orbwyrm",
+        "es": "Orbe Dracónico",
+        "zh_cn": "龙玉"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_399",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_399"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_399.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_399.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_400_s_1",
+      "name": {
+        "en": "Glorywyrm",
+        "es": "Dragón Glorioso",
+        "zh_cn": "耀龙"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_400",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_400"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_400.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_400.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_401_s_1",
+      "name": {
+        "en": "Not-A-Troll",
+        "es": "No-Es-Un-Trol",
+        "zh_cn": "礼貌版"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_401",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_401"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_401.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_401.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_402_s_1",
+      "name": {
+        "en": "Googly",
+        "es": "Ojos Hechizantes",
+        "zh_cn": "大眼"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_402",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_402"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_402.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_402.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_402_s_2",
+      "name": {
+        "en": "Contacts",
+        "es": "Lentes de Contacto",
+        "zh_cn": "美瞳"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_402",
+        "skin_index": 2
+      },
+      "relations": {
+        "weapon": "weapon_402"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_402.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_402.UnlockedSkins[2]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_403_s_1",
+      "name": {
+        "en": "Demonfall",
+        "es": "Flagelo de los Demonios",
+        "zh_cn": "伏魔"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_403",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_403"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_403.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_403.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_404_s_1",
+      "name": {
+        "en": "Frostiron Meteor",
+        "es": "Meteoro de Hierro Gélido",
+        "zh_cn": "寒铁流星锤"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_404",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_404"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_404.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_404.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_406_s_1",
+      "name": {
+        "en": "NanoMatrixNaught",
+        "es": "Nanomatrix Cero",
+        "zh_cn": "零号纳米矩阵"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_406",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_406"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_406.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_406.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_407_s_1",
+      "name": {
+        "en": "Pigtails",
+        "es": "Trenzas",
+        "zh_cn": "双马尾"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_407",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_407"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_407.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_407.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_411_s_1",
+      "name": {
+        "en": "Gacha Galore",
+        "es": "Fiebre de Gacha",
+        "zh_cn": "扭蛋嘉年华"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_411",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_411"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_411.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_411.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_412_s_1",
+      "name": {
+        "en": "Skillpowered",
+        "es": "Máximo Poder",
+        "zh_cn": "技能版"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_412",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_412"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_412.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_412.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_413_s_1",
+      "name": {
+        "en": "Syrup Pulse",
+        "es": "Pulso de Sirope",
+        "zh_cn": "糖浆脉冲"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_413",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_413"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_413.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_413.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_414_s_1",
+      "name": {
+        "en": "Finis Noctem",
+        "es": "Finis Noctem",
+        "zh_cn": "终章之夜"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_414",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_414"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_414.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_414.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_cg_2_s_1",
+      "name": {
+        "en": "Nox Nova",
+        "es": "Nox Nova",
+        "zh_cn": "黯星"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_cg_2",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_cg_2"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_cg_2.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_cg_2.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_lighter_s_1",
+      "name": {
+        "en": "Razzle-Dazzle",
+        "es": "Chispas Deslumbrantes",
+        "zh_cn": "滋滋呼啦"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_lighter",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_lighter"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_lighter.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_lighter.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    },
+    {
+      "id": "weapon_shower_s_1",
+      "name": {
+        "en": "Cerulean",
+        "es": "Cerúleo",
+        "zh_cn": "蔚蓝"
+      },
+      "category": "weapon_skin",
+      "subcategory": "weapon",
+      "attributes": {
+        "weapon_id": "weapon_shower",
+        "skin_index": 1
+      },
+      "relations": {
+        "weapon": "weapon_shower"
+      },
+      "save_refs": [
+        "weaponEvolutionData.weapons.weapon_shower.CurrentSkinIndex",
+        "weaponEvolutionData.weapons.weapon_shower.UnlockedSkins[1]"
+      ],
+      "notes": [],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:needed_data.json"
+    }
+  ]
+}
