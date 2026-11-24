@@ -74,7 +74,7 @@ async function mockEditor(page: Page, session: object = ACTIVE) {
 }
 
 async function submitLogin(page: Page, email = 'holder@example.test', password = 'fixture-password') {
-  await page.getByLabel('Correo electrónico de ChillyRoom').fill(email)
+  await page.getByLabel('Correo electrónico').fill(email)
   await page.getByLabel('Contraseña', { exact: true }).fill(password)
   await page.getByRole('button', { name: 'Iniciar sesión' }).click()
 }
@@ -130,8 +130,9 @@ test('inicia sesión, descarga, prepara, confirma y cierra sesión', async ({ pa
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/partida')
   await submitLogin(page)
-  await expect(page.getByText('Identidad verificada')).toBeVisible()
+  await expect(page.getByLabel('Cuenta conectada')).toContainText(PROFILE.label)
   await expect(page.getByTestId('native-current-gems')).toHaveText('1,001')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
   await page.getByLabel('Nueva cantidad de gemas').fill('1002')
   await page.getByRole('button', { name: 'Preparar edición' }).click()
   await expect(page.getByText('+1', { exact: true })).toBeVisible()
@@ -139,7 +140,9 @@ test('inicia sesión, descarga, prepara, confirma y cierra sesión', async ({ pa
   await expect(confirm).toBeDisabled()
   await page.getByRole('checkbox').check()
   await confirm.click()
-  await expect(page.getByText('La descarga posterior coincide con el agregado subido.')).toBeVisible()
+  await expect(page.getByText('Cambios guardados y verificados en la nube.')).toBeVisible()
+  await page.getByRole('navigation').getByRole('link', { name: 'Partida' }).click()
+  await expect(page.getByTestId('native-current-gems')).toHaveText('1,002')
   page.once('dialog', (dialog) => dialog.accept())
   await page.getByRole('button', { name: 'Cerrar sesión' }).click()
   await expect(page.getByRole('heading', { name: 'Iniciar sesión en ChillyRoom' })).toBeVisible()
@@ -151,12 +154,11 @@ test('no pide identificadores y descarga con la identidad generada por el servid
   await mockEditor(page, { ...ACTIVE, save: SAVE })
   await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
   await page.goto('/partida')
-  await expect(page.getByText('No necesitas configurar identificadores.', { exact: false })).toBeVisible()
   await expect(page.getByLabel('Identificador de instalación')).toHaveCount(0)
   await expect(page.getByLabel('Perfil de instalación')).toHaveCount(0)
   await submitLogin(page)
   await expect(page.getByTestId('native-current-gems')).toHaveText('1,001')
-  await expect(page.getByText('Instalación generada por el servidor')).toBeVisible()
+  await expect(page.getByLabel('Cuenta conectada')).toBeVisible()
 })
 
 test('explica la espera de vinculación de un dispositivo nuevo', async ({ page }) => {
@@ -170,8 +172,8 @@ test('explica la espera de vinculación de un dispositivo nuevo', async ({ page 
   await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
   await page.goto('/partida')
   await submitLogin(page)
-  await expect(page.getByText('Vinculación de dispositivo en espera.', { exact: false })).toBeVisible()
-  await expect(page.getByText('El servidor conserva la identificación generada', { exact: false }).first()).toBeVisible()
+  await expect(page.getByText('En espera de ChillyRoom', { exact: true })).toBeVisible()
+  await expect(page.getByText('Vuelve a intentarlo después de', { exact: false })).toBeVisible()
 })
 
 test('informa sesión caducada durante una descarga y vuelve al acceso', async ({ page }) => {
@@ -209,7 +211,7 @@ test('presenta el servicio no disponible sin pedir credenciales', async ({ page 
   })
   await page.goto('/partida')
   await expect(page.getByRole('heading', { name: 'Servicio temporalmente no disponible' })).toBeVisible()
-  await expect(page.getByLabel('Correo electrónico de ChillyRoom')).toHaveCount(0)
+  await expect(page.getByLabel('Correo electrónico')).toHaveCount(0)
   await expect(page.getByRole('button', { name: 'Reintentar' })).toBeVisible()
 })
 
@@ -239,7 +241,8 @@ test('mantiene el editor en solo lectura cuando la escritura está deshabilitada
   await mockEditor(page, { ...ACTIVE, write_enabled: false, write_ready: false, save: SAVE })
   await page.goto('/partida')
   await submitLogin(page)
-  await expect(page.getByText('La escritura está deshabilitada en el servidor.', { exact: false })).toBeVisible()
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await expect(page.getByText('La subida a la nube está deshabilitada.', { exact: false })).toBeVisible()
   await page.getByLabel('Nueva cantidad de gemas').fill('1002')
   await page.getByRole('button', { name: 'Preparar edición' }).click()
   await expect(page.getByText('+1', { exact: true })).toBeVisible()
@@ -266,6 +269,121 @@ test('informa cuando la cuenta no tiene partida en la nube', async ({ page }) =>
   await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
   await page.goto('/partida')
   await submitLogin(page)
-  await expect(page.getByText('Sin partida en la nube.', { exact: false })).toBeVisible()
-  await expect(page.getByText('No se creó ni se sobrescribió nada.', { exact: false })).toBeVisible()
+  await expect(page.getByText('Sin partida en la nube', { exact: true })).toBeVisible()
+  await expect(page.getByText('Guarda una copia desde Soul Knight', { exact: false })).toBeVisible()
+})
+
+test('navega por el flujo de nube y mantiene el borrador solo para la cuenta activa', async ({ page }) => {
+  const internalLabel = 'Cuenta ' + 'a'.repeat(12)
+  let account = 0
+  await mockBase(page)
+  await page.route('**/api/v1/cloud/native/login', (route) => {
+    account += 1
+    return route.fulfill({ json: {
+      ...ACTIVE,
+      account: { ...ACTIVE.account, label: account === 1 ? internalLabel : SECOND_PROFILE.label },
+      save: { ...SAVE, gems: account === 1 ? 1001 : 42 },
+    } })
+  })
+  await page.route('**/api/v1/cloud/native/logout', (route) => route.fulfill({ status: 204 }))
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
+    json: { backups: account === 1 ? [{ ...BACKUP, confirmed: true }] : [] },
+  }))
+
+  await page.setViewportSize({ width: 320, height: 740 })
+  await page.goto('/')
+  const nav = page.getByRole('navigation', { name: 'Navegación principal' })
+  await expect(nav.getByRole('link')).toHaveText(['Inicio', 'Partida', 'Editor'])
+  await page.getByRole('link', { name: 'Conectar cuenta' }).click()
+  await submitLogin(page)
+  await expect(page.getByLabel('Cuenta conectada')).toContainText('ho…@example.test')
+  await expect(page.locator('body')).not.toContainText(internalLabel)
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await page.getByLabel('Nueva cantidad de gemas').fill('1002')
+  await nav.getByRole('link', { name: 'Inicio' }).click()
+  await expect(page.getByText('Cuenta conectada', { exact: true })).toBeVisible()
+  await page.getByRole('link', { name: 'Abrir partida' }).click()
+  await expect(page.getByText('1,001 gemas', { exact: true })).toBeVisible()
+  await nav.getByRole('link', { name: 'Editor' }).click()
+  await expect(page.getByLabel('Nueva cantidad de gemas')).toHaveValue('1002')
+  await nav.getByRole('link', { name: 'Partida' }).click()
+  page.once('dialog', (dialog) => dialog.accept())
+  await page.getByRole('button', { name: 'Cerrar sesión' }).click()
+  await nav.getByRole('link', { name: 'Editor' }).click()
+  await expect(page.getByLabel('Nueva cantidad de gemas')).toHaveCount(0)
+  await page.getByRole('link', { name: 'Conectar cuenta' }).click()
+  await submitLogin(page, 'second@example.test')
+  await expect(page.getByTestId('native-current-gems')).toHaveText('42')
+  await expect(page.getByText('Esta cuenta todavía no tiene respaldos.')).toBeVisible()
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await expect(page.getByLabel('Nueva cantidad de gemas')).toHaveValue('42')
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(320)
+})
+
+test('las rutas antiguas llevan a Partida y no permiten cargar un archivo local', async ({ page }) => {
+  await mockBase(page)
+  for (const path of ['/importar', '/exportar']) {
+    await page.goto(path)
+    await expect(page).toHaveURL(/\/partida$/)
+    await expect(page.getByRole('heading', { name: 'Partida', exact: true })).toBeVisible()
+    await expect(page.locator('input[type=file]')).toHaveCount(0)
+  }
+})
+
+test('verifica y restaura un respaldo desde Partida con una confirmación', async ({ page }) => {
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, gems: 1002 } } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
+    json: { backups: [{ ...BACKUP, confirmed: true }] },
+  }))
+  await page.route('**/api/v1/cloud/native/verify', (route) => {
+    expect(route.request().postDataJSON()).toEqual({ backup_id: BACKUP.id })
+    return route.fulfill({ json: { backup_id: BACKUP.id, matches_original: false, matches_candidate: true } })
+  })
+  await page.route('**/api/v1/cloud/native/restore', (route) => {
+    expect(route.request().postDataJSON()).toEqual({ backup_id: BACKUP.id, confirmation: 'RESTAURAR' })
+    return route.fulfill({ json: {
+      action: 'restore', backup_id: BACKUP.id, persisted: true, remote_gems: 1001,
+    } })
+  })
+  await page.goto('/partida')
+  await page.getByText('1,001 gemas', { exact: true }).click()
+  await page.getByRole('button', { name: 'Verificar nube' }).click()
+  await expect(page.getByText('La nube coincide con la edición guardada.')).toBeVisible()
+  page.once('dialog', async (dialog) => {
+    expect(dialog.message()).toContain('Se reemplazará la partida en la nube.')
+    await dialog.accept()
+  })
+  await page.getByRole('button', { name: 'Restaurar respaldo' }).click()
+  await expect(page.getByText('Respaldo restaurado y verificado en la nube.')).toBeVisible()
+  await expect(page.getByTestId('native-current-gems')).toHaveText('1,001')
+  await expect(page.getByRole('link', { name: 'Abrir Editor' })).toHaveCount(0)
+})
+
+test('permite reintentar una descarga y conserva el resultado al abrir el Editor', async ({ page }) => {
+  let attempts = 0
+  let finishDownload = () => {}
+  const pendingDownload = new Promise<void>((resolve) => { finishDownload = resolve })
+  await mockBase(page, { ...BASE_CONFIG, session: ACTIVE })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  await page.route('**/api/v1/cloud/native/save', async (route) => {
+    attempts += 1
+    if (attempts === 1) {
+      await route.fulfill({ status: 502, json: { error: { message: 'internal diagnostic', issues: [] } } })
+      return
+    }
+    await pendingDownload
+    await route.fulfill({ json: { ...SAVE, downloaded_at: '2026-11-23T20:00:00Z' } })
+  })
+
+  await page.goto('/partida')
+  await page.getByRole('button', { name: 'Descargar partida' }).click()
+  await expect(page.getByRole('alert')).toContainText('No se pudo descargar la partida.')
+  await expect(page.locator('body')).not.toContainText('internal diagnostic')
+  await page.getByRole('button', { name: 'Descargar partida' }).click()
+  await expect(page.getByRole('button', { name: 'Descargando…' })).toBeDisabled()
+  finishDownload()
+  await expect(page.getByText('Copia verificada')).toBeVisible()
+  await expect(page.getByText('Última descarga')).toBeVisible()
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await expect(page.getByLabel('Nueva cantidad de gemas')).toHaveValue('1001')
 })

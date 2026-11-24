@@ -1,4 +1,4 @@
-import { CloudDownload, DatabaseBackup, Gem, UserRound } from 'lucide-react'
+import { CloudDownload } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import {
@@ -12,6 +12,23 @@ import { useOperation } from '../useOperation'
 
 const gemFormat = new Intl.NumberFormat('es-MX')
 const dateFormat = new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium', timeStyle: 'short' })
+
+const accountProblems: Record<string, string> = {
+  cloud_grant_invalid: 'El enlace ya se usó o caducó. Solicita uno nuevo.',
+  cloud_account_linked: 'Abre el enlace en el navegador donde vinculaste esta cuenta.',
+  cloud_account_missing: 'La cuenta vinculada ya no está disponible.',
+  cloud_browser_required: 'Vincula una cuenta en este navegador.',
+  cloud_session_expired: 'La sesión caducó. Solicita un nuevo enlace para reconectar.',
+  cloud_remote_changed: 'La partida cambió en la nube. Descárgala de nuevo.',
+  cloud_write_disabled: 'La subida a la nube está deshabilitada.',
+  cloud_already_confirmed: 'Esta edición ya se subió. Verifica su respaldo.',
+}
+
+function accountProblem(error: ApiProblem, fallback: string) {
+  const message = accountProblems[error.code] ?? (error.message === 'El inicio de sesión requiere HTTPS en el editor y en la API.'
+    ? error.message : fallback)
+  return new ApiProblem(message, [], error.code)
+}
 
 export function CloudAccountsPage() {
   const [state, setState] = useState<CloudAccounts | null>(null)
@@ -73,16 +90,15 @@ export function CloudAccountsPage() {
   const pending = operation.pending || authentication.pending
 
   return <>
-    <PageTitle title="Partida en la nube" />
-    <div className="lab-shell account-shell">
+    <PageTitle title="Cuentas vinculadas" />
+    <div className="lab-shell account-shell linked-shell">
       <section className="lab-card" aria-labelledby="accounts-title">
         <div className="lab-card-head">
-          <span className="lab-icon"><UserRound size={20} aria-hidden="true" /></span>
           <div><h2 id="accounts-title">Mis cuentas</h2>{account && <p>Android Global · {account.connected ? 'Sesión vigente' : 'Reconexión necesaria'}</p>}</div>
         </div>
-        {state?.message && <Notice tone="warning">{state.message}</Notice>}
+        {state?.message && <Notice tone="warning">El acceso a cuentas vinculadas no está disponible en este momento.</Notice>}
         {operation.pending && <p role="status">Consultando cuentas…</p>}
-        {operation.problem && <><Problem problem={operation.problem} />
+        {operation.problem && <><Problem problem={accountProblem(operation.problem, 'No se pudo completar la operación de la cuenta.')} />
           <button className="button lab-quiet" type="button" onClick={refresh}>Actualizar cuentas</button></>}
         {ticket && <div className="lab-actions">
           <button className="button lab-primary" type="button" onClick={linkAccount}
@@ -94,7 +110,7 @@ export function CloudAccountsPage() {
             {authentication.pending && authAction === 'logout' ? 'Cerrando sesión…' : 'Cerrar sesión'}
           </button>
         </div>}
-        {authentication.problem && <Problem problem={authentication.problem} />}
+        {authentication.problem && <Problem problem={accountProblem(authentication.problem, 'No se pudo completar el acceso a la cuenta.')} />}
         {account && <>
           <label className="lab-field"><span>Cuenta seleccionada</span>
             <select className="lab-input" value={account.id} onChange={(event) => {
@@ -136,7 +152,7 @@ export function CloudAccountsPage() {
             <label className="lab-field"><span>Plataforma</span>
               <select className="lab-input" defaultValue="android-global" name="platform">
                 <option value="android-global">Android Global</option>
-                <option value="ios" disabled>iOS — Próximamente</option>
+                <option value="ios" disabled>iOS · No disponible</option>
               </select>
             </label>
             <p className="lab-hint" role="status">{state?.login_message ?? (operation.problem
@@ -161,21 +177,9 @@ export function CloudAccountsPage() {
       </section>
 
       {state && account ? <AccountEditor key={account.id} account={account} limits={state}
-        serverWriteEnabled={state.write_enabled} onExpired={refresh} /> : <>
-        <section className="lab-card"><h2>Mi partida</h2><p>Selecciona una cuenta vinculada para descargar su partida.</p></section>
-        <section className="lab-card"><h2>Respaldos</h2><p>El historial de respaldos aparecerá al seleccionar una cuenta.</p></section>
-      </>}
-
-      <details className="account-details">
-        <summary>Acceso nativo (Fase 6.8)</summary>
-        <Link className="button lab-quiet" to="/partida">Ir al acceso con correo y contraseña</Link>
-      </details>
-
-      <details className="account-details">
-        <summary>Administración</summary>
-        <Link className="button lab-quiet" to="/partida/laboratorio">Abrir laboratorio administrativo</Link>
-      </details>
+        serverWriteEnabled={state.write_enabled} onExpired={refresh} /> : null}
     </div>
+    <Link className="cloud-text-link justify-self-start" to="/partida">Volver a Partida</Link>
   </>
 }
 
@@ -228,8 +232,7 @@ function AccountEditor({ account, limits, serverWriteEnabled, onExpired }: {
   return <>
     <section className="lab-card" aria-labelledby="save-title">
       <div className="lab-card-head">
-        <span className="lab-icon"><Gem size={20} aria-hidden="true" /></span>
-        <div><h2 id="save-title">Mi partida</h2><p>{account.label} · Android Global</p></div>
+        <h2 id="save-title">Partida en la nube</h2>
       </div>
       {!account.connected && <Notice tone="warning">La sesión caducó. Solicita un nuevo enlace privado para reconectar.</Notice>}
       {account.connected && !account.write_ready && <Notice tone="warning">{serverWriteEnabled === false
@@ -246,7 +249,6 @@ function AccountEditor({ account, limits, serverWriteEnabled, onExpired }: {
         <div className="lab-save">
           <div className="lab-metric"><span>Gemas descargadas</span><strong data-testid="cloud-current-gems">{gemFormat.format(save.gems)}</strong></div>
           <dl className="lab-facts">
-            <div><dt>Tamaño</dt><dd>{formatSize(save.size)}</dd></div>
             <div><dt>Descarga</dt><dd>{dateFormat.format(new Date(save.downloaded_at))}</dd></div>
             <div><dt>Verificación</dt><dd>Copia validada</dd></div>
           </dl>
@@ -270,10 +272,6 @@ function AccountEditor({ account, limits, serverWriteEnabled, onExpired }: {
           </label>
           <button className="button lab-quiet" disabled={disabled || !valid || amount === save.gems}>Preparar edición</button>
         </form>
-        <details className="account-details">
-          <summary>Detalles de descarga</summary>
-          <p className="lab-mono">SHA-256 {save.sha256}</p>
-        </details>
       </>}
       {candidate && <div className="account-preview">
         <dl className="lab-facts">
@@ -295,18 +293,19 @@ function AccountEditor({ account, limits, serverWriteEnabled, onExpired }: {
           })}>Subir y verificar</button>
         </>}
       </div>}
-      {result && <div role="status" className={`lab-banner ${result.persisted ? 'success' : 'warn'}`}>{result.message}</div>}
+      {result && <div role="status" className={`lab-banner ${result.persisted ? 'success' : 'warn'}`}>
+        {result.persisted ? 'Cambios guardados y verificados en la nube.' : 'No se pudo confirmar la subida. Verifica el respaldo.'}
+      </div>}
       {operation.pending && <p role="status">Operación en curso…</p>}
-      {operation.problem && <Problem problem={operation.problem} />}
+      {operation.problem && <Problem problem={accountProblem(operation.problem, 'No se pudo completar la operación de la partida.')} />}
     </section>
 
     <section className="lab-card" aria-labelledby="backups-title">
       <div className="lab-card-head">
-        <span className="lab-icon"><DatabaseBackup size={20} aria-hidden="true" /></span>
-        <div><h2 id="backups-title">Respaldos</h2><p>{account.label}</p></div>
+        <h2 id="backups-title">Respaldos</h2>
       </div>
       {historyOperation.pending && <p role="status">Cargando respaldos…</p>}
-      {historyOperation.problem && <><Problem problem={historyOperation.problem} />
+      {historyOperation.problem && <><Problem problem={accountProblem(historyOperation.problem, 'No se pudieron cargar los respaldos.')} />
         <button className="button lab-quiet" onClick={() => void historyOperation.run(refreshHistory)}>Actualizar respaldos</button>
       </>}
       {history.length === 0 && !historyOperation.pending && !historyOperation.problem && <p>No hay respaldos de esta cuenta.</p>}
@@ -330,14 +329,9 @@ function AccountEditor({ account, limits, serverWriteEnabled, onExpired }: {
           }}>Restaurar respaldo</button>}
         </div>
         {backupResult?.backup_id === backup.id && <p role="status">{backupResult.message}</p>}
-        <details className="account-details">
-          <summary>Huellas SHA-256</summary>
-          <p className="lab-mono">Original {backup.original_sha256}</p>
-          <p className="lab-mono">Candidato {backup.candidate_sha256}</p>
-        </details>
       </details>)}
       {backupOperation.pending && <p role="status">Consultando la nube…</p>}
-      {backupOperation.problem && <Problem problem={backupOperation.problem} />}
+      {backupOperation.problem && <Problem problem={accountProblem(backupOperation.problem, 'No se pudo completar la operación del respaldo.')} />}
     </section>
   </>
 }

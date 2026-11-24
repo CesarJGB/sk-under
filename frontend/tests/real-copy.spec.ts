@@ -24,7 +24,7 @@ test.beforeEach(async ({ page }) => {
       }],
     },
   }))
-  await page.goto('/importar')
+  await page.goto('/tests/fixtures/files.html')
   const picker = page.locator('#local-file')
   await expect(picker).toBeEnabled()
   await picker.setInputFiles({ name: 'sintetico.data', mimeType: 'application/octet-stream', buffer: original })

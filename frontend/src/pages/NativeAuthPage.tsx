@@ -1,6 +1,5 @@
 import {
-  CloudDownload, DatabaseBackup, Eye, EyeOff, Gem, LoaderCircle, LogOut,
-  RefreshCw, ServerOff, ShieldCheck, UserRound,
+  ChevronDown, CloudDownload, Eye, EyeOff, LogOut,
 } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
@@ -10,49 +9,65 @@ import {
   type NativeConfig, type NativeSaveSummary, type NativeSession,
 } from '../api'
 import { formatSize } from '../session'
-import { Notice, PageTitle, Problem } from '../ui'
+import { Loading, Notice, PageTitle, Problem } from '../ui'
+import { HomePage } from './HomePage'
 import { useOperation } from '../useOperation'
 
 const gemFormat = new Intl.NumberFormat('es-MX')
 const dateFormat = new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium', timeStyle: 'short' })
 
 const FRIENDLY: Record<string, string> = {
-  native_https_required: 'El inicio de sesión requiere HTTPS en el editor y en la API.',
-  native_credentials_rejected: 'El correo o la contraseña no son correctos. No se reintenta automáticamente.',
-  native_login_throttled: 'Demasiados intentos en poco tiempo. Espera antes de volver a intentarlo.',
-  native_auth_throttled: 'El proveedor limitó temporalmente los intentos. Espera antes de reintentar.',
-  native_auth_unavailable: 'El servicio de ChillyRoom no está disponible en este momento. Inténtalo más tarde.',
-  native_auth_protocol: 'ChillyRoom devolvió una respuesta que no se pudo verificar.',
-  native_distribution_rejected: 'El proveedor rechazó la distribución aprovisionada. Revisa el perfil de instalación.',
-  native_identity_mismatch: 'La respuesta no corresponde a la cuenta solicitada. No se creó ninguna sesión.',
-  native_profile_identity_mismatch: 'Ese perfil de instalación pertenece a otra cuenta y no se reutiliza.',
-  native_profile_required: 'Selecciona el perfil de instalación que corresponde a esta cuenta.',
-  native_profile_missing: 'La configuración de instalación está pendiente: el propietario debe aprovisionar un perfil.',
-  native_installation_required: 'Completa el identificador de instalación para acceder a la partida.',
-  native_portal_rejected: 'El portal de ChillyRoom rechazó las credenciales de la cuenta. Revisa el correo y la contraseña.',
-  native_portal_identity_mismatch: 'El portal devolvió una cuenta o un jugador distinto. No se creó ninguna sesión.',
-  native_portal_challenge_required: 'ChillyRoom pidió una verificación adicional en el portal. Inicia sesión manualmente en el portal y vuelve a intentarlo.',
-  native_portal_unavailable: 'El portal de ChillyRoom no está disponible en este momento. Inténtalo más tarde.',
-  native_no_cloud_save: 'No hay una partida en la nube para este jugador. No se creó ni se sobrescribió ninguna copia.',
-  native_device_binding_throttled: 'ChillyRoom limita la vinculación de dispositivos nuevos. La identificación generada se conserva; espera antes de reintentar.',
-  native_save_error: 'No se pudo comprobar la partida en este intento. Puedes reintentar la descarga.',
+  invalid_request: 'Revisa los datos del formulario y vuelve a intentarlo.',
+  native_https_required: 'Abre SK-Under mediante HTTPS para iniciar sesión.',
+  native_credentials_rejected: 'El correo o la contraseña no son correctos.',
+  native_login_throttled: 'Demasiados intentos. Espera antes de volver a intentarlo.',
+  native_auth_throttled: 'ChillyRoom limitó los intentos. Espera antes de reintentar.',
+  native_auth_unavailable: 'ChillyRoom no está disponible. Inténtalo más tarde.',
+  native_auth_protocol: 'No se pudo comprobar la respuesta de ChillyRoom.',
+  native_distribution_rejected: 'ChillyRoom rechazó la plataforma seleccionada.',
+  native_identity_mismatch: 'No se pudo verificar la cuenta solicitada.',
+  native_profile_identity_mismatch: 'Elige el perfil que corresponde a tu cuenta.',
+  native_profile_required: 'Selecciona el perfil que corresponde a tu cuenta.',
+  native_profile_missing: 'Pide al administrador que habilite el acceso para esta cuenta.',
+  native_installation_required: 'Completa la configuración de acceso para consultar la partida.',
+  native_portal_rejected: 'El correo o la contraseña no son correctos.',
+  native_portal_identity_mismatch: 'No se pudo verificar la cuenta solicitada.',
+  native_portal_challenge_required: 'ChillyRoom pidió una verificación adicional. Completa el acceso en su portal y vuelve a intentarlo.',
+  native_portal_unavailable: 'El portal de ChillyRoom no está disponible. Inténtalo más tarde.',
+  native_no_cloud_save: 'Sin partida en la nube. Guarda una copia desde Soul Knight y vuelve a intentarlo.',
+  native_device_binding_throttled: 'ChillyRoom está aplicando una espera para este dispositivo.',
+  native_save_error: 'No se pudo descargar la partida. Vuelve a intentarlo.',
   native_session_expired: 'La sesión caducó. Inicia sesión de nuevo.',
-  native_session_required: 'La sesión no está activa. Inicia sesión de nuevo.',
-  native_session_rejected: 'ChillyRoom rechazó la sesión emitida para el servicio de guardado. Inténtalo de nuevo.',
-  native_store_unavailable: 'El almacén privado de sesiones no está disponible. Inténtalo más tarde.',
-  native_auth_disabled: 'La autenticación nativa está deshabilitada en este servidor.',
-  native_write_disabled: 'La escritura remota está deshabilitada en este entorno experimental.',
-  native_write_denied: 'Esta cuenta está autorizada solo para lectura.',
-  native_save_identity_mismatch: 'La partida devuelta no corresponde a la cuenta autenticada.',
+  native_session_required: 'Inicia sesión de nuevo para continuar.',
+  native_session_rejected: 'ChillyRoom rechazó el acceso a la partida. Vuelve a intentarlo.',
+  native_store_unavailable: 'El acceso a la cuenta no está disponible. Inténtalo más tarde.',
+  native_auth_disabled: 'El inicio de sesión está temporalmente deshabilitado.',
+  native_write_disabled: 'La subida a la nube está deshabilitada.',
+  native_write_denied: 'Esta cuenta tiene acceso de solo lectura.',
+  cloud_write_disabled: 'La subida a la nube está deshabilitada.',
+  cloud_session_rejected: 'ChillyRoom rechazó el acceso a la partida. Vuelve a iniciar sesión.',
+  cloud_already_confirmed: 'Esta edición ya se subió. Verifica su respaldo en Partida.',
+  native_save_identity_mismatch: 'No se pudo verificar que la partida pertenezca a tu cuenta.',
+  cloud_remote_changed: 'La partida cambió en la nube. Descárgala de nuevo antes de editar.',
 }
 
-function friendly(error: ApiProblem): ApiProblem {
-  const message = FRIENDLY[error.code]
-  return message ? new ApiProblem(message, [], error.code) : error
+function friendly(error: ApiProblem, fallback: string): ApiProblem {
+  return new ApiProblem(
+    FRIENDLY[error.code] ?? (error.message === 'El inicio de sesión requiere HTTPS en el editor y en la API.'
+      ? FRIENDLY.native_https_required : fallback),
+    [],
+    error.code,
+  )
 }
+
+type CloudView = 'home' | 'save' | 'editor'
 
 function isExpired(error: ApiProblem) {
   return error.code === 'native_session_expired' || error.code === 'native_session_required'
+}
+
+function distributionLabel(label: string) {
+  return label.replace(/ \((?:GP(?:_VNM)?|IOS(?:_VNM|_CN)?)\)$/, '')
 }
 
 function formatDate(value?: string) {
@@ -61,11 +76,12 @@ function formatDate(value?: string) {
   return Number.isNaN(date.getTime()) ? '—' : dateFormat.format(date)
 }
 
-export function NativeAuthPage() {
+export function NativeAuthPage({ view }: { view: CloudView }) {
   const [config, setConfig] = useState<NativeConfig | null>(null)
   const [session, setSession] = useState<NativeSession | null>(null)
   const [profileId, setProfileId] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [accountHint, setAccountHint] = useState('')
   const [revision, setRevision] = useState(0)
   const configOperation = useOperation()
   const authOperation = useOperation()
@@ -76,6 +92,7 @@ export function NativeAuthPage() {
       const next = await nativeAuth.config(signal)
       setConfig(next)
       setSession(next.session)
+      if (!next.session.active) setAccountHint('')
       setProfileId((current) => {
         if (!next.requires_profile_selection) return ''
         if (next.profiles.some((profile) => profile.id === current)) return current
@@ -84,12 +101,17 @@ export function NativeAuthPage() {
     })
   }, [revision])
 
+  useEffect(() => {
+    if (view !== 'save') setShowPassword(false)
+  }, [view])
+
   function refresh() {
     setRevision((value) => value + 1)
   }
 
   function expired() {
-    setSession({ active: false, reason: 'expired', message: FRIENDLY.native_session_expired })
+    setAccountHint('')
+    setSession({ active: false, reason: 'expired' })
     refresh()
   }
 
@@ -112,6 +134,8 @@ export function NativeAuthPage() {
         ...(selected ? { profile_id: selected } : {}),
       }, signal)
       setSession(next)
+      const [name, domain] = email.split('@')
+      setAccountHint(domain ? `${Array.from(name).slice(0, 2).join('')}…@${domain}` : '')
       form.reset()
       setShowPassword(false)
     })
@@ -121,6 +145,7 @@ export function NativeAuthPage() {
     if (!window.confirm('¿Cerrar sesión? Se eliminará el acceso de este navegador a la cuenta.')) return
     void authOperation.run(async (signal) => {
       await nativeAuth.logout(signal)
+      setAccountHint('')
       setSession({ active: false, reason: 'none' })
       setConfig((current) => current && { ...current, session: { active: false, reason: 'none' } })
     })
@@ -141,225 +166,146 @@ export function NativeAuthPage() {
 
   const active = session?.active === true
   const available = config?.available === true
-  const profiles = config?.profiles ?? []
-  const pendingNotice = config !== null && config.available && !config.login_available
-  const sessionMessage = session?.reason === 'expired'
-    ? session.message ?? FRIENDLY.native_session_expired
-    : null
+  const loading = (!config && !configOperation.problem) || (configOperation.pending && !active)
+  const unavailable = Boolean(configOperation.problem) || Boolean(config && !config.login_available)
+  const account = session?.account
+  const version = config?.distributions.find(({ id }) => id === account?.distribution)?.game_version
+  const platform = [distributionLabel(account?.distribution_label ?? ''), version].filter(Boolean).join(' · ')
+
+  if (view === 'home' && !active) {
+    return <HomePage loading={loading} unavailable={unavailable} retry={refresh} />
+  }
+
+  const accountLabel = account?.label && !/^Cuenta [a-f0-9]{12}$/i.test(account.label)
+    ? account.label : accountHint || 'Cuenta ChillyRoom'
+  const accountBar = active && <section className="account-bar" aria-label="Cuenta conectada">
+    <div className="account-identity">
+      <div>
+        <span className="cloud-kicker">Cuenta conectada</span>
+        <strong>{accountLabel}</strong>
+      </div>
+      {platform && <span className="account-platform">{platform}</span>}
+    </div>
+    <button className="button account-logout" type="button" disabled={authOperation.pending} onClick={logout}>
+      <LogOut size={16} aria-hidden="true" />
+      {authOperation.pending ? 'Cerrando sesión…' : 'Cerrar sesión'}
+    </button>
+    {authOperation.problem && <Problem problem={friendly(authOperation.problem, 'No se pudo cerrar sesión. Vuelve a intentarlo.')} />}
+  </section>
 
   return <>
-    <PageTitle title="Cuenta y partida">
-      Inicia sesión con tu cuenta autorizada de ChillyRoom usando solo correo, contraseña y
-      distribución. El servidor genera y cifra la identificación de instalación; no necesitas
-      extraerla de Android ni pedirla al administrador. Solo Android Global está validado.
-    </PageTitle>
-
-    <div className="lab-shell account-shell">
-      {configOperation.pending && !config && <p role="status">Consultando el servicio de autenticación…</p>}
-      {configOperation.problem && <>
-        <section className="lab-card">
-          <div className="lab-card-head">
-            <span className="lab-icon"><ServerOff size={20} aria-hidden="true" /></span>
-            <div><h2>Servicio temporalmente no disponible</h2><p>No se pudo consultar la autenticación nativa.</p></div>
-          </div>
-          <Problem problem={configOperation.problem} />
-          <button className="button lab-quiet" type="button" onClick={refresh}>
-            <RefreshCw size={16} aria-hidden="true" /> Reintentar
-          </button>
-        </section>
+    {view !== 'home' && <div className="cloud-title"><PageTitle title={view === 'editor' ? 'Editor' : 'Partida'} /></div>}
+    {!active && view === 'editor' && <section className="cloud-empty panel">
+      {loading ? <Loading>Comprobando conexión…</Loading> : <>
+        <h2>{unavailable ? 'Servicio temporalmente no disponible' : 'Conecta tu cuenta'}</h2>
+        {!unavailable && <p>Abre tu partida en la nube para editarla.</p>}
+        <Link className="button primary" to="/partida">{unavailable ? 'Ir a Partida' : 'Conectar cuenta'}</Link>
       </>}
-
-      {config && !available && !active && <>
-        <section className="lab-card" aria-labelledby="unavailable-title">
-          <div className="lab-card-head">
-            <span className="lab-icon"><ServerOff size={20} aria-hidden="true" /></span>
-            <div>
-              <h2 id="unavailable-title">Servicio temporalmente no disponible</h2>
-              <p>{config.message ?? 'La autenticación nativa no está habilitada en este servidor.'}</p>
-            </div>
-          </div>
-          <Notice tone="warning">
-            El propietario debe habilitar el servicio y aprovisionar un perfil de instalación
-            Android Global. No se solicitan credenciales mientras el servicio esté deshabilitado.
-          </Notice>
-          <button className="button lab-quiet" type="button" onClick={refresh}>
-            <RefreshCw size={16} aria-hidden="true" /> Reintentar
-          </button>
+    </section>}
+    {!active && view === 'save' && <>
+      {session?.reason === 'expired' && <Notice tone="warning">{FRIENDLY.native_session_expired}</Notice>}
+      {loading ? <Loading>Comprobando el acceso…</Loading> : configOperation.problem || !available ? (
+        <section className="cloud-empty panel">
+          <h2>Servicio temporalmente no disponible</h2>
+          <button className="button quiet" type="button" onClick={refresh}>Reintentar</button>
         </section>
-      </>}
-
-      {!active && available && <>
-        {sessionMessage && <Notice tone="warning">{sessionMessage}</Notice>}
-        <section className="lab-card" aria-labelledby="login-title">
-          <div className="lab-card-head">
-            <span className="lab-icon"><UserRound size={20} aria-hidden="true" /></span>
-            <div>
-              <h2 id="login-title">Iniciar sesión en ChillyRoom</h2>
-              <p>La contraseña solo se usa en memoria y nunca se guarda ni se devuelve al navegador.</p>
-            </div>
+      ) : config && <section className="cloud-login panel" aria-labelledby="login-title">
+        <h2 id="login-title">Iniciar sesión en ChillyRoom</h2>
+        {!config.login_available && <Notice tone="warning">El acceso aún no está habilitado. Contacta con el administrador.</Notice>}
+        {config.auto_identity !== false && config.portal_enabled === false &&
+          <Notice tone="warning">La recuperación del progreso anterior puede estar limitada temporalmente.</Notice>}
+        <form className="cloud-form" onSubmit={login} aria-busy={authOperation.pending}>
+          <label className="cloud-field"><span>Correo electrónico</span>
+            <input name="email" type="email" inputMode="email" autoComplete="username" required disabled={!config.login_available} />
+          </label>
+          <div className="cloud-field">
+            <label htmlFor="native-password">Contraseña</label>
+            <span className="password-control">
+              <input id="native-password" name="password" type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password" required disabled={!config.login_available} />
+              <button className="button quiet password-toggle" type="button"
+                aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                aria-pressed={showPassword} disabled={!config.login_available}
+                onClick={() => setShowPassword((value) => !value)}>
+                {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+              </button>
+            </span>
           </div>
-          {pendingNotice && <Notice tone="warning">
-            <strong>Configuración pendiente.</strong> El servicio no tiene habilitada la generación
-            automática de instalación ni un perfil administrativo utilizable. El propietario debe
-            revisar la configuración del servidor.
-          </Notice>}
-          {config.problem_code && <Notice tone="warning">
-            {config.message ?? 'El servicio de autenticación no está configurado por completo.'}
-          </Notice>}
-          {config.auto_identity !== false && <Notice tone="info">
-            <strong>No necesitas configurar identificadores.</strong>{' '}
-            {config.portal_enabled === false
-              ? 'El servidor generará y cifrará un perfil de instalación propio, pero la consulta al portal está deshabilitada: una cuenta con progreso anterior podría no recuperar su jugador.'
-              : 'El servidor consultará el portal oficial para localizar tu jugador, generará y cifrará un perfil de instalación propio y conservará el mismo par en los siguientes accesos.'}
-            {' '}ChillyRoom puede aplicar su espera de vinculación de dispositivos nuevos.
-          </Notice>}
-          <form onSubmit={login}>
-            <label className="lab-field"><span>Distribución</span>
-              <select className="lab-input" name="distribution" defaultValue="android-global"
-                disabled={!config.login_available}>
+          <label className="cloud-field"><span>Distribución</span>
+            <span className="cloud-select">
+              <select name="distribution" defaultValue="android-global" disabled={!config.login_available}>
                 {config.distributions.map((distribution) => <option key={distribution.id}
                   value={distribution.id} disabled={!distribution.enabled}>
-                  {distribution.label}{distribution.enabled ? '' : ' — no validada'}
+                  {distributionLabel(distribution.label)}{distribution.enabled ? '' : ' · No disponible'}
                 </option>)}
               </select>
-            </label>
-            {config.requires_profile_selection && profiles.length > 1 && <label className="lab-field"><span>Perfil de instalación</span>
-              <select className="lab-input" name="profile_id" value={profileId}
-                onChange={(event) => setProfileId(event.target.value)} disabled={!config.login_available}>
-                <option value="">Selecciona un perfil</option>
-                {profiles.map((profile) => <option key={profile.id} value={profile.id}>
-                  {profile.label}{profile.installation_ready ? '' : ' — instalación pendiente'}
-                </option>)}
-              </select>
-            </label>}
-            {config.requires_profile_selection && profiles.length === 1 && <p className="lab-hint">
-              Perfil de instalación: {profiles[0].label}
-              {profiles[0].installation_ready ? '' : ' — instalación pendiente'}
-            </p>}
-            <label className="lab-field"><span>Correo electrónico de ChillyRoom</span>
-              <input className="lab-input" name="email" type="email" inputMode="email"
-                autoComplete="username" required disabled={!config.login_available} />
-            </label>
-            <div className="lab-field">
-              <label htmlFor="native-password">Contraseña</label>
-              <span className="password-control">
-                <input id="native-password" className="lab-input" name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password" required disabled={!config.login_available} />
-                <button className="button lab-quiet password-toggle" type="button"
-                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-                  aria-pressed={showPassword} disabled={!config.login_available}
-                  onClick={() => setShowPassword((value) => !value)}>
-                  {showPassword ? <EyeOff size={17} aria-hidden="true" /> : <Eye size={17} aria-hidden="true" />}
-                </button>
+              <ChevronDown size={16} aria-hidden="true" />
+            </span>
+          </label>
+          {config.requires_profile_selection && config.profiles.length > 1 &&
+            <label className="cloud-field"><span>Perfil de instalación</span>
+              <span className="cloud-select">
+                <select name="profile_id" value={profileId} onChange={(event) => setProfileId(event.target.value)}
+                  disabled={!config.login_available}>
+                  <option value="">Selecciona un perfil</option>
+                  {config.profiles.map((profile) => <option key={profile.id} value={profile.id}>
+                    {profile.label}{profile.installation_ready ? '' : ' · Instalación pendiente'}
+                  </option>)}
+                </select>
+                <ChevronDown size={16} aria-hidden="true" />
               </span>
-            </div>
-            <button className="button lab-primary" disabled={authOperation.pending || !config.login_available}>
-              {authOperation.pending && <LoaderCircle className="lab-spin" size={17} aria-hidden="true" />}
-              {authOperation.pending ? 'Iniciando sesión…' : 'Iniciar sesión'}
-            </button>
-          </form>
-          {authOperation.problem && <Problem problem={friendly(authOperation.problem)} />}
-          <p className="lab-hint">
-            Solo usa cuentas propias y autorizadas. No se reintenta automáticamente ante límites
-            o desafíos del proveedor.
-          </p>
-        </section>
-      </>}
+            </label>}
+          <button className="button primary" disabled={authOperation.pending || !config.login_available}>
+            {authOperation.pending ? 'Iniciando sesión…' : 'Iniciar sesión'}
+          </button>
+          {authOperation.pending && <Loading>Conectando con ChillyRoom…</Loading>}
+          {authOperation.problem && <Problem problem={friendly(authOperation.problem, 'No se pudo iniciar sesión. Vuelve a intentarlo.')} />}
+        </form>
+      </section>}
+    </>}
 
-      {active && session && <>
-        <section className="lab-card" aria-labelledby="session-title">
-          <div className="lab-card-head">
-            <span className="lab-icon"><ShieldCheck size={20} aria-hidden="true" /></span>
-            <div>
-              <h2 id="session-title">Sesión activa</h2>
-              <p>{session.account?.label ?? 'Cuenta autorizada'} · {session.account?.distribution_label ?? 'Android Global'}</p>
-            </div>
-          </div>
-          <div className="lab-actions">
-            <span className="lab-pill live"><span className="lab-dot" />Identidad verificada</span>
-            {session.installation_ready
-              ? <span className="lab-pill read"><span className="lab-dot" />
-                {session.auto_identity ? 'Instalación generada por el servidor' : 'Instalación lista'}</span>
-              : <span className="lab-pill read"><span className="lab-dot" />Instalación pendiente</span>}
-          </div>
-          <dl className="lab-facts">
-            <div><dt>Caducidad de sesión</dt><dd>{formatDate(session.session_expires_at)}</dd></div>
-            <div><dt>Inactividad</dt><dd>{formatDate(session.idle_expires_at)}</dd></div>
-          </dl>
-          {session.save_error === 'native_no_cloud_save' && <Notice tone="info">
-            <strong>Sin partida en la nube.</strong> La cuenta se autenticó correctamente y el
-            servidor no encontró una copia para este jugador. No se creó ni se sobrescribió nada.
-          </Notice>}
-          {session.save_error === 'native_device_binding_throttled' && <Notice tone="warning">
-            <strong>Vinculación de dispositivo en espera.</strong> ChillyRoom limitó la vinculación
-            de una instalación nueva para esta cuenta. El servidor conserva la identificación
-            generada; no se crea otra. Vuelve a intentar la descarga cuando termine la espera
-            {session.binding_wait_until ? ` (${formatDate(session.binding_wait_until)})` : ''}.
-          </Notice>}
-          {session.save_error && session.save_error !== 'native_device_binding_throttled'
-            && session.save_error !== 'native_installation_required' && <Notice tone="warning">
-            La comprobación inicial de la partida no se completó ({session.save_error}). Puedes
-            reintentar la descarga desde el editor.
-          </Notice>}
-          <div className="lab-actions">
-            <button className="button lab-quiet" type="button" disabled={authOperation.pending} onClick={logout}>
-              {authOperation.pending ? <LoaderCircle className="lab-spin" size={16} aria-hidden="true" />
-                : <LogOut size={16} aria-hidden="true" />}
-              Cerrar sesión
-            </button>
-          </div>
-          {authOperation.problem && <Problem problem={friendly(authOperation.problem)} />}
-        </section>
-
-        {session.installation_ready && <NativeEditor key={`${session.account?.label}-${session.session_expires_at}`}
-          session={session} initialSave={session.save ?? null} onExpired={expired} />}
-
-        {!session.installation_ready && session.auto_identity === false && <section className="lab-card"
-          aria-labelledby="installation-title">
-          <div className="lab-card-head">
-            <span className="lab-icon"><ShieldCheck size={20} aria-hidden="true" /></span>
-            <div>
-              <h2 id="installation-title">Configuración administrativa de la instalación</h2>
-              <p>Este perfil fue aprovisionado manualmente y aún no tiene identificador de instalación.</p>
-            </div>
-          </div>
-          <Notice tone="warning">
-            La generación automática está deshabilitada en este servidor. Un administrador debe
-            completar la identificación por un canal autorizado; no se solicita en el flujo normal.
-          </Notice>
-          <form onSubmit={install}>
-            <label className="lab-field"><span>Identificador de instalación</span>
-              <input className="lab-input" name="unique_id" required maxLength={512}
-                autoComplete="off" spellCheck={false} />
-              <small>Se cifra en el servidor y no se devuelve al navegador.</small>
-            </label>
-            <button className="button lab-primary" disabled={installOperation.pending}>
-              {installOperation.pending && <LoaderCircle className="lab-spin" size={17} aria-hidden="true" />}
-              {installOperation.pending ? 'Comprobando instalación…' : 'Completar instalación'}
-            </button>
-          </form>
-          {installOperation.problem && <Problem problem={friendly(installOperation.problem)} />}
-        </section>}
-      </>}
-
-      <details className="account-details">
-        <summary>Cuentas vinculadas de la Fase 6.3</summary>
-        <p className="lab-hint">El flujo anterior por enlace privado sigue disponible sin cambios.</p>
-        <Link className="button lab-quiet" to="/partida/vinculadas">Abrir cuentas vinculadas</Link>
-      </details>
-    </div>
+    {active && session && <>
+      {view === 'save' && accountBar}
+      {session.installation_ready ? <NativeEditor key={`${session.account?.label}-${session.session_expires_at}`}
+        session={session} initialSave={session.save ?? null} view={view} platform={platform} accountLabel={accountLabel}
+        onExpired={expired} /> : view === 'home' ? <HomePage account={{ label: accountLabel, platform, saveStatus: 'Configuración de acceso pendiente' }} />
+          : view === 'editor' ? <section className="cloud-empty panel">
+            <h2>Configuración de acceso pendiente</h2>
+            <Link className="button primary" to="/partida">Ir a Partida</Link>
+          </section> : <section className="cloud-empty panel">
+            <h2>Configuración de acceso pendiente</h2>
+            <p>Contacta con el administrador para completar el acceso a la partida.</p>
+            {session.auto_identity === false && <details className="cloud-details">
+              <summary>Configuración de instalación</summary>
+              <form className="cloud-form" onSubmit={install}>
+                <label className="cloud-field"><span>Identificador de instalación</span>
+                  <input name="unique_id" required maxLength={512} autoComplete="off" spellCheck={false} />
+                </label>
+                <button className="button primary" disabled={installOperation.pending}>
+                  {installOperation.pending ? 'Comprobando instalación…' : 'Completar instalación'}
+                </button>
+              </form>
+              {installOperation.problem && <Problem problem={friendly(installOperation.problem, 'No se pudo completar la instalación.')} />}
+            </details>}
+          </section>}
+    </>}
+    {view === 'save' && <div className="cloud-secondary">
+      <Link className="cloud-text-link" to="/partida/vinculadas">Acceso por enlace privado</Link>
+    </div>}
   </>
 }
 
-function NativeEditor({ session, initialSave, onExpired }: {
+function NativeEditor({ session, initialSave, onExpired, view, platform, accountLabel }: {
   session: NativeSession
   initialSave: NativeSaveSummary | null
   onExpired: () => void
+  view: CloudView
+  platform: string
+  accountLabel: string
 }) {
-  const [save, setSave] = useState<(NativeSaveSummary & { downloaded_at: string }) | null>(
-    initialSave ? { ...initialSave, downloaded_at: new Date().toISOString() } : null,
-  )
+  const [save, setSave] = useState<(NativeSaveSummary & { downloaded_at?: string }) | null>(initialSave)
+  const [syncResult, setSyncResult] = useState<LabWriteResult | null>(null)
+  const [action, setAction] = useState<'download' | 'prepare' | 'upload'>('download')
   const [newGems, setNewGems] = useState(initialSave ? String(initialSave.gems) : '')
   const [candidate, setCandidate] = useState<LabPrepared | null>(null)
   const [confirm, setConfirm] = useState(false)
@@ -401,150 +347,203 @@ function NativeEditor({ session, initialSave, onExpired }: {
     setResult(null)
   }
 
-  return <>
-    <section className="lab-card" aria-labelledby="save-title">
-      <div className="lab-card-head">
-        <span className="lab-icon"><Gem size={20} aria-hidden="true" /></span>
-        <div><h2 id="save-title">Mi partida</h2><p>{session.account?.label} · {session.account?.distribution_label}</p></div>
-      </div>
-      {!session.write_ready && <Notice tone="warning">
-        {session.write_enabled === false
-          ? 'La escritura está deshabilitada en el servidor. Puedes descargar y preparar la edición, pero no subirla.'
-          : 'Esta cuenta está autorizada solo para lectura. No se enviará ninguna escritura.'}
-      </Notice>}
-      {session.save_error === 'native_no_cloud_save' && !save && <Notice tone="info">
-        La cuenta no tiene una partida en la nube para este jugador. No se creó ni se sobrescribió
-        ninguna copia; puedes reintentar la descarga más adelante.
-      </Notice>}
-      {session.save_error === 'native_device_binding_throttled' && !save && <Notice tone="warning">
-        <strong>Vinculación en espera.</strong> ChillyRoom limitó la vinculación de esta instalación
-        nueva. El servidor conserva la identificación generada; espera antes de reintentar la descarga.
-      </Notice>}
-      {session.save_error && session.save_error !== 'native_device_binding_throttled'
-        && session.save_error !== 'native_installation_required' && !save && <Notice tone="warning">
-        La descarga de verificación no se completó. Puedes reintentarla manualmente.
-      </Notice>}
-      <button className="button lab-primary" disabled={disabled} onClick={() => run(async (signal) => {
-        clearPreview()
-        setSave(null)
-        const downloaded = await nativeAuth.save(signal)
-        setSave(downloaded)
-        setNewGems(String(downloaded.gems))
-      })}>
-        <CloudDownload size={18} aria-hidden="true" />
-        {operation.pending ? 'Descargando…' : 'Descargar partida'}
-      </button>
-      {save && <>
-        <div className="lab-save">
-          <div className="lab-metric"><span>Gemas descargadas</span>
-            <strong data-testid="native-current-gems">{gemFormat.format(save.gems)}</strong></div>
-          <dl className="lab-facts">
-            <div><dt>Tamaño</dt><dd>{formatSize(save.bytes)}</dd></div>
-            <div><dt>Descarga</dt><dd>{formatDate(save.downloaded_at)}</dd></div>
-            <div><dt>Verificación</dt><dd>Copia validada</dd></div>
-            <div><dt>Origen</dt><dd>{save.remote_source}</dd></div>
-          </dl>
+  const downloading = action === 'download' && operation.pending
+  const downloadProblem = action === 'download' ? operation.problem : null
+  const initialProblem = !save && !downloadProblem && !syncResult && !downloading ? session.save_error : null
+  const noCloudSave = initialProblem === 'native_no_cloud_save' || downloadProblem?.code === 'native_no_cloud_save'
+  const waiting = initialProblem === 'native_device_binding_throttled'
+    || downloadProblem?.code === 'native_device_binding_throttled'
+  const waitUntil = session.binding_wait_until && formatDate(session.binding_wait_until)
+  const cloudGems = syncResult?.persisted ? syncResult.remote_gems : save?.gems
+  const uploadPending = action === 'upload' && operation.pending
+  const uploadFailed = action === 'upload' && Boolean(operation.problem)
+  const syncUnconfirmed = uploadFailed || (syncResult !== null && !syncResult.persisted)
+  let saveStatus = 'Partida pendiente de descargar'
+  if (downloading) saveStatus = 'Descargando partida…'
+  else if (uploadPending) saveStatus = 'Subiendo y verificando…'
+  else if (syncUnconfirmed) saveStatus = 'Sincronización sin confirmar'
+  else if (syncResult?.persisted) saveStatus = syncResult.action === 'restore' ? 'Respaldo restaurado' : 'Subida verificada'
+  else if (save) saveStatus = 'Copia verificada'
+  else if (noCloudSave) saveStatus = 'Sin partida en la nube'
+  else if (waiting) saveStatus = 'En espera de ChillyRoom'
+  else if (downloadProblem || initialProblem) saveStatus = 'Descarga pendiente'
+
+  function download() {
+    setAction('download')
+    run(async (signal) => {
+      clearPreview()
+      setSyncResult(null)
+      setSave(null)
+      const downloaded = await nativeAuth.save(signal)
+      setSave(downloaded)
+      setNewGems(String(downloaded.gems))
+    })
+  }
+
+  const downloadButton = <button className={`button ${save ? 'quiet' : 'primary'}`} disabled={disabled} onClick={download}>
+    <CloudDownload size={18} aria-hidden="true" />
+    {downloading ? 'Descargando…' : 'Descargar partida'}
+  </button>
+
+  const downloadFeedback = noCloudSave ? <p className="cloud-note">
+    Guarda una copia desde Soul Knight y vuelve a intentar la descarga.
+  </p> : waiting ? <Notice tone="warning">
+    ChillyRoom está aplicando una espera para este dispositivo.
+    {waitUntil && waitUntil !== '—' ? ` Vuelve a intentarlo después de ${waitUntil}.` : ' Espera antes de volver a intentarlo.'}
+  </Notice> : downloadProblem ? <Problem problem={friendly(downloadProblem, 'No se pudo descargar la partida. Vuelve a intentarlo.')} />
+    : initialProblem ? <Notice tone="warning">No se pudo comprobar la partida. Intenta descargarla de nuevo.</Notice> : null
+
+  if (view === 'home') return <HomePage account={{ label: accountLabel, platform, saveStatus }} />
+
+  if (view === 'save') return <>
+    <section className="cloud-section panel" aria-labelledby="save-title">
+      <div className="cloud-save-overview">
+        <div>
+          <h2 id="save-title">Partida en la nube</h2>
+          <p className="cloud-state" role="status">{saveStatus}</p>
         </div>
-        <form onSubmit={(event) => {
-          event.preventDefault()
-          if (!valid) return
-          run(async (signal) => {
-            clearPreview()
-            setCandidate(await nativeAuth.prepare(amount, save.sha256, signal))
-            void historyOperation.run(refreshHistory)
-          })
-        }}>
-          <label className="lab-field"><span>Nueva cantidad de gemas</span>
-            <input className="lab-input" inputMode="numeric" value={newGems} disabled={disabled}
-              aria-invalid={!valid} onChange={(event) => {
-                setNewGems(event.target.value)
-                clearPreview()
-              }} />
-            <small>Entero entre {gemFormat.format(limits.min_gems)} y {gemFormat.format(limits.max_gems)}.</small>
-          </label>
-          <button className="button lab-quiet" disabled={disabled || !valid || amount === save.gems}>
-            Preparar edición
-          </button>
-        </form>
-        <details className="account-details">
-          <summary>Detalles de descarga</summary>
-          <p className="lab-mono">SHA-256 {save.sha256}</p>
-        </details>
-      </>}
-      {candidate && <div className="account-preview">
-        <dl className="lab-facts">
-          <div><dt>Gemas actuales</dt><dd>{gemFormat.format(candidate.original_gems)}</dd></div>
-          <div><dt>Gemas nuevas</dt><dd>{gemFormat.format(candidate.new_gems)}</dd></div>
-          <div><dt>Cambio</dt><dd>{new Intl.NumberFormat('es-MX', { signDisplay: 'exceptZero' })
-            .format(candidate.new_gems - candidate.original_gems)}</dd></div>
-          <div><dt>Respaldo original</dt><dd>{formatSize(candidate.backup.original_size)}</dd></div>
-        </dl>
-        <p className="lab-hint">La edición solo cambia las gemas y conserva un respaldo privado.</p>
-        {session.write_ready && !result && <>
-          <label className="lab-check"><input type="checkbox" checked={confirm} disabled={disabled}
-            onChange={(event) => setConfirm(event.target.checked)} />
-            <span>Confirmo que quiero sobrescribir la partida de {session.account?.label}.</span>
-          </label>
-          <button className="button lab-primary" disabled={disabled || !confirm || !candidate.changed}
-            onClick={() => run(async (signal) => {
-              setConfirm(false)
-              setResult(await nativeAuth.confirm(candidate.backup.id, candidate.candidate_sha256, signal))
-              void historyOperation.run(refreshHistory)
-            })}>
-            Subir y verificar
-          </button>
-        </>}
-      </div>}
-      {result && <div role="status" className={`lab-banner ${result.persisted ? 'success' : 'warn'}`}>
-        {result.message}
-      </div>}
-      {operation.pending && <p role="status">Operación en curso…</p>}
-      {operation.problem && <Problem problem={friendly(operation.problem)} />}
+        {cloudGems != null && <dl className="cloud-save-data">
+          <div className="cloud-gems">
+            <dt>{uploadPending || syncUnconfirmed ? 'Últimas gemas verificadas' : 'Gemas'}</dt>
+            <dd data-testid="native-current-gems">{gemFormat.format(cloudGems)}</dd>
+          </div>
+          {save?.downloaded_at && !syncResult && <div>
+            <dt>Última descarga</dt><dd>{formatDate(save.downloaded_at)}</dd>
+          </div>}
+        </dl>}
+        <div className="cloud-actions">
+          {save && <Link className="button primary" to="/editor">Abrir Editor</Link>}
+          {downloadButton}
+        </div>
+      </div>
+      {downloadFeedback}
+      {uploadFailed && operation.problem && <Problem problem={friendly(operation.problem, 'No se pudo confirmar la subida. Puedes verificar el respaldo.')} />}
+      {!session.write_ready && <p className="cloud-note">Acceso a la nube de solo lectura.</p>}
     </section>
 
-    <section className="lab-card" aria-labelledby="backups-title">
-      <div className="lab-card-head">
-        <span className="lab-icon"><DatabaseBackup size={20} aria-hidden="true" /></span>
-        <div><h2 id="backups-title">Respaldos</h2><p>{session.account?.label}</p></div>
-      </div>
-      {historyOperation.pending && <p role="status">Cargando respaldos…</p>}
+    <section className="cloud-section cloud-backups" aria-labelledby="backups-title">
+      <h2 id="backups-title">Respaldos</h2>
+      {historyOperation.pending && <Loading>Cargando respaldos…</Loading>}
       {historyOperation.problem && <>
-        <Problem problem={friendly(historyOperation.problem)} />
-        <button className="button lab-quiet" onClick={() => void historyOperation.run(refreshHistory)}>
+        <Problem problem={friendly(historyOperation.problem, 'No se pudieron cargar los respaldos.')} />
+        <button className="button quiet" onClick={() => void historyOperation.run(refreshHistory)}>
           Actualizar respaldos
         </button>
       </>}
-      {history.length === 0 && !historyOperation.pending && !historyOperation.problem
-        && <p>No hay respaldos de esta cuenta.</p>}
-      {history.map((backup) => <details className="account-details" key={backup.id}>
-        <summary>{formatDate(backup.created_at)} · {gemFormat.format(backup.original_gems)} → {gemFormat.format(backup.candidate_gems)}</summary>
-        <p>{backup.confirmed ? 'Subida verificada' : 'Copia preparada'} · {formatSize(backup.original_size)}</p>
-        <div className="lab-actions">
-          <button className="button lab-quiet" disabled={disabled} onClick={() => {
-            setBackupResult(null)
-            run(async (signal) => setBackupResult(await nativeAuth.verify(backup.id, signal)), backupOperation)
-          }}>Verificar nube</button>
-          {session.write_ready && backup.changed && <button className="button lab-quiet" disabled={disabled}
-            onClick={() => {
-              if (window.confirm(`¿Restaurar el respaldo de ${session.account?.label} con ${gemFormat.format(backup.original_gems)} gemas?`)) {
-                setBackupResult(null)
-                run(async (signal) => {
-                  setBackupResult(await nativeAuth.restore(backup.id, signal))
-                  setSave(null)
-                  clearPreview()
-                }, backupOperation)
-              }
-            }}>Restaurar respaldo</button>}
+      {history.length === 0 && !historyOperation.pending && !historyOperation.problem &&
+        <p className="cloud-note">Esta cuenta todavía no tiene respaldos.</p>}
+      {history.map((backup) => <details className="cloud-details backup-row" key={backup.id}>
+        <summary><span>{formatDate(backup.created_at)}</span>
+          <span className="backup-amount">{gemFormat.format(backup.original_gems)} gemas</span></summary>
+        <div className="backup-body">
+          <p>{backup.confirmed ? 'Subida verificada' : 'Edición preparada'} · {formatSize(backup.original_size)}</p>
+          <div className="cloud-actions">
+            <button className="button quiet" disabled={disabled} onClick={() => {
+              setBackupResult(null)
+              run(async (signal) => setBackupResult(await nativeAuth.verify(backup.id, signal)), backupOperation)
+            }}>Verificar nube</button>
+            {session.write_ready && backup.changed && <button className="button quiet" disabled={disabled}
+              onClick={() => {
+                if (window.confirm(`¿Restaurar el respaldo de ${accountLabel} con ${gemFormat.format(backup.original_gems)} gemas? Se reemplazará la partida en la nube.`)) {
+                  setBackupResult(null)
+                  run(async (signal) => {
+                    const restored = await nativeAuth.restore(backup.id, signal)
+                    setBackupResult(restored)
+                    setSyncResult(restored)
+                    setSave(null)
+                    clearPreview()
+                  }, backupOperation)
+                }
+              }}>Restaurar respaldo</button>}
+          </div>
+          {backupResult?.backup_id === backup.id && <p role="status">{backupMessage(backupResult)}</p>}
         </div>
-        {backupResult?.backup_id === backup.id && <p role="status">{backupResult.message}</p>}
-        <details className="account-details">
-          <summary>Huellas SHA-256</summary>
-          <p className="lab-mono">Original {backup.original_sha256}</p>
-          <p className="lab-mono">Candidato {backup.candidate_sha256}</p>
-        </details>
       </details>)}
-      {backupOperation.pending && <p role="status">Consultando la nube…</p>}
-      {backupOperation.problem && <Problem problem={friendly(backupOperation.problem)} />}
+      {backupOperation.pending && <Loading>Consultando la nube…</Loading>}
+      {backupOperation.problem && <Problem problem={friendly(backupOperation.problem, 'No se pudo completar la operación del respaldo.')} />}
     </section>
   </>
+
+  if (!save) return <section className="cloud-empty panel">
+    <h2>{noCloudSave ? 'Sin partida en la nube' : 'Descarga tu partida'}</h2>
+    {downloading && <Loading>Descargando partida…</Loading>}
+    {downloadFeedback}
+    {downloadButton}
+  </section>
+
+  return <section className="cloud-section panel cloud-editor" aria-labelledby="edit-gems-title">
+    <div className="cloud-section-head">
+      <div><h2 id="edit-gems-title">Gemas</h2><p className="cloud-state">{accountLabel}</p></div>
+      <div className="editor-current">
+        <span>Gemas de la copia descargada</span>
+        <strong>{gemFormat.format(save.gems)}</strong>
+      </div>
+    </div>
+    {!session.write_ready && <Notice tone="warning">
+      Puedes preparar una edición y su respaldo. La subida a la nube está deshabilitada.
+    </Notice>}
+    <form className="cloud-form" onSubmit={(event) => {
+      event.preventDefault()
+      if (!valid) return
+      setAction('prepare')
+      run(async (signal) => {
+        clearPreview()
+        setCandidate(await nativeAuth.prepare(amount, save.sha256, signal))
+        void historyOperation.run(refreshHistory)
+      })
+    }}>
+      <label className="cloud-field"><span>Nueva cantidad de gemas</span>
+        <input inputMode="numeric" value={newGems} disabled={disabled}
+          aria-invalid={!valid} aria-describedby="gem-limits" onChange={(event) => {
+            setNewGems(event.target.value)
+            clearPreview()
+          }} />
+        <small id="gem-limits">Entero entre {gemFormat.format(limits.min_gems)} y {gemFormat.format(limits.max_gems)}.</small>
+      </label>
+      <button className="button primary" disabled={disabled || !valid || amount === save.gems}>Preparar edición</button>
+    </form>
+    {candidate && <div className="cloud-preview">
+      <h3>Revisar cambios</h3>
+      <dl className="cloud-preview-data">
+        <div><dt>Gemas originales</dt><dd>{gemFormat.format(candidate.original_gems)}</dd></div>
+        <div><dt>Gemas nuevas</dt><dd>{gemFormat.format(candidate.new_gems)}</dd></div>
+        <div><dt>Cambio</dt><dd>{new Intl.NumberFormat('es-MX', { signDisplay: 'exceptZero' })
+          .format(candidate.new_gems - candidate.original_gems)}</dd></div>
+      </dl>
+      <p className="cloud-note">Se guardó un respaldo de la partida original.</p>
+      {session.write_ready && !result && <>
+        <label className="cloud-check"><input type="checkbox" checked={confirm} disabled={disabled}
+          onChange={(event) => setConfirm(event.target.checked)} />
+          <span>Confirmo que quiero sobrescribir la partida en la nube de {accountLabel}.</span>
+        </label>
+        <button className="button primary" disabled={disabled || !confirm || !candidate.changed}
+          onClick={() => {
+            setAction('upload')
+            run(async (signal) => {
+              setConfirm(false)
+              const uploaded = await nativeAuth.confirm(candidate.backup.id, candidate.candidate_sha256, signal)
+              setResult(uploaded)
+              setSyncResult(uploaded)
+              void historyOperation.run(refreshHistory)
+            })
+          }}>Subir y verificar</button>
+      </>}
+    </div>}
+    {result && <div role="status" className={`cloud-feedback ${result.persisted ? 'verified' : 'uncertain'}`}>
+      {result.persisted ? 'Cambios guardados y verificados en la nube.' : 'No se pudo confirmar la subida. Verifica el estado desde Partida.'}
+    </div>}
+    {operation.pending && <Loading>{action === 'prepare' ? 'Preparando edición…' : 'Subiendo y verificando…'}</Loading>}
+    {operation.problem && <Problem problem={friendly(operation.problem, action === 'upload'
+      ? 'No se pudo confirmar la subida. Verifica el estado desde Partida.'
+      : 'No se pudo preparar la edición. Vuelve a intentarlo.')} />}
+  </section>
+}
+
+function backupMessage(result: LabWriteResult | LabVerification) {
+  if ('persisted' in result) {
+    return result.persisted ? 'Respaldo restaurado y verificado en la nube.' : 'No se pudo confirmar la restauración.'
+  }
+  if (result.matches_original) return 'La nube coincide con el respaldo original.'
+  if (result.matches_candidate) return 'La nube coincide con la edición guardada.'
+  return 'La partida en la nube difiere de las dos versiones del respaldo.'
 }
