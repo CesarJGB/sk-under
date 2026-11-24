@@ -103,7 +103,7 @@ export type SaveCharacter = {
   equipped_skin: SaveSkin | null
   skins_recorded: number
   skin_options: SaveSkinOption[]
-  skins_status: 'experimental'
+  skins_status: 'confirmed_by_owner'
 }
 
 export type SaveSkillSummary = {
@@ -122,7 +122,7 @@ export type SaveSkinsSummary = {
   selected: number
   incompatible: number
   characters_with_data: number
-  status: 'experimental'
+  status: 'confirmed_by_owner'
 }
 
 export type SaveCharacterReport = {
@@ -131,7 +131,7 @@ export type SaveCharacterReport = {
   skills?: SaveSkillSummary
   skins?: SaveSkinsSummary
   level_status: 'not_validated'
-  skins_status: 'experimental'
+  skins_status: 'confirmed_by_owner'
   catalog: {
     available: boolean
     error: string | null
@@ -199,7 +199,7 @@ export type LabSave = {
   fish_chip_write_policy?: 'confirmed_by_owner'
   character_write_policy?: 'confirmed_by_owner'
   skill_write_policy?: 'confirmed_by_owner'
-  skin_write_policy?: 'experimental'
+  skin_write_policy?: 'confirmed_by_owner'
   size: number
   sha256: string
   serialzed_version: number
@@ -359,7 +359,7 @@ export type LabSkinPrepared = {
   locked_character_codes: string[]
   original_value?: number
   new_value?: number
-  experimental: true
+  experimental: false
   changed: boolean
   candidate_size: number
   candidate_sha256: string
@@ -369,8 +369,8 @@ export type LabSkinPrepared = {
     valid: true
     structure_valid: true
     only_skins_changed: boolean
-    experimental: true
-    evidence_level: 'E2'
+    experimental: false
+    evidence_level: 'E3'
     message: string
   }
 }
@@ -622,7 +622,7 @@ export type NativeSaveSummary = {
   fish_chip_write_policy?: 'confirmed_by_owner'
   character_write_policy?: 'confirmed_by_owner'
   skill_write_policy?: 'confirmed_by_owner'
-  skin_write_policy?: 'experimental'
+  skin_write_policy?: 'confirmed_by_owner'
   sections: number | null
   remote_source: string
   report?: SaveReport | null
@@ -653,7 +653,7 @@ export type NativeSession = {
   fish_chip_write_policy?: 'confirmed_by_owner'
   character_write_policy?: 'confirmed_by_owner'
   skill_write_policy?: 'confirmed_by_owner'
-  skin_write_policy?: 'experimental'
+  skin_write_policy?: 'confirmed_by_owner'
   save?: NativeSaveSummary | null
   save_error?: string | null
 }
@@ -672,7 +672,7 @@ export type NativeConfig = {
   fish_chip_write_policy?: 'confirmed_by_owner'
   character_write_policy?: 'confirmed_by_owner'
   skill_write_policy?: 'confirmed_by_owner'
-  skin_write_policy?: 'experimental'
+  skin_write_policy?: 'confirmed_by_owner'
   login_available: boolean
   auto_identity?: boolean
   portal_enabled?: boolean

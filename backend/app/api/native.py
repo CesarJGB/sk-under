@@ -205,7 +205,7 @@ def _disabled_config(settings) -> dict[str, object]:
         "fish_chip_write_policy": "confirmed_by_owner",
         "character_write_policy": "confirmed_by_owner",
         "skill_write_policy": "confirmed_by_owner",
-        "skin_write_policy": "experimental",
+        "skin_write_policy": "confirmed_by_owner",
         "login_available": False,
         "auto_identity": False,
         "requires_profile_selection": False,
@@ -339,7 +339,7 @@ def prepare_skills(payload: SkillPrepareInput, request: Request) -> dict[str, ob
 
 @router.post(
     "/prepare-skins",
-    summary="Preparar el desbloqueo experimental de skins y crear un respaldo",
+    summary="Preparar el desbloqueo de skins y crear un respaldo",
 )
 def prepare_skins(payload: SkinPrepareInput, request: Request) -> dict[str, object]:
     service = _require_service(request)

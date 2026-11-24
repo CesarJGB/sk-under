@@ -2,7 +2,7 @@ import {
   ChevronDown, CloudDownload, Eye, EyeOff, LogOut,
 } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
-import { Link } from 'react-router'
+import { Link, useLocation } from 'react-router'
 import {
   ApiProblem, nativeAuth,
   type LabBackup, type LabFishChipPrepared, type LabPrepared, type LabVerification, type LabWriteResult,
@@ -12,9 +12,13 @@ import { formatSize } from '../session'
 import { Loading, Notice, PageTitle, Problem } from '../ui'
 import { CharacterUnlockSection } from './CharacterUnlockSection'
 import { HomePage } from './HomePage'
-import { SaveReportSections } from './SaveReportSections'
 import { SkillUnlockSection } from './SkillUnlockSection'
 import { SkinUnlockSection } from './SkinUnlockSection'
+import { QuickUnlockCard } from './QuickUnlockCard'
+import {
+  emptyUnlockSelections, pendingCharacterCodes, pendingSkinKeys, pendingSkillKeys,
+  type UnlockCategory, type UnlockSelections,
+} from '../unlockSelections'
 import { useOperation } from '../useOperation'
 
 const gemFormat = new Intl.NumberFormat('es-MX')
@@ -371,9 +375,12 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
   const [fishAction, setFishAction] = useState<'prepare' | 'upload' | null>(null)
   const [history, setHistory] = useState<Array<LabBackup & { confirmed: boolean }>>([])
   const [backupResult, setBackupResult] = useState<(LabWriteResult | LabVerification) | null>(null)
+  const [selections, setSelections] = useState<UnlockSelections>(emptyUnlockSelections)
+  const [applied, setApplied] = useState<UnlockSelections>(emptyUnlockSelections)
   const operation = useOperation()
   const historyOperation = useOperation()
   const backupOperation = useOperation()
+  const { pathname } = useLocation()
 
   async function refreshHistory(signal: AbortSignal) {
     setHistory((await nativeAuth.backups(signal)).backups)
@@ -462,6 +469,8 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
       setSave(downloaded)
       setNewGems(String(downloaded.gems))
       setNewFishChip(downloaded.fish_chip != null ? String(downloaded.fish_chip) : '')
+      setSelections(emptyUnlockSelections())
+      setApplied(emptyUnlockSelections())
     })
   }
 
@@ -477,6 +486,39 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     {waitUntil && waitUntil !== '—' ? ` Vuelve a intentarlo después de ${waitUntil}.` : ' Espera antes de volver a intentarlo.'}
   </Notice> : downloadProblem ? <Problem problem={friendly(downloadProblem, 'No se pudo descargar la partida. Vuelve a intentarlo.')} />
     : initialProblem ? <Notice tone="warning">No se pudo comprobar la partida. Intenta descargarla de nuevo.</Notice> : null
+
+  const reportCharacters = save?.report?.characters ?? null
+  const pendingCharacters = reportCharacters
+    ? pendingCharacterCodes(reportCharacters, applied.characters) : []
+  const pendingSkills = reportCharacters
+    ? pendingSkillKeys(reportCharacters, applied.skills) : []
+  const pendingSkins = reportCharacters
+    ? pendingSkinKeys(reportCharacters, applied.skins) : []
+  const selectedCount = (category: UnlockCategory, keys: string[]) => (
+    keys.filter((key) => selections[category].has(key)).length
+  )
+  const updateSelection = (category: UnlockCategory, next: Set<string>) => {
+    setSelections((current) => ({ ...current, [category]: next }))
+  }
+  const applyUnlocks = (category: UnlockCategory, keys: string[]) => {
+    setApplied((current) => ({ ...current, [category]: new Set([...current[category], ...keys]) }))
+  }
+  const toggleCategory = (category: UnlockCategory, keys: string[]) => {
+    const current = selections[category]
+    const next = new Set(current)
+    const allSelected = keys.length > 0 && keys.every((key) => current.has(key))
+    for (const key of keys) {
+      if (allSelected) next.delete(key)
+      else next.add(key)
+    }
+    updateSelection(category, next)
+  }
+  const editorCategory = pathname.startsWith('/editor/')
+    ? pathname.slice('/editor/'.length).replace(/\/+$/, '')
+    : null
+  const selectedTotal = selectedCount('characters', pendingCharacters)
+    + selectedCount('skills', pendingSkills)
+    + selectedCount('skins', pendingSkins)
 
   if (view === 'home') return <HomePage account={{ label: accountLabel, platform, saveStatus }} />
 
@@ -558,12 +600,93 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     {downloadButton}
   </section>
 
+  if (editorCategory && !['personajes', 'habilidades', 'skins'].includes(editorCategory)) {
+    return <section className="cloud-empty panel">
+      <h2>Categoría no encontrada</h2>
+      <Link className="button primary" to="/editor">Volver al Editor</Link>
+    </section>
+  }
+
+  if (editorCategory) {
+    const category: UnlockCategory = editorCategory === 'personajes'
+      ? 'characters' : editorCategory === 'habilidades' ? 'skills' : 'skins'
+    const keys = category === 'characters' ? pendingCharacters
+      : category === 'skills' ? pendingSkills : pendingSkins
+    const title = category === 'characters' ? 'Personajes'
+      : category === 'skills' ? 'Habilidades' : 'Skins'
+    return <>
+      <div className="editor-detail-nav">
+        <Link className="cloud-text-link" to="/editor">← Editor</Link>
+        <span>{gemFormat.format(selectedCount(category, keys))} seleccionados · {title}</span>
+      </div>
+      {!reportCharacters ? <section className="cloud-empty panel">
+        <p>Informe no disponible. Descarga la partida de nuevo.</p>
+        <button className="button primary" disabled={disabled} onClick={download}>Descargar partida</button>
+        {downloadFeedback}
+      </section> : category === 'characters' ? <CharacterUnlockSection
+        key={save.sha256}
+        characters={reportCharacters}
+        saveSha={save.sha256}
+        writeReady={Boolean(session.write_ready)}
+        accountLabel={accountLabel}
+        disabled={disabled}
+        selected={selections.characters}
+        onSelectedChange={(next) => updateSelection('characters', next)}
+        applied={applied.characters}
+        onApplied={(codes) => applyUnlocks('characters', codes)}
+        formatProblem={friendly}
+        onExpired={onExpired}
+        onPrepared={() => void historyOperation.run(refreshHistory)}
+      /> : category === 'skills' ? <SkillUnlockSection
+        key={`skills-${save.sha256}`}
+        characters={reportCharacters}
+        saveSha={save.sha256}
+        writeReady={Boolean(session.write_ready)}
+        accountLabel={accountLabel}
+        disabled={disabled}
+        selected={selections.skills}
+        onSelectedChange={(next) => updateSelection('skills', next)}
+        applied={applied.skills}
+        onApplied={(codes) => applyUnlocks('skills', codes)}
+        formatProblem={friendly}
+        onExpired={onExpired}
+        onPrepared={() => void historyOperation.run(refreshHistory)}
+      /> : <SkinUnlockSection
+        key={`skins-${save.sha256}`}
+        characters={reportCharacters}
+        saveSha={save.sha256}
+        writeReady={Boolean(session.write_ready)}
+        accountLabel={accountLabel}
+        disabled={disabled}
+        selected={selections.skins}
+        onSelectedChange={(next) => updateSelection('skins', next)}
+        applied={applied.skins}
+        onApplied={(codes) => applyUnlocks('skins', codes)}
+        formatProblem={friendly}
+        onExpired={onExpired}
+        onPrepared={() => void historyOperation.run(refreshHistory)}
+      />}
+    </>
+  }
+
   return <>
+  <section className="cloud-section panel quick-editor-head">
+    <div>
+      <span className="cloud-kicker">Editor rápido</span>
+      <h2>Partida</h2>
+      <p className="cloud-state">{accountLabel} · {platform}</p>
+    </div>
+    <div className="editor-current">
+      <span>Seleccionados</span>
+      <strong data-testid="quick-selected-count">{gemFormat.format(selectedTotal)}</strong>
+    </div>
+  </section>
+  <div className="quick-edit-grid">
   <section className="cloud-section panel cloud-editor" aria-labelledby="edit-gems-title">
     <div className="cloud-section-head">
-      <div><h2 id="edit-gems-title">Gemas</h2><p className="cloud-state">{accountLabel}</p></div>
+      <div><h2 id="edit-gems-title">Gemas</h2><p className="cloud-state">Saldo de la copia</p></div>
       <div className="editor-current">
-        <span>Gemas de la copia descargada</span>
+        <span>Actual</span>
         <strong>{gemFormat.format(save.gems)}</strong>
       </div>
     </div>
@@ -634,10 +757,10 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     <div className="cloud-section-head">
       <div>
         <h2 id="edit-fish-chip-title">Fichas de pesca</h2>
-        <p className="cloud-state">gameData.fishChip + itemData.materials.material_fish · {accountLabel}</p>
+        <p className="cloud-state">Saldo y <code>material_fish</code></p>
       </div>
       <div className="editor-current">
-        <span>{fishResult?.persisted ? 'Últimos valores verificados' : 'Valores de la copia descargada'}</span>
+        <span>{fishResult?.persisted ? 'Verificados' : 'Actuales'}</span>
         <strong data-testid="native-current-fish-chip">
           {cloudFishChip == null ? '—' : gemFormat.format(cloudFishChip)}
         </strong>
@@ -647,13 +770,6 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
         </strong>
       </div>
     </div>
-    <p className="cloud-note">
-      La escritura conjunta de <code>gameData.fishChip</code> y
-      <code>itemData.materials.material_fish</code> fue confirmada por el propietario en un
-      dispositivo Android: el saldo se muestra en el juego, la compra descuenta el importe
-      correcto y el cliente oficial guarda el cambio. Se mantiene el respaldo y la verificación
-      antes de subir.
-    </p>
     {!session.write_ready && <Notice tone="warning">
       Puedes preparar la edición y su respaldo. La subida a la nube no está disponible.
     </Notice>}
@@ -677,8 +793,7 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
           }} />
         <small id="fish-chip-limits">
           Entero entre {gemFormat.format(fishLimits.min)} y {gemFormat.format(fishLimits.max)}.
-          Se aplica a gameData.fishChip y a itemData.materials.material_fish; cumulativeFishCount,
-          los historiales y los demás materiales no se tocan.
+          No modifica historiales, recompensas ni otros materiales.
         </small>
       </label>
       <button className="button primary" disabled={disabled || !fishValid || fishAlreadyCurrent}>
@@ -730,46 +845,45 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
         ? 'No se pudo confirmar la subida de fichas. Verifica el estado desde Partida.'
         : 'No se pudo preparar la edición de fichas. Vuelve a intentarlo.')} />}
   </section>
-  {save.report?.characters ? <CharacterUnlockSection
-    key={save.sha256}
-    characters={save.report.characters}
-    saveSha={save.sha256}
-    writeReady={Boolean(session.write_ready)}
-    accountLabel={accountLabel}
-    disabled={disabled}
-    formatProblem={friendly}
-    onExpired={onExpired}
-    onPrepared={() => void historyOperation.run(refreshHistory)}
-  /> : null}
-  {save.report?.characters ? <SkillUnlockSection
-    key={`skills-${save.sha256}`}
-    characters={save.report.characters}
-    saveSha={save.sha256}
-    writeReady={Boolean(session.write_ready)}
-    accountLabel={accountLabel}
-    disabled={disabled}
-    formatProblem={friendly}
-    onExpired={onExpired}
-    onPrepared={() => void historyOperation.run(refreshHistory)}
-  /> : null}
-  {save.report?.characters ? <SkinUnlockSection
-    key={`skins-${save.sha256}`}
-    characters={save.report.characters}
-    saveSha={save.sha256}
-    writeReady={Boolean(session.write_ready)}
-    accountLabel={accountLabel}
-    disabled={disabled}
-    formatProblem={friendly}
-    onExpired={onExpired}
-    onPrepared={() => void historyOperation.run(refreshHistory)}
-  /> : null}
-  {save.report ? <SaveReportSections report={save.report} showCharacters={false} /> : <section className="cloud-section panel cloud-empty" aria-labelledby="report-pending-title">
-    <h2 id="report-pending-title">Recursos y personajes</h2>
-    <p>Descarga la partida de nuevo para generar el informe de solo lectura.</p>
+  </div>
+  {!reportCharacters ? <section className="cloud-section panel cloud-empty">
+    <h2>Informe no disponible</h2>
+    <p>Descarga la partida de nuevo para editar desbloqueos.</p>
     <button className="button quiet" disabled={disabled} onClick={download}>
       {downloading ? 'Descargando…' : 'Actualizar informe'}
     </button>
     {downloadFeedback}
+  </section> : <section className="cloud-section panel quick-unlock-section" aria-labelledby="quick-unlock-title">
+    <div className="cloud-section-head">
+      <div>
+        <span className="cloud-kicker">Desbloqueos</span>
+        <h2 id="quick-unlock-title">Selecciona y revisa por categoría</h2>
+      </div>
+    </div>
+    <div className="quick-unlock-grid">
+      <QuickUnlockCard title="Personajes" path="/editor/personajes"
+        unlocked={Math.min(reportCharacters.counts.characters, reportCharacters.counts.unlocked + applied.characters.size)}
+        total={reportCharacters.counts.characters}
+        pending={pendingCharacters.length}
+        selected={selectedCount('characters', pendingCharacters)}
+        busy={disabled}
+        onToggleAll={() => toggleCategory('characters', pendingCharacters)} />
+      <QuickUnlockCard title="Habilidades" path="/editor/habilidades"
+        unlocked={Math.min(reportCharacters.skills?.total ?? 0, (reportCharacters.skills?.unlocked ?? 0) + applied.skills.size)}
+        total={reportCharacters.skills?.total ?? 0}
+        pending={pendingSkills.length}
+        selected={selectedCount('skills', pendingSkills)}
+        busy={disabled}
+        onToggleAll={() => toggleCategory('skills', pendingSkills)} />
+      <QuickUnlockCard title="Skins" path="/editor/skins"
+        unlocked={Math.min(reportCharacters.skins?.total ?? 0, (reportCharacters.skins?.unlocked ?? 0) + applied.skins.size)}
+        total={reportCharacters.skins?.total ?? 0}
+        pending={pendingSkins.length}
+        selected={selectedCount('skins', pendingSkins)}
+        busy={disabled}
+        onToggleAll={() => toggleCategory('skins', pendingSkins)} />
+    </div>
+    <p className="cloud-note">Nada se sube hasta revisarlo y confirmarlo dentro de cada categoría.</p>
   </section>}
 </>}
 

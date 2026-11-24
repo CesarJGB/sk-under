@@ -43,7 +43,9 @@ function LabRoute() {
 export default function App() {
   const { pathname } = useLocation()
   const main = useRef<HTMLElement>(null)
-  const view = navigation.find(({ path }) => matchPath(path, pathname))?.view
+  const view = pathname === '/editor' || pathname.startsWith('/editor/')
+    ? 'editor'
+    : navigation.find(({ path }) => matchPath(path, pathname))?.view
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -60,7 +62,7 @@ export default function App() {
         </Link>
         <nav className="navigation" aria-label="Navegación principal">
           {navigation.map(({ path, label, icon: Icon }) => (
-            <NavLink key={path} to={path} end={path !== '/partida'} className="nav-link">
+            <NavLink key={path} to={path} end={path === '/'} className="nav-link">
               <Icon size={17} aria-hidden="true" />{label}
             </NavLink>
           ))}

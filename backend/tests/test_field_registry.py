@@ -73,9 +73,11 @@ def test_report_fields_remain_read_only():
     assert "confirmed_by_owner" in fields["heroSkillUnlock"]["edit_policy"]
     assert "Fase 6.17" in fields["heroSkillUnlock"]["experimental_evidence"]
     assert "Fase 6.18" in fields["heroSkillUnlock"]["experimental_evidence"]
-    assert fields["skinLock"]["validation_level"] == "E2"
-    assert fields["skinLock"]["edit_policy"].startswith("escritura experimental E2")
+    assert fields["skinLock"]["validation_level"] == "E3"
+    assert fields["skinLock"]["edit_policy"].startswith("escritura confirmada por el propietario")
+    assert "confirmed_by_owner" in fields["skinLock"]["edit_policy"]
     assert "Fase 6.18" in fields["skinLock"]["experimental_evidence"]
+    assert "Fase 6.19" in fields["skinLock"]["experimental_evidence"]
 
 
 def test_registry_links_exist_relative_to_documentation():

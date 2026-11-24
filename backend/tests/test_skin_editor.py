@@ -304,8 +304,8 @@ def test_prepare_confirm_verify_restore_and_backup_integrity(tmp_path):
     assert prepared.edit.locked_character_codes == ("Ranger",)
     summary = prepared.summary()
     assert summary["field"] == "gameData.skinLock"
-    assert summary["experimental"] is True
-    assert summary["validation"]["evidence_level"] == "E2"
+    assert summary["experimental"] is False
+    assert summary["validation"]["evidence_level"] == "E3"
     assert summary["validation"]["only_skins_changed"] is True
     assert summary["locked_character_codes"] == ["Ranger"]
 

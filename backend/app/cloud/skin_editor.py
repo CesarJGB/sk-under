@@ -1,6 +1,6 @@
-"""Desbloqueo granular y experimental de skins en ``gameData.skinLock``.
+"""Desbloqueo granular de skins confirmado por el propietario en ``gameData.skinLock``.
 
-La Fase 6.18 mantiene la política conservadora de las fases anteriores: las
+La Fase 6.19 conserva la política conservadora de las fases anteriores: las
 copias reales de 8.8.0 contienen exactamente 802 posiciones ``{Key, Value}``
 repartidas en 42 listas por código de personaje, y el catálogo empaquetado
 contiene las mismas 802 posiciones en el mismo orden.
@@ -8,10 +8,12 @@ contiene las mismas 802 posiciones en el mismo orden.
 La única semántica que se escribe es ``Value = 1`` para una skin concreta. En
 las muestras observadas las 42 skins base (``Key = 0``) y una skin adicional de
 Warlock tienen ``Value = 1``; el resto usa otros enteros (cero, precios o
-códigos negativos) cuya semántica no se ha validado. Por eso este editor es
-experimental E2: no crea posiciones, no agrega personajes, no modifica
-``currentSkinDatas`` (la selección observada) ni ``heroUnlock`` y exige que cada
-posición seleccionada exista en la copia original.
+códigos negativos) cuya semántica no se ha validado. El propietario confirmó en
+Android físico que las skins seleccionadas aparecen disponibles en el cliente
+oficial (E3), sin declarar persistencia posterior. El editor no crea posiciones,
+no agrega personajes, no modifica ``currentSkinDatas`` (la selección observada)
+ni ``heroUnlock`` y exige que cada posición seleccionada exista en la copia
+original.
 """
 
 from __future__ import annotations

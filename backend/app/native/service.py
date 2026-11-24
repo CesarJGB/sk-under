@@ -193,7 +193,7 @@ class NativeAuthService:
             "fish_chip_write_policy": "confirmed_by_owner",
             "character_write_policy": "confirmed_by_owner",
             "skill_write_policy": "confirmed_by_owner",
-            "skin_write_policy": "experimental",
+            "skin_write_policy": "confirmed_by_owner",
             "login_available": login_available,
             "auto_identity": self.auto_identity,
             "portal_enabled": self.portal_client is not None,
@@ -251,7 +251,7 @@ class NativeAuthService:
             "fish_chip_write_policy": "confirmed_by_owner",
             "character_write_policy": "confirmed_by_owner",
             "skill_write_policy": "confirmed_by_owner",
-            "skin_write_policy": "experimental",
+            "skin_write_policy": "confirmed_by_owner",
         }
 
     # Inicio y cierre de sesión ---------------------------------------------
@@ -397,7 +397,7 @@ class NativeAuthService:
     def prepare_fish_chip(
         self, session: NativeSessionRecord, new_fish_chip: object, source_sha256: str
     ) -> dict[str, object]:
-        """Escritura experimental autorizada de las dos rutas de pesca.
+        """Escritura autorizada de las dos rutas de pesca.
 
         Aplica el mismo entero a ``gameData.fishChip`` y a
         ``itemData.materials.material_fish``. No se habilitan otros campos de
@@ -450,7 +450,7 @@ class NativeAuthService:
         skins: list[dict[str, object]],
         source_sha256: str,
     ) -> dict[str, object]:
-        """Prepara el desbloqueo experimental de skins seleccionadas.
+        """Prepara el desbloqueo de skins seleccionadas.
 
         Solo cambia a ``1`` posiciones existentes de ``gameData.skinLock`` y
         conserva la skin equipada, los personajes y el resto de la partida.
@@ -818,7 +818,7 @@ class NativeAuthService:
             "fish_chip_write_policy": "confirmed_by_owner",
             "character_write_policy": "confirmed_by_owner",
             "skill_write_policy": "confirmed_by_owner",
-            "skin_write_policy": "experimental",
+            "skin_write_policy": "confirmed_by_owner",
             "sections": None,
             "remote_source": save.metadata.source,
         }
@@ -965,7 +965,7 @@ class NativeAuthService:
             "fish_chip_write_policy": "confirmed_by_owner",
             "character_write_policy": "confirmed_by_owner",
             "skill_write_policy": "confirmed_by_owner",
-            "skin_write_policy": "experimental",
+            "skin_write_policy": "confirmed_by_owner",
             "sections": None,
             "remote_source": save.metadata.source,
         }

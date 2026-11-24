@@ -115,7 +115,7 @@ class CloudLabStatus(BaseModel):
     fish_chip_write_policy: Literal["confirmed_by_owner"] = "confirmed_by_owner"
     character_write_policy: Literal["confirmed_by_owner"] = "confirmed_by_owner"
     skill_write_policy: Literal["confirmed_by_owner"] = "confirmed_by_owner"
-    skin_write_policy: Literal["experimental"] = "experimental"
+    skin_write_policy: Literal["confirmed_by_owner"] = "confirmed_by_owner"
     message: str
 
 
@@ -135,7 +135,7 @@ class CloudLabSave(BaseModel):
     fish_chip_write_policy: Literal["confirmed_by_owner"] | None = None
     character_write_policy: Literal["confirmed_by_owner"] | None = None
     skill_write_policy: Literal["confirmed_by_owner"] | None = None
-    skin_write_policy: Literal["experimental"] | None = None
+    skin_write_policy: Literal["confirmed_by_owner"] | None = None
     size: int
     sha256: str
     serialzed_version: int
@@ -284,7 +284,7 @@ class CloudLabSkinPrepared(BaseModel):
     original_value: int | None = None
     new_value: int | None = None
     field: str
-    experimental: Literal[True] = True
+    experimental: bool = False
     changed: bool
     candidate_size: int
     candidate_sha256: str

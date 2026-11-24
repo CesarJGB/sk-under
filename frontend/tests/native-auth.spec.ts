@@ -79,7 +79,7 @@ const REPORT = {
         { index: 2, key: 'c0_skin2', name: 'Lava Knight', state: 'unknown', value: null, compatible: false },
       ],
       selected_skin: 0, equipped_skin: { key: 0, state: 1, name: 'Knight' },
-      skins_recorded: 3, skins_status: 'experimental',
+      skins_recorded: 3, skins_status: 'confirmed_by_owner',
     }, ...['Ranger', 'Mage', 'Alchemist'].map((name, index) => ({
       code: name, name, catalog_index: index + 1, unlocked: false, level: 0,
       level_max: null, level_status: 'not_validated', selected_skill: 0,
@@ -102,7 +102,7 @@ const REPORT = {
       ],
       selected_skin: '<missing>', equipped_skin: null,
       skins_recorded: name === 'Ranger' ? 2 : name === 'Mage' ? 2 : 1,
-      skins_status: 'experimental',
+      skins_status: 'confirmed_by_owner',
     }))],
     counts: { characters: 42, unlocked: 1, selected_skins: 1 },
     skills: {
@@ -111,9 +111,9 @@ const REPORT = {
     },
     skins: {
       total: 8, unlocked: 4, pending: 3, selected: 1,
-      incompatible: 1, characters_with_data: 4, status: 'experimental',
+      incompatible: 1, characters_with_data: 4, status: 'confirmed_by_owner',
     },
-    level_status: 'not_validated', skins_status: 'experimental',
+    level_status: 'not_validated', skins_status: 'confirmed_by_owner',
     catalog: {
       available: true, error: null, version: '8.8.0', source: 'SKDFE', characters: 42,
     },
@@ -166,12 +166,12 @@ function characterPrepared(codes: string[]) {
     field: 'gameData.heroUnlock', original_unlocked_count: 1,
     new_unlocked_count: 1 + codes.length, total_characters: 42,
     selected_codes: codes, newly_unlocked_codes: codes,
-    original_value: 1, new_value: 1 + codes.length, experimental: true, changed: true,
+    original_value: 1, new_value: 1 + codes.length, experimental: false, changed: true,
     candidate_size: 505, candidate_sha256: CANDIDATE, byte_diff: PREPARED.byte_diff,
     changed_fields: codes.map((code) => `gameData.heroUnlock.${code}`),
     validation: {
       valid: true, structure_valid: true, only_characters_changed: true,
-      experimental: true, evidence_level: 'E2',
+      experimental: false, evidence_level: 'confirmed_by_owner',
       message: `Campos modificados: ${codes.map((code) => `gameData.heroUnlock.${code}`).join(', ')}.`,
     },
   }
@@ -221,12 +221,12 @@ function skinPrepared(skins: Array<{ code: string; index: number }>) {
     new_unlocked_count: 4 + skins.length, total_skins: 8,
     selected_skins: skins, newly_unlocked_skins: skins, affected_codes: codes,
     locked_character_codes: [],
-    original_value: 4, new_value: 4 + skins.length, experimental: true, changed: true,
+    original_value: 4, new_value: 4 + skins.length, experimental: false, changed: true,
     candidate_size: 505, candidate_sha256: CANDIDATE, byte_diff: PREPARED.byte_diff,
     changed_fields: skins.map((skin) => `gameData.skinLock.${skin.code}[${skin.index}]`),
     validation: {
       valid: true, structure_valid: true, only_skins_changed: true,
-      experimental: true, evidence_level: 'E2',
+      experimental: false, evidence_level: 'E3',
       message: `Campos modificados: ${skins.map((skin) => `gameData.skinLock.${skin.code}[${skin.index}]`).join(', ')}.`,
     },
   }
@@ -268,6 +268,11 @@ async function submitLogin(page: Page, email = 'holder@example.test', password =
   await page.getByLabel('Correo electrónico').fill(email)
   await page.getByLabel('Contraseña', { exact: true }).fill(password)
   await page.getByRole('button', { name: 'Iniciar sesión' }).click()
+}
+
+async function openCategory(page: Page, title: string) {
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await page.getByRole('link', { name: `Revisar ${title}` }).click()
 }
 
 test.beforeEach(async ({ page }) => {
@@ -534,21 +539,49 @@ test('navega por el flujo de nube y mantiene el borrador solo para la cuenta act
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(320)
 })
 
-test('muestra fichas, recursos y personajes del informe en solo lectura', async ({ page }) => {
+test('muestra el editor rápido con saldos y tarjetas de desbloqueo', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
   await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/partida')
   await page.getByRole('link', { name: 'Abrir Editor' }).click()
-  await expect(page.getByTestId('fish-chip-balance')).toHaveText('3')
-  await expect(page.getByTestId('fish-chip-evidence')).toContainText('propietario confirmó')
+  await expect(page.getByTestId('native-current-fish-chip')).toHaveText('3')
+  await expect(page.getByTestId('native-current-material-fish')).toHaveText('3')
   const fishSection = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Fichas de pesca' }) })
   await expect(fishSection.getByText('Experimental · E2')).toHaveCount(0)
-  await expect(page.getByTestId('resource-group-materials')).toContainText('wood × 4')
-  await expect(page.getByTestId('character-unlocked-count')).toHaveText('1 / 42')
-  await expect(page.getByTestId('character-unlock-Knight')).toContainText('Disponible')
-  await expect(page.getByTestId('character-unlock-Ranger')).toContainText('Bloqueado')
+  await expect(page.getByTestId('quick-personajes')).toContainText('1 de 42 desbloqueados')
+  await expect(page.getByTestId('quick-personajes')).toContainText('3 pendientes')
+  await expect(page.getByTestId('quick-habilidades')).toContainText('4 de 7 desbloqueados')
+  await expect(page.getByTestId('quick-skins')).toContainText('4 de 8 desbloqueados')
+  await expect(page.getByTestId('character-unlock-section')).toHaveCount(0)
+  await expect(page.getByTestId('skill-unlock-section')).toHaveCount(0)
+  await expect(page.getByTestId('skin-unlock-section')).toHaveCount(0)
+  await expect(page.getByTestId('save-report')).toHaveCount(0)
   await expect(page.getByLabel('Nueva cantidad de gemas')).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('sincroniza la selección rápida y detallada y la conserva al navegar', async ({ page }) => {
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/partida')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await page.getByLabel('Seleccionar todos: Personajes').check()
+  await expect(page.getByTestId('quick-selected-count')).toHaveText('3')
+  await expect(page.getByTestId('quick-personajes')).toContainText('Todo seleccionado')
+  await page.getByRole('link', { name: 'Revisar personajes' }).click()
+  await expect(page).toHaveURL(/\/editor\/personajes$/)
+  await expect(page.getByLabel('Seleccionar Ranger')).toBeChecked()
+  await expect(page.getByLabel('Seleccionar Mage')).toBeChecked()
+  await page.getByLabel('Seleccionar Mage').uncheck()
+  await page.getByRole('link', { name: '← Editor' }).click()
+  await expect(page).toHaveURL(/\/editor$/)
+  await expect(page.getByTestId('quick-selected-count')).toHaveText('2')
+  await expect(page.getByTestId('quick-personajes')).toContainText('2 seleccionados')
+  await page.getByRole('link', { name: 'Revisar personajes' }).click()
+  await expect(page.getByLabel('Seleccionar Ranger')).toBeChecked()
+  await expect(page.getByLabel('Seleccionar Mage')).not.toBeChecked()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 
@@ -580,7 +613,7 @@ test('edita y sube el saldo de fichas con el flujo autenticado', async ({ page }
   await expect(page.getByTestId('native-current-fish-chip')).toHaveText('3')
   await expect(page.getByTestId('native-current-material-fish')).toHaveText('3')
   await expect(page.getByText('Experimental · E2')).toHaveCount(0)
-  await expect(page.getByText('confirmada por el propietario', { exact: false })).toBeVisible()
+  await expect(page.getByText('No modifica historiales, recompensas ni otros materiales.')).toBeVisible()
   await page.getByLabel('Nuevo saldo de fichas de pesca').fill('7')
   await page.getByRole('button', { name: 'Preparar cambio de fichas' }).click()
   await expect(page.getByRole('heading', { name: 'Revisar cambio de fichas' })).toBeVisible()
@@ -640,17 +673,19 @@ test('bloquea la preparación cuando el catálogo de personajes no está disponi
     await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: unavailable } } })
     await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
     await page.goto('/partida')
-    await page.getByRole('link', { name: 'Abrir Editor' }).click()
+    await openCategory(page, 'personajes')
     await expect(page.getByTestId('character-catalog-unavailable')).toBeVisible()
     await expect(page.getByTestId('character-catalog-unavailable')).toContainText(
-      'No está disponible el catálogo local de personajes',
+      'Catálogo de personajes no disponible',
     )
-    await expect(page.getByRole('button', { name: 'Preparar desbloqueo de seleccionados' }))
+    await expect(page.getByRole('button', { name: 'Preparar desbloqueo' }))
       .toBeDisabled()
-    await expect(page.getByRole('button', { name: 'Seleccionar todos los bloqueados' }))
+    await expect(page.getByRole('button', { name: 'Seleccionar bloqueados' }))
       .toBeDisabled()
+    await page.getByRole('link', { name: '← Editor' }).click()
+    await page.getByRole('link', { name: 'Revisar habilidades' }).click()
     await expect(page.getByTestId('skill-catalog-unavailable')).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Preparar desbloqueo de seleccionadas' }))
+    await expect(page.getByRole('button', { name: 'Preparar desbloqueo' }))
       .toBeDisabled()
     await expect(page.getByTestId('skill-unlocked-count')).toHaveText('0 / 0')
   })
@@ -679,17 +714,17 @@ test('desbloquea un personaje individual con resumen y verificación', async ({ 
   })
 
   await page.goto('/partida')
-  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await openCategory(page, 'personajes')
   await expect(page.getByTestId('character-unlock-section')).toBeVisible()
   await page.getByLabel('Seleccionar Ranger').check()
-  await page.getByRole('button', { name: 'Preparar desbloqueo de seleccionados' }).click()
+  await page.getByRole('button', { name: 'Preparar desbloqueo' }).click()
   expect(selectedCodes).toEqual(['Ranger'])
   await expect(page.getByRole('heading', { name: 'Revisar desbloqueo' })).toBeVisible()
   await expect(page.getByTestId('character-unlock-preview')).toContainText('Ranger')
   await expect(page.getByTestId('character-unlock-preview')).toContainText('gameData.heroUnlock.Ranger')
-  await page.getByLabel(/Confirmo que quiero desbloquear estos personajes/).check()
+  await page.getByLabel(/Confirmo sobrescribir la partida/).check()
   await page.getByRole('button', { name: 'Desbloquear y verificar' }).click()
-  await expect(page.getByText('Desbloqueo subido y verificado en la nube', { exact: false })).toBeVisible()
+  await expect(page.getByText('Desbloqueo verificado en la nube', { exact: false })).toBeVisible()
   await expect(page.getByTestId('character-unlocked-count')).toHaveText('2 / 42')
   await expect(page.getByTestId('character-unlock-Ranger')).toContainText('Disponible')
   await expect(page.getByLabel('Seleccionar Knight')).toHaveCount(0)
@@ -705,15 +740,15 @@ test('desbloquea varios personajes seleccionados sin tocar los disponibles', asy
   })
 
   await page.goto('/partida')
-  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await openCategory(page, 'personajes')
   await page.getByLabel('Seleccionar Ranger').check()
   await page.getByLabel('Seleccionar Mage').check()
-  await expect(page.getByText('2 seleccionados de 3 bloqueados.')).toBeVisible()
-  await page.getByRole('button', { name: 'Preparar desbloqueo de seleccionados' }).click()
+  await expect(page.getByText('2 de 3 seleccionados.')).toBeVisible()
+  await page.getByRole('button', { name: 'Preparar desbloqueo' }).click()
   expect(selectedCodes).toEqual(['Ranger', 'Mage'])
   const preview = page.getByTestId('character-unlock-preview')
   await expect(preview).toContainText('Ranger, Mage')
-  await expect(preview).toContainText('Desbloqueados nuevos')
+  await expect(preview).toContainText('Disponibles ahora')
   await expect(preview).toContainText('3 / 42')
   await expect(page.getByLabel('Seleccionar Knight')).toHaveCount(0)
 })
@@ -735,20 +770,20 @@ test('selecciona todos, deselecciona y desbloquea el resto en masa', async ({ pa
   } }))
 
   await page.goto('/partida')
-  await page.getByRole('link', { name: 'Abrir Editor' }).click()
-  await page.getByRole('button', { name: 'Seleccionar todos los bloqueados' }).click()
+  await openCategory(page, 'personajes')
+  await page.getByRole('button', { name: 'Seleccionar bloqueados' }).click()
   await expect(page.getByLabel('Seleccionar Ranger')).toBeChecked()
   await expect(page.getByLabel('Seleccionar Alchemist')).toBeChecked()
-  await expect(page.getByText('3 seleccionados de 3 bloqueados.')).toBeVisible()
-  await page.getByRole('button', { name: 'Deseleccionar todos' }).click()
+  await expect(page.getByText('3 de 3 seleccionados.')).toBeVisible()
+  await page.getByRole('button', { name: 'Limpiar selección' }).click()
   await expect(page.getByLabel('Seleccionar Ranger')).not.toBeChecked()
-  await expect(page.getByRole('button', { name: 'Preparar desbloqueo de seleccionados' })).toBeDisabled()
-  await page.getByRole('button', { name: 'Seleccionar todos los bloqueados' }).click()
-  await page.getByRole('button', { name: 'Preparar desbloqueo de seleccionados' }).click()
+  await expect(page.getByRole('button', { name: 'Preparar desbloqueo' })).toBeDisabled()
+  await page.getByRole('button', { name: 'Seleccionar bloqueados' }).click()
+  await page.getByRole('button', { name: 'Preparar desbloqueo' }).click()
   expect(selectedCodes).toEqual(['Ranger', 'Mage', 'Alchemist'])
-  await page.getByLabel(/Confirmo que quiero desbloquear estos personajes/).check()
+  await page.getByLabel(/Confirmo sobrescribir la partida/).check()
   await page.getByRole('button', { name: 'Desbloquear y verificar' }).click()
-  await expect(page.getByText('Desbloqueo subido y verificado en la nube', { exact: false })).toBeVisible()
+  await expect(page.getByText('Desbloqueo verificado en la nube', { exact: false })).toBeVisible()
   await expect(page.getByTestId('character-unlocked-count')).toHaveText('4 / 42')
   await expect(page.getByTestId('character-unlock-Alchemist')).toContainText('Disponible')
 })
@@ -779,7 +814,7 @@ test('muestra el resumen y desbloquea una skin con respaldo y verificación', as
 
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/partida')
-  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await openCategory(page, 'skins')
   await expect(page.getByTestId('skin-unlock-section')).toBeVisible()
   await expect(page.getByTestId('skin-unlocked-count')).toHaveText('4 / 8')
   const skinsSection = page.locator('section').filter({
@@ -787,27 +822,26 @@ test('muestra el resumen y desbloquea una skin con respaldo y verificación', as
   })
   await expect(skinsSection).toContainText('Identificadas')
   await expect(skinsSection).toContainText('Pendientes')
-  await expect(skinsSection).toContainText('Selección registrada')
   await expect(skinsSection).toContainText('Incompatibles')
   await expect(page.getByTestId('skin-incompatible-count')).toHaveText('1')
-  await expect(page.getByTestId('skin-experimental-notice')).toContainText('experimental E2')
+  await expect(skinsSection).toContainText('Confirmado por el propietario · E3')
   await expect(page.getByTestId('skin-character-Knight')).toContainText('1 / 3 desbloqueadas')
 
   await page.getByTestId('skin-character-Knight').locator('summary').click()
   await expect(page.getByTestId('skin-option-Knight-1')).toContainText('Elite Knight')
   await expect(page.getByTestId('skin-option-Knight-1')).toContainText('Compatible')
   await page.getByLabel('Seleccionar Elite Knight de Knight').check()
-  await page.getByRole('button', { name: 'Preparar desbloqueo de skins seleccionadas' }).click()
+  await page.getByRole('button', { name: 'Preparar desbloqueo' }).click()
   expect(selectedSkins).toEqual([{ code: 'Knight', index: 1 }])
   const preview = page.getByTestId('skin-unlock-preview')
   await expect(page.getByTestId('skin-unlock-summary')).toContainText('Knight: Elite Knight')
   await expect(preview).toContainText('gameData.skinLock.Knight[1]')
-  await expect(preview).toContainText('gameData.currentSkinDatas')
-  await expect(preview).toContainText('Evidencia experimental E2')
-  await page.getByLabel(/Confirmo que quiero desbloquear estas skins/).check()
-  await page.getByRole('button', { name: 'Desbloquear skins y verificar' }).click()
+  await expect(preview).toContainText('currentSkinDatas')
+  await expect(preview).not.toContainText('experimental E2')
+  await page.getByLabel(/Confirmo sobrescribir la partida/).check()
+  await page.getByRole('button', { name: 'Desbloquear y verificar' }).click()
   await expect(page.getByTestId('skin-unlock-result')).toContainText(
-    'Skins subidas y verificadas en la nube',
+    'Desbloqueo verificado en la nube',
   )
   await expect(page.getByTestId('skin-unlocked-count')).toHaveText('5 / 8')
   await page.getByLabel('Mostrar skins').selectOption('all')
@@ -825,17 +859,17 @@ test('selecciona todas las skins pendientes y prepara el lote sin renderizar tar
   })
 
   await page.goto('/partida')
-  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await openCategory(page, 'skins')
   await expect(page.getByTestId('skin-option-Knight-1')).toHaveCount(0)
   await page.getByTestId('skin-character-Knight').locator('summary').click()
   await page.getByRole('button', { name: 'Seleccionar pendientes de Knight' }).click()
-  await expect(page.getByText('1 seleccionadas de 3 pendientes compatibles.')).toBeVisible()
+  await expect(page.getByText('1 de 3 seleccionadas.')).toBeVisible()
   await expect(page.getByLabel('Seleccionar Elite Knight de Knight')).toBeChecked()
-  await page.getByRole('button', { name: 'Deseleccionar skins' }).click()
-  await expect(page.getByRole('button', { name: 'Preparar desbloqueo de skins seleccionadas' }))
+  await page.getByRole('button', { name: 'Limpiar selección' }).click()
+  await expect(page.getByRole('button', { name: 'Preparar desbloqueo' }))
     .toBeDisabled()
-  await page.getByRole('button', { name: 'Seleccionar todas las pendientes' }).click()
-  await page.getByRole('button', { name: 'Preparar desbloqueo de skins seleccionadas' }).click()
+  await page.getByRole('button', { name: 'Seleccionar pendientes', exact: true }).click()
+  await page.getByRole('button', { name: 'Preparar desbloqueo' }).click()
   expect(selectedSkins).toEqual([
     { code: 'Knight', index: 1 },
     { code: 'Ranger', index: 1 },
@@ -849,7 +883,7 @@ test('busca skins, filtra estados y muestra posiciones incompatibles', async ({ 
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
   await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
   await page.goto('/partida')
-  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await openCategory(page, 'skins')
 
   await page.getByLabel('Buscar skin o personaje').fill('Elite')
   await expect(page.getByTestId('skin-character-Knight')).toContainText('1 coincidencias')
@@ -895,39 +929,31 @@ test('muestra el resumen y desbloquea una habilidad con respaldo y verificación
 
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/partida')
-  await page.getByRole('link', { name: 'Abrir Editor' }).click()
-  const characterSection = page.locator('section').filter({
-    has: page.getByRole('heading', { name: 'Personajes' }),
-  })
-  await expect(characterSection.getByText('Experimental · E2')).toHaveCount(0)
-  await expect(page.getByTestId('character-confirmed-notice')).toContainText(
-    'confirmado por el propietario',
-  )
+  await openCategory(page, 'habilidades')
   await expect(page.getByTestId('skill-unlock-section')).toBeVisible()
   await expect(page.getByTestId('skill-unlocked-count')).toHaveText('4 / 7')
   const skillsSection = page.locator('section').filter({
     has: page.getByRole('heading', { name: 'Habilidades' }),
   })
   await expect(skillsSection).toContainText('Conocidas')
-  await expect(skillsSection).toContainText('Equipadas')
-  await expect(skillsSection).toContainText('Personajes con datos')
+  await expect(skillsSection).toContainText('Bloqueadas')
   await expect(page.getByTestId('skill-character-Knight')).toContainText('1 / 3 disponibles')
+  await page.getByTestId('skill-character-Knight').locator('summary').click()
   await expect(page.getByTestId('skill-option-Knight-1')).toContainText('Superior Fire')
-  await expect(page.getByTestId('skill-confirmed-notice')).toContainText('confirmado por el propietario')
-  await expect(skillsSection.getByText('Experimental · E2')).toHaveCount(0)
+  await expect(skillsSection).toContainText('Confirmado por el propietario · E3')
 
   await page.getByLabel('Seleccionar Superior Fire de Knight').check()
-  await page.getByRole('button', { name: 'Preparar desbloqueo de seleccionadas' }).click()
+  await page.getByRole('button', { name: 'Preparar desbloqueo' }).click()
   expect(selectedSkills).toEqual([{ code: 'Knight', index: 1 }])
-  await expect(page.getByRole('heading', { name: 'Revisar desbloqueo de habilidades' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Revisar desbloqueo' })).toBeVisible()
   const preview = page.getByTestId('skill-unlock-preview')
   await expect(page.getByTestId('skill-unlock-summary')).toContainText('Knight: Superior Fire')
   await expect(preview).toContainText('gameData.heroSkillUnlock.Knight[1]')
-  await expect(preview).toContainText('Evidencia E3 confirmada por el propietario')
-  await page.getByLabel(/Confirmo que quiero desbloquear estas habilidades/).check()
-  await page.getByRole('button', { name: 'Desbloquear habilidades y verificar' }).click()
+  await expect(preview).toContainText('Respaldo cifrado creado')
+  await page.getByLabel(/Confirmo sobrescribir la partida/).check()
+  await page.getByRole('button', { name: 'Desbloquear y verificar' }).click()
   await expect(page.getByTestId('skill-unlock-result')).toContainText(
-    'Habilidades subidas y verificadas en la nube',
+    'Desbloqueo verificado en la nube',
   )
   await expect(page.getByTestId('skill-unlocked-count')).toHaveText('5 / 7')
   await expect(page.getByTestId('skill-option-Knight-1')).toContainText('Disponible')
@@ -944,23 +970,25 @@ test('selecciona todas las habilidades bloqueadas, deselecciona y prepara el lot
   })
 
   await page.goto('/partida')
-  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await openCategory(page, 'habilidades')
   await page.getByLabel('Buscar personaje').fill('Ranger')
   await page.getByLabel('Filtro').selectOption('all')
   await expect(page.getByTestId('skill-character-Ranger')).toContainText('1 / 2 disponibles')
   await page.getByLabel('Buscar personaje').fill('')
   await page.getByLabel('Filtro').selectOption('pending')
+  await page.getByTestId('skill-character-Knight').locator('summary').click()
+  await page.getByTestId('skill-character-Ranger').locator('summary').click()
 
-  await page.getByRole('button', { name: 'Seleccionar todas las bloqueadas', exact: true }).click()
-  await expect(page.getByText('3 seleccionadas de 3 bloqueadas.')).toBeVisible()
+  await page.getByRole('button', { name: 'Seleccionar bloqueadas', exact: true }).click()
+  await expect(page.getByText('3 de 3 seleccionadas.')).toBeVisible()
   await expect(page.getByLabel('Seleccionar Superior Fire de Knight')).toBeChecked()
   await expect(page.getByLabel('Seleccionar Shield Bash de Knight')).toBeChecked()
   await expect(page.getByLabel("Seleccionar Hunter's Mark de Ranger")).toBeChecked()
-  await page.getByRole('button', { name: 'Deseleccionar todas' }).click()
-  await expect(page.getByRole('button', { name: 'Preparar desbloqueo de seleccionadas' }))
+  await page.getByRole('button', { name: 'Limpiar selección' }).click()
+  await expect(page.getByRole('button', { name: 'Preparar desbloqueo' }))
     .toBeDisabled()
-  await page.getByRole('button', { name: 'Seleccionar todas las bloqueadas', exact: true }).click()
-  await page.getByRole('button', { name: 'Preparar desbloqueo de seleccionadas' }).click()
+  await page.getByRole('button', { name: 'Seleccionar bloqueadas', exact: true }).click()
+  await page.getByRole('button', { name: 'Preparar desbloqueo' }).click()
   expect(selectedSkills).toEqual([
     { code: 'Knight', index: 1 },
     { code: 'Knight', index: 2 },
@@ -983,9 +1011,10 @@ test('filtra habilidades pendientes y muestra posiciones sin dato', async ({ pag
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: withUnknown } } })
   await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
   await page.goto('/partida')
-  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await openCategory(page, 'habilidades')
   await page.getByLabel('Filtro').selectOption('incomplete')
   await expect(page.getByTestId('skill-character-Mage')).toContainText('sin dato')
+  await page.getByTestId('skill-character-Mage').locator('summary').click()
   await expect(page.getByTestId('skill-option-Mage-0')).toContainText('Sin dato')
   await expect(page.getByLabel('Seleccionar Mage Skill de Mage')).toHaveCount(0)
   await page.getByLabel('Buscar personaje').fill('NoExiste')

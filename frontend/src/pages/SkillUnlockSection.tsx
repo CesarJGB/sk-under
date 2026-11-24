@@ -6,6 +6,7 @@ import {
 } from '../api'
 import { Loading, Notice, Problem } from '../ui'
 import { useOperation } from '../useOperation'
+import { skillKey } from '../unlockSelections'
 
 const amountFormat = new Intl.NumberFormat('es-MX')
 
@@ -31,23 +32,23 @@ function isExpired(error: ApiProblem) {
   return error.code === 'native_session_expired' || error.code === 'native_session_required'
 }
 
-function skillKey(code: string, index: number) {
-  return `${code}:${index}`
-}
-
 export function SkillUnlockSection({
   characters, saveSha, writeReady, accountLabel, disabled, formatProblem, onExpired, onPrepared,
+  selected, onSelectedChange, applied, onApplied,
 }: {
   characters: SaveCharacterReport
   saveSha: string
   writeReady: boolean
   accountLabel: string
   disabled: boolean
+  selected: Set<string>
+  onSelectedChange: (next: Set<string>) => void
+  applied: Set<string>
+  onApplied: (keys: string[]) => void
   formatProblem: (error: ApiProblem, fallback: string) => ApiProblem
   onExpired: () => void
   onPrepared?: () => void
 }) {
-  const [selected, setSelected] = useState<Set<string>>(new Set())
   const [prepared, setPrepared] = useState<LabSkillPrepared | null>(null)
   const [confirm, setConfirm] = useState(false)
   const [result, setResult] = useState<LabWriteResult | null>(null)
@@ -56,11 +57,6 @@ export function SkillUnlockSection({
   const [filter, setFilter] = useState<SkillFilter>('pending')
   const operation = useOperation()
 
-  const justUnlocked = new Set(
-    result?.persisted
-      ? (prepared?.newly_unlocked_skills ?? []).map((skill) => skillKey(skill.code, skill.index))
-      : [],
-  )
   const summary = characters.skills ?? {
     total: 0,
     unlocked: 0,
@@ -72,13 +68,12 @@ export function SkillUnlockSection({
   const characterViews: CharacterSkills[] = characters.items.map((character) => {
     const options = character.skill_options.map((option) => {
       const observed = character.skills.find((entry) => entry.key === option.index)
-      const state: SkillState = justUnlocked.has(skillKey(character.code, option.index))
+      const key = skillKey(character.code, option.index)
+      const state: SkillState = observed?.unlocked === true || applied.has(key)
         ? 'available'
-        : observed?.unlocked === true
-          ? 'available'
-          : observed?.unlocked === false
-            ? 'pending'
-            : 'unknown'
+        : observed?.unlocked === false
+          ? 'pending'
+          : 'unknown'
       return { index: option.index, name: option.name, state }
     })
     return {
@@ -94,14 +89,17 @@ export function SkillUnlockSection({
     .filter((option) => option.state === 'pending')
     .map((option) => skillKey(view.character.code, option.index)))
   const selectedRefs: LabSkillRef[] = characterViews.flatMap((view) => view.options
-    .filter((option) => selected.has(skillKey(view.character.code, option.index)))
+    .filter((option) => option.state === 'pending'
+      && selected.has(skillKey(view.character.code, option.index)))
     .map((option) => ({ code: view.character.code, index: option.index })))
   const total = summary.total
   const catalogUnavailable = characters.catalog.available === false
     || characters.catalog.characters === 0
     || total === 0
   const busy = disabled || operation.pending || catalogUnavailable
-  const unlockedCount = result?.persisted ? result.remote_skills ?? summary.unlocked : summary.unlocked
+  const unlockedCount = result?.persisted
+    ? result.remote_skills ?? summary.unlocked
+    : Math.min(total, summary.unlocked + applied.size)
   const lockedCount = Math.max(0, total - unlockedCount)
   const names = new Map(characters.items.map((character) => [character.code, character.name]))
   const skillNames = new Map(characterViews.flatMap((view) => view.options.map((option) => [
@@ -136,17 +134,15 @@ export function SkillUnlockSection({
 
   function toggle(code: string, index: number) {
     const key = skillKey(code, index)
-    setSelected((current) => {
-      const next = new Set(current)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
-      return next
-    })
+    const next = new Set(selected)
+    if (next.has(key)) next.delete(key)
+    else next.add(key)
+    onSelectedChange(next)
     clearPreview()
   }
 
   function addKeys(keys: string[]) {
-    setSelected((current) => new Set([...current, ...keys]))
+    onSelectedChange(new Set([...selected, ...keys]))
     clearPreview()
   }
 
@@ -167,9 +163,7 @@ export function SkillUnlockSection({
       <div>
         <span className="cloud-kicker">Confirmado por el propietario · E3</span>
         <h2 id="edit-skills-title">Habilidades</h2>
-        <p className="cloud-state">
-          gameData.heroSkillUnlock · {amountFormat.format(total)} habilidades del catálogo · {accountLabel}
-        </p>
+        <p className="cloud-state">{amountFormat.format(total)} en el catálogo · {accountLabel}</p>
       </div>
       <div className="editor-current">
         <span>Desbloqueadas</span>
@@ -183,32 +177,18 @@ export function SkillUnlockSection({
       <div><span>Conocidas</span><strong>{amountFormat.format(total)}</strong></div>
       <div><span>Desbloqueadas</span><strong>{amountFormat.format(unlockedCount)}</strong></div>
       <div><span>Bloqueadas</span><strong>{amountFormat.format(lockedCount)}</strong></div>
-      <div><span>Equipadas</span><strong>{amountFormat.format(summary.selected)}</strong></div>
-      <div><span>Personajes con datos</span><strong>{amountFormat.format(summary.characters_with_data)}</strong></div>
     </div>
 
-    <Notice tone="info">
-      <span data-testid="skill-confirmed-notice">
-        El desbloqueo de habilidades fue <strong>confirmado por el propietario</strong> en un
-        dispositivo Android físico con el cliente oficial: las habilidades seleccionadas se
-        editaron, subieron, recuperaron y aparecieron disponibles en el juego. Solo activa
-        posiciones existentes de <code>gameData.heroSkillUnlock</code>; no cambia
-        <code> gameData.heroSkill</code>, personajes, niveles, skins ni el resto de la partida.
-        Evidencia E3; no se declara persistencia posterior a una nueva partida.
-      </span>
-    </Notice>
     {!writeReady && <Notice tone="warning">
-      Puedes preparar el desbloqueo y su respaldo. La subida a la nube está deshabilitada.
+      Puedes preparar el cambio y su respaldo. La subida está deshabilitada.
     </Notice>}
     {catalogUnavailable && <Notice tone="warning">
       <span data-testid="skill-catalog-unavailable">
-        No está disponible el catálogo local de habilidades. La preparación queda bloqueada
-        hasta que el backend pueda leer el catálogo empaquetado.
+        Catálogo de habilidades no disponible. La preparación está bloqueada.
       </span>
     </Notice>}
     {summary.characters_with_data < characters.items.length && !catalogUnavailable && <Notice tone="info">
-      Algunos personajes no tienen datos de habilidades en esta copia. Sus posiciones no se
-      crean ni se modifican.
+      Algunos personajes no tienen datos de habilidades; sus posiciones no se modifican.
     </Notice>}
 
     <div className="skill-filters">
@@ -221,8 +201,8 @@ export function SkillUnlockSection({
         <span>Filtro</span>
         <select value={filter} disabled={busy}
           onChange={(event) => setFilter(event.target.value as SkillFilter)}>
-          <option value="pending">Con habilidades pendientes</option>
-          <option value="available">Con habilidades disponibles</option>
+          <option value="pending">Con pendientes</option>
+          <option value="available">Con disponibles</option>
           <option value="locked">Personajes bloqueados</option>
           <option value="incomplete">Con datos incompletos</option>
           <option value="all">Todos</option>
@@ -232,25 +212,24 @@ export function SkillUnlockSection({
 
     <div className="character-unlock-toolbar">
       <span>{selected.size === 0
-        ? 'Selecciona habilidades bloqueadas para preparar su desbloqueo.'
-        : `${amountFormat.format(selected.size)} seleccionadas de ${amountFormat.format(pendingKeys.length)} bloqueadas.`}</span>
+        ? 'Selecciona habilidades bloqueadas.'
+        : `${amountFormat.format(selectedRefs.length)} de ${amountFormat.format(pendingKeys.length)} seleccionadas.`}</span>
       <div className="cloud-actions">
         <button type="button" className="button quiet" disabled={busy || pendingKeys.length === 0}
-          onClick={() => addKeys(pendingKeys)}>Seleccionar todas las bloqueadas</button>
+          onClick={() => addKeys(pendingKeys)}>Seleccionar bloqueadas</button>
         <button type="button" className="button quiet" disabled={busy || selected.size === 0}
           onClick={() => {
-            setSelected(new Set())
+            onSelectedChange(new Set())
             clearPreview()
-          }}>Deseleccionar todas</button>
+          }}>Limpiar selección</button>
       </div>
     </div>
 
     {selectedLockedCharacters.length > 0 && <Notice tone="warning">
       <span data-testid="skill-locked-character-warning">
-        La selección incluye habilidades de personajes que aún aparecen bloqueados
-        ({selectedLockedCharacters.map((view) => view.character.name).join(', ')}).
-        Esta sección no modifica <code>gameData.heroUnlock</code>; desbloquea esos personajes
-        en la sección Personajes si quieres usarlos en el juego.
+        La selección incluye personajes bloqueados ({selectedLockedCharacters
+          .map((view) => view.character.name).join(', ')}). Esta sección no modifica
+        <code> heroUnlock</code>.
       </span>
     </Notice>}
 
@@ -264,24 +243,22 @@ export function SkillUnlockSection({
           .map((option) => skillKey(character.code, option.index))
         const unlocked = character.unlocked === true
         return <details className="skill-character" key={character.code}
-          data-testid={`skill-character-${character.code}`}
-          open={view.pending > 0 && visibleViews.length <= 3 ? true : undefined}>
+          data-testid={`skill-character-${character.code}`}>
           <summary>
             <span className="skill-character-title">
               <strong>{character.name}</strong>
               <small>{character.code} · {amountFormat.format(view.available)} / {amountFormat.format(options.length)} disponibles</small>
             </span>
             <span className={`report-state ${unlocked ? 'available' : 'locked'}`}>
-              {unlocked ? 'Personaje disponible' : character.unlocked === '<missing>' ? 'Personaje sin dato' : 'Personaje bloqueado'}
+              {unlocked ? 'Personaje disponible' : character.unlocked === '<missing>' ? 'Sin dato' : 'Personaje bloqueado'}
             </span>
           </summary>
           <div className="skill-character-body">
             {!unlocked && <p className="skill-requirement">
-              <strong>Requisito pendiente:</strong> el personaje no está desbloqueado en esta copia.
-              Las habilidades se pueden preparar, pero no se modificará <code>gameData.heroUnlock</code>.
+              Personaje bloqueado. Las habilidades se preparan, pero <code>heroUnlock</code> no se modifica.
             </p>}
             {options.length === 0 ? <p className="cloud-note">
-              No hay datos de habilidades para este personaje en el catálogo.
+              Sin datos de habilidades para este personaje.
             </p> : <ul className="skill-list">
               {options.map((option) => {
                 const key = skillKey(character.code, option.index)
@@ -306,13 +283,14 @@ export function SkillUnlockSection({
               })}
             </ul>}
             {view.unknown > 0 && <p className="cloud-note">
-              {amountFormat.format(view.unknown)} posiciones no tienen dato observado y no se modifican.
+              {amountFormat.format(view.unknown)} posiciones sin dato; no se modifican.
             </p>}
             <div className="cloud-actions">
               <button type="button" className="button quiet"
+                aria-label={`Seleccionar bloqueadas de ${character.name}`}
                 disabled={busy || pendingKeysForCharacter.length === 0}
                 onClick={() => addKeys(pendingKeysForCharacter)}>
-                Seleccionar bloqueadas de {character.name}
+                Seleccionar bloqueadas
               </button>
             </div>
           </div>
@@ -331,44 +309,32 @@ export function SkillUnlockSection({
             setPrepared(next)
             onPrepared?.()
           })
-        }}>Preparar desbloqueo de seleccionadas</button>
+        }}>Preparar desbloqueo</button>
     </div>
 
     {prepared && <div className="cloud-preview" data-testid="skill-unlock-preview">
-      <h3>Revisar desbloqueo de habilidades</h3>
+      <h3>Revisar desbloqueo</h3>
       <dl className="cloud-preview-data">
-        <div><dt>Habilidades originales</dt><dd>{amountFormat.format(prepared.original_unlocked_count)}</dd></div>
         <div><dt>Habilidades nuevas</dt><dd>{amountFormat.format(prepared.new_unlocked_count)} / {amountFormat.format(prepared.total_skills)}</dd></div>
-        <div><dt>Habilidades que se desbloquean</dt><dd>{amountFormat.format(prepared.newly_unlocked_skills.length)}</dd></div>
-        <div><dt>Personajes afectados</dt><dd>{amountFormat.format(prepared.affected_codes.length)}</dd></div>
+        <div><dt>Se desbloquean</dt><dd>{amountFormat.format(prepared.newly_unlocked_skills.length)}</dd></div>
       </dl>
-      <p className="cloud-note">
-        Personajes: {affectedNames || 'ninguno'}.
-      </p>
       <p className="cloud-note" data-testid="skill-unlock-summary">
         {prepared.newly_unlocked_skills.map((skill) => (
           `${names.get(skill.code) ?? skill.code}: ${skillNames.get(skillKey(skill.code, skill.index)) ?? `índice ${skill.index}`}`
         )).join(' · ')}
       </p>
       <p className="cloud-note">
-        Se guardó un respaldo cifrado de la partida original. La habilidad equipada
-        (<code>gameData.heroSkill</code>), los personajes, los niveles, las skins y el resto
-        de los campos permanecen intactos.
+        Respaldo cifrado creado. Personajes: {affectedNames || 'ninguno'}. <code>heroSkill</code>,
+        personajes, niveles, skins y recursos no cambian.
       </p>
       <details className="skill-changed-fields">
         <summary>Campos afectados ({amountFormat.format(prepared.changed_fields.length)})</summary>
         <code>{prepared.changed_fields.join(', ')}</code>
       </details>
-      <Notice tone="info">
-        Evidencia E3 confirmada por el propietario en Android físico. La subida verifica que
-        la nube conserva la copia modificada; la disponibilidad en el juego ya fue comprobada
-        con el cliente oficial.
-      </Notice>
       {writeReady && !result && <>
         <label className="cloud-check"><input type="checkbox" checked={confirm} disabled={busy}
           onChange={(event) => setConfirm(event.target.checked)} />
-          <span>Confirmo que quiero desbloquear estas habilidades y sobrescribir la partida
-            en la nube de {accountLabel}.</span>
+          <span>Confirmo sobrescribir la partida de {accountLabel}.</span>
         </label>
         <button type="button" className="button primary"
           disabled={busy || !confirm || !prepared.changed}
@@ -380,24 +346,25 @@ export function SkillUnlockSection({
                 prepared.backup.id, prepared.candidate_sha256, signal,
               )
               setResult(uploaded)
-              setSelected(new Set())
+              onSelectedChange(new Set())
+              onApplied(prepared.newly_unlocked_skills.map((skill) => skillKey(skill.code, skill.index)))
               onPrepared?.()
             })
-          }}>Desbloquear habilidades y verificar</button>
+          }}>Desbloquear y verificar</button>
       </>}
     </div>}
     {result && <div role="status" className={`cloud-feedback ${result.persisted ? 'verified' : 'uncertain'}`}
       data-testid="skill-unlock-result">
       {result.persisted
-        ? `Habilidades subidas y verificadas en la nube. Quedan ${amountFormat.format(result.remote_skills ?? prepared?.new_unlocked_count ?? 0)} de ${amountFormat.format(total)} desbloqueadas. Desbloqueo confirmado por el propietario en Android.`
-        : 'No se pudo confirmar la subida de habilidades. Verifica el estado desde Partida.'}
+        ? `Desbloqueo verificado en la nube. ${amountFormat.format(result.remote_skills ?? prepared?.new_unlocked_count ?? 0)} de ${amountFormat.format(total)} disponibles.`
+        : 'No se pudo confirmar la subida. Verifica el estado desde Partida.'}
     </div>}
     {operation.pending && <Loading>
-      {action === 'prepare' ? 'Preparando desbloqueo de habilidades y respaldo…' : 'Subiendo y verificando habilidades…'}
+      {action === 'prepare' ? 'Preparando desbloqueo…' : 'Subiendo y verificando…'}
     </Loading>}
     {operation.problem && <Problem problem={formatProblem(operation.problem,
       action === 'upload'
-        ? 'No se pudo confirmar la subida de habilidades. Verifica el estado desde Partida.'
-        : 'No se pudo preparar el desbloqueo de habilidades. Vuelve a intentarlo.')} />}
+        ? 'No se pudo confirmar la subida. Verifica el estado desde Partida.'
+        : 'No se pudo preparar el desbloqueo. Vuelve a intentarlo.')} />}
   </section>
 }

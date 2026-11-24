@@ -17,7 +17,8 @@
     "phase6-15": "../research/phase6-15/README.md",
     "phase6-16": "../research/phase6-16/README.md",
     "phase6-17": "../research/phase6-17/README.md",
-    "phase6-18": "../research/phase6-18/README.md"
+    "phase6-18": "../research/phase6-18/README.md",
+    "phase6-19": "../research/phase6-19/README.md"
   },
   "fields": [
     {
@@ -426,11 +427,12 @@
       "known_dependencies": [],
       "pending_dependencies": [
         "fishChip (H)",
-        "paquetes de peces"
+        "paquetes de peces",
+        "progreso de recompensas acumuladas (H; candidato CumulativePurchaseFishChip/MallFishChipRewardManager)"
       ],
       "validation_level": "E2",
       "edit_policy": "solo lectura",
-      "experimental_evidence": "Los seis contadores están a 0 en las muestras 8.8.0; la muestra 8.6.0 no incluye mall_reload. Se refieren a compras de peces, no al saldo de fichas."
+      "experimental_evidence": "Los seis contadores están a 0 en las muestras 8.8.0; la muestra 8.6.0 no incluye mall_reload. Se refieren a compras de peces, no al saldo de fichas. La Fase 6.19 revisó los metadatos 8.8.0: existen CumulativePurchaseFishChip, MallFishChipRewardManager, FishChipRewardStatistics y DonateRewardController, pero ningún archivo descifrado contiene un contador de compras acumuladas distinto de estos buyFishCount*; todas las muestras observadas siguen a 0. No se identificó un campo de guardado escribible para el progreso de recompensas."
     },
     {
       "internal_name": "fishChip",
@@ -458,7 +460,8 @@
       "pending_dependencies": [
         "proyección en furniture_fish_chips (H)",
         "historiales fishChipStore* (H)",
-        "origen de cada saldo"
+        "origen de cada saldo",
+        "progreso acumulado de compras/recompensas (CumulativePurchaseFishChip en metadatos; campo de guardado no identificado, Fase 6.19)"
       ],
       "validation_level": "E4",
       "edit_policy": "escritura confirmada de gameData.fishChip junto con itemData.materials.material_fish; respaldo, confirmación, verificación por descarga y restauración",
@@ -1374,7 +1377,7 @@
       ],
       "validation_level": "E2",
       "edit_policy": "solo lectura",
-      "experimental_evidence": "Diccionario disperso: solo aparece el personaje con una selección registrada. La ausencia no se interpreta como falta de skin. La copia de nube de la Fase 5.8 contiene seis entradas (Assassin, Elves, Joker, Paladin, Taoist, Viking) para personajes que entonces estaban bloqueados, por lo que no demuestra posesión ni equipamiento actual. El informe de la Fase 6.13 solo muestra la selección cuando existe y no deduce posesión. La Fase 6.18 conserva currentSkinDatas sin cambios al editar skinLock y no lo usa para seleccionar skins."
+      "experimental_evidence": "Diccionario disperso: solo aparece el personaje con una selección registrada. La ausencia no se interpreta como falta de skin. La copia de nube de la Fase 5.8 contiene seis entradas (Assassin, Elves, Joker, Paladin, Taoist, Viking) para personajes que entonces estaban bloqueados, por lo que no demuestra posesión ni equipamiento actual. El informe de la Fase 6.13 solo muestra la selección cuando existe y no deduce posesión. La Fase 6.18 conserva currentSkinDatas sin cambios al editar skinLock y no lo usa para seleccionar skins. La Fase 6.19 mantiene currentSkinDatas sin cambios al editar skinLock."
     },
     {
       "internal_name": "heroLevel",
@@ -1545,11 +1548,13 @@
       ],
       "known_dependencies": [],
       "pending_dependencies": [
-        "dependencia de derechos de compra"
+        "semántica de la tarjeta normal frente a la tarjeta de resurrección superior",
+        "si el booleano representa derecho permanente, cantidad o estado temporal",
+        "proyección al cliente oficial y dependencia de derechos de compra"
       ],
       "validation_level": "E2",
       "edit_policy": "protegido, solo lectura",
-      "experimental_evidence": "Bandera en JSON y entero con prefijo tras la recuperación."
+      "experimental_evidence": "Bandera booleana en gameData.rebornCard y entero con prefijo en PlayerPrefs tras la recuperación. La Fase 6.19 revisó los metadatos 8.8.0 (RebornCardUnlock, RebornCardConfig, UpdateRebornCard, onBuyRebornCard, ResurrectionCard) y las muestras descifradas: no se encontró un campo específico de tarjeta superior ni una cantidad separada. No se distingue tarjeta permanente, consumible, resurrección en partida ni estado temporal; se mantiene en solo lectura."
     },
     {
       "internal_name": "skinLock",
@@ -1575,14 +1580,14 @@
       ],
       "known_dependencies": [],
       "pending_dependencies": [
-        "semántica confirmada de cada valor de skinLock",
-        "validación del desbloqueo en el cliente oficial y en un dispositivo Android físico",
+        "persistencia posterior a guardar de nuevo desde el cliente oficial (no probada; no se declara E4)",
+        "semántica confirmada de cada valor de skinLock distinto de 1",
         "tratamiento de skins ligadas a eventos, compras, planos, actividades o temporadas",
         "correspondencia entre currentSkinDatas y la skin realmente equipada"
       ],
-      "validation_level": "E2",
-      "edit_policy": "escritura experimental E2 autorizada de posiciones existentes de gameData.skinLock: cambia a 1 solo las entradas seleccionadas, no crea listas ni claves, conserva currentSkinDatas, heroUnlock, habilidades, niveles, recursos y el resto de la partida, y exige reproducción inversa byte a byte.",
-      "experimental_evidence": "802 entradas en 42 listas, con Key secuencial 0..N-1 y Value entero. La Fase 6.18 comprobó que el catálogo empaquetado y la partida local 8.8.0 coinciden exactamente: 42 personajes, 802 skins y 802 posiciones, sin claves ausentes ni sobrantes. En la muestra local hay 43 entradas con Value=1: las 42 skins Key=0 (una por personaje) y Warlock Key=3 (\"Possessed Girl\"); las otras 759 no valen 1. Se interpreta Value=1 como posesión/desbloqueo, hipótesis E2 coherente con las skins iniciales, pero no demostrada para cada tipo. Los valores 0, negativos y positivos (por ejemplo 0, -13, -6, 2000, 12000, 18000) se conservan sin reinterpretar; podrían representar condiciones, precios o estados especiales. currentSkinDatas es un diccionario disperso (6 personajes en la copia de nube) y no se usa como prueba de posesión ni como lista completa de equipadas. PlayerPrefs replica las 802 claves c<ID>_skin<N> con los mismos enteros. El editor de la Fase 6.18 solo cambia a 1 posiciones existentes seleccionadas y conserva todo lo demás; la validación física en Android sigue pendiente."
+      "validation_level": "E3",
+      "edit_policy": "escritura confirmada por el propietario (confirmed_by_owner) de posiciones existentes de gameData.skinLock: cambia a 1 solo las entradas seleccionadas, no crea listas ni claves, conserva currentSkinDatas, heroUnlock, habilidades, niveles, recursos y el resto de la partida, y exige reproducción inversa byte a byte",
+      "experimental_evidence": "802 entradas en 42 listas, con Key secuencial 0..N-1 y Value entero. La Fase 6.18 comprobó que el catálogo empaquetado y la partida local 8.8.0 coinciden exactamente: 42 personajes, 802 skins y 802 posiciones, sin claves ausentes ni sobrantes. En la muestra local hay 43 entradas con Value=1: las 42 skins Key=0 (una por personaje) y Warlock Key=3 (\"Possessed Girl\"); las otras 759 no valen 1. Se interpreta Value=1 como posesión/desbloqueo. Los valores 0, negativos y positivos (por ejemplo 0, -13, -6, 2000, 12000, 18000) se conservan sin reinterpretar. currentSkinDatas es un diccionario disperso y no se usa como prueba de posesión ni como lista completa de equipadas. PlayerPrefs replica las 802 claves c<ID>_skin<N> con los mismos enteros. La Fase 6.18 añadió el editor que solo cambia a 1 posiciones existentes y conserva todo lo demás. La Fase 6.19 registra la confirmación del propietario en un dispositivo Android físico con el cliente oficial: todas las skins seleccionadas aparecieron desbloqueadas y disponibles en el juego después de editar, subir y recuperar la partida. Es evidencia E3; no se declara E4 porque no se repitió la prueba de persistencia después de guardar de nuevo desde el cliente oficial."
     },
     {
       "internal_name": "chips",

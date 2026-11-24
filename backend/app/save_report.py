@@ -125,7 +125,7 @@ def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
                 "skin_options": skin_options,
                 "equipped_skin": equipped,
                 "skins_recorded": len(observed_skins),
-                "skins_status": "experimental",
+                "skins_status": "confirmed_by_owner",
             }
         )
         rows.append(row)
@@ -201,10 +201,10 @@ def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
             "selected": selected_skins,
             "incompatible": incompatible_skins,
             "characters_with_data": characters_with_skins,
-            "status": "experimental",
+            "status": "confirmed_by_owner",
         },
         "level_status": "not_validated",
-        "skins_status": "experimental",
+        "skins_status": "confirmed_by_owner",
         "catalog": {
             "available": bool(catalog.get("available", bool(catalog.get("codes")))),
             "error": catalog.get("error"),
@@ -215,7 +215,7 @@ def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
         "notes": [
             "El nivel se muestra tal como aparece en la partida; no hay máximo validado.",
             "Solo Knight tiene un cambio de nivel observado experimentalmente (E3).",
-            "El editor de skins es experimental E2: interpreta Value=1 como desbloqueada, no crea posiciones y conserva currentSkinDatas. Los demás valores de skinLock no tienen semántica validada.",
+            "El desbloqueo de skins está confirmado por el propietario en Android físico (E3): interpreta Value=1 como desbloqueada, no crea posiciones y conserva currentSkinDatas. Los demás valores de skinLock no tienen semántica validada.",
             "Las habilidades se muestran con nombre de catálogo y el estado observado en heroSkillUnlock.",
             "El desbloqueo de personajes está confirmado por el propietario en Android físico; solo activa gameData.heroUnlock y conserva niveles, habilidades y skins.",
             "El desbloqueo de habilidades fue confirmado por el propietario en el cliente oficial y Android físico (E3); solo activa posiciones existentes de gameData.heroSkillUnlock y conserva gameData.heroSkill.",
@@ -477,8 +477,8 @@ def build_save_report(document: Mapping[str, Any]) -> dict[str, object]:
         "limitations": [
             "El propietario confirmó el saldo de fichas de pesca y la escritura conjunta de gameData.fishChip e itemData.materials.material_fish en un dispositivo Android físico.",
             "El desbloqueo de personajes confirmado por el propietario solo modifica gameData.heroUnlock; no edita niveles, habilidades, skins ni recursos.",
-            "No se habilita la escritura de niveles, recursos ni otras categorías. El desbloqueo de habilidades está confirmado por el propietario; el de skins es experimental E2.",
-            "Solo se interpreta skinLock Value=1 como skin desbloqueada, de forma experimental E2; los demás valores se conservan sin semántica validada.",
+            "No se habilita la escritura de niveles, recursos ni otras categorías. El desbloqueo de personajes, habilidades y skins está confirmado por el propietario; no se declara persistencia posterior.",
+            "Solo se interpreta skinLock Value=1 como skin desbloqueada; el propietario confirmó el resultado en Android físico (E3). Los demás valores se conservan sin semántica validada.",
             "Los niveles máximos de personaje no están validados; no se muestran como si lo estuvieran.",
         ],
     }

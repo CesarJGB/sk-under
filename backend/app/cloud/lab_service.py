@@ -132,7 +132,7 @@ class LabStatus:
             "fish_chip_write_policy": "confirmed_by_owner",
             "character_write_policy": "confirmed_by_owner",
             "skill_write_policy": "confirmed_by_owner",
-            "skin_write_policy": "experimental",
+            "skin_write_policy": "confirmed_by_owner",
             "message": self.message,
         }
 
@@ -163,7 +163,7 @@ class LoadedSave:
             "fish_chip_write_policy": "confirmed_by_owner",
             "character_write_policy": "confirmed_by_owner",
             "skill_write_policy": "confirmed_by_owner",
-            "skin_write_policy": "experimental",
+            "skin_write_policy": "confirmed_by_owner",
             "size": self.size,
             "sha256": self.sha256,
             "serialzed_version": self.serialzed_version,
@@ -409,7 +409,7 @@ class PreparedSkillEdit:
 
 @dataclass(frozen=True)
 class PreparedSkinEdit:
-    """Resultado experimental de preparar un desbloqueo de skins."""
+    """Resultado de preparar un desbloqueo de skins confirmado por el propietario."""
 
     backup: BackupRecord
     edit: SkinEdit
@@ -446,19 +446,19 @@ class PreparedSkinEdit:
             "candidate_sha256": self.edit.candidate_sha256,
             "byte_diff": self.edit.binary.as_dict(),
             "changed_fields": list(self.edit.changed_fields),
-            "experimental": True,
+            "experimental": False,
             "validation": {
                 "valid": True,
                 "structure_valid": True,
                 "only_skins_changed": self.edit.changed
                 and all(path.startswith(SKIN_PATH + ".") for path in self.edit.changed_fields),
-                "experimental": True,
-                "evidence_level": "E2",
+                "experimental": False,
+                "evidence_level": "E3",
                 "message": (
                     "Campos modificados: " + ", ".join(self.edit.changed_fields) + ". "
                     "gameData.currentSkinDatas, gameData.heroUnlock y los demás campos no se "
-                    "modifican. La semántica de Value=1 está pendiente de validación en el "
-                    "cliente oficial."
+                    "modifican. El propietario confirmó el desbloqueo en el cliente oficial y "
+                    "Android físico; solo se activan posiciones existentes con Value=1."
                     if self.edit.changed
                     else "Las skins seleccionadas ya están desbloqueadas; no hay cambios que subir."
                 ),
@@ -885,7 +885,7 @@ class CloudLabService:
     def prepare_skins(
         self, selections: object, *, expected_source: str | None = None
     ) -> PreparedSkinEdit:
-        """Prepara el desbloqueo experimental de las skins seleccionadas.
+        """Prepara el desbloqueo de las skins seleccionadas.
 
         Solo cambia a ``1`` las posiciones existentes de ``gameData.skinLock``.
         No crea listas ni entradas ausentes y conserva ``gameData.currentSkinDatas``,
@@ -912,7 +912,7 @@ class CloudLabService:
             {
                 "action": "prepare",
                 "field": SKIN_PATH,
-                "experimental": True,
+                "experimental": False,
                 "changed": edit.changed,
                 "original_unlocked": len(edit.original_unlocked),
                 "new_unlocked": len(edit.new_unlocked),

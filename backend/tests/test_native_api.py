@@ -737,7 +737,7 @@ def test_native_character_unlock_single_flow_preserves_progress_and_restores(tmp
     source, draft = prepare_characters(client, ["Ranger"])
     assert source["character_write_policy"] == "confirmed_by_owner"
     assert source["skill_write_policy"] == "confirmed_by_owner"
-    assert source["skin_write_policy"] == "experimental"
+    assert source["skin_write_policy"] == "confirmed_by_owner"
     assert draft["field"] == "gameData.heroUnlock"
     assert draft["experimental"] is False
     assert draft["validation"]["evidence_level"] == "confirmed_by_owner"
@@ -815,7 +815,7 @@ def test_native_skill_unlock_single_flow_preserves_progress_and_restores(tmp_pat
 
     source, draft = prepare_skills(client, [{"code": "Knight", "index": 1}])
     assert source["skill_write_policy"] == "confirmed_by_owner"
-    assert source["skin_write_policy"] == "experimental"
+    assert source["skin_write_policy"] == "confirmed_by_owner"
     assert source["character_write_policy"] == "confirmed_by_owner"
     assert draft["field"] == "gameData.heroSkillUnlock"
     assert draft["experimental"] is False
@@ -891,12 +891,12 @@ def test_native_skin_unlock_single_flow_preserves_progress_and_restores(tmp_path
     assert login(client).status_code == 200
 
     source, draft = prepare_skins(client, [{"code": "Knight", "index": 1}])
-    assert source["skin_write_policy"] == "experimental"
+    assert source["skin_write_policy"] == "confirmed_by_owner"
     assert source["skill_write_policy"] == "confirmed_by_owner"
     assert source["character_write_policy"] == "confirmed_by_owner"
     assert draft["field"] == "gameData.skinLock"
-    assert draft["experimental"] is True
-    assert draft["validation"]["evidence_level"] == "E2"
+    assert draft["experimental"] is False
+    assert draft["validation"]["evidence_level"] == "E3"
     assert draft["validation"]["only_skins_changed"] is True
     assert draft["original_unlocked_count"] == 42
     assert draft["new_unlocked_count"] == 43
