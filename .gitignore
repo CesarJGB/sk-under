@@ -24,6 +24,9 @@ __pycache__/
 coverage/
 frontend/test-results/
 
+# Documentos privados de investigación
+SK-Under_Investigacion_Discord_*.txt
+
 # Archivos temporales
 *.log
 *.tmp

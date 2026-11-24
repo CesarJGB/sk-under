@@ -99,19 +99,22 @@ export function SaveReportSections({ report }: { report: SaveReport }) {
         <div>
           <span className="cloud-kicker">Solo consulta</span>
           <h2 id="report-resources-title">Recursos</h2>
-          <p className="cloud-state">Datos observados en la copia descargada. La edición no está habilitada.</p>
+          <p className="cloud-state">
+            Datos observados en la copia descargada. La edición de recursos y personajes no está habilitada.
+          </p>
         </div>
         <span className="report-badge">Lectura</span>
       </div>
       <div className="report-fish">
         <div>
-          <span>Fichas de pesca</span>
+          <span>Fichas de pesca <small className="report-badge">Experimental · E2</small></span>
           <strong data-testid="fish-chip-balance">{fish.balance == null ? '—' : amountFormat.format(fish.balance)}</strong>
         </div>
         <p>
           {fish.balance_path ? `Campo candidato: ${fish.balance_path}. ` : 'No se encontró el campo candidato. '}
-          {fish.missing_proof}
+          La escritura de gameData.fishChip está habilitada solo como prueba experimental autorizada; no está validada.
         </p>
+        <p data-testid="fish-chip-missing-proof">{fish.missing_proof}</p>
       </div>
       <div className="report-resource-grid">
         {report.resources.groups.map((group) => <ResourceGroup key={group.id} group={group} />)}

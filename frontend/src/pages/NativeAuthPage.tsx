@@ -5,7 +5,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import {
   ApiProblem, nativeAuth,
-  type LabBackup, type LabPrepared, type LabVerification, type LabWriteResult,
+  type LabBackup, type LabFishChipPrepared, type LabPrepared, type LabVerification, type LabWriteResult,
   type NativeConfig, type NativeSaveSummary, type NativeSession,
 } from '../api'
 import { formatSize } from '../session'
@@ -61,6 +61,11 @@ const FRIENDLY: Record<string, string> = {
   invalid_gems_value: 'Introduce un número entero dentro del intervalo de gemas indicado.',
   gems_verification_failed: 'La copia editada no superó la comprobación de integridad.',
   outdated_gems_draft: 'El borrador usa una edición anterior. Prepara de nuevo la edición antes de subirla.',
+  invalid_fish_chip_value: 'Introduce un número entero no negativo dentro del intervalo de fichas de pesca.',
+  fish_chip_field_missing: 'La partida no contiene gameData.fishChip; la edición experimental no está disponible.',
+  fish_chip_verification_failed: 'La copia editada de fichas no superó la comprobación de integridad.',
+  fish_chip_edit: 'No se pudo preparar la edición experimental de fichas de pesca.',
+  outdated_fish_chip_draft: 'El borrador de fichas usa una edición anterior. Prepara de nuevo la edición antes de subirla.',
   cloud_hash_mismatch: 'La huella del borrador no coincide con la del respaldo. Prepara de nuevo la edición.',
   backup_integrity: 'El respaldo no superó la comprobación de integridad.',
   backup_store: 'No se pudo guardar o leer el respaldo privado.',
@@ -326,6 +331,11 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
   const [candidate, setCandidate] = useState<LabPrepared | null>(null)
   const [confirm, setConfirm] = useState(false)
   const [result, setResult] = useState<LabWriteResult | null>(null)
+  const [newFishChip, setNewFishChip] = useState(initialSave?.fish_chip != null ? String(initialSave.fish_chip) : '')
+  const [fishCandidate, setFishCandidate] = useState<LabFishChipPrepared | null>(null)
+  const [fishConfirm, setFishConfirm] = useState(false)
+  const [fishResult, setFishResult] = useState<LabWriteResult | null>(null)
+  const [fishAction, setFishAction] = useState<'prepare' | 'upload' | null>(null)
   const [history, setHistory] = useState<Array<LabBackup & { confirmed: boolean }>>([])
   const [backupResult, setBackupResult] = useState<(LabWriteResult | LabVerification) | null>(null)
   const operation = useOperation()
@@ -353,14 +363,31 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     min_gems: session.min_gems ?? 0,
     max_gems: session.max_gems ?? 2_147_483_647,
   }
+  const fishLimits = {
+    min: session.min_fish_chip ?? 0,
+    max: session.max_fish_chip ?? 2_147_483_647,
+  }
   const amount = /^\d+$/.test(newGems) ? Number(newGems) : Number.NaN
   const valid = Number.isSafeInteger(amount) && amount >= limits.min_gems && amount <= limits.max_gems
+  const fishAmount = /^\d+$/.test(newFishChip) ? Number(newFishChip) : Number.NaN
+  const fishValid = Number.isSafeInteger(fishAmount)
+    && fishAmount >= fishLimits.min && fishAmount <= fishLimits.max
   const disabled = operation.pending || backupOperation.pending
+  const originalFishChip = save?.fish_chip ?? save?.report?.fish_chips.balance ?? null
+  const cloudFishChip = fishResult?.persisted
+    ? fishResult.remote_value ?? originalFishChip
+    : originalFishChip
 
   function clearPreview() {
     setCandidate(null)
     setConfirm(false)
     setResult(null)
+  }
+
+  function clearFishPreview() {
+    setFishCandidate(null)
+    setFishConfirm(false)
+    setFishResult(null)
   }
 
   const downloading = action === 'download' && operation.pending
@@ -386,13 +413,16 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
 
   function download() {
     setAction('download')
+    setFishAction(null)
     run(async (signal) => {
       clearPreview()
+      clearFishPreview()
       setSyncResult(null)
       setSave(null)
       const downloaded = await nativeAuth.save(signal)
       setSave(downloaded)
       setNewGems(String(downloaded.gems))
+      setNewFishChip(downloaded.fish_chip != null ? String(downloaded.fish_chip) : '')
     })
   }
 
@@ -450,7 +480,9 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
         <p className="cloud-note">Esta cuenta todavía no tiene respaldos.</p>}
       {history.map((backup) => <details className="cloud-details backup-row" key={backup.id}>
         <summary><span>{formatDate(backup.created_at)}</span>
-          <span className="backup-amount">{gemFormat.format(backup.original_gems)} gemas</span></summary>
+          <span className="backup-amount">
+            {gemFormat.format(backup.original_value ?? backup.original_gems)} {backupFieldLabel(backup)}
+          </span></summary>
         <div className="backup-body">
           <p>{backup.confirmed ? 'Subida verificada' : 'Edición preparada'} · {formatSize(backup.original_size)}</p>
           <div className="cloud-actions">
@@ -460,7 +492,7 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
             }}>Verificar nube</button>
             {session.write_ready && backup.changed && <button className="button quiet" disabled={disabled}
               onClick={() => {
-                if (window.confirm(`¿Restaurar el respaldo de ${accountLabel} con ${gemFormat.format(backup.original_gems)} gemas? Se reemplazará la partida en la nube.`)) {
+                if (window.confirm(`¿Restaurar el respaldo de ${accountLabel} con ${gemFormat.format(backup.original_value ?? backup.original_gems)} ${backupFieldLabel(backup)}? Se reemplazará la partida en la nube.`)) {
                   setBackupResult(null)
                   run(async (signal) => {
                     const restored = await nativeAuth.restore(backup.id, signal)
@@ -503,6 +535,7 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
       event.preventDefault()
       if (!valid) return
       setAction('prepare')
+      setFishAction(null)
       run(async (signal) => {
         clearPreview()
         setCandidate(await nativeAuth.prepare(amount, save.sha256, signal))
@@ -539,6 +572,7 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
         <button className="button primary" disabled={disabled || !confirm || !candidate.changed}
           onClick={() => {
             setAction('upload')
+            setFishAction(null)
             run(async (signal) => {
               setConfirm(false)
               const uploaded = await nativeAuth.confirm(candidate.backup.id, candidate.candidate_sha256, signal)
@@ -552,10 +586,100 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     {result && <div role="status" className={`cloud-feedback ${result.persisted ? 'verified' : 'uncertain'}`}>
       {result.persisted ? 'Cambios guardados y verificados en la nube.' : 'No se pudo confirmar la subida. Verifica el estado desde Partida.'}
     </div>}
-    {operation.pending && <Loading>{action === 'prepare' ? 'Preparando edición…' : 'Subiendo y verificando…'}</Loading>}
-    {operation.problem && <Problem problem={friendly(operation.problem, action === 'upload'
+    {operation.pending && !fishAction && <Loading>{action === 'prepare' ? 'Preparando edición…' : 'Subiendo y verificando…'}</Loading>}
+    {operation.problem && !fishAction && <Problem problem={friendly(operation.problem, action === 'upload'
       ? 'No se pudo confirmar la subida. Verifica el estado desde Partida.'
       : 'No se pudo preparar la edición. Vuelve a intentarlo.')} />}
+  </section>
+  <section className="cloud-section panel cloud-editor fish-chip-editor" aria-labelledby="edit-fish-chip-title">
+    <div className="cloud-section-head">
+      <div>
+        <span className="cloud-kicker">Experimental · E2</span>
+        <h2 id="edit-fish-chip-title">Fichas de pesca</h2>
+        <p className="cloud-state">gameData.fishChip · {accountLabel}</p>
+      </div>
+      <div className="editor-current">
+        <span>{fishResult?.persisted ? 'Últimas fichas verificadas' : 'Fichas de la copia descargada'}</span>
+        <strong data-testid="native-current-fish-chip">
+          {cloudFishChip == null ? '—' : gemFormat.format(cloudFishChip)}
+        </strong>
+      </div>
+    </div>
+    <Notice tone="warning">
+      La escritura de <code>gameData.fishChip</code> es una prueba experimental autorizada.
+      No se ha validado la autoridad del servidor, el gasto dentro del juego ni la persistencia
+      tras reiniciar. Prepara un respaldo antes de subir.
+    </Notice>
+    {!session.write_ready && <Notice tone="warning">
+      Puedes preparar la edición experimental y su respaldo. La subida a la nube no está disponible.
+    </Notice>}
+    {originalFishChip == null ? <p className="cloud-note">
+      La partida descargada no contiene <code>gameData.fishChip</code>. La edición no está disponible.
+    </p> : <form className="cloud-form" onSubmit={(event) => {
+      event.preventDefault()
+      if (!fishValid) return
+      setFishAction('prepare')
+      run(async (signal) => {
+        clearFishPreview()
+        setFishCandidate(await nativeAuth.prepareFishChip(fishAmount, save.sha256, signal))
+        void historyOperation.run(refreshHistory)
+      })
+    }}>
+      <label className="cloud-field"><span>Nuevo saldo de fichas de pesca</span>
+        <input inputMode="numeric" value={newFishChip} disabled={disabled}
+          aria-invalid={!fishValid} aria-describedby="fish-chip-limits" onChange={(event) => {
+            setNewFishChip(event.target.value)
+            clearFishPreview()
+          }} />
+        <small id="fish-chip-limits">
+          Entero entre {gemFormat.format(fishLimits.min)} y {gemFormat.format(fishLimits.max)}.
+          Solo se modifica gameData.fishChip; material_fish, cumulativeFishCount y los historiales no se tocan.
+        </small>
+      </label>
+      <button className="button primary" disabled={disabled || !fishValid || fishAmount === originalFishChip}>
+        Preparar cambio experimental
+      </button>
+    </form>}
+    {fishCandidate && <div className="cloud-preview">
+      <h3>Revisar cambio experimental</h3>
+      <dl className="cloud-preview-data">
+        <div><dt>Fichas originales</dt><dd>{gemFormat.format(fishCandidate.original_fish_chip)}</dd></div>
+        <div><dt>Fichas nuevas</dt><dd>{gemFormat.format(fishCandidate.new_fish_chip)}</dd></div>
+        <div><dt>Cambio</dt><dd>{new Intl.NumberFormat('es-MX', { signDisplay: 'exceptZero' })
+          .format(fishCandidate.new_fish_chip - fishCandidate.original_fish_chip)}</dd></div>
+      </dl>
+      <p className="cloud-note">Se guardó un respaldo cifrado de la partida original.</p>
+      {session.write_ready && !fishResult && <>
+        <label className="cloud-check"><input type="checkbox" checked={fishConfirm} disabled={disabled}
+          onChange={(event) => setFishConfirm(event.target.checked)} />
+          <span>Confirmo que quiero sobrescribir la partida en la nube de {accountLabel} con este cambio experimental.</span>
+        </label>
+        <button className="button primary" disabled={disabled || !fishConfirm || !fishCandidate.changed}
+          onClick={() => {
+            setFishAction('upload')
+            run(async (signal) => {
+              setFishConfirm(false)
+              const uploaded = await nativeAuth.confirm(
+                fishCandidate.backup.id, fishCandidate.candidate_sha256, signal,
+              )
+              setFishResult(uploaded)
+              void historyOperation.run(refreshHistory)
+            })
+          }}>Subir fichas y verificar</button>
+      </>}
+    </div>}
+    {fishResult && <div role="status" className={`cloud-feedback ${fishResult.persisted ? 'verified' : 'uncertain'}`}>
+      {fishResult.persisted
+        ? 'Cambio experimental subido y verificado en la nube. Falta la comprobación manual dentro del juego.'
+        : 'No se pudo confirmar la subida de fichas. Verifica el estado desde Partida.'}
+    </div>}
+    {operation.pending && fishAction && <Loading>
+      {fishAction === 'prepare' ? 'Preparando edición experimental…' : 'Subiendo fichas y verificando…'}
+    </Loading>}
+    {operation.problem && fishAction && <Problem problem={friendly(operation.problem,
+      fishAction === 'upload'
+        ? 'No se pudo confirmar la subida de fichas. Verifica el estado desde Partida.'
+        : 'No se pudo preparar la edición experimental de fichas. Vuelve a intentarlo.')} />}
   </section>
   {save.report ? <SaveReportSections report={save.report} /> : <section className="cloud-section panel cloud-empty" aria-labelledby="report-pending-title">
     <h2 id="report-pending-title">Recursos y personajes</h2>
@@ -566,6 +690,10 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     {downloadFeedback}
   </section>}
 </>}
+
+function backupFieldLabel(backup: LabBackup) {
+  return backup.field === 'fish_chip' ? 'fichas de pesca' : 'gemas'
+}
 
 function backupMessage(result: LabWriteResult | LabVerification) {
   if ('persisted' in result) {

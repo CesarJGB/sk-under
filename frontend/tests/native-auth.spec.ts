@@ -18,7 +18,11 @@ const DISTRIBUTIONS = [
   { id: 'ios-china', label: 'iOS China (IOS_CN)', platform: 'ios', game_version: '8.8.0', enabled: false, validated: false, note: 'No validada.' },
   { id: 'taptap', label: 'TapTap', platform: 'android', game_version: '8.8.0', enabled: false, validated: false, note: 'No validada.' },
 ]
-const SAVE = { verified: true, bytes: 505, sha256: SHA, gems: 1001, sections: 17, remote_source: 'modern-cloud' }
+const SAVE = {
+  verified: true, bytes: 505, sha256: SHA, gems: 1001, fish_chip: 3,
+  fish_chip_path: 'gameData.fishChip', fish_chip_write_policy: 'experimental',
+  sections: 17, remote_source: 'modern-cloud',
+}
 const ACTIVE = {
   active: true, identity_verified: true,
   account: {
@@ -92,6 +96,22 @@ const PREPARED = {
     original_sha256: SHA, modified_sha256: CANDIDATE,
   },
   validation: { valid: true, structure_valid: true, only_gems_changed: false, message: 'Campos modificados: gameData.gems, gameData.varGems.' },
+}
+const FISH_BACKUP = {
+  ...BACKUP, field: 'fish_chip', original_gems: 3, original_value: 3,
+  candidate_gems: 7, candidate_value: 7,
+}
+const FISH_PREPARED = {
+  remote: { source: 'modern-cloud', size: 505, sha256: SHA }, backup: FISH_BACKUP,
+  field: 'gameData.fishChip', original_fish_chip: 3, new_fish_chip: 7,
+  original_value: 3, new_value: 7, experimental: true, changed: true,
+  candidate_size: 505, candidate_sha256: CANDIDATE,
+  changed_fields: ['gameData.fishChip'],
+  byte_diff: PREPARED.byte_diff,
+  validation: {
+    valid: true, structure_valid: true, only_fish_chip_changed: true,
+    experimental: true, evidence_level: 'E2', message: 'Campos modificados: gameData.fishChip.',
+  },
 }
 
 async function mockBase(page: Page, config: object = BASE_CONFIG) {
@@ -396,6 +416,69 @@ test('muestra fichas, recursos y personajes del informe en solo lectura', async 
   await expect(page.getByTestId('character-row-Knight')).toContainText('Knight')
   await expect(page.getByLabel('Nueva cantidad de gemas')).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('edita y sube el saldo experimental de fichas con el flujo autenticado', async ({ page }) => {
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: SAVE } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
+    json: { backups: [{ ...FISH_BACKUP, confirmed: true }] },
+  }))
+  await page.route('**/api/v1/cloud/native/prepare-fish-chip', (route) => {
+    expect(route.request().postDataJSON()).toEqual({ new_fish_chip: 7, source_sha256: SHA })
+    return route.fulfill({ json: FISH_PREPARED })
+  })
+  await page.route('**/api/v1/cloud/native/confirm', (route) => {
+    expect(route.request().postDataJSON()).toEqual({
+      backup_id: FISH_BACKUP.id, expected_sha256: CANDIDATE, confirmation: 'SUBIR',
+    })
+    return route.fulfill({ json: {
+      action: 'confirm', backup_id: FISH_BACKUP.id, field: 'gameData.fishChip',
+      uploaded: true, accepted: true, persisted: true, already_original: false,
+      expected_sha256: CANDIDATE, remote_sha256: CANDIDATE, remote_size: 505,
+      remote_gems: 1001, remote_value: 7, status: 200,
+      message: 'La descarga posterior coincide con el agregado subido de las fichas de pesca.',
+    } })
+  })
+
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/partida')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await expect(page.getByTestId('native-current-fish-chip')).toHaveText('3')
+  await expect(page.getByText('Experimental · E2').first()).toBeVisible()
+  await expect(page.getByText('No se ha validado la autoridad del servidor', { exact: false })).toBeVisible()
+  await page.getByLabel('Nuevo saldo de fichas de pesca').fill('7')
+  await page.getByRole('button', { name: 'Preparar cambio experimental' }).click()
+  await expect(page.getByRole('heading', { name: 'Revisar cambio experimental' })).toBeVisible()
+  const preview = page.locator('.cloud-preview-data')
+  await expect(preview).toContainText('Fichas originales')
+  await expect(preview).toContainText('Fichas nuevas')
+  await page.getByLabel(/cambio experimental/).check()
+  await page.getByRole('button', { name: 'Subir fichas y verificar' }).click()
+  await expect(page.getByText('Cambio experimental subido y verificado en la nube', { exact: false })).toBeVisible()
+  await expect(page.getByTestId('native-current-fish-chip')).toHaveText('7')
+
+  await page.getByRole('link', { name: 'Partida' }).click()
+  await expect(page.getByText('3 fichas de pesca')).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('rechaza valores inválidos de fichas antes de preparar la edición', async ({ page }) => {
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: SAVE } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  await page.goto('/partida')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  const input = page.getByLabel('Nuevo saldo de fichas de pesca')
+  const prepare = page.getByRole('button', { name: 'Preparar cambio experimental' })
+
+  await input.fill('-1')
+  await expect(input).toHaveAttribute('aria-invalid', 'true')
+  await expect(prepare).toBeDisabled()
+  await input.fill('2.5')
+  await expect(input).toHaveAttribute('aria-invalid', 'true')
+  await expect(prepare).toBeDisabled()
+  await input.fill('4')
+  await expect(input).toHaveAttribute('aria-invalid', 'false')
+  await expect(prepare).toBeEnabled()
 })
 
 test('las rutas antiguas llevan a Partida y no permiten cargar un archivo local', async ({ page }) => {

@@ -69,6 +69,8 @@ export type SaveFishChips = {
   server_authority: 'unknown'
   status: 'read_only'
   evidence: string
+  validation_level?: 'E2'
+  write_policy?: 'experimental_authorized'
   transaction_validated: false
   missing_proof: string
   fields: SaveFishChipField[]
@@ -154,6 +156,9 @@ export type SaveReport = {
 export type LabSave = {
   remote: LabRemote
   gems: number
+  fish_chip?: number | null
+  fish_chip_path?: string
+  fish_chip_write_policy?: 'experimental'
   size: number
   sha256: string
   serialzed_version: number
@@ -163,13 +168,16 @@ export type LabSave = {
 export type LabBackup = {
   id: string
   created_at: string
+  field?: 'gems' | 'fish_chip'
   changed: boolean
   original_size: number
   original_sha256: string
   original_gems: number
+  original_value?: number
   candidate_size: number
   candidate_sha256: string
   candidate_gems: number
+  candidate_value?: number
   remote_source: string
   remote_size: number
   remote_sha256: string
@@ -190,8 +198,11 @@ export type LabByteDiff = {
 export type LabPrepared = {
   remote: LabRemote
   backup: LabBackup
+  field?: 'gameData.gems'
   original_gems: number
   new_gems: number
+  original_value?: number
+  new_value?: number
   changed: boolean
   candidate_size: number
   candidate_sha256: string
@@ -205,9 +216,34 @@ export type LabPrepared = {
   }
 }
 
+export type LabFishChipPrepared = {
+  remote: LabRemote
+  backup: LabBackup
+  field: 'gameData.fishChip'
+  original_fish_chip: number
+  new_fish_chip: number
+  original_value?: number
+  new_value?: number
+  experimental: true
+  changed: boolean
+  candidate_size: number
+  candidate_sha256: string
+  byte_diff: LabByteDiff
+  changed_fields: string[]
+  validation: {
+    valid: true
+    structure_valid: true
+    only_fish_chip_changed: boolean
+    experimental: true
+    evidence_level: 'E2'
+    message: string
+  }
+}
+
 export type LabWriteResult = {
   action: 'confirm' | 'restore'
   backup_id: string
+  field?: string
   uploaded: boolean
   accepted: boolean
   persisted: boolean
@@ -216,17 +252,20 @@ export type LabWriteResult = {
   remote_sha256: string | null
   remote_size: number | null
   remote_gems: number | null
+  remote_value?: number | null
   status: number | null
   message: string
 }
 
 export type LabVerification = {
   backup_id: string
+  field?: string
   matches_candidate: boolean
   matches_original: boolean
   remote_sha256: string
   remote_size: number
   remote_gems: number | null
+  remote_value?: number | null
   expected_candidate_sha256: string
   expected_original_sha256: string
   message: string
@@ -433,6 +472,9 @@ export type NativeSaveSummary = {
   bytes: number
   sha256: string
   gems: number
+  fish_chip?: number | null
+  fish_chip_path?: string
+  fish_chip_write_policy?: 'experimental'
   sections: number | null
   remote_source: string
   report?: SaveReport | null
@@ -458,6 +500,9 @@ export type NativeSession = {
   write_ready?: boolean
   min_gems?: number
   max_gems?: number
+  min_fish_chip?: number
+  max_fish_chip?: number
+  fish_chip_write_policy?: 'experimental'
   save?: NativeSaveSummary | null
   save_error?: string | null
 }
@@ -471,6 +516,9 @@ export type NativeConfig = {
   secure: boolean
   min_gems: number
   max_gems: number
+  min_fish_chip?: number
+  max_fish_chip?: number
+  fish_chip_write_policy?: 'experimental'
   login_available: boolean
   auto_identity?: boolean
   portal_enabled?: boolean
@@ -516,6 +564,8 @@ export const nativeAuth = {
     nativeRequest<NativeSession>('/installation', signal, { unique_id }),
   prepare: (new_gems: number, source_sha256: string, signal: AbortSignal) =>
     nativeRequest<LabPrepared>('/prepare', signal, { new_gems, source_sha256 }),
+  prepareFishChip: (new_fish_chip: number, source_sha256: string, signal: AbortSignal) =>
+    nativeRequest<LabFishChipPrepared>('/prepare-fish-chip', signal, { new_fish_chip, source_sha256 }),
   confirm: (backup_id: string, expected_sha256: string, signal: AbortSignal) =>
     nativeRequest<LabWriteResult>('/confirm', signal, { backup_id, expected_sha256, confirmation: 'SUBIR' }),
   restore: (backup_id: string, signal: AbortSignal) =>

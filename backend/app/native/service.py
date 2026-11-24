@@ -22,6 +22,7 @@ from typing import Callable
 from urllib.parse import urlsplit
 
 from ..cloud.backup_store import LabBackupStore
+from ..cloud.fish_chip_editor import MAX_FISH_CHIP, MIN_FISH_CHIP, read_fish_chip
 from ..cloud.gems_editor import MAX_GEMS, MIN_GEMS, read_gems
 from ..cloud.lab_service import CloudLabService
 from ..cloud.provider import (
@@ -136,6 +137,8 @@ class NativeAuthService:
         uploader_factory: Callable[[str, str, str], object],
         min_gems: int = MIN_GEMS,
         max_gems: int = MAX_GEMS,
+        min_fish_chip: int = MIN_FISH_CHIP,
+        max_fish_chip: int = MAX_FISH_CHIP,
         auto_identity: bool = True,
         auto_allow_write: bool = False,
         portal_client: PortalClient | None = None,
@@ -155,6 +158,8 @@ class NativeAuthService:
         self.uploader_factory = uploader_factory
         self.min_gems = min_gems
         self.max_gems = max_gems
+        self.min_fish_chip = min_fish_chip
+        self.max_fish_chip = max_fish_chip
         self.auto_identity = bool(auto_identity)
         self.auto_allow_write = bool(auto_allow_write)
         self.portal_client = portal_client
@@ -183,6 +188,9 @@ class NativeAuthService:
             "secure": self.secure,
             "min_gems": self.min_gems,
             "max_gems": self.max_gems,
+            "min_fish_chip": self.min_fish_chip,
+            "max_fish_chip": self.max_fish_chip,
+            "fish_chip_write_policy": "experimental",
             "login_available": login_available,
             "auto_identity": self.auto_identity,
             "portal_enabled": self.portal_client is not None,
@@ -235,6 +243,9 @@ class NativeAuthService:
             "write_ready": self.write_enabled and profile.allow_write and installation_ready,
             "min_gems": self.min_gems,
             "max_gems": self.max_gems,
+            "min_fish_chip": self.min_fish_chip,
+            "max_fish_chip": self.max_fish_chip,
+            "fish_chip_write_policy": "experimental",
         }
 
     # Inicio y cierre de sesión ---------------------------------------------
@@ -375,6 +386,22 @@ class NativeAuthService:
         return self._operate(
             session,
             lambda: self._lab(session).prepare(new_gems, expected_source=source_sha256).summary(),
+        )
+
+    def prepare_fish_chip(
+        self, session: NativeSessionRecord, new_fish_chip: object, source_sha256: str
+    ) -> dict[str, object]:
+        """Escritura experimental autorizada de ``gameData.fishChip``.
+
+        No se habilitan otros campos de peces. El respaldo y la restauración
+        comparten el almacén existente y la confirmación sigue exigiendo la
+        misma autorización de escritura del perfil.
+        """
+        return self._operate(
+            session,
+            lambda: self._lab(session).prepare_fish_chip(
+                new_fish_chip, expected_source=source_sha256
+            ).summary(),
         )
 
     def confirm(self, session: NativeSessionRecord, backup_id: str, expected_sha256: str) -> dict[str, object]:
@@ -714,11 +741,18 @@ class NativeAuthService:
         )
         save = provider.download()
         gems = read_gems(save.payload)
+        try:
+            fish_chip = read_fish_chip(save.payload).fish_chip
+        except CloudSaveError:
+            fish_chip = None
         return {
             "verified": True,
             "bytes": save.metadata.size,
             "sha256": save.metadata.sha256,
             "gems": gems.gems,
+            "fish_chip": fish_chip,
+            "fish_chip_path": "gameData.fishChip",
+            "fish_chip_write_policy": "experimental",
             "sections": None,
             "remote_source": save.metadata.source,
         }
@@ -845,12 +879,19 @@ class NativeAuthService:
             raise
         self.store.clear_binding_wait(profile.id)
         gems = read_gems(save.payload)
+        try:
+            fish_chip = read_fish_chip(save.payload).fish_chip
+        except CloudSaveError:
+            fish_chip = None
         self._event("save_verify", "ok", subject=subject)
         return {
             "verified": True,
             "bytes": save.metadata.size,
             "sha256": save.metadata.sha256,
             "gems": gems.gems,
+            "fish_chip": fish_chip,
+            "fish_chip_path": "gameData.fishChip",
+            "fish_chip_write_policy": "experimental",
             "sections": None,
             "remote_source": save.metadata.source,
         }

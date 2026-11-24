@@ -397,10 +397,13 @@ def build_save_report(document: Mapping[str, Any]) -> dict[str, object]:
         {
             "status": READ_ONLY,
             "evidence": E2,
+            "validation_level": "E2",
+            "write_policy": "experimental_authorized",
             "transaction_validated": False,
             "missing_proof": (
                 "No se observó una transacción legítima que obtenga o gaste fichas, "
-                "ni una recuperación tras reiniciar con saldo positivo."
+                "ni una recuperación tras reiniciar con saldo positivo. La escritura de "
+                "gameData.fishChip es experimental y no está validada."
             ),
         }
     )
@@ -412,8 +415,9 @@ def build_save_report(document: Mapping[str, Any]) -> dict[str, object]:
         "characters": _character_rows(game),
         "resources": _resources(document),
         "limitations": [
-            "Las fichas de pesca se muestran como saldo candidato de solo lectura; la autoridad local/remota no está confirmada.",
-            "No se habilita la escritura de fichas, personajes, habilidades, skins ni recursos.",
+            "Las fichas de pesca se muestran como saldo candidato; la autoridad local/remota no está confirmada.",
+            "La escritura de gameData.fishChip está autorizada solo como prueba experimental E2 y no se presenta como validada.",
+            "No se habilita la escritura de personajes, habilidades, skins ni recursos.",
             "Los valores de skinLock no se interpretan como posesión ni como desbloqueo.",
             "Los niveles máximos de personaje no están validados; no se muestran como si lo estuvieran.",
         ],

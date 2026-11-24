@@ -106,4 +106,6 @@ incluye `report`.
 6. No se verificaron variantes regionales ni iOS.
 
 La propuesta para continuar se encuentra en
-[propuesta-6.14.md](propuesta-6.14.md).
+[propuesta-6.14.md](propuesta-6.14.md). La [Fase 6.14](../phase6-14/README.md)
+habilita la escritura experimental de `gameData.fishChip` con respaldo y
+restauración, sin declarar validada su semántica ni su persistencia.

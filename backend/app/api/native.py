@@ -19,11 +19,13 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.routing import APIRoute
 from pydantic import BaseModel, ConfigDict, StringConstraints, field_validator
 
+from ..cloud.fish_chip_editor import MAX_FISH_CHIP, MIN_FISH_CHIP
 from ..cloud.gems_editor import MAX_GEMS, MIN_GEMS
 from ..cloud_save import CloudSaveError
 from ..errors import PRIVATE_HEADERS, EditorError
 from ..models import (
     CloudLabConfirmInput,
+    CloudLabFishChipPrepareInput,
     CloudLabPrepareInput,
     CloudLabRestoreInput,
     CloudLabVerifyInput,
@@ -168,6 +170,10 @@ class PrepareInput(CloudLabPrepareInput):
     source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
 
 
+class FishChipPrepareInput(CloudLabFishChipPrepareInput):
+    source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
+
+
 def _disabled_config(settings) -> dict[str, object]:
     origin = settings.native_origin or settings.cloud_accounts_origin
     return {
@@ -179,6 +185,9 @@ def _disabled_config(settings) -> dict[str, object]:
         "secure": origin.startswith("https://"),
         "min_gems": MIN_GEMS,
         "max_gems": MAX_GEMS,
+        "min_fish_chip": MIN_FISH_CHIP,
+        "max_fish_chip": MAX_FISH_CHIP,
+        "fish_chip_write_policy": "experimental",
         "login_available": False,
         "auto_identity": False,
         "requires_profile_selection": False,
@@ -276,6 +285,16 @@ def prepare(payload: PrepareInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
     current = service.require_session(_cookie(request, service))
     return service.prepare(current, payload.new_gems, payload.source_sha256)
+
+
+@router.post(
+    "/prepare-fish-chip",
+    summary="Preparar la edición experimental de fichas de pesca y crear un respaldo",
+)
+def prepare_fish_chip(payload: FishChipPrepareInput, request: Request) -> dict[str, object]:
+    service = _require_service(request)
+    current = service.require_session(_cookie(request, service))
+    return service.prepare_fish_chip(current, payload.new_fish_chip, payload.source_sha256)
 
 
 @router.post("/confirm", summary="Subir el candidato y verificar la persistencia")

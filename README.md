@@ -1,8 +1,8 @@
 # sk-under
 
-**Soul Knight Editor · Fase 6.13**
+**Soul Knight Editor · Fase 6.14**
 
-Editor web privado para inspeccionar copias locales y, con autorización expresa, autenticar una cuenta propia de ChillyRoom y editar sus gemas desde el navegador. La muestra sintética `.skdemo` permite edición y exportación. El adaptador opcional de la Fase 3 lee nueve estructuras `.data` observadas en muestras de Soul Knight 8.6.0 y permite descargar copias intactas. [Configuración y cobertura de la Fase 3](docs/phase3/IMPLEMENTATION.md)
+Editor web privado para inspeccionar copias locales y, con autorización expresa, autenticar una cuenta propia de ChillyRoom y editar sus gemas desde el navegador. La Fase 6.14 añade una edición **experimental** del saldo candidato de fichas de pesca. La muestra sintética `.skdemo` permite edición y exportación. El adaptador opcional de la Fase 3 lee nueve estructuras `.data` observadas en muestras de Soul Knight 8.6.0 y permite descargar copias intactas. [Configuración y cobertura de la Fase 3](docs/phase3/IMPLEMENTATION.md)
 
 La Fase 4 documenta el análisis estático del APK 8.8.0 y las pruebas con las muestras de 8.6.0. [Informe de la Fase 4](docs/research/phase4/README.md)
 
@@ -41,6 +41,8 @@ La [Fase 6.11](docs/research/phase6-11/README.md) documentó la conciliación de
 La [Fase 6.12](docs/research/phase6-12/README.md) inventarió todas las secciones del agregado de nube y las familias de archivos locales, añadió un módulo y una CLI de análisis estructural de solo lectura, y amplió el [registro de campos](docs/save-research/field-registry.json) a 65 entradas. La investigación cubre la representación de las fichas de pesca, el cruce de los 42 personajes, 105 habilidades y 802 skins, los recursos de inventario y las dependencias entre archivos. El catálogo saneado de personajes se usa solo para resolver nombres. Las fichas de pesca, los estados de compra y los desbloqueos permanecen de solo lectura.
 
 La [Fase 6.13](docs/research/phase6-13/README.md) añade un informe saneado a la descarga autenticada. El editor muestra el saldo candidato de fichas de pesca, los 42 personajes con su estado y nivel observados, la habilidad seleccionada, la skin equipada y los recursos identificados. Los campos nuevos son de solo consulta: no se habilitó la escritura de fichas, niveles, habilidades, skins ni recursos. La [propuesta 6.14](docs/research/phase6-13/propuesta-6.14.md) prioriza una transacción legítima de fichas y nuevas pruebas de persistencia antes de evaluar cualquier edición.
+
+La [Fase 6.14](docs/research/phase6-14/README.md) habilita la edición experimental de `gameData.fishChip` desde la tarjeta **Experimental · E2** del editor. Reutiliza el respaldo cifrado, la confirmación autenticada, la verificación por descarga y la restauración de las gemas. Solo cambia ese campo: `material_fish`, `cumulativeFishCount`, los historiales `fishChipStore*` y el resto del agregado permanecen intactos. El campo sigue siendo E2 y no se presenta como validado; la comprobación de gasto, reinicio y persistencia en un dispositivo Android real queda en el protocolo manual del propietario.
 
 ## Arquitectura
 

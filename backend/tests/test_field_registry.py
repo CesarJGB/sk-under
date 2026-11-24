@@ -16,7 +16,6 @@ REQUIRED = {
     "experimental_evidence",
 }
 READ_ONLY = {
-    "fishChip",
     "heroLevel",
     "heroUnlock",
     "heroSkill",
@@ -61,13 +60,16 @@ def test_report_fields_remain_read_only():
     for name in READ_ONLY:
         assert fields[name]["edit_policy"].startswith("solo lectura"), name
     assert fields["fishChip"]["validation_level"] == "E2"
-    assert fields["heroLevel"]["validation_level"] == "E3"
+    assert fields["fishChip"]["edit_policy"].startswith("escritura experimental")
     assert "Fase 6.13" in fields["fishChip"]["experimental_evidence"]
+    assert "Fase 6.14" in fields["fishChip"]["experimental_evidence"]
+    assert fields["heroLevel"]["validation_level"] == "E3"
 
 
 def test_registry_links_exist_relative_to_documentation():
     data = registry()
     directory = REGISTRY.parent
     assert data["source_index"]["phase6-13"] == "../research/phase6-13/README.md"
+    assert data["source_index"]["phase6-14"] == "../research/phase6-14/README.md"
     for source, target in data["source_index"].items():
         assert (directory / target).is_file(), source

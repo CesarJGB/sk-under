@@ -18,6 +18,17 @@ from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError, CopyLimitError
 from ..save_report import read_save_report
 from .backup_store import BackupRecord, BackupStoreError, LabBackupStore
 from .blob_upload import UploadResult
+from .fish_chip_editor import (
+    FISH_CHIP_PATH,
+    FISH_CHIP_RECORD_FIELD,
+    MAX_FISH_CHIP,
+    MIN_FISH_CHIP,
+    FishChipEdit,
+    FishChipFieldMissing,
+    prepare_fish_chip_edit,
+    read_fish_chip,
+    require_fish_chip_write_compatibility,
+)
 from .gems_editor import (
     GEMS_FIELD_ID,
     MAX_GEMS,
@@ -76,6 +87,8 @@ class LabStatus:
     min_gems: int
     max_gems: int
     message: str
+    min_fish_chip: int = MIN_FISH_CHIP
+    max_fish_chip: int = MAX_FISH_CHIP
 
     def summary(self) -> dict[str, object]:
         return {
@@ -88,6 +101,9 @@ class LabStatus:
             "backup_count": self.backup_count,
             "min_gems": self.min_gems,
             "max_gems": self.max_gems,
+            "min_fish_chip": self.min_fish_chip,
+            "max_fish_chip": self.max_fish_chip,
+            "fish_chip_write_policy": "experimental",
             "message": self.message,
         }
 
@@ -100,6 +116,7 @@ class LoadedSave:
     sha256: str = field(repr=False)
     serialzed_version: int
     report: dict[str, object]
+    fish_chip: int | None = None
 
     def summary(self) -> dict[str, object]:
         return {
@@ -109,6 +126,9 @@ class LoadedSave:
                 "sha256": self.metadata.sha256,
             },
             "gems": self.gems,
+            "fish_chip": self.fish_chip,
+            "fish_chip_path": FISH_CHIP_PATH,
+            "fish_chip_write_policy": "experimental",
             "size": self.size,
             "sha256": self.sha256,
             "serialzed_version": self.serialzed_version,
@@ -140,6 +160,7 @@ class PreparedEdit:
 
     def summary(self) -> dict[str, object]:
         return {
+            "field": "gameData.gems",
             "remote": {
                 "source": self.remote_source,
                 "size": self.edit.binary.original_size,
@@ -148,6 +169,8 @@ class PreparedEdit:
             "backup": self.backup.summary(),
             "original_gems": self.edit.original_gems,
             "new_gems": self.edit.new_gems,
+            "original_value": self.edit.original_gems,
+            "new_value": self.edit.new_gems,
             "changed": self.edit.changed,
             "candidate_size": len(self.edit.candidate),
             "candidate_sha256": self.edit.candidate_sha256,
@@ -157,6 +180,64 @@ class PreparedEdit:
                 "valid": True,
                 "structure_valid": True,
                 "only_gems_changed": "gameData.varGems" not in self.edit.changed_fields,
+                "message": (
+                    "Campos modificados: " + ", ".join(self.edit.changed_fields) + "."
+                    if self.edit.changed
+                    else "El valor solicitado ya está en la partida; no hay cambios que subir."
+                ),
+            },
+        }
+
+
+@dataclass(frozen=True)
+class PreparedFishChipEdit:
+    """Resultado experimental de preparar un cambio de ``gameData.fishChip``."""
+
+    backup: BackupRecord
+    edit: FishChipEdit
+    remote_source: str
+
+    @property
+    def original_fish_chip(self) -> int:
+        return self.edit.original_fish_chip
+
+    @property
+    def new_fish_chip(self) -> int:
+        return self.edit.new_fish_chip
+
+    @property
+    def changed(self) -> bool:
+        return self.edit.changed
+
+    @property
+    def candidate_sha256(self) -> str:
+        return self.edit.candidate_sha256
+
+    def summary(self) -> dict[str, object]:
+        return {
+            "field": FISH_CHIP_PATH,
+            "remote": {
+                "source": self.remote_source,
+                "size": self.edit.binary.original_size,
+                "sha256": self.edit.original_sha256,
+            },
+            "backup": self.backup.summary(),
+            "original_fish_chip": self.edit.original_fish_chip,
+            "new_fish_chip": self.edit.new_fish_chip,
+            "original_value": self.edit.original_fish_chip,
+            "new_value": self.edit.new_fish_chip,
+            "changed": self.edit.changed,
+            "candidate_size": len(self.edit.candidate),
+            "candidate_sha256": self.edit.candidate_sha256,
+            "byte_diff": self.edit.binary.as_dict(),
+            "changed_fields": list(self.edit.changed_fields),
+            "experimental": True,
+            "validation": {
+                "valid": True,
+                "structure_valid": True,
+                "only_fish_chip_changed": self.edit.changed_fields == (FISH_CHIP_PATH,),
+                "experimental": True,
+                "evidence_level": "E2",
                 "message": (
                     "Campos modificados: " + ", ".join(self.edit.changed_fields) + "."
                     if self.edit.changed
@@ -180,11 +261,14 @@ class WriteResult:
     remote_gems: int | None
     status: int | None
     message: str
+    field: str = "gems"
+    remote_value: int | None = None
 
     def summary(self) -> dict[str, object]:
         return {
             "action": self.action,
             "backup_id": self.backup_id,
+            "field": self.field,
             "uploaded": self.uploaded,
             "accepted": self.accepted,
             "persisted": self.persisted,
@@ -193,6 +277,7 @@ class WriteResult:
             "remote_sha256": self.remote_sha256,
             "remote_size": self.remote_size,
             "remote_gems": self.remote_gems,
+            "remote_value": self.remote_value,
             "status": self.status,
             "message": self.message,
         }
@@ -209,15 +294,19 @@ class VerifyResult:
     expected_candidate_sha256: str = field(repr=False)
     expected_original_sha256: str = field(repr=False)
     message: str
+    field: str = "gems"
+    remote_value: int | None = None
 
     def summary(self) -> dict[str, object]:
         return {
             "backup_id": self.backup_id,
+            "field": self.field,
             "matches_candidate": self.matches_candidate,
             "matches_original": self.matches_original,
             "remote_sha256": self.remote_sha256,
             "remote_size": self.remote_size,
             "remote_gems": self.remote_gems,
+            "remote_value": self.remote_value,
             "expected_candidate_sha256": self.expected_candidate_sha256,
             "expected_original_sha256": self.expected_original_sha256,
             "message": self.message,
@@ -273,6 +362,8 @@ class CloudLabService:
             backup_count=backups,
             min_gems=MIN_GEMS,
             max_gems=MAX_GEMS,
+            min_fish_chip=MIN_FISH_CHIP,
+            max_fish_chip=MAX_FISH_CHIP,
             message=message,
         )
 
@@ -281,9 +372,14 @@ class CloudLabService:
         snapshot = read_gems(save.payload)
         if snapshot.sha256 != save.metadata.sha256 or snapshot.size != save.metadata.size:
             raise LabServiceError("La copia descargada no coincide con sus metadatos.")
+        try:
+            fish_chip = read_fish_chip(save.payload).fish_chip
+        except (FishChipFieldMissing, CloudSaveError):
+            fish_chip = None
         return LoadedSave(
             metadata=save.metadata,
             gems=snapshot.gems,
+            fish_chip=fish_chip,
             size=snapshot.size,
             sha256=snapshot.sha256,
             serialzed_version=snapshot.serialzed_version,
@@ -296,6 +392,26 @@ class CloudLabService:
             self.store.append_event(backup_id, event)
         except BackupStoreError:
             pass
+
+    @staticmethod
+    def _field_path(field: str) -> str:
+        return FISH_CHIP_PATH if field == FISH_CHIP_RECORD_FIELD else "gameData.gems"
+
+    @staticmethod
+    def _remote_values(payload: bytes, field: str) -> tuple[int | None, int | None]:
+        """Devuelve gemas y el valor del campo respaldado tras una escritura."""
+        try:
+            gems = read_gems(payload).gems
+        except CloudSaveError:
+            gems = None
+        if field == FISH_CHIP_RECORD_FIELD:
+            try:
+                value: int | None = read_fish_chip(payload).fish_chip
+            except CloudSaveError:
+                value = None
+        else:
+            value = gems
+        return gems, value
 
     def prepare(self, new_gems: object, *, expected_source: str | None = None) -> PreparedEdit:
         save = self.provider.download(self.max_input_bytes)
@@ -324,6 +440,46 @@ class CloudLabService:
         )
         return PreparedEdit(bundle.record, edit, save.metadata.source)
 
+    def prepare_fish_chip(
+        self, new_fish_chip: object, *, expected_source: str | None = None
+    ) -> PreparedFishChipEdit:
+        """Prepara una edición experimental de ``gameData.fishChip``.
+
+        El respaldo usa el mismo almacén cifrado que las gemas y registra el
+        tipo de campo para que la confirmación y la restauración verifiquen la
+        transición correcta.
+        """
+        save = self.provider.download(self.max_input_bytes)
+        if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
+            raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
+        edit = prepare_fish_chip_edit(save.payload, new_fish_chip)
+        if edit.original_sha256 != save.metadata.sha256:
+            raise LabServiceError("El original preparado no coincide con la descarga.")
+        bundle = self.store.save(
+            edit,
+            remote_source=save.metadata.source,
+            remote_size=save.metadata.size,
+            remote_sha256=save.metadata.sha256,
+            field=FISH_CHIP_RECORD_FIELD,
+            original_value=edit.original_fish_chip,
+            new_value=edit.new_fish_chip,
+        )
+        self.store.append_event(
+            bundle.record.id,
+            {
+                "action": "prepare",
+                "field": FISH_CHIP_PATH,
+                "experimental": True,
+                "changed": edit.changed,
+                "original_value": edit.original_fish_chip,
+                "candidate_value": edit.new_fish_chip,
+                "candidate_sha256": edit.candidate_sha256,
+                "changed_fields": list(edit.changed_fields),
+                "remote_source": save.metadata.source,
+            },
+        )
+        return PreparedFishChipEdit(bundle.record, edit, save.metadata.source)
+
     def confirm(self, backup_id: str, expected_sha256: str, *, single_attempt: bool = False) -> WriteResult:
         if not self.write_enabled or self.uploader is None:
             raise LabWriteDisabled("La escritura remota está deshabilitada en el servidor.")
@@ -331,13 +487,19 @@ class CloudLabService:
             raise LabHashMismatch("La huella esperada no es válida.")
         with self._write_lock:
             bundle = self.store.load(backup_id)
+            label = "las fichas de pesca" if bundle.record.field == FISH_CHIP_RECORD_FIELD else "las gemas"
             if not bundle.record.changed:
-                raise LabNoChanges("La operación no cambia las gemas; no se enviará nada a la nube.")
+                raise LabNoChanges(f"La operación no cambia {label}; no se enviará nada a la nube.")
             if not compare_digest(expected_sha256, bundle.record.candidate_sha256):
                 raise LabHashMismatch("La huella esperada no coincide con el candidato respaldado.")
             if self.store.confirmation(backup_id) is not None:
                 raise LabAlreadyConfirmed("Este respaldo ya fue confirmado; usa la verificación.")
-            require_gems_write_compatibility(bundle.original, bundle.record.candidate_gems, bundle.candidate)
+            if bundle.record.field == FISH_CHIP_RECORD_FIELD:
+                require_fish_chip_write_compatibility(
+                    bundle.original, bundle.record.candidate_gems, bundle.candidate
+                )
+            else:
+                require_gems_write_compatibility(bundle.original, bundle.record.candidate_gems, bundle.candidate)
             current = self.provider.download(self.max_input_bytes)
             if current.metadata.sha256 != bundle.record.original_sha256:
                 raise LabRemoteChanged(
@@ -351,10 +513,7 @@ class CloudLabService:
                 remote.metadata.size == bundle.record.candidate_size
                 and compare_digest(remote.metadata.sha256, bundle.record.candidate_sha256)
             )
-            try:
-                remote_gems = read_gems(remote.payload).gems
-            except CloudSaveError:
-                remote_gems = None
+            remote_gems, remote_value = self._remote_values(remote.payload, bundle.record.field)
             result = WriteResult(
                 action="confirm",
                 backup_id=backup_id,
@@ -367,8 +526,10 @@ class CloudLabService:
                 remote_size=remote.metadata.size,
                 remote_gems=remote_gems,
                 status=upload.status,
+                field=self._field_path(bundle.record.field),
+                remote_value=remote_value,
                 message=(
-                    "La descarga posterior coincide con el agregado subido. "
+                    f"La descarga posterior coincide con el agregado subido de {label}. "
                     "Las transacciones y la persistencia dentro del juego siguen sin verificarse."
                     if persisted
                     else "La subida fue aceptada, pero la descarga posterior no coincide. No se declara persistencia."
@@ -393,10 +554,14 @@ class CloudLabService:
             raise LabWriteDisabled("La escritura remota está deshabilitada en el servidor.")
         with self._write_lock:
             bundle = self.store.load(backup_id)
+            label = "las fichas de pesca" if bundle.record.field == FISH_CHIP_RECORD_FIELD else "las gemas"
             if not bundle.record.changed:
                 raise LabNoChanges("El respaldo no contiene una modificación que restaurar.")
             current = self.provider.download(self.max_input_bytes)
             if current.metadata.sha256 == bundle.record.original_sha256:
+                remote_gems, remote_value = self._remote_values(
+                    current.payload, bundle.record.field
+                )
                 return WriteResult(
                     action="restore",
                     backup_id=backup_id,
@@ -407,8 +572,10 @@ class CloudLabService:
                     expected_sha256=bundle.record.original_sha256,
                     remote_sha256=current.metadata.sha256,
                     remote_size=current.metadata.size,
-                    remote_gems=bundle.record.original_gems,
+                    remote_gems=remote_gems,
                     status=None,
+                    field=self._field_path(bundle.record.field),
+                    remote_value=remote_value,
                     message="La nube ya contiene el original; no se envió nada.",
                 )
             if current.metadata.sha256 != bundle.record.candidate_sha256:
@@ -421,10 +588,7 @@ class CloudLabService:
                 remote.metadata.size == bundle.record.original_size
                 and compare_digest(remote.metadata.sha256, bundle.record.original_sha256)
             )
-            try:
-                remote_gems = read_gems(remote.payload).gems
-            except CloudSaveError:
-                remote_gems = None
+            remote_gems, remote_value = self._remote_values(remote.payload, bundle.record.field)
             result = WriteResult(
                 action="restore",
                 backup_id=backup_id,
@@ -437,8 +601,10 @@ class CloudLabService:
                 remote_size=remote.metadata.size,
                 remote_gems=remote_gems,
                 status=upload.status,
+                field=self._field_path(bundle.record.field),
+                remote_value=remote_value,
                 message=(
-                    "La descarga posterior coincide con el original respaldado."
+                    f"La descarga posterior coincide con el original respaldado de {label}."
                     if persisted
                     else "La restauración fue aceptada, pero la descarga posterior no coincide con el original."
                 ),
@@ -464,10 +630,7 @@ class CloudLabService:
             remote.metadata.size == bundle.record.original_size
             and compare_digest(remote.metadata.sha256, bundle.record.original_sha256)
         )
-        try:
-            remote_gems = read_gems(remote.payload).gems
-        except CloudSaveError:
-            remote_gems = None
+        remote_gems, remote_value = self._remote_values(remote.payload, bundle.record.field)
         self._event(
             backup_id,
             {
@@ -493,6 +656,8 @@ class CloudLabService:
             expected_candidate_sha256=bundle.record.candidate_sha256,
             expected_original_sha256=bundle.record.original_sha256,
             message=message,
+            field=self._field_path(bundle.record.field),
+            remote_value=remote_value,
         )
 
     def backups(self, limit: int = 25) -> list[BackupRecord]:

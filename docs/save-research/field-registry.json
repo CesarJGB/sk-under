@@ -12,7 +12,8 @@
     "discord": "community-reference.txt",
     "skdfe": "external-sources.md",
     "phase6-12": "../research/phase6-12/README.md",
-    "phase6-13": "../research/phase6-13/README.md"
+    "phase6-13": "../research/phase6-13/README.md",
+    "phase6-14": "../research/phase6-14/README.md"
   },
   "fields": [
     {
@@ -455,8 +456,8 @@
         "acción legítima de obtención/gasto"
       ],
       "validation_level": "E2",
-      "edit_policy": "solo lectura; sin edición hasta demostrar semántica y persistencia",
-      "experimental_evidence": "34 ocurrencias de fishChip con valor 0 en 221 archivos JSON privados; ninguna positiva. La preferencia aparece con 0 tras recuperar. No se observó una transacción legítima. La Fase 6.13 lo muestra en el informe saneado de solo lectura y mantiene la escritura deshabilitada."
+      "edit_policy": "escritura experimental autorizada solo para gameData.fishChip; E2 sin validar",
+      "experimental_evidence": "34 ocurrencias de fishChip con valor 0 en 221 archivos JSON privados; ninguna positiva. La preferencia aparece con 0 tras recuperar. No se observó una transacción legítima. La Fase 6.13 lo muestra en el informe saneado de solo lectura y mantiene la escritura deshabilitada. La Fase 6.14 habilita la escritura experimental de gameData.fishChip con respaldo, confirmación autenticada y restauración; no modifica material_fish, cumulativeFishCount ni fishChipStore*. La semántica y la persistencia dentro del juego siguen pendientes de validación manual."
     },
     {
       "internal_name": "fishChipConfigId",

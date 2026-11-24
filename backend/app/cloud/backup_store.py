@@ -24,9 +24,17 @@ from Crypto.Cipher import AES
 
 from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError, reconstruct_cloud_save
 from ..parsers.json_document import parse_json
+from .fish_chip_editor import (
+    FISH_CHIP_RECORD_FIELD,
+    FishChipEdit,
+    FishChipFieldMissing,
+    prepare_fish_chip_edit,
+    read_fish_chip,
+)
 from .gems_editor import GemsEdit, GemsEditError, prepare_gems_edit, read_gems, replay_legacy_gems_edit
 
 _ID = re.compile(r"^[0-9a-f]{32}$")
+_FIELDS = frozenset({"gems", FISH_CHIP_RECORD_FIELD})
 _RECORD_LIMIT = 64 * 1024
 _SEAL_MAGIC = b"SKB1"
 _SEAL_TAG = 16
@@ -66,18 +74,32 @@ class BackupRecord:
     remote_source: str
     remote_size: int
     remote_sha256: str = field(repr=False)
+    field: str = "gems"
+
+    @property
+    def original_value(self) -> int:
+        """Valor original del campo respaldado, sea gemas o fichas de pesca."""
+        return self.original_gems
+
+    @property
+    def candidate_value(self) -> int:
+        """Valor candidato del campo respaldado, sea gemas o fichas de pesca."""
+        return self.candidate_gems
 
     def summary(self) -> dict[str, object]:
         return {
             "id": self.id,
             "created_at": self.created_at,
+            "field": self.field,
             "changed": self.changed,
             "original_size": self.original_size,
             "original_sha256": self.original_sha256,
             "original_gems": self.original_gems,
+            "original_value": self.original_gems,
             "candidate_size": self.candidate_size,
             "candidate_sha256": self.candidate_sha256,
             "candidate_gems": self.candidate_gems,
+            "candidate_value": self.candidate_gems,
             "remote_source": self.remote_source,
             "remote_size": self.remote_size,
             "remote_sha256": self.remote_sha256,
@@ -230,15 +252,32 @@ class LabBackupStore:
 
     def save(
         self,
-        edit: GemsEdit,
+        edit: GemsEdit | FishChipEdit,
         *,
         remote_source: str,
         remote_size: int,
         remote_sha256: str,
+        field: str = "gems",
+        original_value: int | None = None,
+        new_value: int | None = None,
     ) -> BackupBundle:
-        """Crea un respaldo y devuelve los bytes que quedaron en disco."""
+        """Crea un respaldo y devuelve los bytes que quedaron en disco.
+
+        ``field`` identifica el único grupo editado (``gems`` o ``fish_chip``).
+        Los registros y las respuestas existentes conservan ``original_gems`` y
+        ``candidate_gems`` como el valor del campo respaldado para mantener la
+        compatibilidad de la Fase 6.13.
+        """
+        if field not in _FIELDS:
+            raise BackupIntegrityError("El tipo de campo del respaldo no es válido.")
         if remote_sha256 != edit.original_sha256 or remote_size != len(edit.original):
             raise BackupIntegrityError("La copia remota no coincide con el original preparado.")
+        if original_value is None:
+            original_value = getattr(edit, "original_gems", getattr(edit, "original_fish_chip", None))
+        if new_value is None:
+            new_value = getattr(edit, "new_gems", getattr(edit, "new_fish_chip", None))
+        original_value = _require_int(original_value, "original_value")
+        new_value = _require_int(new_value, "candidate_value")
         source = _require_text(remote_source, "remote_source")
         self._ensure_root()
         backup_id = uuid4().hex
@@ -253,13 +292,14 @@ class LabBackupStore:
             changed=edit.changed,
             original_size=len(edit.original),
             original_sha256=edit.original_sha256,
-            original_gems=edit.original_gems,
+            original_gems=original_value,
             candidate_size=len(edit.candidate),
             candidate_sha256=edit.candidate_sha256,
-            candidate_gems=edit.new_gems,
+            candidate_gems=new_value,
             remote_source=source,
             remote_size=remote_size,
             remote_sha256=remote_sha256,
+            field=field,
         )
         try:
             self._write_private(directory / "original.json", edit.original)
@@ -359,6 +399,9 @@ class LabBackupStore:
             raise BackupIntegrityError("El registro de respaldo no es JSON válido.") from None
         if not isinstance(data, dict):
             raise BackupIntegrityError("El registro de respaldo no es un objeto.")
+        field = data.get("field", "gems")
+        if field not in _FIELDS:
+            raise BackupIntegrityError("El registro de respaldo contiene un tipo de campo inválido.")
         record = BackupRecord(
             id=_require_text(data.get("id"), "id"),
             created_at=_require_text(data.get("created_at"), "created_at"),
@@ -372,6 +415,7 @@ class LabBackupStore:
             remote_source=_require_text(data.get("remote_source"), "remote_source"),
             remote_size=_require_int(data.get("remote_size"), "remote_size"),
             remote_sha256=_require_hash(data.get("remote_sha256")),
+            field=field,
         )
         if record.id != backup_id:
             raise BackupIntegrityError("El identificador del registro no coincide.")
@@ -390,10 +434,26 @@ class LabBackupStore:
         if len(candidate) != record.candidate_size or sha256(candidate).hexdigest() != record.candidate_sha256:
             raise BackupIntegrityError("El candidato del respaldo no coincide con su registro.")
         reconstruct_cloud_save(original)
-        if read_gems(original).gems != record.original_gems:
-            raise BackupIntegrityError("El original del respaldo no conserva el valor registrado.")
         if record.changed != (original != candidate):
             raise BackupIntegrityError("El indicador de cambio del respaldo no coincide.")
+        if record.field == FISH_CHIP_RECORD_FIELD:
+            try:
+                original_fish_chip = read_fish_chip(original).fish_chip
+            except FishChipFieldMissing:
+                raise BackupIntegrityError("El original del respaldo no contiene el saldo de fichas.") from None
+            if original_fish_chip != record.original_gems:
+                raise BackupIntegrityError("El original del respaldo no conserva el valor registrado.")
+            try:
+                current = prepare_fish_chip_edit(original, record.candidate_gems)
+            except CloudSaveError:
+                raise BackupIntegrityError(
+                    "El candidato del respaldo no es reproducible desde el original."
+                ) from None
+            if current.candidate != candidate:
+                raise BackupIntegrityError("El candidato del respaldo no es reproducible desde el original.")
+            return BackupBundle(record, original, candidate)
+        if read_gems(original).gems != record.original_gems:
+            raise BackupIntegrityError("El original del respaldo no conserva el valor registrado.")
         legacy = replay_legacy_gems_edit(original, record.candidate_gems)
         if legacy.candidate != candidate:
             try:

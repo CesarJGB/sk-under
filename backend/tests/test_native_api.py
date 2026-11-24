@@ -565,3 +565,114 @@ def test_secure_cookie_and_https_origin(tmp_path):
     cookie = response.headers["set-cookie"]
     assert "__Host-sk_native=" in cookie and "Secure" in cookie and "HttpOnly" in cookie
     assert client.get(API + "/session", headers={"Origin": origin}).json()["active"] is True
+
+
+def fish_payload(fish_chip: int = 4) -> bytes:
+    data = json.loads(PAYLOAD_A)
+    data["gameData"]["fishChip"] = fish_chip
+    data["itemData"]["material_fish"] = {"salmon": 9}
+    data["itemData"]["cumulativeFishCount"] = 42
+    return canonical(data)
+
+
+def prepare_fish_chip(client, value=9):
+    source = client.get(API + "/save", headers=HEADERS)
+    assert source.status_code == 200, source.text
+    response = client.post(
+        API + "/prepare-fish-chip",
+        headers=HEADERS,
+        json={"new_fish_chip": value, "source_sha256": source.json()["sha256"]},
+    )
+    assert response.status_code == 200, response.text
+    return source.json(), response.json()
+
+
+def test_native_fish_chip_experimental_flow_preserves_gems_and_backups(tmp_path):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = fish_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+
+    source, draft = prepare_fish_chip(client)
+    assert source["fish_chip"] == 4
+    assert draft["field"] == "gameData.fishChip"
+    assert draft["experimental"] is True
+    assert draft["original_fish_chip"] == 4 and draft["new_fish_chip"] == 9
+    assert draft["changed_fields"] == ["gameData.fishChip"]
+    assert draft["backup"]["field"] == "fish_chip"
+    assert draft["backup"]["original_value"] == 4
+    assert draft["backup"]["candidate_value"] == 9
+
+    confirmed = client.post(API + "/confirm", headers=HEADERS, json=confirmation(draft))
+    assert confirmed.status_code == 200, confirmed.text
+    result = confirmed.json()
+    assert result["persisted"] is True
+    assert result["field"] == "gameData.fishChip"
+    assert result["remote_value"] == 9
+    assert result["remote_gems"] == 1000
+
+    uploaded = json.loads(env["providers"]["unique-a"].payload)
+    assert uploaded["gameData"]["fishChip"] == 9
+    assert uploaded["gameData"]["gems"] == 1000
+    assert uploaded["itemData"]["material_fish"] == {"salmon": 9}
+    assert uploaded["itemData"]["cumulativeFishCount"] == 42
+
+    refreshed = client.get(API + "/save", headers=HEADERS).json()
+    assert refreshed["fish_chip"] == 9 and refreshed["gems"] == 1000
+    backups = client.get(API + "/backups", headers=HEADERS).json()["backups"]
+    assert backups[0]["field"] == "fish_chip"
+
+    verified = client.post(API + "/verify", headers=HEADERS,
+                           json={"backup_id": draft["backup"]["id"]})
+    assert verified.status_code == 200, verified.text
+    assert verified.json()["matches_candidate"] is True
+    assert verified.json()["remote_value"] == 9
+
+    restored = client.post(API + "/restore", headers=HEADERS,
+                           json={"backup_id": draft["backup"]["id"], "confirmation": "RESTAURAR"})
+    assert restored.status_code == 200, restored.text
+    assert restored.json()["persisted"] is True
+    assert restored.json()["remote_value"] == 4
+    assert restored.json()["remote_gems"] == 1000
+
+    # La edición de gemas sigue funcionando y no toca las fichas restauradas.
+    gems = prepare(client, 1001)
+    assert gems["original_gems"] == 1000
+    gems_confirmed = client.post(API + "/confirm", headers=HEADERS, json=confirmation(gems))
+    assert gems_confirmed.status_code == 200, gems_confirmed.text
+    assert gems_confirmed.json()["persisted"] is True
+    after = client.get(API + "/save", headers=HEADERS).json()
+    assert after["gems"] == 1001 and after["fish_chip"] == 4
+
+
+@pytest.mark.parametrize("value", [-1, 2_147_483_648, "9", 9.5, True])
+def test_native_rejects_invalid_fish_chip_values_before_backup(tmp_path, value):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = fish_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+    source = client.get(API + "/save", headers=HEADERS)
+    assert source.status_code == 200
+    response = client.post(
+        API + "/prepare-fish-chip",
+        headers=HEADERS,
+        json={"new_fish_chip": value, "source_sha256": source.json()["sha256"]},
+    )
+    assert response.status_code == 422, response.text
+    assert response.json()["error"]["code"] in {"invalid_fish_chip_value", "invalid_request"}
+    assert client.get(API + "/backups", headers=HEADERS).json()["backups"] == []
+
+
+def test_native_reports_missing_fish_chip_without_creating_a_backup(tmp_path):
+    env = make_native(tmp_path, write=True)
+    client = env["client"]
+    assert login(client).status_code == 200
+    source = client.get(API + "/save", headers=HEADERS).json()
+    assert source["fish_chip"] is None
+    response = client.post(
+        API + "/prepare-fish-chip",
+        headers=HEADERS,
+        json={"new_fish_chip": 9, "source_sha256": source["sha256"]},
+    )
+    assert_error(response, 422, "fish_chip_field_missing")
+    assert client.get(API + "/backups", headers=HEADERS).json()["backups"] == []
