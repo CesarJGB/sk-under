@@ -145,9 +145,13 @@ batalla**. En móvil se apilan y cada sección puede plegarse.
 
 ## Publicación
 
-- Commit: pendiente de publicar al generar este informe.
-- CI: pendiente de la ejecución real de GitHub Actions.
-- No se considera producción actualizada hasta verificar el flujo desplegado.
+- Commit de implementación: `470c574bc566ed8dfb4e865acd8e5ec6e0feb588`.
+- Push directo a `main`; `HEAD` local y `origin/main` coinciden.
+- GitHub Actions: ejecución [45475821521](https://github.com/CesarJGB/sk-under/actions/runs/45475821521)
+  completada con éxito. Pasaron Backend, Frontend, Higiene/secretos y
+  Playwright/Chromium. Cloudflare Pages también informó `success`.
+- El despliegue y la CI no demuestran el comportamiento dentro del cliente del
+  juego. La validación funcional queda pendiente de las pruebas Android.
 
 ## Pruebas en Android físico
 
