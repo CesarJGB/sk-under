@@ -166,13 +166,14 @@ Rama `feature/phase6-9-autonomous-auth`, publicada en `origin`:
 
 | Commit | Contenido |
 | --- | --- |
-| `d8d40d5` | Backend: portal, identidad autónoma, selección de jugador, `100504`/`100509`, migración del almacén, respaldos cifrados, CSP, IP de proxy y límite atómico. |
-| `3027d73` | Frontend: formulario sin identificadores manuales, estados de vinculación/partida/desafío y CSP. |
-| `b39d9e9` | Documentación, evidencia saneada, runbook de Coolify y guía de pruebas. |
-| `f421e1c` | Registro de los commits publicados de la rama. |
-| `9c6606e` | Reutilización de perfiles vinculados de la Fase 6.8 y pruebas de migración. |
+| `fa06917` | Backend: portal, identidad autónoma, selección de jugador, `100504`/`100509`, migración del almacén, respaldos cifrados, CSP, IP de proxy y límite atómico. |
+| `5dad88d` | Frontend: formulario sin identificadores manuales, estados de vinculación/partida/desafío y CSP. |
+| `fe762f7` | Documentación, evidencia saneada, runbook de Coolify y guía de pruebas. |
+| `d39d055` | Registro de los commits publicados de la rama. |
+| `e8f7918` | Reutilización de perfiles vinculados de la Fase 6.8 y pruebas de migración. |
+| `5bf43b7` | Pruebas con identificadores sintéticos; no se publican UUID reales. |
 
-No se hizo merge a `main` ni se desplegó públicamente.
+No se hizo merge a `main` ni se desplegó públicamente. El commit que actualiza esta lista es posterior y no cambia código.
 
 ## Documentos de la fase
 

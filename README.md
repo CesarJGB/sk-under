@@ -216,7 +216,7 @@ Si el proveedor limita la vinculación de un dispositivo nuevo (`error 100509`),
 
 La cookie es `__Host-sk_native` en HTTPS (`Secure`, `HttpOnly`, `SameSite=Strict`, `Path=/`); en desarrollo local se usa `sk_native_dev`. Las sesiones caducan por inactividad y por el plazo absoluto; el cierre de sesión no afirma revocar el token en ChillyRoom. Los errores tienen códigos estables (`native_credentials_rejected`, `native_portal_rejected`, `native_portal_challenge_required`, `native_device_binding_throttled`, `native_no_cloud_save`, `native_login_throttled`, `native_session_expired`, `native_session_rejected`, `native_write_disabled`, etc.) y no incluyen cuerpos remotos ni secretos.
 
-La guía de despliegue está en [deployment.md](docs/research/phase6-9/deployment.md) y la validación con cuentas reales en [manual-testing.md](docs/research/phase6-9/manual-testing.md). Commits de la rama: `d8d40d5` (backend), `3027d73` (frontend), `b39d9e9` (documentación), `9c6606e` (reutilización de perfiles de la Fase 6.8). No se hizo merge a `main` ni se desplegó públicamente.
+La guía de despliegue está en [deployment.md](docs/research/phase6-9/deployment.md) y la validación con cuentas reales en [manual-testing.md](docs/research/phase6-9/manual-testing.md). Commits de la rama: `fa06917` (backend), `5dad88d` (frontend), `fe762f7` (documentación), `e8f7918` (reutilización de perfiles de la Fase 6.8). No se hizo merge a `main` ni se desplegó públicamente.
 
 ## Editor web de partida (Fase 6.2)
 
