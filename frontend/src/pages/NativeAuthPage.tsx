@@ -1,6 +1,6 @@
 import {
   CloudDownload, DatabaseBackup, Eye, EyeOff, Gem, LoaderCircle, LogOut,
-  RefreshCw, ServerOff, Settings2, ShieldCheck, UserRound,
+  RefreshCw, ServerOff, ShieldCheck, UserRound,
 } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
@@ -29,6 +29,13 @@ const FRIENDLY: Record<string, string> = {
   native_profile_required: 'Selecciona el perfil de instalación que corresponde a esta cuenta.',
   native_profile_missing: 'La configuración de instalación está pendiente: el propietario debe aprovisionar un perfil.',
   native_installation_required: 'Completa el identificador de instalación para acceder a la partida.',
+  native_portal_rejected: 'El portal de ChillyRoom rechazó las credenciales de la cuenta. Revisa el correo y la contraseña.',
+  native_portal_identity_mismatch: 'El portal devolvió una cuenta o un jugador distinto. No se creó ninguna sesión.',
+  native_portal_challenge_required: 'ChillyRoom pidió una verificación adicional en el portal. Inicia sesión manualmente en el portal y vuelve a intentarlo.',
+  native_portal_unavailable: 'El portal de ChillyRoom no está disponible en este momento. Inténtalo más tarde.',
+  native_no_cloud_save: 'No hay una partida en la nube para este jugador. No se creó ni se sobrescribió ninguna copia.',
+  native_device_binding_throttled: 'ChillyRoom limita la vinculación de dispositivos nuevos. La identificación generada se conserva; espera antes de reintentar.',
+  native_save_error: 'No se pudo comprobar la partida en este intento. Puedes reintentar la descarga.',
   native_session_expired: 'La sesión caducó. Inicia sesión de nuevo.',
   native_session_required: 'La sesión no está activa. Inicia sesión de nuevo.',
   native_session_rejected: 'ChillyRoom rechazó la sesión emitida para el servicio de guardado. Inténtalo de nuevo.',
@@ -69,11 +76,11 @@ export function NativeAuthPage() {
       const next = await nativeAuth.config(signal)
       setConfig(next)
       setSession(next.session)
-      setProfileId((current) => (
-        next.profiles.some((profile) => profile.id === current)
-          ? current
-          : next.profiles.length === 1 ? next.profiles[0].id : ''
-      ))
+      setProfileId((current) => {
+        if (!next.requires_profile_selection) return ''
+        if (next.profiles.some((profile) => profile.id === current)) return current
+        return next.profiles.length === 1 ? next.profiles[0].id : ''
+      })
     })
   }, [revision])
 
@@ -94,7 +101,9 @@ export function NativeAuthPage() {
     const password = String(data.get('password') ?? '')
     const passwordField = form.elements.namedItem('password')
     if (passwordField instanceof HTMLInputElement) passwordField.value = ''
-    const selected = String(data.get('profile_id') ?? profileId)
+    const selected = config?.requires_profile_selection
+      ? String(data.get('profile_id') ?? profileId)
+      : ''
     void authOperation.run(async (signal) => {
       const next = await nativeAuth.login({
         distribution: String(data.get('distribution') ?? 'android-global'),
@@ -133,16 +142,16 @@ export function NativeAuthPage() {
   const active = session?.active === true
   const available = config?.available === true
   const profiles = config?.profiles ?? []
-  const pendingNotice = config?.problem_code === 'native_profile_missing'
-    || (config !== null && config.available && !config.login_available)
+  const pendingNotice = config !== null && config.available && !config.login_available
   const sessionMessage = session?.reason === 'expired'
     ? session.message ?? FRIENDLY.native_session_expired
     : null
 
   return <>
     <PageTitle title="Cuenta y partida">
-      Inicia sesión con tu cuenta autorizada de ChillyRoom. Solo Android Global está validado;
-      las demás distribuciones aparecen deshabilitadas y no se usan para autenticar.
+      Inicia sesión con tu cuenta autorizada de ChillyRoom usando solo correo, contraseña y
+      distribución. El servidor genera y cifra la identificación de instalación; no necesitas
+      extraerla de Android ni pedirla al administrador. Solo Android Global está validado.
     </PageTitle>
 
     <div className="lab-shell account-shell">
@@ -190,11 +199,19 @@ export function NativeAuthPage() {
             </div>
           </div>
           {pendingNotice && <Notice tone="warning">
-            <strong>Configuración de instalación pendiente.</strong> El propietario debe aprovisionar
-            un perfil Android Global antes de que este formulario pueda autenticar.
+            <strong>Configuración pendiente.</strong> El servicio no tiene habilitada la generación
+            automática de instalación ni un perfil administrativo utilizable. El propietario debe
+            revisar la configuración del servidor.
           </Notice>}
-          {config.problem_code && config.problem_code !== 'native_profile_missing' && <Notice tone="warning">
+          {config.problem_code && <Notice tone="warning">
             {config.message ?? 'El servicio de autenticación no está configurado por completo.'}
+          </Notice>}
+          {config.auto_identity !== false && <Notice tone="info">
+            <strong>No necesitas configurar identificadores.</strong>{' '}
+            {config.portal_enabled === false
+              ? 'El servidor generará y cifrará un perfil de instalación propio, pero la consulta al portal está deshabilitada: una cuenta con progreso anterior podría no recuperar su jugador.'
+              : 'El servidor consultará el portal oficial para localizar tu jugador, generará y cifrará un perfil de instalación propio y conservará el mismo par en los siguientes accesos.'}
+            {' '}ChillyRoom puede aplicar su espera de vinculación de dispositivos nuevos.
           </Notice>}
           <form onSubmit={login}>
             <label className="lab-field"><span>Distribución</span>
@@ -206,7 +223,7 @@ export function NativeAuthPage() {
                 </option>)}
               </select>
             </label>
-            {profiles.length > 1 && <label className="lab-field"><span>Perfil de instalación</span>
+            {config.requires_profile_selection && profiles.length > 1 && <label className="lab-field"><span>Perfil de instalación</span>
               <select className="lab-input" name="profile_id" value={profileId}
                 onChange={(event) => setProfileId(event.target.value)} disabled={!config.login_available}>
                 <option value="">Selecciona un perfil</option>
@@ -215,7 +232,7 @@ export function NativeAuthPage() {
                 </option>)}
               </select>
             </label>}
-            {profiles.length === 1 && <p className="lab-hint">
+            {config.requires_profile_selection && profiles.length === 1 && <p className="lab-hint">
               Perfil de instalación: {profiles[0].label}
               {profiles[0].installation_ready ? '' : ' — instalación pendiente'}
             </p>}
@@ -262,13 +279,29 @@ export function NativeAuthPage() {
           <div className="lab-actions">
             <span className="lab-pill live"><span className="lab-dot" />Identidad verificada</span>
             {session.installation_ready
-              ? <span className="lab-pill read"><span className="lab-dot" />Instalación lista</span>
+              ? <span className="lab-pill read"><span className="lab-dot" />
+                {session.auto_identity ? 'Instalación generada por el servidor' : 'Instalación lista'}</span>
               : <span className="lab-pill read"><span className="lab-dot" />Instalación pendiente</span>}
           </div>
           <dl className="lab-facts">
             <div><dt>Caducidad de sesión</dt><dd>{formatDate(session.session_expires_at)}</dd></div>
             <div><dt>Inactividad</dt><dd>{formatDate(session.idle_expires_at)}</dd></div>
           </dl>
+          {session.save_error === 'native_no_cloud_save' && <Notice tone="info">
+            <strong>Sin partida en la nube.</strong> La cuenta se autenticó correctamente y el
+            servidor no encontró una copia para este jugador. No se creó ni se sobrescribió nada.
+          </Notice>}
+          {session.save_error === 'native_device_binding_throttled' && <Notice tone="warning">
+            <strong>Vinculación de dispositivo en espera.</strong> ChillyRoom limitó la vinculación
+            de una instalación nueva para esta cuenta. El servidor conserva la identificación
+            generada; no se crea otra. Vuelve a intentar la descarga cuando termine la espera
+            {session.binding_wait_until ? ` (${formatDate(session.binding_wait_until)})` : ''}.
+          </Notice>}
+          {session.save_error && session.save_error !== 'native_device_binding_throttled'
+            && session.save_error !== 'native_installation_required' && <Notice tone="warning">
+            La comprobación inicial de la partida no se completó ({session.save_error}). Puedes
+            reintentar la descarga desde el editor.
+          </Notice>}
           <div className="lab-actions">
             <button className="button lab-quiet" type="button" disabled={authOperation.pending} onClick={logout}>
               {authOperation.pending ? <LoaderCircle className="lab-spin" size={16} aria-hidden="true" />
@@ -279,17 +312,21 @@ export function NativeAuthPage() {
           {authOperation.problem && <Problem problem={friendly(authOperation.problem)} />}
         </section>
 
-        {!session.installation_ready && <section className="lab-card" aria-labelledby="installation-title">
+        {session.installation_ready && <NativeEditor key={`${session.account?.label}-${session.session_expires_at}`}
+          session={session} initialSave={session.save ?? null} onExpired={expired} />}
+
+        {!session.installation_ready && session.auto_identity === false && <section className="lab-card"
+          aria-labelledby="installation-title">
           <div className="lab-card-head">
-            <span className="lab-icon"><Settings2 size={20} aria-hidden="true" /></span>
+            <span className="lab-icon"><ShieldCheck size={20} aria-hidden="true" /></span>
             <div>
-              <h2 id="installation-title">Configuración de instalación pendiente</h2>
-              <p>La identidad ya está verificada, pero falta el identificador de instalación autorizado.</p>
+              <h2 id="installation-title">Configuración administrativa de la instalación</h2>
+              <p>Este perfil fue aprovisionado manualmente y aún no tiene identificador de instalación.</p>
             </div>
           </div>
           <Notice tone="warning">
-            Introduce el identificador de instalación de tu propia instalación oficial. Este valor
-            no sustituye a la contraseña y no se muestra en claro después de guardarlo.
+            La generación automática está deshabilitada en este servidor. Un administrador debe
+            completar la identificación por un canal autorizado; no se solicita en el flujo normal.
           </Notice>
           <form onSubmit={install}>
             <label className="lab-field"><span>Identificador de instalación</span>
@@ -304,9 +341,6 @@ export function NativeAuthPage() {
           </form>
           {installOperation.problem && <Problem problem={friendly(installOperation.problem)} />}
         </section>}
-
-        {session.installation_ready && <NativeEditor key={`${session.account?.label}-${session.session_expires_at}`}
-          session={session} initialSave={session.save ?? null} onExpired={expired} />}
       </>}
 
       <details className="account-details">
@@ -378,7 +412,16 @@ function NativeEditor({ session, initialSave, onExpired }: {
           ? 'La escritura está deshabilitada en el servidor. Puedes descargar y preparar la edición, pero no subirla.'
           : 'Esta cuenta está autorizada solo para lectura. No se enviará ninguna escritura.'}
       </Notice>}
-      {session.save_error && session.save_error !== 'native_installation_required' && !save && <Notice tone="warning">
+      {session.save_error === 'native_no_cloud_save' && !save && <Notice tone="info">
+        La cuenta no tiene una partida en la nube para este jugador. No se creó ni se sobrescribió
+        ninguna copia; puedes reintentar la descarga más adelante.
+      </Notice>}
+      {session.save_error === 'native_device_binding_throttled' && !save && <Notice tone="warning">
+        <strong>Vinculación en espera.</strong> ChillyRoom limitó la vinculación de esta instalación
+        nueva. El servidor conserva la identificación generada; espera antes de reintentar la descarga.
+      </Notice>}
+      {session.save_error && session.save_error !== 'native_device_binding_throttled'
+        && session.save_error !== 'native_installation_required' && !save && <Notice tone="warning">
         La descarga de verificación no se completó. Puedes reintentarla manualmente.
       </Notice>}
       <button className="button lab-primary" disabled={disabled} onClick={() => run(async (signal) => {

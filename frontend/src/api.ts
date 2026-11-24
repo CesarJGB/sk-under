@@ -317,6 +317,10 @@ export type NativeProfile = {
   installation_ready: boolean
   bound: boolean
   write_allowed: boolean
+  auto_generated?: boolean
+  binding_pending?: boolean
+  binding_wait_until?: number | null
+  last_save_error?: string | null
 }
 
 export type NativeSaveSummary = {
@@ -342,6 +346,8 @@ export type NativeSession = {
   session_expires_at?: string
   idle_expires_at?: string
   installation_ready?: boolean
+  auto_identity?: boolean
+  binding_wait_until?: string | null
   write_enabled?: boolean
   write_ready?: boolean
   min_gems?: number
@@ -360,6 +366,9 @@ export type NativeConfig = {
   min_gems: number
   max_gems: number
   login_available: boolean
+  auto_identity?: boolean
+  portal_enabled?: boolean
+  requires_profile_selection?: boolean
   profiles: NativeProfile[]
   distributions: NativeDistribution[]
   session: NativeSession

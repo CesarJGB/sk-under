@@ -27,13 +27,15 @@ const ACTIVE = {
   },
   session_expires_at: '2026-12-01T00:05:40Z',
   idle_expires_at: '2026-11-24T02:00:00Z',
-  installation_ready: true, write_enabled: true, write_ready: true,
+  installation_ready: true, auto_identity: true, binding_wait_until: null,
+  write_enabled: true, write_ready: true,
   min_gems: 0, max_gems: 2_147_483_647, save: null, save_error: null,
 }
 const BASE_CONFIG = {
   available: true, enabled: true, configured: true, write_enabled: true, secure: false,
   min_gems: 0, max_gems: 2_147_483_647, login_available: true,
-  profiles: [PROFILE], distributions: DISTRIBUTIONS,
+  auto_identity: true, requires_profile_selection: false,
+  profiles: [], distributions: DISTRIBUTIONS,
   session: { active: false, reason: 'none' }, problem_code: null, message: null,
 }
 const BACKUP = {
@@ -144,29 +146,32 @@ test('inicia sesión, descarga, prepara, confirma y cierra sesión', async ({ pa
   await expect(page.getByTestId('native-current-gems')).toHaveCount(0)
 })
 
-test('completa la configuración de instalación pendiente y habilita el editor', async ({ page }) => {
-  let installed = false
+test('no pide identificadores y descarga con la identidad generada por el servidor', async ({ page }) => {
   await mockBase(page)
-  await page.route('**/api/v1/cloud/native/config', (route) => route.fulfill({
-    json: installed ? { ...BASE_CONFIG, session: { ...ACTIVE, save: SAVE } } : BASE_CONFIG,
-  }))
-  await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({
-    json: { ...ACTIVE, installation_ready: false, save: null, save_error: 'native_installation_required' },
-  }))
-  await page.route('**/api/v1/cloud/native/installation', (route) => {
-    expect(route.request().postDataJSON()).toEqual({ unique_id: 'unique-owner' })
-    installed = true
-    return route.fulfill({ json: { ...ACTIVE, save: SAVE } })
-  })
+  await mockEditor(page, { ...ACTIVE, save: SAVE })
   await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  await page.goto('/partida')
+  await expect(page.getByText('No necesitas configurar identificadores.', { exact: false })).toBeVisible()
+  await expect(page.getByLabel('Identificador de instalación')).toHaveCount(0)
+  await expect(page.getByLabel('Perfil de instalación')).toHaveCount(0)
+  await submitLogin(page)
+  await expect(page.getByTestId('native-current-gems')).toHaveText('1,001')
+  await expect(page.getByText('Instalación generada por el servidor')).toBeVisible()
+})
 
+test('explica la espera de vinculación de un dispositivo nuevo', async ({ page }) => {
+  await mockBase(page)
+  await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({
+    json: {
+      ...ACTIVE, save: null, save_error: 'native_device_binding_throttled',
+      binding_wait_until: '2026-11-25T08:00:00Z',
+    },
+  }))
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
   await page.goto('/partida')
   await submitLogin(page)
-  await expect(page.getByRole('heading', { name: 'Configuración de instalación pendiente' })).toBeVisible()
-  await page.getByLabel('Identificador de instalación').fill('unique-owner')
-  await page.getByRole('button', { name: 'Completar instalación' }).click()
-  await expect(page.getByTestId('native-current-gems')).toHaveText('1,001')
-  await expect(page.getByRole('heading', { name: 'Configuración de instalación pendiente' })).toHaveCount(0)
+  await expect(page.getByText('Vinculación de dispositivo en espera.', { exact: false })).toBeVisible()
+  await expect(page.getByText('El servidor conserva la identificación generada', { exact: false }).first()).toBeVisible()
 })
 
 test('informa sesión caducada durante una descarga y vuelve al acceso', async ({ page }) => {
@@ -209,7 +214,7 @@ test('presenta el servicio no disponible sin pedir credenciales', async ({ page 
 })
 
 test('permite elegir el perfil cuando hay más de uno', async ({ page }) => {
-  await mockBase(page, { ...BASE_CONFIG, profiles: [PROFILE, SECOND_PROFILE] })
+  await mockBase(page, { ...BASE_CONFIG, auto_identity: false, requires_profile_selection: true, profiles: [PROFILE, SECOND_PROFILE] })
   let requested = ''
   await page.route('**/api/v1/cloud/native/login', async (route) => {
     requested = String(route.request().postDataJSON().profile_id)
@@ -239,4 +244,28 @@ test('mantiene el editor en solo lectura cuando la escritura está deshabilitada
   await page.getByRole('button', { name: 'Preparar edición' }).click()
   await expect(page.getByText('+1', { exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Subir y verificar' })).toHaveCount(0)
+})
+
+test('explica el desafío del portal y no simula una sesión', async ({ page }) => {
+  await mockBase(page)
+  await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({
+    status: 409,
+    json: { error: { code: 'native_portal_challenge_required', message: 'captcha', issues: [] } },
+  }))
+  await page.goto('/partida')
+  await submitLogin(page)
+  await expect(page.getByText('ChillyRoom pidió una verificación adicional', { exact: false })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Iniciar sesión en ChillyRoom' })).toBeVisible()
+})
+
+test('informa cuando la cuenta no tiene partida en la nube', async ({ page }) => {
+  await mockBase(page)
+  await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({
+    json: { ...ACTIVE, save: null, save_error: 'native_no_cloud_save' },
+  }))
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  await page.goto('/partida')
+  await submitLogin(page)
+  await expect(page.getByText('Sin partida en la nube.', { exact: false })).toBeVisible()
+  await expect(page.getByText('No se creó ni se sobrescribió nada.', { exact: false })).toBeVisible()
 })
