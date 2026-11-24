@@ -1,4 +1,4 @@
-"""Autenticación nativa de ChillyRoom y sesiones web aisladas (Fase 6.8)."""
+"""Autenticación nativa de ChillyRoom y sesiones web aisladas (Fase 6.9)."""
 
 from .client import NativeAuthClient
 from .errors import NativeError
