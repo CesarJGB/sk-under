@@ -30,6 +30,8 @@ La Fase 6.2 convirtió ese protocolo en un editor web de gemas. La página **Par
 
 La [Fase 6.3](docs/research/phase6-3/README.md) documenta la vinculación privada, el editor por cuenta y la prueba real de persistencia en Android Global. El inicio directo con correo y contraseña sigue pendiente.
 
+La [Fase 6.7](docs/research/phase6-7/README.md) obtuvo una sesión nueva desde Linux con la cuenta de laboratorio, verificó su identidad y descargó la partida real sin emulador activo. La diferencia decisiva fue la cabecera `x-distro-id`; el cuerpo correcto es JSON plano. El cliente experimental y la propuesta de integración quedan en la rama de investigación, no en producción. [Evidencia saneada](docs/research/phase6-7/evidence.json)
+
 ## Arquitectura
 
 ```text

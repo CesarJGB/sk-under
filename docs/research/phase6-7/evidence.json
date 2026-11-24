@@ -1,0 +1,134 @@
+{
+  "body": {
+    "credential": null,
+    "fields": [
+      "loginType",
+      "account",
+      "password",
+      "credential"
+    ],
+    "format": "JSON plano",
+    "gzip_body_accepted": false,
+    "loginType": 3
+  },
+  "control_experiments": [
+    {
+      "conclusion": "cabecera obligatoria",
+      "name": "sin x-distro-id",
+      "result": "HTTP 502 / errorCode 10003"
+    },
+    {
+      "conclusion": "el valor se valida; no es arbitrario",
+      "name": "x-distro-id aleatoria",
+      "result": "HTTP 400 / errorCode 10003"
+    },
+    {
+      "conclusion": "no es necesaria para el login",
+      "name": "sin x-unique-id",
+      "result": "HTTP 200"
+    },
+    {
+      "conclusion": "el gateway espera JSON plano",
+      "name": "cuerpo gzip",
+      "result": "HTTP 400 Input validation failed"
+    },
+    {
+      "conclusion": "BlobSave exige el identificador de instalaci\u00f3n v\u00e1lido",
+      "name": "unique_id nuevo para BlobSave",
+      "result": "HTTP 400"
+    }
+  ],
+  "environment": {
+    "android_session_reused": false,
+    "build": "8.8.0 (versionCode 1080800)",
+    "client": "Linux",
+    "distribution": "Android Global 8.8.0",
+    "emulator_active": false,
+    "python": "3.12"
+  },
+  "generated_at_utc": "2026-11-24T00:05:49Z",
+  "headers": {
+    "not_required_for_login": [
+      "x-unique-id"
+    ],
+    "observed": [
+      "Content-Type",
+      "Accept",
+      "Accept-Encoding",
+      "User-Agent",
+      "x-game-id",
+      "x-game",
+      "x-app-version",
+      "x-game-version",
+      "x-platform",
+      "x-game-lang",
+      "x-locale",
+      "x-distro-id"
+    ],
+    "required_for_login": [
+      "x-distro-id"
+    ]
+  },
+  "identifiers": {
+    "distro_id_sha256": "cccff053a36de2934a015bb62fd93e213552a5ecb21ace5eb5da0d0a39af7d77",
+    "note": "Los valores reales no se incluyen en Git.",
+    "unique_id_sha256": "49f9776c930c27d0658e36530a5dcf1f91170ee0bafcc64faf98abaa71f53ed0"
+  },
+  "phase": "6.7",
+  "real_runs": [
+    {
+      "download": {
+        "bytes": 114779,
+        "gems": 99999,
+        "sections": 17,
+        "sha256": "ace7c58b3c7776ce26afe4f18a362d819b804984b7ca37b3e4aab2bc5d82cfb1",
+        "status": 200
+      },
+      "identity": {
+        "email_matches": true,
+        "email_sha256": "3100f7518756721b8611fa89d7714250da5452d698d16db4802890147ce4fee6",
+        "player_id_matches_known_account": true,
+        "player_id_sha256": "adb791dc0a68cc0f55a94ccc23643f438f0494f911d425a982b4d28fd02a1df0",
+        "session_uid_matches_user_id": true,
+        "uid_sha256": "09297ea665189df87b8cf0060f051ac627aa4f9c91b6e43ca9e3df6cf2168e4a"
+      },
+      "kind": "module",
+      "login": {
+        "expire": 1796083540,
+        "expire_iso": "2026-12-01T00:05:40Z",
+        "http_status": 200,
+        "ok": true,
+        "token_differs_from_android_session": true,
+        "token_sha256": "a8004db61edbe4ff84fccb939ebf7401656b5abe27871ace390f42a2326032e4"
+      }
+    },
+    {
+      "download": {
+        "bytes": 114779,
+        "gems": 99999,
+        "sha256": "ace7c58b3c7776ce26afe4f18a362d819b804984b7ca37b3e4aab2bc5d82cfb1",
+        "status": 200
+      },
+      "kind": "cli",
+      "login": {
+        "expire": 1796083549,
+        "expire_iso": "2026-12-01T00:05:49Z",
+        "http_status": 200,
+        "ok": true,
+        "token_sha256": "6bf0f95ee01e193e777e0d022e1472e11dc1da7963a5bd4f64476a35a603f982"
+      }
+    }
+  ],
+  "security": {
+    "certificate_pinning_observed": "CheckCertHashTrusted",
+    "password_stored": false,
+    "pinning_bypassed": false,
+    "redirects_followed": false,
+    "tls_verification": "normal",
+    "token_stored_in_repo": false
+  },
+  "tests": {
+    "real": "2 ejecuciones Linux (m\u00f3dulo y CLI)",
+    "simulated": "13 nuevas + 11 de la fase 6.6"
+  }
+}

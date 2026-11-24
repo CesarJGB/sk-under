@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Hypothesis-driven Linux login experiment. The success contract is unverified."""
+"""Historical hypothesis client (Fase 6.6). Superseded by native_auth.py.
+
+This module lacks x-distro-id and is kept only for the 6.6 tests; it is not
+the verified Linux client.
+"""
 import getpass
 import http.client
 import zlib
