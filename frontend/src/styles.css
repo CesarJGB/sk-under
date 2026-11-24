@@ -741,7 +741,7 @@ h3 { font-weight: 650; letter-spacing: -.02em; }
   .editor-current { justify-items: start; }
 }
 
-/* Habilidades (fase 6.17, evidencia experimental E2) */
+/* Habilidades (fase 6.17; confirmadas por el propietario, E3) */
 .skill-unlock-editor { border-color: #d9ceb4; background: #fffdf8; }
 .skill-unlock-editor .cloud-kicker { color: #7a5a12; }
 .skill-summary {
@@ -834,6 +834,123 @@ h3 { font-weight: 650; letter-spacing: -.02em; }
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
+/* Skins (fase 6.18, evidencia experimental E2) */
+.skin-unlock-editor { border-color: #c9d3df; background: #fbfdff; }
+.skin-unlock-editor .cloud-kicker { color: #315c7c; }
+.skin-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap: .5rem;
+}
+.skin-summary > div {
+  display: grid;
+  gap: .1rem;
+  padding: .6rem .7rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+}
+.skin-summary span { color: var(--muted); font-size: .78rem; }
+.skin-summary strong { font-size: 1.2rem; font-variant-numeric: tabular-nums; }
+.skin-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: .65rem;
+}
+.skin-filters .cloud-field { margin: 0; }
+.skin-character-list { display: grid; gap: .55rem; }
+.skin-character {
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: #fff;
+  overflow: hidden;
+}
+.skin-character[open] { border-color: #aebfd0; }
+.skin-character > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .65rem;
+  min-height: 52px;
+  padding: .7rem .8rem;
+  cursor: pointer;
+  list-style: none;
+}
+.skin-character > summary::-webkit-details-marker { display: none; }
+.skin-character > summary::after {
+  content: '+';
+  grid-column: 1 / -1;
+  grid-row: 2;
+  justify-self: end;
+  margin-top: -.2rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+.skin-character[open] > summary::after { content: '−'; }
+.skin-character-title { display: grid; min-width: 0; gap: .1rem; }
+.skin-character-title strong { overflow-wrap: anywhere; }
+.skin-character-title small { color: var(--muted); font-size: .78rem; }
+.skin-character-body {
+  display: grid;
+  gap: .65rem;
+  padding: 0 .8rem .8rem;
+  border-top: 1px solid var(--border);
+}
+.skin-list { display: grid; gap: .4rem; padding: 0; margin: 0; list-style: none; }
+.skin-row {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .55rem;
+  padding: .55rem .65rem;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #fff;
+}
+.skin-row:has(input:checked) { border-color: var(--accent); background: var(--subtle); }
+.skin-row.unlocked { border-color: #c9ddce; background: #f7fbf6; }
+.skin-row.unknown { border-style: dashed; background: #fafafa; }
+.skin-row input { width: 1.2rem; height: 1.2rem; accent-color: var(--accent); }
+.skin-thumb {
+  display: grid;
+  place-items: center;
+  width: 2.15rem;
+  height: 2.15rem;
+  border: 1px dashed #aebfd0;
+  border-radius: 8px;
+  color: #52738e;
+  background: #eef5fb;
+  font-size: 1.1rem;
+  flex: none;
+}
+.skin-name { display: grid; min-width: 0; }
+.skin-name strong { overflow-wrap: anywhere; }
+.skin-name small { color: var(--muted); font-size: .76rem; overflow-wrap: anywhere; }
+.skin-state { display: grid; justify-items: end; gap: .2rem; }
+.skin-state small { font-size: .72rem; }
+.skin-compatible { color: #3d6d4a; }
+.skin-incompatible { color: #8a4a3a; }
+.skin-requirement { margin: 0; color: #684f1c; font-size: .86rem; }
+.skin-changed-fields { max-width: 100%; }
+.skin-changed-fields summary { cursor: pointer; color: var(--accent-dark); font-weight: 600; }
+.skin-changed-fields code {
+  display: block;
+  max-height: 8rem;
+  margin-top: .4rem;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: .76rem;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+@media (max-width: 430px) {
+  .skin-filters { grid-template-columns: minmax(0, 1fr); }
+  .skin-character > summary { grid-template-columns: minmax(0, 1fr); }
+  .skin-character > summary .report-state { justify-self: start; }
+  .skin-row { grid-template-columns: auto auto minmax(0, 1fr); }
+  .skin-row .skin-state { grid-column: 2 / -1; justify-items: start; }
+}
+
 @media (max-width: 430px) {
   .skill-filters { grid-template-columns: minmax(0, 1fr); }
   .skill-character > summary { grid-template-columns: minmax(0, 1fr); }

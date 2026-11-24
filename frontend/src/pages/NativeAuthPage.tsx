@@ -14,6 +14,7 @@ import { CharacterUnlockSection } from './CharacterUnlockSection'
 import { HomePage } from './HomePage'
 import { SaveReportSections } from './SaveReportSections'
 import { SkillUnlockSection } from './SkillUnlockSection'
+import { SkinUnlockSection } from './SkinUnlockSection'
 import { useOperation } from '../useOperation'
 
 const gemFormat = new Intl.NumberFormat('es-MX')
@@ -88,6 +89,16 @@ const FRIENDLY: Record<string, string> = {
   skill_catalog_missing: 'No está disponible el catálogo local de habilidades.',
   skill_verification_failed: 'La copia editada de habilidades no superó la comprobación de integridad.',
   outdated_skill_draft: 'El borrador de habilidades usa una selección anterior. Prepara de nuevo el desbloqueo.',
+  skins_edit: 'No se pudo preparar el desbloqueo de skins.',
+  invalid_skin_selection: 'Selecciona entre 1 y 802 skins, sin repetir personaje e índice.',
+  unknown_skin_character: 'La selección contiene un personaje que no pertenece al catálogo.',
+  unknown_skin_index: 'La selección contiene una skin que no existe para ese personaje.',
+  skin_field_missing: 'La partida no contiene gameData.skinLock; el desbloqueo de skins no está disponible.',
+  incomplete_skin_structure: 'La partida no contiene la posición de skin seleccionada. No se crean entradas faltantes.',
+  unsupported_skins_structure: 'gameData.skinLock no tiene la estructura esperada; no se sobrescribe.',
+  skin_catalog_missing: 'No está disponible el catálogo local de skins.',
+  skin_verification_failed: 'La copia editada de skins no superó la comprobación de integridad.',
+  outdated_skin_draft: 'El borrador de skins usa una selección anterior. Prepara de nuevo el desbloqueo.',
   cloud_hash_mismatch: 'La huella del borrador no coincide con la del respaldo. Prepara de nuevo la edición.',
   backup_integrity: 'El respaldo no superó la comprobación de integridad.',
   backup_store: 'No se pudo guardar o leer el respaldo privado.',
@@ -741,6 +752,17 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     onExpired={onExpired}
     onPrepared={() => void historyOperation.run(refreshHistory)}
   /> : null}
+  {save.report?.characters ? <SkinUnlockSection
+    key={`skins-${save.sha256}`}
+    characters={save.report.characters}
+    saveSha={save.sha256}
+    writeReady={Boolean(session.write_ready)}
+    accountLabel={accountLabel}
+    disabled={disabled}
+    formatProblem={friendly}
+    onExpired={onExpired}
+    onPrepared={() => void historyOperation.run(refreshHistory)}
+  /> : null}
   {save.report ? <SaveReportSections report={save.report} showCharacters={false} /> : <section className="cloud-section panel cloud-empty" aria-labelledby="report-pending-title">
     <h2 id="report-pending-title">Recursos y personajes</h2>
     <p>Descarga la partida de nuevo para generar el informe de solo lectura.</p>
@@ -755,6 +777,7 @@ function backupFieldLabel(backup: LabBackup) {
   if (backup.field === 'fish_chip') return 'fichas de pesca'
   if (backup.field === 'characters') return 'personajes disponibles'
   if (backup.field === 'skills') return 'habilidades'
+  if (backup.field === 'skins') return 'skins'
   return 'gemas'
 }
 

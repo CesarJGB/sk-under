@@ -84,19 +84,48 @@ def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
                 {"key": selected_skin, "state": None, "name": None},
             )
         options = []
+        skin_options = []
+        observed_by_index = {
+            skin.get("key"): skin.get("state")
+            for skin in observed_skins
+            if isinstance(skin, dict)
+        }
         if isinstance(entry, dict):
             for skill in entry.get("skills", []) if isinstance(entry.get("skills"), list) else []:
                 if isinstance(skill, dict) and type(skill.get("index")) is int:
                     options.append({"index": skill["index"], "name": _safe_text(skill.get("name"))})
+            for skin in entry.get("skins", []) if isinstance(entry.get("skins"), list) else []:
+                if not isinstance(skin, dict) or type(skin.get("index")) is not int:
+                    continue
+                index = skin["index"]
+                value = observed_by_index.get(index)
+                compatible = type(value) is int
+                if not compatible:
+                    state = "unknown"
+                elif value == 1:
+                    state = "unlocked"
+                else:
+                    state = "locked"
+                skin_options.append(
+                    {
+                        "index": index,
+                        "key": _safe_text(skin.get("key")),
+                        "name": _safe_text(skin.get("name")),
+                        "state": state,
+                        "value": value if type(value) is int else None,
+                        "compatible": compatible,
+                    }
+                )
         row.update(
             {
                 "name": _safe_text(name),
                 "level_max": None,
                 "level_status": "not_validated",
                 "skill_options": options,
+                "skin_options": skin_options,
                 "equipped_skin": equipped,
                 "skins_recorded": len(observed_skins),
-                "skins_status": "not_validated",
+                "skins_status": "experimental",
             }
         )
         rows.append(row)
@@ -128,6 +157,32 @@ def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
         selected = row.get("selected_skill")
         if type(selected) is int and selected in option_indices:
             selected_skills += 1
+
+    total_skins = 0
+    unlocked_skins = 0
+    incompatible_skins = 0
+    selected_skins = 0
+    characters_with_skins = 0
+    for row in rows:
+        options = row.get("skin_options")
+        if not isinstance(options, list):
+            continue
+        if row.get("skins_recorded"):
+            characters_with_skins += 1
+        total_skins += len(options)
+        compatible_indices: set[int] = set()
+        for option in options:
+            if not isinstance(option, dict):
+                continue
+            if option.get("compatible") is True and type(option.get("index")) is int:
+                compatible_indices.add(option["index"])
+                if option.get("state") == "unlocked":
+                    unlocked_skins += 1
+            else:
+                incompatible_skins += 1
+        selected = row.get("selected_skin")
+        if type(selected) is int and selected in compatible_indices:
+            selected_skins += 1
     return {
         "items": rows,
         "counts": report["counts"],
@@ -139,8 +194,17 @@ def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
             "characters_with_data": characters_with_skills,
             "status": READ_ONLY,
         },
+        "skins": {
+            "total": total_skins,
+            "unlocked": unlocked_skins,
+            "pending": total_skins - unlocked_skins - incompatible_skins,
+            "selected": selected_skins,
+            "incompatible": incompatible_skins,
+            "characters_with_data": characters_with_skins,
+            "status": "experimental",
+        },
         "level_status": "not_validated",
-        "skins_status": "not_validated",
+        "skins_status": "experimental",
         "catalog": {
             "available": bool(catalog.get("available", bool(catalog.get("codes")))),
             "error": catalog.get("error"),
@@ -151,10 +215,10 @@ def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
         "notes": [
             "El nivel se muestra tal como aparece en la partida; no hay máximo validado.",
             "Solo Knight tiene un cambio de nivel observado experimentalmente (E3).",
-            "La posesión de skins no se deduce de skinLock; solo se muestra la skin equipada y el número de entradas registradas.",
+            "El editor de skins es experimental E2: interpreta Value=1 como desbloqueada, no crea posiciones y conserva currentSkinDatas. Los demás valores de skinLock no tienen semántica validada.",
             "Las habilidades se muestran con nombre de catálogo y el estado observado en heroSkillUnlock.",
             "El desbloqueo de personajes está confirmado por el propietario en Android físico; solo activa gameData.heroUnlock y conserva niveles, habilidades y skins.",
-            "El desbloqueo de habilidades es experimental E2; solo activa posiciones existentes de gameData.heroSkillUnlock y conserva gameData.heroSkill.",
+            "El desbloqueo de habilidades fue confirmado por el propietario en el cliente oficial y Android físico (E3); solo activa posiciones existentes de gameData.heroSkillUnlock y conserva gameData.heroSkill.",
         ],
         "status": READ_ONLY,
     }
@@ -412,9 +476,9 @@ def build_save_report(document: Mapping[str, Any]) -> dict[str, object]:
         "resources": _resources(document),
         "limitations": [
             "El propietario confirmó el saldo de fichas de pesca y la escritura conjunta de gameData.fishChip e itemData.materials.material_fish en un dispositivo Android físico.",
-            "El desbloqueo experimental de personajes solo modifica gameData.heroUnlock; no edita niveles, habilidades, skins ni recursos.",
-            "No se habilita la escritura de niveles, habilidades, skins ni recursos.",
-            "Los valores de skinLock no se interpretan como posesión ni como desbloqueo.",
+            "El desbloqueo de personajes confirmado por el propietario solo modifica gameData.heroUnlock; no edita niveles, habilidades, skins ni recursos.",
+            "No se habilita la escritura de niveles, recursos ni otras categorías. El desbloqueo de habilidades está confirmado por el propietario; el de skins es experimental E2.",
+            "Solo se interpreta skinLock Value=1 como skin desbloqueada, de forma experimental E2; los demás valores se conservan sin semántica validada.",
             "Los niveles máximos de personaje no están validados; no se muestran como si lo estuvieran.",
         ],
     }

@@ -165,7 +165,7 @@ export function SkillUnlockSection({
     aria-labelledby="edit-skills-title" data-testid="skill-unlock-section">
     <div className="cloud-section-head">
       <div>
-        <span className="cloud-kicker">Experimental · E2</span>
+        <span className="cloud-kicker">Confirmado por el propietario · E3</span>
         <h2 id="edit-skills-title">Habilidades</h2>
         <p className="cloud-state">
           gameData.heroSkillUnlock · {amountFormat.format(total)} habilidades del catálogo · {accountLabel}
@@ -187,12 +187,14 @@ export function SkillUnlockSection({
       <div><span>Personajes con datos</span><strong>{amountFormat.format(summary.characters_with_data)}</strong></div>
     </div>
 
-    <Notice tone="warning">
-      <span data-testid="skill-experimental-notice">
-        El desbloqueo de habilidades es una función <strong>experimental E2</strong>. Solo activa
+    <Notice tone="info">
+      <span data-testid="skill-confirmed-notice">
+        El desbloqueo de habilidades fue <strong>confirmado por el propietario</strong> en un
+        dispositivo Android físico con el cliente oficial: las habilidades seleccionadas se
+        editaron, subieron, recuperaron y aparecieron disponibles en el juego. Solo activa
         posiciones existentes de <code>gameData.heroSkillUnlock</code>; no cambia
         <code> gameData.heroSkill</code>, personajes, niveles, skins ni el resto de la partida.
-        Todavía no está validado en el cliente oficial ni en un dispositivo físico.
+        Evidencia E3; no se declara persistencia posterior a una nueva partida.
       </span>
     </Notice>
     {!writeReady && <Notice tone="warning">
@@ -357,9 +359,10 @@ export function SkillUnlockSection({
         <summary>Campos afectados ({amountFormat.format(prepared.changed_fields.length)})</summary>
         <code>{prepared.changed_fields.join(', ')}</code>
       </details>
-      <Notice tone="warning">
-        Evidencia experimental E2. La subida solo confirma que la nube conserva la copia
-        modificada; falta comprobar el desbloqueo dentro del juego en Android.
+      <Notice tone="info">
+        Evidencia E3 confirmada por el propietario en Android físico. La subida verifica que
+        la nube conserva la copia modificada; la disponibilidad en el juego ya fue comprobada
+        con el cliente oficial.
       </Notice>
       {writeReady && !result && <>
         <label className="cloud-check"><input type="checkbox" checked={confirm} disabled={busy}
@@ -386,7 +389,7 @@ export function SkillUnlockSection({
     {result && <div role="status" className={`cloud-feedback ${result.persisted ? 'verified' : 'uncertain'}`}
       data-testid="skill-unlock-result">
       {result.persisted
-        ? `Habilidades subidas y verificadas en la nube. Quedan ${amountFormat.format(result.remote_skills ?? prepared?.new_unlocked_count ?? 0)} de ${amountFormat.format(total)} desbloqueadas. Falta la comprobación manual dentro del juego.`
+        ? `Habilidades subidas y verificadas en la nube. Quedan ${amountFormat.format(result.remote_skills ?? prepared?.new_unlocked_count ?? 0)} de ${amountFormat.format(total)} desbloqueadas. Desbloqueo confirmado por el propietario en Android.`
         : 'No se pudo confirmar la subida de habilidades. Verifica el estado desde Partida.'}
     </div>}
     {operation.pending && <Loading>

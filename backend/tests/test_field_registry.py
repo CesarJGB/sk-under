@@ -18,7 +18,6 @@ REQUIRED = {
 READ_ONLY = {
     "heroLevel",
     "heroSkill",
-    "skinLock",
     "currentSkinDatas",
     "materials",
     "seeds",
@@ -69,9 +68,14 @@ def test_report_fields_remain_read_only():
     assert "confirmed_by_owner" in fields["heroUnlock"]["edit_policy"]
     assert "heroLevel" in fields["heroUnlock"]["experimental_evidence"]
     assert "Fase 6.16" in fields["heroUnlock"]["experimental_evidence"]
-    assert fields["heroSkillUnlock"]["validation_level"] == "E2"
-    assert fields["heroSkillUnlock"]["edit_policy"].startswith("escritura experimental E2")
+    assert fields["heroSkillUnlock"]["validation_level"] == "E3"
+    assert fields["heroSkillUnlock"]["edit_policy"].startswith("escritura confirmada por el propietario")
+    assert "confirmed_by_owner" in fields["heroSkillUnlock"]["edit_policy"]
     assert "Fase 6.17" in fields["heroSkillUnlock"]["experimental_evidence"]
+    assert "Fase 6.18" in fields["heroSkillUnlock"]["experimental_evidence"]
+    assert fields["skinLock"]["validation_level"] == "E2"
+    assert fields["skinLock"]["edit_policy"].startswith("escritura experimental E2")
+    assert "Fase 6.18" in fields["skinLock"]["experimental_evidence"]
 
 
 def test_registry_links_exist_relative_to_documentation():
@@ -81,5 +85,6 @@ def test_registry_links_exist_relative_to_documentation():
     assert data["source_index"]["phase6-14"] == "../research/phase6-14/README.md"
     assert data["source_index"]["phase6-16"] == "../research/phase6-16/README.md"
     assert data["source_index"]["phase6-17"] == "../research/phase6-17/README.md"
+    assert data["source_index"]["phase6-18"] == "../research/phase6-18/README.md"
     for source, target in data["source_index"].items():
         assert (directory / target).is_file(), source

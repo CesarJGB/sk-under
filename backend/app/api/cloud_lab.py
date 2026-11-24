@@ -33,6 +33,7 @@ from ..cloud.gems_editor import (
 )
 from ..cloud.character_editor import CharacterEditError
 from ..cloud.fish_chip_editor import FishChipEditError
+from ..cloud.skin_editor import SkinEditError
 from ..cloud.lab_service import (
     CloudLabService,
     LabAlreadyConfirmed,
@@ -131,7 +132,7 @@ def _http_error(exc: CloudSaveError) -> EditorError:
         return EditorError(404, exc.code, str(exc))
     if isinstance(exc, (LabNoChanges, LabRemoteChanged, LabAlreadyConfirmed, BackupAlreadyConfirmed)):
         return EditorError(409, exc.code, str(exc))
-    if isinstance(exc, (InvalidBackupId, LabHashMismatch, GemsEditError, FishChipEditError, CharacterEditError)):
+    if isinstance(exc, (InvalidBackupId, LabHashMismatch, GemsEditError, FishChipEditError, CharacterEditError, SkinEditError)):
         return EditorError(422, exc.code, str(exc))
     if isinstance(exc, CopyLimitError):
         return EditorError(413, exc.code, str(exc))

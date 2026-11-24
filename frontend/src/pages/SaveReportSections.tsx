@@ -67,7 +67,7 @@ function CharacterRow({ character }: { character: SaveCharacter }) {
     <dl className="report-character-data">
       <div><dt>Nivel</dt><dd data-testid={`character-level-${character.code}`}>{level}</dd></div>
       <div><dt>Habilidad</dt><dd>{skillName ?? (character.selected_skill === '<missing>' ? 'sin dato' : `índice ${character.selected_skill}`)}</dd></div>
-      <div><dt>Skin equipada</dt><dd>{character.equipped_skin?.name ?? 'ninguna registrada'}</dd></div>
+      <div><dt>Selección de skin registrada</dt><dd>{character.equipped_skin?.name ?? 'ninguna registrada'}</dd></div>
     </dl>
     {character.skill_options.length > 0 && <details className="report-character-details">
       <summary>Habilidades del catálogo</summary>
@@ -81,7 +81,7 @@ function CharacterRow({ character }: { character: SaveCharacter }) {
         })}
       </ul>
       <p className="cloud-note">
-        {amountFormat.format(character.skins_recorded)} skins registradas. La posesión no se deduce de skinLock.
+        {amountFormat.format(character.skins_recorded)} skins registradas. La posesión se interpreta de skinLock como hipótesis experimental E2 (valor 1).
       </p>
     </details>}
   </li>
@@ -102,7 +102,7 @@ export function SaveReportSections({
           <span className="cloud-kicker">Solo consulta</span>
           <h2 id="report-resources-title">Recursos</h2>
           <p className="cloud-state">
-            Datos observados en la copia descargada. La edición de niveles, habilidades, skins y recursos no está habilitada.
+            Datos observados en la copia descargada. Personajes y habilidades están confirmados; las skins son experimentales E2. La edición de niveles y recursos no está habilitada.
           </p>
         </div>
         <span className="report-badge">Lectura</span>
@@ -136,7 +136,7 @@ export function SaveReportSections({
           <h2 id="report-characters-title">Personajes</h2>
           <p className="cloud-state">
             {amountFormat.format(report.characters.counts.unlocked)} de {amountFormat.format(report.characters.counts.characters)} disponibles.
-            Niveles y skins sin máximo o posesión validados.
+            Niveles sin máximo validado; la posesión de skins es una hipótesis experimental E2.
           </p>
         </div>
         <span className="report-badge">Lectura</span>

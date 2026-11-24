@@ -1,9 +1,14 @@
 # Fase 6.17 — Personajes confirmados y editor experimental de habilidades
 
 **Estado:** personajes confirmados por el propietario para el alcance probado;
-editor de habilidades publicado como **Experimental · E2**. La validación de
-habilidades en el cliente oficial y en un dispositivo Android físico sigue
-pendiente.
+editor de habilidades publicado originalmente como **Experimental · E2**.
+
+> **Actualización de la Fase 6.18:** el propietario confirmó el desbloqueo de
+> habilidades en un dispositivo Android físico con el cliente oficial. La
+> política pasa a `confirmed_by_owner` y la evidencia a E3; no se declara E4
+> porque falta una prueba de persistencia posterior. La implementación
+> funcional documentada aquí no cambió. Consulta
+> [la Fase 6.18](../phase6-18/README.md).
 
 ## 1. Alcance y resultado
 

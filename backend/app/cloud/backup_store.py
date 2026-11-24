@@ -48,9 +48,19 @@ from .skill_editor import (
     prepare_skill_unlock_edit,
     read_skills,
 )
+from .skin_editor import (
+    MAX_SKINS,
+    SKIN_RECORD_FIELD,
+    SkinEdit,
+    SkinFieldMissing,
+    prepare_skin_unlock_edit,
+    read_skins,
+)
 
 _ID = re.compile(r"^[0-9a-f]{32}$")
-_FIELDS = frozenset({"gems", FISH_CHIP_RECORD_FIELD, CHARACTER_RECORD_FIELD, SKILL_RECORD_FIELD})
+_FIELDS = frozenset(
+    {"gems", FISH_CHIP_RECORD_FIELD, CHARACTER_RECORD_FIELD, SKILL_RECORD_FIELD, SKIN_RECORD_FIELD}
+)
 _RECORD_LIMIT = 64 * 1024
 _SEAL_MAGIC = b"SKB1"
 _SEAL_TAG = 16
@@ -93,6 +103,7 @@ class BackupRecord:
     field: str = "gems"
     character_codes: tuple[str, ...] = ()
     skill_selections: tuple[tuple[str, int], ...] = ()
+    skin_selections: tuple[tuple[str, int], ...] = ()
 
     @property
     def original_value(self) -> int:
@@ -124,6 +135,9 @@ class BackupRecord:
             "character_codes": list(self.character_codes),
             "skill_selections": [
                 {"code": code, "index": index} for code, index in self.skill_selections
+            ],
+            "skin_selections": [
+                {"code": code, "index": index} for code, index in self.skin_selections
             ],
         }
 
@@ -182,6 +196,36 @@ def _require_skill_selections(value: object) -> tuple[tuple[str, int], ...]:
         ):
             raise BackupIntegrityError(
                 "El registro de respaldo contiene una selección de habilidades inválida."
+            )
+        selections.append((code, index))
+    return tuple(selections)
+
+
+def _require_skin_selections(value: object) -> tuple[tuple[str, int], ...]:
+    if value is None:
+        return ()
+    if not isinstance(value, list) or len(value) > MAX_SKINS:
+        raise BackupIntegrityError(
+            "El registro de respaldo contiene una selección de skins inválida."
+        )
+    selections: list[tuple[str, int]] = []
+    for item in value:
+        if not isinstance(item, dict):
+            raise BackupIntegrityError(
+                "El registro de respaldo contiene una selección de skins inválida."
+            )
+        code = item.get("code")
+        index = item.get("index")
+        if (
+            not isinstance(code, str)
+            or not code
+            or len(code) > 80
+            or type(index) is not int
+            or index < 0
+            or (code, index) in selections
+        ):
+            raise BackupIntegrityError(
+                "El registro de respaldo contiene una selección de skins inválida."
             )
         selections.append((code, index))
     return tuple(selections)
@@ -319,7 +363,7 @@ class LabBackupStore:
 
     def save(
         self,
-        edit: GemsEdit | FishChipEdit | SkillEdit,
+        edit: GemsEdit | FishChipEdit | SkillEdit | SkinEdit,
         *,
         remote_source: str,
         remote_size: int,
@@ -329,6 +373,7 @@ class LabBackupStore:
         new_value: int | None = None,
         character_codes: tuple[str, ...] | None = None,
         skill_selections: list[dict[str, object]] | tuple[dict[str, object], ...] | None = None,
+        skin_selections: list[dict[str, object]] | tuple[dict[str, object], ...] | None = None,
     ) -> BackupBundle:
         """Crea un respaldo y devuelve los bytes que quedaron en disco.
 
@@ -343,17 +388,28 @@ class LabBackupStore:
         skills = _require_skill_selections(
             list(skill_selections) if skill_selections is not None else None
         )
+        skins = _require_skin_selections(
+            list(skin_selections) if skin_selections is not None else None
+        )
         if field == CHARACTER_RECORD_FIELD:
             if edit.changed and not codes:
                 raise BackupIntegrityError("El respaldo de personajes requiere la selección preparada.")
             skills = ()
+            skins = ()
         elif field == SKILL_RECORD_FIELD:
             if edit.changed and not skills:
                 raise BackupIntegrityError("El respaldo de habilidades requiere la selección preparada.")
             codes = ()
+            skins = ()
+        elif field == SKIN_RECORD_FIELD:
+            if edit.changed and not skins:
+                raise BackupIntegrityError("El respaldo de skins requiere la selección preparada.")
+            codes = ()
+            skills = ()
         else:
             codes = ()
             skills = ()
+            skins = ()
         if remote_sha256 != edit.original_sha256 or remote_size != len(edit.original):
             raise BackupIntegrityError("La copia remota no coincide con el original preparado.")
         if original_value is None:
@@ -386,6 +442,7 @@ class LabBackupStore:
             field=field,
             character_codes=codes,
             skill_selections=skills,
+            skin_selections=skins,
         )
         try:
             self._write_private(directory / "original.json", edit.original)
@@ -504,6 +561,7 @@ class LabBackupStore:
             field=field,
             character_codes=_require_codes(data.get("character_codes")),
             skill_selections=_require_skill_selections(data.get("skill_selections")),
+            skin_selections=_require_skin_selections(data.get("skin_selections")),
         )
         if record.id != backup_id:
             raise BackupIntegrityError("El identificador del registro no coincide.")
@@ -563,6 +621,34 @@ class LabBackupStore:
                     [
                         {"code": code, "index": index}
                         for code, index in record.skill_selections
+                    ],
+                )
+            except CloudSaveError:
+                raise BackupIntegrityError(
+                    "El candidato del respaldo no es reproducible desde el original."
+                ) from None
+            if current.candidate != candidate or len(current.new_unlocked) != record.candidate_gems:
+                raise BackupIntegrityError(
+                    "El candidato del respaldo no es reproducible desde el original."
+                )
+            return BackupBundle(record, original, candidate)
+        if record.field == SKIN_RECORD_FIELD:
+            try:
+                original_unlocked = read_skins(original).unlocked
+            except SkinFieldMissing:
+                raise BackupIntegrityError(
+                    "El original del respaldo no contiene las skins."
+                ) from None
+            if len(original_unlocked) != record.original_gems:
+                raise BackupIntegrityError("El original del respaldo no conserva el valor registrado.")
+            if not record.changed:
+                return BackupBundle(record, original, candidate)
+            try:
+                current = prepare_skin_unlock_edit(
+                    original,
+                    [
+                        {"code": code, "index": index}
+                        for code, index in record.skin_selections
                     ],
                 )
             except CloudSaveError:

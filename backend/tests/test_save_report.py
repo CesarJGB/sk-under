@@ -61,7 +61,7 @@ def test_report_lists_characters_with_catalog_names_and_read_only_status():
     assert knight["selected_skin"] == 0
     assert knight["equipped_skin"]["name"] == "Knight"
     assert knight["skins_recorded"] == 2
-    assert knight["skins_status"] == "not_validated"
+    assert knight["skins_status"] == "experimental"
     assert report["characters"]["status"] == "read_only"
 
 

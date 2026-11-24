@@ -329,7 +329,8 @@ def test_prepare_backup_confirm_verify_and_restore(tmp_path):
     assert prepared.backup.skill_selections == (("Knight", 1), ("Transcendent", 1))
     summary = prepared.summary()
     assert summary["field"] == "gameData.heroSkillUnlock"
-    assert summary["experimental"] is True
+    assert summary["experimental"] is False
+    assert summary["validation"]["evidence_level"] == "E3"
     assert summary["validation"]["only_skills_changed"] is True
     assert summary["changed_fields"] == [
         "gameData.heroSkillUnlock.Knight[1]",

@@ -192,7 +192,8 @@ class NativeAuthService:
             "max_fish_chip": self.max_fish_chip,
             "fish_chip_write_policy": "confirmed_by_owner",
             "character_write_policy": "confirmed_by_owner",
-            "skill_write_policy": "experimental",
+            "skill_write_policy": "confirmed_by_owner",
+            "skin_write_policy": "experimental",
             "login_available": login_available,
             "auto_identity": self.auto_identity,
             "portal_enabled": self.portal_client is not None,
@@ -249,7 +250,8 @@ class NativeAuthService:
             "max_fish_chip": self.max_fish_chip,
             "fish_chip_write_policy": "confirmed_by_owner",
             "character_write_policy": "confirmed_by_owner",
-            "skill_write_policy": "experimental",
+            "skill_write_policy": "confirmed_by_owner",
+            "skin_write_policy": "experimental",
         }
 
     # Inicio y cierre de sesión ---------------------------------------------
@@ -430,7 +432,7 @@ class NativeAuthService:
         skills: list[dict[str, object]],
         source_sha256: str,
     ) -> dict[str, object]:
-        """Prepara el desbloqueo experimental de habilidades seleccionadas.
+        """Prepara el desbloqueo confirmado de habilidades seleccionadas.
 
         Solo activa posiciones existentes de ``gameData.heroSkillUnlock`` y
         conserva ``gameData.heroSkill`` y los demás campos de la partida.
@@ -439,6 +441,24 @@ class NativeAuthService:
             session,
             lambda: self._lab(session).prepare_skills(
                 skills, expected_source=source_sha256
+            ).summary(),
+        )
+
+    def prepare_skins(
+        self,
+        session: NativeSessionRecord,
+        skins: list[dict[str, object]],
+        source_sha256: str,
+    ) -> dict[str, object]:
+        """Prepara el desbloqueo experimental de skins seleccionadas.
+
+        Solo cambia a ``1`` posiciones existentes de ``gameData.skinLock`` y
+        conserva la skin equipada, los personajes y el resto de la partida.
+        """
+        return self._operate(
+            session,
+            lambda: self._lab(session).prepare_skins(
+                skins, expected_source=source_sha256
             ).summary(),
         )
 
@@ -797,7 +817,8 @@ class NativeAuthService:
             "material_fish_path": "itemData.materials.material_fish",
             "fish_chip_write_policy": "confirmed_by_owner",
             "character_write_policy": "confirmed_by_owner",
-            "skill_write_policy": "experimental",
+            "skill_write_policy": "confirmed_by_owner",
+            "skin_write_policy": "experimental",
             "sections": None,
             "remote_source": save.metadata.source,
         }
@@ -943,7 +964,8 @@ class NativeAuthService:
             "material_fish_path": "itemData.materials.material_fish",
             "fish_chip_write_policy": "confirmed_by_owner",
             "character_write_policy": "confirmed_by_owner",
-            "skill_write_policy": "experimental",
+            "skill_write_policy": "confirmed_by_owner",
+            "skin_write_policy": "experimental",
             "sections": None,
             "remote_source": save.metadata.source,
         }

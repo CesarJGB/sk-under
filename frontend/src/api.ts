@@ -80,6 +80,14 @@ export type SaveFishChips = {
 export type SaveSkill = { key: number; unlocked: boolean | null; name: string | null }
 export type SaveSkillOption = { index: number; name: string }
 export type SaveSkin = { key: number; state: number | null; name: string | null }
+export type SaveSkinOption = {
+  index: number
+  key: string
+  name: string
+  state: 'unlocked' | 'locked' | 'unknown'
+  value: number | null
+  compatible: boolean
+}
 export type SaveCharacter = {
   code: string
   name: string
@@ -94,7 +102,8 @@ export type SaveCharacter = {
   selected_skin: number | '<missing>'
   equipped_skin: SaveSkin | null
   skins_recorded: number
-  skins_status: 'not_validated'
+  skin_options: SaveSkinOption[]
+  skins_status: 'experimental'
 }
 
 export type SaveSkillSummary = {
@@ -106,12 +115,23 @@ export type SaveSkillSummary = {
   status: 'read_only'
 }
 
+export type SaveSkinsSummary = {
+  total: number
+  unlocked: number
+  pending: number
+  selected: number
+  incompatible: number
+  characters_with_data: number
+  status: 'experimental'
+}
+
 export type SaveCharacterReport = {
   items: SaveCharacter[]
   counts: { characters: number; unlocked: number; selected_skins: number }
   skills?: SaveSkillSummary
+  skins?: SaveSkinsSummary
   level_status: 'not_validated'
-  skins_status: 'not_validated'
+  skins_status: 'experimental'
   catalog: {
     available: boolean
     error: string | null
@@ -178,7 +198,8 @@ export type LabSave = {
   material_fish_path?: string
   fish_chip_write_policy?: 'confirmed_by_owner'
   character_write_policy?: 'confirmed_by_owner'
-  skill_write_policy?: 'experimental'
+  skill_write_policy?: 'confirmed_by_owner'
+  skin_write_policy?: 'experimental'
   size: number
   sha256: string
   serialzed_version: number
@@ -188,7 +209,7 @@ export type LabSave = {
 export type LabBackup = {
   id: string
   created_at: string
-  field?: 'gems' | 'fish_chip' | 'characters' | 'skills'
+  field?: 'gems' | 'fish_chip' | 'characters' | 'skills' | 'skins'
   changed: boolean
   original_size: number
   original_sha256: string
@@ -203,6 +224,7 @@ export type LabBackup = {
   remote_sha256: string
   character_codes?: string[]
   skill_selections?: Array<{ code: string; index: number }>
+  skin_selections?: Array<{ code: string; index: number }>
 }
 
 export type LabByteDiff = {
@@ -306,7 +328,7 @@ export type LabSkillPrepared = {
   affected_codes: string[]
   original_value?: number
   new_value?: number
-  experimental: true
+  experimental: false
   changed: boolean
   candidate_size: number
   candidate_sha256: string
@@ -316,6 +338,37 @@ export type LabSkillPrepared = {
     valid: true
     structure_valid: true
     only_skills_changed: boolean
+    experimental: false
+    evidence_level: 'E3'
+    message: string
+  }
+}
+
+export type LabSkinRef = { code: string; index: number }
+
+export type LabSkinPrepared = {
+  remote: LabRemote
+  backup: LabBackup
+  field: 'gameData.skinLock'
+  original_unlocked_count: number
+  new_unlocked_count: number
+  total_skins: number
+  selected_skins: LabSkinRef[]
+  newly_unlocked_skins: LabSkinRef[]
+  affected_codes: string[]
+  locked_character_codes: string[]
+  original_value?: number
+  new_value?: number
+  experimental: true
+  changed: boolean
+  candidate_size: number
+  candidate_sha256: string
+  byte_diff: LabByteDiff
+  changed_fields: string[]
+  validation: {
+    valid: true
+    structure_valid: true
+    only_skins_changed: boolean
     experimental: true
     evidence_level: 'E2'
     message: string
@@ -338,6 +391,7 @@ export type LabWriteResult = {
   remote_material_fish?: number | null
   remote_characters?: number | null
   remote_skills?: number | null
+  remote_skins?: number | null
   status: number | null
   message: string
 }
@@ -354,6 +408,7 @@ export type LabVerification = {
   remote_material_fish?: number | null
   remote_characters?: number | null
   remote_skills?: number | null
+  remote_skins?: number | null
   expected_candidate_sha256: string
   expected_original_sha256: string
   message: string
@@ -566,7 +621,8 @@ export type NativeSaveSummary = {
   material_fish_path?: string
   fish_chip_write_policy?: 'confirmed_by_owner'
   character_write_policy?: 'confirmed_by_owner'
-  skill_write_policy?: 'experimental'
+  skill_write_policy?: 'confirmed_by_owner'
+  skin_write_policy?: 'experimental'
   sections: number | null
   remote_source: string
   report?: SaveReport | null
@@ -596,7 +652,8 @@ export type NativeSession = {
   max_fish_chip?: number
   fish_chip_write_policy?: 'confirmed_by_owner'
   character_write_policy?: 'confirmed_by_owner'
-  skill_write_policy?: 'experimental'
+  skill_write_policy?: 'confirmed_by_owner'
+  skin_write_policy?: 'experimental'
   save?: NativeSaveSummary | null
   save_error?: string | null
 }
@@ -614,7 +671,8 @@ export type NativeConfig = {
   max_fish_chip?: number
   fish_chip_write_policy?: 'confirmed_by_owner'
   character_write_policy?: 'confirmed_by_owner'
-  skill_write_policy?: 'experimental'
+  skill_write_policy?: 'confirmed_by_owner'
+  skin_write_policy?: 'experimental'
   login_available: boolean
   auto_identity?: boolean
   portal_enabled?: boolean
@@ -666,6 +724,8 @@ export const nativeAuth = {
     nativeRequest<LabCharacterPrepared>('/prepare-characters', signal, { codes, source_sha256 }),
   prepareSkills: (skills: LabSkillRef[], source_sha256: string, signal: AbortSignal) =>
     nativeRequest<LabSkillPrepared>('/prepare-skills', signal, { skills, source_sha256 }),
+  prepareSkins: (skins: LabSkinRef[], source_sha256: string, signal: AbortSignal) =>
+    nativeRequest<LabSkinPrepared>('/prepare-skins', signal, { skins, source_sha256 }),
   confirm: (backup_id: string, expected_sha256: string, signal: AbortSignal) =>
     nativeRequest<LabWriteResult>('/confirm', signal, { backup_id, expected_sha256, confirmation: 'SUBIR' }),
   restore: (backup_id: string, signal: AbortSignal) =>

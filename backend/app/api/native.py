@@ -29,6 +29,7 @@ from ..models import (
     CloudLabFishChipPrepareInput,
     CloudLabPrepareInput,
     CloudLabRestoreInput,
+    CloudLabSkinPrepareInput,
     CloudLabSkillPrepareInput,
     CloudLabVerifyInput,
 )
@@ -45,7 +46,7 @@ from .cloud_lab import _http_error
 from .uploads import BoundedJSONRequest
 
 logger = logging.getLogger(__name__)
-JSON_LIMIT = 8192
+JSON_LIMIT = 65536
 
 router = APIRouter(prefix="/api/v1/cloud/native", tags=["Autenticación nativa"])
 
@@ -184,6 +185,10 @@ class SkillPrepareInput(CloudLabSkillPrepareInput):
     source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
 
 
+class SkinPrepareInput(CloudLabSkinPrepareInput):
+    source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
+
+
 def _disabled_config(settings) -> dict[str, object]:
     origin = settings.native_origin or settings.cloud_accounts_origin
     return {
@@ -199,7 +204,8 @@ def _disabled_config(settings) -> dict[str, object]:
         "max_fish_chip": MAX_FISH_CHIP,
         "fish_chip_write_policy": "confirmed_by_owner",
         "character_write_policy": "confirmed_by_owner",
-        "skill_write_policy": "experimental",
+        "skill_write_policy": "confirmed_by_owner",
+        "skin_write_policy": "experimental",
         "login_available": False,
         "auto_identity": False,
         "requires_profile_selection": False,
@@ -321,13 +327,25 @@ def prepare_characters(payload: CharacterPrepareInput, request: Request) -> dict
 
 @router.post(
     "/prepare-skills",
-    summary="Preparar el desbloqueo experimental de habilidades y crear un respaldo",
+    summary="Preparar el desbloqueo confirmado de habilidades y crear un respaldo",
 )
 def prepare_skills(payload: SkillPrepareInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
     current = service.require_session(_cookie(request, service))
     return service.prepare_skills(
         current, [skill.model_dump() for skill in payload.skills], payload.source_sha256
+    )
+
+
+@router.post(
+    "/prepare-skins",
+    summary="Preparar el desbloqueo experimental de skins y crear un respaldo",
+)
+def prepare_skins(payload: SkinPrepareInput, request: Request) -> dict[str, object]:
+    service = _require_service(request)
+    current = service.require_session(_cookie(request, service))
+    return service.prepare_skins(
+        current, [skin.model_dump() for skin in payload.skins], payload.source_sha256
     )
 
 

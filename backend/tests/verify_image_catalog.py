@@ -38,6 +38,15 @@ from app.cloud.skill_editor import (
     read_skills,
     skill_catalog,
 )
+from app.cloud.skin_editor import (
+    IncompleteSkinStructure,
+    SkinCatalogMissing,
+    UnknownSkinCharacter,
+    UnknownSkinIndex,
+    prepare_skin_unlock_edit,
+    read_skins,
+    skin_catalog,
+)
 from app.save_report import _load_character_catalog, read_save_report
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "cloud-save-gems.json"
@@ -65,7 +74,13 @@ def document(unlocked=("Knight",)) -> dict:
         ]
         for code in codes
     }
-    data["gameData"]["skinLock"] = {code: [0, 1, -1] for code in codes}
+    data["gameData"]["skinLock"] = {
+        code: [
+            {"Key": skin["index"], "Value": 1 if skin["index"] == 0 else 0}
+            for skin in catalog["characters"][code]["skins"]
+        ]
+        for code in codes
+    }
     data["gameData"]["currentSkinDatas"] = {"Knight": 1}
     data["gameData"]["fishChip"] = 3
     data["itemData"]["materials"] = {"material_fish": 3, "material_ticket": 5}
@@ -157,6 +172,75 @@ def main() -> int:
         )
         print("lectura y preparación individual, múltiple y masiva de habilidades: correcta")
 
+        skin_catalog_data = skin_catalog()
+        check(skin_catalog_data.total == 802, "el catálogo no declara 802 skins")
+        skins = read_skins(source)
+        check(skins.total == 802, "la lectura no declara 802 skins")
+        check(len(skins.unlocked) == 42, "la lectura no conserva 42 skins iniciales")
+        check(skins.characters_with_data == 42, "la lectura no cubre 42 personajes")
+        skin_single = prepare_skin_unlock_edit(source, [{"code": "Knight", "index": 1}])
+        check(
+            [(ref.code, ref.index) for ref in skin_single.newly_unlocked] == [("Knight", 1)],
+            "la preparación individual de skins es incorrecta",
+        )
+        skin_multiple = prepare_skin_unlock_edit(
+            source,
+            [
+                {"code": "Knight", "index": 1},
+                {"code": "Ranger", "index": 1},
+            ],
+        )
+        check(
+            [(ref.code, ref.index) for ref in skin_multiple.newly_unlocked]
+            == [("Knight", 1), ("Ranger", 1)],
+            "la preparación múltiple de skins es incorrecta",
+        )
+        all_pending_skins = [
+            {"code": code, "index": skin["index"]}
+            for code in codes
+            for skin in catalog["characters"][code]["skins"]
+            if skin["index"] != 0
+        ]
+        skin_massive = prepare_skin_unlock_edit(source, all_pending_skins)
+        check(len(all_pending_skins) == 760, "el catálogo no tiene 760 skins pendientes en la fixture")
+        check(len(skin_massive.new_unlocked) == 802, "la preparación masiva no llega a 802")
+        check(len(skin_massive.changed_fields) == 760, "la preparación masiva cambió un número inesperado")
+        skin_candidate = json.loads(skin_massive.candidate)
+        check(
+            skin_candidate["gameData"]["currentSkinDatas"]
+            == json.loads(source)["gameData"]["currentSkinDatas"],
+            "la preparación de skins alteró currentSkinDatas",
+        )
+        check(
+            skin_candidate["gameData"]["heroUnlock"]
+            == json.loads(source)["gameData"]["heroUnlock"],
+            "la preparación de skins alteró heroUnlock",
+        )
+        print("lectura y preparación individual, múltiple y masiva de skins: correcta")
+
+        try:
+            prepare_skin_unlock_edit(source, [{"code": "Knight", "index": 500}])
+        except UnknownSkinIndex:
+            pass
+        else:
+            raise AssertionError("un índice de skin inexistente no fue rechazado")
+        try:
+            prepare_skin_unlock_edit(source, [{"code": "NoExiste", "index": 0}])
+        except UnknownSkinCharacter:
+            pass
+        else:
+            raise AssertionError("un personaje desconocido de skin no fue rechazado")
+        incomplete_skins = json.loads(source)
+        incomplete_skins["gameData"]["skinLock"]["Ranger"] = []
+        try:
+            prepare_skin_unlock_edit(
+                canonical(incomplete_skins), [{"code": "Ranger", "index": 1}]
+            )
+        except IncompleteSkinStructure:
+            pass
+        else:
+            raise AssertionError("una estructura incompleta de skins no fue rechazada")
+
         try:
             prepare_skill_unlock_edit(source, [{"code": "Envoy", "index": 1}])
         except UnknownSkillIndex:
@@ -239,7 +323,24 @@ def main() -> int:
                 raise AssertionError("la preparación de habilidades no se bloqueó sin catálogo")
         finally:
             skill_module.load_character_catalog = original_skill_loader
-        print("ausencia, corrupción y bloqueo de personajes y habilidades: controlados")
+        import app.cloud.skin_editor as skin_module
+
+        original_skin_loader = skin_module.load_character_catalog
+        skin_module.load_character_catalog = lambda: {
+            "available": False,
+            "error": "catalog_missing",
+            "codes": [],
+        }
+        try:
+            try:
+                prepare_skin_unlock_edit(source, [{"code": "Knight", "index": 1}])
+            except SkinCatalogMissing:
+                pass
+            else:
+                raise AssertionError("la preparación de skins no se bloqueó sin catálogo")
+        finally:
+            skin_module.load_character_catalog = original_skin_loader
+        print("ausencia, corrupción y bloqueo de personajes, habilidades y skins: controlados")
 
         gems = prepare_gems_edit(source, 1002)
         check(json.loads(gems.candidate)["gameData"]["gems"] == 1002, "la edición de gemas falló")
@@ -257,6 +358,8 @@ def main() -> int:
         report = read_save_report(source)
         check(report["characters"]["catalog"]["available"] is True, "el informe no ve el catálogo")
         check(report["characters"]["catalog"]["characters"] == 42, "el informe no ve 42 personajes")
+        check(report["characters"]["skins"]["total"] == 802, "el informe no ve 802 skins")
+        check(report["characters"]["skins"]["unlocked"] == 42, "el informe no ve 42 skins iniciales")
         check(report["fish_chips"]["balance"] == 3, "el informe no conserva las fichas")
         print("informe saneado: catálogo y fichas disponibles")
     except Exception as exc:  # noqa: BLE001 - el script debe fallar de forma legible

@@ -73,8 +73,13 @@ const REPORT = {
         { index: 1, name: 'Superior Fire' },
         { index: 2, name: 'Shield Bash' },
       ],
+      skin_options: [
+        { index: 0, key: 'c0_skin0', name: 'Knight', state: 'unlocked', value: 1, compatible: true },
+        { index: 1, key: 'c0_skin1', name: 'Elite Knight', state: 'locked', value: 0, compatible: true },
+        { index: 2, key: 'c0_skin2', name: 'Lava Knight', state: 'unknown', value: null, compatible: false },
+      ],
       selected_skin: 0, equipped_skin: { key: 0, state: 1, name: 'Knight' },
-      skins_recorded: 2, skins_status: 'not_validated',
+      skins_recorded: 3, skins_status: 'experimental',
     }, ...['Ranger', 'Mage', 'Alchemist'].map((name, index) => ({
       code: name, name, catalog_index: index + 1, unlocked: false, level: 0,
       level_max: null, level_status: 'not_validated', selected_skill: 0,
@@ -86,15 +91,29 @@ const REPORT = {
         { index: 0, name: 'Arrow Rain' },
         { index: 1, name: "Hunter's Mark" },
       ] : [{ index: 0, name: `${name} Skill` }],
+      skin_options: name === 'Ranger' ? [
+        { index: 0, key: 'c1_skin0', name: 'Ranger', state: 'unlocked', value: 1, compatible: true },
+        { index: 1, key: 'c1_skin1', name: 'Hunter', state: 'locked', value: 12000, compatible: true },
+      ] : [
+        { index: 0, key: `c${index + 1}_skin0`, name, state: 'unlocked', value: 1, compatible: true },
+        ...(name === 'Mage'
+          ? [{ index: 1, key: 'c2_skin1', name: 'Apprentice', state: 'locked', value: 5000, compatible: true }]
+          : []),
+      ],
       selected_skin: '<missing>', equipped_skin: null,
-      skins_recorded: 0, skins_status: 'not_validated',
+      skins_recorded: name === 'Ranger' ? 2 : name === 'Mage' ? 2 : 1,
+      skins_status: 'experimental',
     }))],
     counts: { characters: 42, unlocked: 1, selected_skins: 1 },
     skills: {
       total: 7, unlocked: 4, locked: 3, selected: 4,
       characters_with_data: 4, status: 'read_only',
     },
-    level_status: 'not_validated', skins_status: 'not_validated',
+    skins: {
+      total: 8, unlocked: 4, pending: 3, selected: 1,
+      incompatible: 1, characters_with_data: 4, status: 'experimental',
+    },
+    level_status: 'not_validated', skins_status: 'experimental',
     catalog: {
       available: true, error: null, version: '8.8.0', source: 'SKDFE', characters: 42,
     },
@@ -174,13 +193,41 @@ function skillPrepared(skills: Array<{ code: string; index: number }>) {
     field: 'gameData.heroSkillUnlock', original_unlocked_count: 4,
     new_unlocked_count: 4 + skills.length, total_skills: 7,
     selected_skills: skills, newly_unlocked_skills: skills, affected_codes: codes,
-    original_value: 4, new_value: 4 + skills.length, experimental: true, changed: true,
+    original_value: 4, new_value: 4 + skills.length, experimental: false, changed: true,
     candidate_size: 505, candidate_sha256: CANDIDATE, byte_diff: PREPARED.byte_diff,
     changed_fields: skills.map((skill) => `gameData.heroSkillUnlock.${skill.code}[${skill.index}]`),
     validation: {
       valid: true, structure_valid: true, only_skills_changed: true,
-      experimental: true, evidence_level: 'E2',
+      experimental: false, evidence_level: 'E3',
       message: `Campos modificados: ${skills.map((skill) => `gameData.heroSkillUnlock.${skill.code}[${skill.index}]`).join(', ')}.`,
+    },
+  }
+}
+const SKIN_BACKUP = {
+  ...BACKUP, field: 'skins', original_gems: 4, original_value: 4,
+  candidate_gems: 4, candidate_value: 4, skin_selections: [],
+}
+function skinPrepared(skins: Array<{ code: string; index: number }>) {
+  const codes = [...new Set(skins.map((skin) => skin.code))]
+  return {
+    remote: { source: 'modern-cloud', size: 505, sha256: SHA },
+    backup: {
+      ...SKIN_BACKUP,
+      candidate_gems: 4 + skins.length,
+      candidate_value: 4 + skins.length,
+      skin_selections: skins,
+    },
+    field: 'gameData.skinLock', original_unlocked_count: 4,
+    new_unlocked_count: 4 + skins.length, total_skins: 8,
+    selected_skins: skins, newly_unlocked_skins: skins, affected_codes: codes,
+    locked_character_codes: [],
+    original_value: 4, new_value: 4 + skins.length, experimental: true, changed: true,
+    candidate_size: 505, candidate_sha256: CANDIDATE, byte_diff: PREPARED.byte_diff,
+    changed_fields: skins.map((skin) => `gameData.skinLock.${skin.code}[${skin.index}]`),
+    validation: {
+      valid: true, structure_valid: true, only_skins_changed: true,
+      experimental: true, evidence_level: 'E2',
+      message: `Campos modificados: ${skins.map((skin) => `gameData.skinLock.${skin.code}[${skin.index}]`).join(', ')}.`,
     },
   }
 }
@@ -706,6 +753,123 @@ test('selecciona todos, deselecciona y desbloquea el resto en masa', async ({ pa
   await expect(page.getByTestId('character-unlock-Alchemist')).toContainText('Disponible')
 })
 
+test('muestra el resumen y desbloquea una skin con respaldo y verificación', async ({ page }) => {
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  let selectedSkins: Array<{ code: string; index: number }> = []
+  await page.route('**/api/v1/cloud/native/prepare-skins', (route) => {
+    const payload = route.request().postDataJSON()
+    expect(payload.source_sha256).toBe(SHA)
+    selectedSkins = payload.skins
+    return route.fulfill({ json: skinPrepared(payload.skins) })
+  })
+  await page.route('**/api/v1/cloud/native/confirm', (route) => {
+    expect(route.request().postDataJSON()).toEqual({
+      backup_id: SKIN_BACKUP.id, expected_sha256: CANDIDATE, confirmation: 'SUBIR',
+    })
+    return route.fulfill({ json: {
+      action: 'confirm', backup_id: SKIN_BACKUP.id, field: 'gameData.skinLock',
+      uploaded: true, accepted: true, persisted: true, already_original: false,
+      expected_sha256: CANDIDATE, remote_sha256: CANDIDATE, remote_size: 505,
+      remote_gems: 1001, remote_value: 5, remote_skins: 5, remote_skills: null,
+      remote_characters: null, status: 200,
+      message: 'La descarga posterior coincide con el agregado subido de las skins.',
+    } })
+  })
+
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/partida')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await expect(page.getByTestId('skin-unlock-section')).toBeVisible()
+  await expect(page.getByTestId('skin-unlocked-count')).toHaveText('4 / 8')
+  const skinsSection = page.locator('section').filter({
+    has: page.getByRole('heading', { name: 'Skins' }),
+  })
+  await expect(skinsSection).toContainText('Identificadas')
+  await expect(skinsSection).toContainText('Pendientes')
+  await expect(skinsSection).toContainText('Selección registrada')
+  await expect(skinsSection).toContainText('Incompatibles')
+  await expect(page.getByTestId('skin-incompatible-count')).toHaveText('1')
+  await expect(page.getByTestId('skin-experimental-notice')).toContainText('experimental E2')
+  await expect(page.getByTestId('skin-character-Knight')).toContainText('1 / 3 desbloqueadas')
+
+  await page.getByTestId('skin-character-Knight').locator('summary').click()
+  await expect(page.getByTestId('skin-option-Knight-1')).toContainText('Elite Knight')
+  await expect(page.getByTestId('skin-option-Knight-1')).toContainText('Compatible')
+  await page.getByLabel('Seleccionar Elite Knight de Knight').check()
+  await page.getByRole('button', { name: 'Preparar desbloqueo de skins seleccionadas' }).click()
+  expect(selectedSkins).toEqual([{ code: 'Knight', index: 1 }])
+  const preview = page.getByTestId('skin-unlock-preview')
+  await expect(page.getByTestId('skin-unlock-summary')).toContainText('Knight: Elite Knight')
+  await expect(preview).toContainText('gameData.skinLock.Knight[1]')
+  await expect(preview).toContainText('gameData.currentSkinDatas')
+  await expect(preview).toContainText('Evidencia experimental E2')
+  await page.getByLabel(/Confirmo que quiero desbloquear estas skins/).check()
+  await page.getByRole('button', { name: 'Desbloquear skins y verificar' }).click()
+  await expect(page.getByTestId('skin-unlock-result')).toContainText(
+    'Skins subidas y verificadas en la nube',
+  )
+  await expect(page.getByTestId('skin-unlocked-count')).toHaveText('5 / 8')
+  await page.getByLabel('Mostrar skins').selectOption('all')
+  await expect(page.getByTestId('skin-option-Knight-1')).toContainText('Desbloqueada')
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('selecciona todas las skins pendientes y prepara el lote sin renderizar tarjetas cerradas', async ({ page }) => {
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  let selectedSkins: Array<{ code: string; index: number }> = []
+  await page.route('**/api/v1/cloud/native/prepare-skins', (route) => {
+    selectedSkins = route.request().postDataJSON().skins
+    return route.fulfill({ json: skinPrepared(selectedSkins) })
+  })
+
+  await page.goto('/partida')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await expect(page.getByTestId('skin-option-Knight-1')).toHaveCount(0)
+  await page.getByTestId('skin-character-Knight').locator('summary').click()
+  await page.getByRole('button', { name: 'Seleccionar pendientes de Knight' }).click()
+  await expect(page.getByText('1 seleccionadas de 3 pendientes compatibles.')).toBeVisible()
+  await expect(page.getByLabel('Seleccionar Elite Knight de Knight')).toBeChecked()
+  await page.getByRole('button', { name: 'Deseleccionar skins' }).click()
+  await expect(page.getByRole('button', { name: 'Preparar desbloqueo de skins seleccionadas' }))
+    .toBeDisabled()
+  await page.getByRole('button', { name: 'Seleccionar todas las pendientes' }).click()
+  await page.getByRole('button', { name: 'Preparar desbloqueo de skins seleccionadas' }).click()
+  expect(selectedSkins).toEqual([
+    { code: 'Knight', index: 1 },
+    { code: 'Ranger', index: 1 },
+    { code: 'Mage', index: 1 },
+  ])
+  await expect(page.getByTestId('skin-unlock-preview')).toContainText('7 / 8')
+  await expect(page.getByTestId('skin-unlock-preview')).toContainText('Knight, Ranger, Mage')
+})
+
+test('busca skins, filtra estados y muestra posiciones incompatibles', async ({ page }) => {
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  await page.goto('/partida')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+
+  await page.getByLabel('Buscar skin o personaje').fill('Elite')
+  await expect(page.getByTestId('skin-character-Knight')).toContainText('1 coincidencias')
+  await expect(page.getByTestId('skin-character-Ranger')).toHaveCount(0)
+  await page.getByTestId('skin-character-Knight').locator('summary').click()
+  await expect(page.getByTestId('skin-option-Knight-1')).toBeVisible()
+  await expect(page.getByTestId('skin-option-Knight-0')).toHaveCount(0)
+
+  await page.getByLabel('Buscar skin o personaje').fill('')
+  await page.getByLabel('Mostrar skins').selectOption('incompatible')
+  await expect(page.getByTestId('skin-character-Knight')).toBeVisible()
+  await expect(page.getByTestId('skin-character-Ranger')).toHaveCount(0)
+  await expect(page.getByTestId('skin-option-Knight-2')).toContainText('Sin dato')
+  await expect(page.getByTestId('skin-option-Knight-2')).toContainText('No compatible')
+  await expect(page.getByLabel('Seleccionar Lava Knight de Knight')).toHaveCount(0)
+
+  await page.getByLabel('Mostrar skins').selectOption('unlocked')
+  await expect(page.getByTestId('skin-character-Alchemist')).toBeVisible()
+})
+
 test('muestra el resumen y desbloquea una habilidad con respaldo y verificación', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
   await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
@@ -749,7 +913,8 @@ test('muestra el resumen y desbloquea una habilidad con respaldo y verificación
   await expect(skillsSection).toContainText('Personajes con datos')
   await expect(page.getByTestId('skill-character-Knight')).toContainText('1 / 3 disponibles')
   await expect(page.getByTestId('skill-option-Knight-1')).toContainText('Superior Fire')
-  await expect(page.getByTestId('skill-experimental-notice')).toContainText('experimental E2')
+  await expect(page.getByTestId('skill-confirmed-notice')).toContainText('confirmado por el propietario')
+  await expect(skillsSection.getByText('Experimental · E2')).toHaveCount(0)
 
   await page.getByLabel('Seleccionar Superior Fire de Knight').check()
   await page.getByRole('button', { name: 'Preparar desbloqueo de seleccionadas' }).click()
@@ -758,7 +923,7 @@ test('muestra el resumen y desbloquea una habilidad con respaldo y verificación
   const preview = page.getByTestId('skill-unlock-preview')
   await expect(page.getByTestId('skill-unlock-summary')).toContainText('Knight: Superior Fire')
   await expect(preview).toContainText('gameData.heroSkillUnlock.Knight[1]')
-  await expect(preview).toContainText('Evidencia experimental E2')
+  await expect(preview).toContainText('Evidencia E3 confirmada por el propietario')
   await page.getByLabel(/Confirmo que quiero desbloquear estas habilidades/).check()
   await page.getByRole('button', { name: 'Desbloquear habilidades y verificar' }).click()
   await expect(page.getByTestId('skill-unlock-result')).toContainText(

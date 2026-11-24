@@ -16,7 +16,8 @@
     "phase6-14": "../research/phase6-14/README.md",
     "phase6-15": "../research/phase6-15/README.md",
     "phase6-16": "../research/phase6-16/README.md",
-    "phase6-17": "../research/phase6-17/README.md"
+    "phase6-17": "../research/phase6-17/README.md",
+    "phase6-18": "../research/phase6-18/README.md"
   },
   "fields": [
     {
@@ -1373,7 +1374,7 @@
       ],
       "validation_level": "E2",
       "edit_policy": "solo lectura",
-      "experimental_evidence": "Diccionario disperso: solo aparece el personaje con skin seleccionada. La ausencia no se interpreta como falta de skin. El informe de la Fase 6.13 solo muestra la skin equipada cuando existe y no deduce posesión."
+      "experimental_evidence": "Diccionario disperso: solo aparece el personaje con una selección registrada. La ausencia no se interpreta como falta de skin. La copia de nube de la Fase 5.8 contiene seis entradas (Assassin, Elves, Joker, Paladin, Taoist, Viking) para personajes que entonces estaban bloqueados, por lo que no demuestra posesión ni equipamiento actual. El informe de la Fase 6.13 solo muestra la selección cuando existe y no deduce posesión. La Fase 6.18 conserva currentSkinDatas sin cambios al editar skinLock y no lo usa para seleccionar skins."
     },
     {
       "internal_name": "heroLevel",
@@ -1457,12 +1458,11 @@
       ],
       "known_dependencies": [],
       "pending_dependencies": [
-        "confirmación del propietario en el cliente oficial y en un dispositivo Android físico",
         "cómo materializa cada estado heroSkillUnlock y si intervienen planos o compras"
       ],
-      "validation_level": "E2",
-      "edit_policy": "escritura experimental E2 autorizada de posiciones existentes de gameData.heroSkillUnlock para la selección; activa Value=true sin crear personajes ni claves faltantes, conserva gameData.heroSkill, heroUnlock y el resto de la partida, y exige reproducción inversa byte a byte",
-      "experimental_evidence": "El catálogo 8.8.0 y la partida local auténtica contienen 105 habilidades: 28 personajes con 3, 7 con 2 y 7 con 1. heroSkillUnlock tiene exactamente esas 105 posiciones, cada una como {Key:int, Value:bool}, y la lista coincide con los índices y el orden del catálogo. En todas las muestras observadas solo Key=0 es true (42 en total), Key=1 es false en 35 posiciones y Key=2 es false en 28; PlayerPrefs contiene las mismas 105 claves c_<código>_skill_<N>_unlock. No se observó ninguna partida con una segunda habilidad desbloqueada ni una prueba controlada en el cliente. La Fase 6.17 añade el editor experimental que activa únicamente posiciones existentes, rechaza índices desconocidos y estructuras incompletas, y conserva heroSkill. La validación en el cliente oficial y la persistencia física siguen pendientes."
+      "validation_level": "E3",
+      "edit_policy": "escritura confirmada por el propietario para posiciones existentes de gameData.heroSkillUnlock: activa Value=true solo en la selección, no crea personajes ni claves faltantes, conserva gameData.heroSkill, heroUnlock y el resto de la partida, y exige reproducción inversa byte a byte. La política interna es confirmed_by_owner para el alcance probado; no se declara persistencia posterior a una nueva partida.",
+      "experimental_evidence": "El catálogo 8.8.0 y la partida local auténtica contienen 105 habilidades: 28 personajes con 3, 7 con 2 y 7 con 1. heroSkillUnlock tiene exactamente esas 105 posiciones, cada una como {Key:int, Value:bool}, y la lista coincide con los índices y el orden del catálogo. En las muestras observadas solo Key=0 era true (42 en total), Key=1 false en 35 posiciones y Key=2 false en 28; PlayerPrefs contiene las mismas 105 claves c_<código>_skill_<N>_unlock. La Fase 6.17 añadió el editor experimental que activa únicamente posiciones existentes, rechaza índices desconocidos y estructuras incompletas, y conserva heroSkill. La Fase 6.18 registra la confirmación del propietario en un dispositivo Android físico con el cliente oficial: seleccionó las habilidades pendientes, las editó, subió la partida, la recuperó en Android y comprobó que todas estaban disponibles en el juego. La implementación funcional no cambió. No se realizó una prueba de persistencia posterior a guardar de nuevo desde el cliente oficial, por lo que se mantiene E3 y no se declara E4."
     },
     {
       "internal_name": "heroUnlock",
@@ -1575,11 +1575,14 @@
       ],
       "known_dependencies": [],
       "pending_dependencies": [
-        "semántica de cada valor de desbloqueo"
+        "semántica confirmada de cada valor de skinLock",
+        "validación del desbloqueo en el cliente oficial y en un dispositivo Android físico",
+        "tratamiento de skins ligadas a eventos, compras, planos, actividades o temporadas",
+        "correspondencia entre currentSkinDatas y la skin realmente equipada"
       ],
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "experimental_evidence": "802 entradas en 42 listas. Valores observados: 0, 1, enteros negativos y positivos. No se ha demostrado que 1 sea posesión ni que los demás sean precio o requisito. El informe de la Fase 6.13 no usa estos valores para afirmar posesión ni los edita."
+      "edit_policy": "escritura experimental E2 autorizada de posiciones existentes de gameData.skinLock: cambia a 1 solo las entradas seleccionadas, no crea listas ni claves, conserva currentSkinDatas, heroUnlock, habilidades, niveles, recursos y el resto de la partida, y exige reproducción inversa byte a byte.",
+      "experimental_evidence": "802 entradas en 42 listas, con Key secuencial 0..N-1 y Value entero. La Fase 6.18 comprobó que el catálogo empaquetado y la partida local 8.8.0 coinciden exactamente: 42 personajes, 802 skins y 802 posiciones, sin claves ausentes ni sobrantes. En la muestra local hay 43 entradas con Value=1: las 42 skins Key=0 (una por personaje) y Warlock Key=3 (\"Possessed Girl\"); las otras 759 no valen 1. Se interpreta Value=1 como posesión/desbloqueo, hipótesis E2 coherente con las skins iniciales, pero no demostrada para cada tipo. Los valores 0, negativos y positivos (por ejemplo 0, -13, -6, 2000, 12000, 18000) se conservan sin reinterpretar; podrían representar condiciones, precios o estados especiales. currentSkinDatas es un diccionario disperso (6 personajes en la copia de nube) y no se usa como prueba de posesión ni como lista completa de equipadas. PlayerPrefs replica las 802 claves c<ID>_skin<N> con los mismos enteros. El editor de la Fase 6.18 solo cambia a 1 posiciones existentes seleccionadas y conserva todo lo demás; la validación física en Android sigue pendiente."
     },
     {
       "internal_name": "chips",

@@ -477,7 +477,7 @@ def test_origin_content_type_and_body_limits_are_enforced(tmp_path):
     )
     assert_error(
         env["client"].post(API + "/login", headers=HEADERS | {"Content-Type": "application/json"},
-                           content=b"x" * 20_000),
+                           content=b"x" * 70_000),
         413, "request_too_large",
     )
     assert_error(env["client"].get(API + "/config", headers={"Origin": "https://foreign.example"}),
@@ -703,7 +703,13 @@ def character_payload(unlocked=("Knight", "CostumePrince")) -> bytes:
         ]
         for code in codes
     }
-    data["gameData"]["skinLock"] = {code: [0, 1, -1] for code in codes}
+    data["gameData"]["skinLock"] = {
+        code: [
+            {"Key": skin["index"], "Value": 1 if skin["index"] == 0 else 0}
+            for skin in catalog["characters"][code]["skins"]
+        ]
+        for code in codes
+    }
     data["gameData"]["currentSkinDatas"] = {"Knight": 1}
     data["gameData"]["fishChip"] = 3
     data["itemData"]["materials"] = {"material_fish": 3, "material_ticket": 5}
@@ -730,7 +736,8 @@ def test_native_character_unlock_single_flow_preserves_progress_and_restores(tmp
 
     source, draft = prepare_characters(client, ["Ranger"])
     assert source["character_write_policy"] == "confirmed_by_owner"
-    assert source["skill_write_policy"] == "experimental"
+    assert source["skill_write_policy"] == "confirmed_by_owner"
+    assert source["skin_write_policy"] == "experimental"
     assert draft["field"] == "gameData.heroUnlock"
     assert draft["experimental"] is False
     assert draft["validation"]["evidence_level"] == "confirmed_by_owner"
@@ -763,9 +770,10 @@ def test_native_character_unlock_single_flow_preserves_progress_and_restores(tmp
     assert uploaded["gameData"]["heroSkill"] == {
         code: 0 for code in uploaded["gameData"]["heroSkill"]
     }
-    assert uploaded["gameData"]["skinLock"] == {
-        code: [0, 1, -1] for code in uploaded["gameData"]["skinLock"]
-    }
+    assert sum(len(items) for items in uploaded["gameData"]["skinLock"].values()) == 802
+    assert uploaded["gameData"]["skinLock"]["Knight"][0] == {"Key": 0, "Value": 1}
+    assert uploaded["gameData"]["skinLock"]["Knight"][1] == {"Key": 1, "Value": 0}
+    assert uploaded["gameData"]["currentSkinDatas"] == {"Knight": 1}
     assert uploaded["gameData"]["gems"] == 1000
     assert uploaded["gameData"]["fishChip"] == 3
     assert uploaded["itemData"]["materials"] == {"material_fish": 3, "material_ticket": 5}
@@ -806,11 +814,12 @@ def test_native_skill_unlock_single_flow_preserves_progress_and_restores(tmp_pat
     assert login(client).status_code == 200
 
     source, draft = prepare_skills(client, [{"code": "Knight", "index": 1}])
-    assert source["skill_write_policy"] == "experimental"
+    assert source["skill_write_policy"] == "confirmed_by_owner"
+    assert source["skin_write_policy"] == "experimental"
     assert source["character_write_policy"] == "confirmed_by_owner"
     assert draft["field"] == "gameData.heroSkillUnlock"
-    assert draft["experimental"] is True
-    assert draft["validation"]["evidence_level"] == "E2"
+    assert draft["experimental"] is False
+    assert draft["validation"]["evidence_level"] == "E3"
     assert draft["validation"]["only_skills_changed"] is True
     assert draft["original_unlocked_count"] == 42
     assert draft["new_unlocked_count"] == 43
@@ -861,6 +870,139 @@ def test_native_skill_unlock_single_flow_preserves_progress_and_restores(tmp_pat
     after = json.loads(env["providers"]["unique-a"].payload)
     assert after["gameData"]["heroSkillUnlock"]["Knight"][1]["Value"] is False
     assert after["gameData"]["heroSkillUnlock"]["Knight"][0]["Value"] is True
+
+
+def prepare_skins(client, skins):
+    source = client.get(API + "/save", headers=HEADERS)
+    assert source.status_code == 200, source.text
+    response = client.post(
+        API + "/prepare-skins",
+        headers=HEADERS,
+        json={"skins": skins, "source_sha256": source.json()["sha256"]},
+    )
+    assert response.status_code == 200, response.text
+    return source.json(), response.json()
+
+
+def test_native_skin_unlock_single_flow_preserves_progress_and_restores(tmp_path):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = character_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+
+    source, draft = prepare_skins(client, [{"code": "Knight", "index": 1}])
+    assert source["skin_write_policy"] == "experimental"
+    assert source["skill_write_policy"] == "confirmed_by_owner"
+    assert source["character_write_policy"] == "confirmed_by_owner"
+    assert draft["field"] == "gameData.skinLock"
+    assert draft["experimental"] is True
+    assert draft["validation"]["evidence_level"] == "E2"
+    assert draft["validation"]["only_skins_changed"] is True
+    assert draft["original_unlocked_count"] == 42
+    assert draft["new_unlocked_count"] == 43
+    assert draft["total_skins"] == 802
+    assert draft["selected_skins"] == [{"code": "Knight", "index": 1}]
+    assert draft["newly_unlocked_skins"] == [{"code": "Knight", "index": 1}]
+    assert draft["affected_codes"] == ["Knight"]
+    assert draft["locked_character_codes"] == []
+    assert draft["changed_fields"] == ["gameData.skinLock.Knight[1]"]
+    assert draft["backup"]["field"] == "skins"
+    assert draft["backup"]["skin_selections"] == [{"code": "Knight", "index": 1}]
+    assert draft["backup"]["original_value"] == 42
+    assert draft["backup"]["candidate_value"] == 43
+
+    confirmed = client.post(API + "/confirm", headers=HEADERS, json=confirmation(draft))
+    assert confirmed.status_code == 200, confirmed.text
+    result = confirmed.json()
+    assert result["persisted"] is True
+    assert result["field"] == "gameData.skinLock"
+    assert result["remote_skins"] == 43
+    assert result["remote_skills"] is None
+    assert result["remote_characters"] is None
+    assert result["remote_gems"] == 1000
+
+    uploaded = json.loads(env["providers"]["unique-a"].payload)
+    assert uploaded["gameData"]["skinLock"]["Knight"][1] == {"Key": 1, "Value": 1}
+    assert uploaded["gameData"]["skinLock"]["Knight"][2] == {"Key": 2, "Value": 0}
+    assert uploaded["gameData"]["currentSkinDatas"] == {"Knight": 1}
+    assert uploaded["gameData"]["heroUnlock"]["Ranger"] is False
+    assert uploaded["gameData"]["heroSkillUnlock"]["Knight"][1]["Value"] is False
+    assert uploaded["gameData"]["heroLevel"]["Knight"] == 2
+    assert uploaded["gameData"]["gems"] == 1000
+    assert uploaded["gameData"]["fishChip"] == 3
+    assert uploaded["itemData"]["materials"] == {"material_fish": 3, "material_ticket": 5}
+
+    verified = client.post(API + "/verify", headers=HEADERS,
+                           json={"backup_id": draft["backup"]["id"]})
+    assert verified.status_code == 200, verified.text
+    assert verified.json()["matches_candidate"] is True
+    assert verified.json()["remote_skins"] == 43
+
+    restored = client.post(API + "/restore", headers=HEADERS,
+                           json={"backup_id": draft["backup"]["id"], "confirmation": "RESTAURAR"})
+    assert restored.status_code == 200, restored.text
+    assert restored.json()["persisted"] is True
+    assert restored.json()["remote_skins"] == 42
+    after = json.loads(env["providers"]["unique-a"].payload)
+    assert after["gameData"]["skinLock"]["Knight"][1] == {"Key": 1, "Value": 0}
+    assert after["gameData"]["currentSkinDatas"] == {"Knight": 1}
+
+
+def test_native_skin_unlock_mass_keeps_previous_and_equipped_selection(tmp_path):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = character_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+
+    from app.save_report import _load_character_catalog
+
+    catalog = _load_character_catalog()
+    pending = [
+        {"code": code, "index": skin["index"]}
+        for code in catalog["codes"]
+        for skin in catalog["characters"][code]["skins"]
+        if skin["index"] != 0
+    ]
+    _, draft = prepare_skins(client, pending)
+    assert draft["original_unlocked_count"] == 42
+    assert draft["new_unlocked_count"] == 802
+    assert len(draft["newly_unlocked_skins"]) == 760
+    confirmed = client.post(API + "/confirm", headers=HEADERS, json=confirmation(draft))
+    assert confirmed.status_code == 200, confirmed.text
+    assert confirmed.json()["remote_skins"] == 802
+    uploaded = json.loads(env["providers"]["unique-a"].payload)
+    assert sum(
+        entry["Value"] == 1
+        for items in uploaded["gameData"]["skinLock"].values()
+        for entry in items
+    ) == 802
+    assert uploaded["gameData"]["currentSkinDatas"] == {"Knight": 1}
+    assert uploaded["gameData"]["heroUnlock"] == {
+        code: code in {"Knight", "CostumePrince"}
+        for code in uploaded["gameData"]["heroUnlock"]
+    }
+
+
+def test_native_skin_unlock_rejects_unknown_and_duplicate_positions(tmp_path):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = character_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+    source = client.get(API + "/save", headers=HEADERS).json()
+    for skins, code in (
+        ([{"code": "Knight", "index": 500}], "unknown_skin_index"),
+        ([{"code": "NoExiste", "index": 0}], "unknown_skin_character"),
+        ([{"code": "Knight", "index": 1}] * 2, "invalid_skin_selection"),
+    ):
+        response = client.post(
+            API + "/prepare-skins",
+            headers=HEADERS,
+            json={"skins": skins, "source_sha256": source["sha256"]},
+        )
+        assert response.status_code == 422, response.text
+        assert response.json()["error"]["code"] == code
+    assert client.get(API + "/backups", headers=HEADERS).json()["backups"] == []
+
 
 
 def test_native_skill_unlock_rejects_unknown_and_duplicate_positions(tmp_path):
