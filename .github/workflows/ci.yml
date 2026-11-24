@@ -30,6 +30,8 @@ jobs:
         run: uv sync --locked
       - name: Compilar módulos
         run: uv run --locked python -m compileall -q app
+      - name: Verificar catálogo empaquetado
+        run: uv run --locked python -m app.catalogs.verify
       - name: Ejecutar pruebas
         run: uv run --locked pytest -q
 

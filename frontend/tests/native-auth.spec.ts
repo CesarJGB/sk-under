@@ -63,19 +63,37 @@ const REPORT = {
     items: [{
       code: 'Knight', name: 'Knight', catalog_index: 0, unlocked: true, level: 2,
       level_max: null, level_status: 'not_validated', selected_skill: 0,
-      skills: [{ key: 0, unlocked: true, name: 'Dual Wield' }],
-      skill_options: [{ index: 0, name: 'Dual Wield' }, { index: 1, name: 'Superior Fire' }],
+      skills: [
+        { key: 0, unlocked: true, name: 'Dual Wield' },
+        { key: 1, unlocked: false, name: 'Superior Fire' },
+        { key: 2, unlocked: false, name: 'Shield Bash' },
+      ],
+      skill_options: [
+        { index: 0, name: 'Dual Wield' },
+        { index: 1, name: 'Superior Fire' },
+        { index: 2, name: 'Shield Bash' },
+      ],
       selected_skin: 0, equipped_skin: { key: 0, state: 1, name: 'Knight' },
       skins_recorded: 2, skins_status: 'not_validated',
     }, ...['Ranger', 'Mage', 'Alchemist'].map((name, index) => ({
       code: name, name, catalog_index: index + 1, unlocked: false, level: 0,
       level_max: null, level_status: 'not_validated', selected_skill: 0,
-      skills: [{ key: 0, unlocked: true, name: 'Habilidad' }],
-      skill_options: [{ index: 0, name: 'Habilidad' }],
+      skills: name === 'Ranger' ? [
+        { key: 0, unlocked: true, name: 'Arrow Rain' },
+        { key: 1, unlocked: false, name: "Hunter's Mark" },
+      ] : [{ key: 0, unlocked: true, name: `${name} Skill` }],
+      skill_options: name === 'Ranger' ? [
+        { index: 0, name: 'Arrow Rain' },
+        { index: 1, name: "Hunter's Mark" },
+      ] : [{ index: 0, name: `${name} Skill` }],
       selected_skin: '<missing>', equipped_skin: null,
       skins_recorded: 0, skins_status: 'not_validated',
     }))],
     counts: { characters: 42, unlocked: 1, selected_skins: 1 },
+    skills: {
+      total: 7, unlocked: 4, locked: 3, selected: 4,
+      characters_with_data: 4, status: 'read_only',
+    },
     level_status: 'not_validated', skins_status: 'not_validated',
     catalog: {
       available: true, error: null, version: '8.8.0', source: 'SKDFE', characters: 42,
@@ -136,6 +154,33 @@ function characterPrepared(codes: string[]) {
       valid: true, structure_valid: true, only_characters_changed: true,
       experimental: true, evidence_level: 'E2',
       message: `Campos modificados: ${codes.map((code) => `gameData.heroUnlock.${code}`).join(', ')}.`,
+    },
+  }
+}
+const SKILL_BACKUP = {
+  ...BACKUP, field: 'skills', original_gems: 4, original_value: 4,
+  candidate_gems: 4, candidate_value: 4, skill_selections: [],
+}
+function skillPrepared(skills: Array<{ code: string; index: number }>) {
+  const codes = [...new Set(skills.map((skill) => skill.code))]
+  return {
+    remote: { source: 'modern-cloud', size: 505, sha256: SHA },
+    backup: {
+      ...SKILL_BACKUP,
+      candidate_gems: 4 + skills.length,
+      candidate_value: 4 + skills.length,
+      skill_selections: skills,
+    },
+    field: 'gameData.heroSkillUnlock', original_unlocked_count: 4,
+    new_unlocked_count: 4 + skills.length, total_skills: 7,
+    selected_skills: skills, newly_unlocked_skills: skills, affected_codes: codes,
+    original_value: 4, new_value: 4 + skills.length, experimental: true, changed: true,
+    candidate_size: 505, candidate_sha256: CANDIDATE, byte_diff: PREPARED.byte_diff,
+    changed_fields: skills.map((skill) => `gameData.heroSkillUnlock.${skill.code}[${skill.index}]`),
+    validation: {
+      valid: true, structure_valid: true, only_skills_changed: true,
+      experimental: true, evidence_level: 'E2',
+      message: `Campos modificados: ${skills.map((skill) => `gameData.heroSkillUnlock.${skill.code}[${skill.index}]`).join(', ')}.`,
     },
   }
 }
@@ -535,6 +580,10 @@ test('bloquea la preparación cuando el catálogo de personajes no está disponi
         ...REPORT.characters,
         items: [],
         counts: { characters: 0, unlocked: 0, selected_skins: 0 },
+        skills: {
+          total: 0, unlocked: 0, locked: 0, selected: 0,
+          characters_with_data: 0, status: 'read_only',
+        },
         catalog: {
           available: false, error: 'catalog_missing', version: null, source: null,
           characters: 0,
@@ -553,6 +602,10 @@ test('bloquea la preparación cuando el catálogo de personajes no está disponi
       .toBeDisabled()
     await expect(page.getByRole('button', { name: 'Seleccionar todos los bloqueados' }))
       .toBeDisabled()
+    await expect(page.getByTestId('skill-catalog-unavailable')).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Preparar desbloqueo de seleccionadas' }))
+      .toBeDisabled()
+    await expect(page.getByTestId('skill-unlocked-count')).toHaveText('0 / 0')
   })
 
 test('desbloquea un personaje individual con resumen y verificación', async ({ page }) => {
@@ -651,6 +704,127 @@ test('selecciona todos, deselecciona y desbloquea el resto en masa', async ({ pa
   await expect(page.getByText('Desbloqueo subido y verificado en la nube', { exact: false })).toBeVisible()
   await expect(page.getByTestId('character-unlocked-count')).toHaveText('4 / 42')
   await expect(page.getByTestId('character-unlock-Alchemist')).toContainText('Disponible')
+})
+
+test('muestra el resumen y desbloquea una habilidad con respaldo y verificación', async ({ page }) => {
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  let selectedSkills: Array<{ code: string; index: number }> = []
+  await page.route('**/api/v1/cloud/native/prepare-skills', (route) => {
+    const payload = route.request().postDataJSON()
+    expect(payload.source_sha256).toBe(SHA)
+    selectedSkills = payload.skills
+    return route.fulfill({ json: skillPrepared(payload.skills) })
+  })
+  await page.route('**/api/v1/cloud/native/confirm', (route) => {
+    expect(route.request().postDataJSON()).toEqual({
+      backup_id: SKILL_BACKUP.id, expected_sha256: CANDIDATE, confirmation: 'SUBIR',
+    })
+    return route.fulfill({ json: {
+      action: 'confirm', backup_id: SKILL_BACKUP.id, field: 'gameData.heroSkillUnlock',
+      uploaded: true, accepted: true, persisted: true, already_original: false,
+      expected_sha256: CANDIDATE, remote_sha256: CANDIDATE, remote_size: 505,
+      remote_gems: 1001, remote_value: 5, remote_skills: 5, remote_characters: null, status: 200,
+      message: 'La descarga posterior coincide con el agregado subido de las habilidades.',
+    } })
+  })
+
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/partida')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  const characterSection = page.locator('section').filter({
+    has: page.getByRole('heading', { name: 'Personajes' }),
+  })
+  await expect(characterSection.getByText('Experimental · E2')).toHaveCount(0)
+  await expect(page.getByTestId('character-confirmed-notice')).toContainText(
+    'confirmado por el propietario',
+  )
+  await expect(page.getByTestId('skill-unlock-section')).toBeVisible()
+  await expect(page.getByTestId('skill-unlocked-count')).toHaveText('4 / 7')
+  const skillsSection = page.locator('section').filter({
+    has: page.getByRole('heading', { name: 'Habilidades' }),
+  })
+  await expect(skillsSection).toContainText('Conocidas')
+  await expect(skillsSection).toContainText('Equipadas')
+  await expect(skillsSection).toContainText('Personajes con datos')
+  await expect(page.getByTestId('skill-character-Knight')).toContainText('1 / 3 disponibles')
+  await expect(page.getByTestId('skill-option-Knight-1')).toContainText('Superior Fire')
+  await expect(page.getByTestId('skill-experimental-notice')).toContainText('experimental E2')
+
+  await page.getByLabel('Seleccionar Superior Fire de Knight').check()
+  await page.getByRole('button', { name: 'Preparar desbloqueo de seleccionadas' }).click()
+  expect(selectedSkills).toEqual([{ code: 'Knight', index: 1 }])
+  await expect(page.getByRole('heading', { name: 'Revisar desbloqueo de habilidades' })).toBeVisible()
+  const preview = page.getByTestId('skill-unlock-preview')
+  await expect(page.getByTestId('skill-unlock-summary')).toContainText('Knight: Superior Fire')
+  await expect(preview).toContainText('gameData.heroSkillUnlock.Knight[1]')
+  await expect(preview).toContainText('Evidencia experimental E2')
+  await page.getByLabel(/Confirmo que quiero desbloquear estas habilidades/).check()
+  await page.getByRole('button', { name: 'Desbloquear habilidades y verificar' }).click()
+  await expect(page.getByTestId('skill-unlock-result')).toContainText(
+    'Habilidades subidas y verificadas en la nube',
+  )
+  await expect(page.getByTestId('skill-unlocked-count')).toHaveText('5 / 7')
+  await expect(page.getByTestId('skill-option-Knight-1')).toContainText('Disponible')
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('selecciona todas las habilidades bloqueadas, deselecciona y prepara el lote', async ({ page }) => {
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  let selectedSkills: Array<{ code: string; index: number }> = []
+  await page.route('**/api/v1/cloud/native/prepare-skills', (route) => {
+    selectedSkills = route.request().postDataJSON().skills
+    return route.fulfill({ json: skillPrepared(selectedSkills) })
+  })
+
+  await page.goto('/partida')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await page.getByLabel('Buscar personaje').fill('Ranger')
+  await page.getByLabel('Filtro').selectOption('all')
+  await expect(page.getByTestId('skill-character-Ranger')).toContainText('1 / 2 disponibles')
+  await page.getByLabel('Buscar personaje').fill('')
+  await page.getByLabel('Filtro').selectOption('pending')
+
+  await page.getByRole('button', { name: 'Seleccionar todas las bloqueadas', exact: true }).click()
+  await expect(page.getByText('3 seleccionadas de 3 bloqueadas.')).toBeVisible()
+  await expect(page.getByLabel('Seleccionar Superior Fire de Knight')).toBeChecked()
+  await expect(page.getByLabel('Seleccionar Shield Bash de Knight')).toBeChecked()
+  await expect(page.getByLabel("Seleccionar Hunter's Mark de Ranger")).toBeChecked()
+  await page.getByRole('button', { name: 'Deseleccionar todas' }).click()
+  await expect(page.getByRole('button', { name: 'Preparar desbloqueo de seleccionadas' }))
+    .toBeDisabled()
+  await page.getByRole('button', { name: 'Seleccionar todas las bloqueadas', exact: true }).click()
+  await page.getByRole('button', { name: 'Preparar desbloqueo de seleccionadas' }).click()
+  expect(selectedSkills).toEqual([
+    { code: 'Knight', index: 1 },
+    { code: 'Knight', index: 2 },
+    { code: 'Ranger', index: 1 },
+  ])
+  await expect(page.getByTestId('skill-unlock-preview')).toContainText('7 / 7')
+  await expect(page.getByTestId('skill-unlock-preview')).toContainText('Knight, Ranger')
+})
+
+test('filtra habilidades pendientes y muestra posiciones sin dato', async ({ page }) => {
+  const withUnknown = {
+    ...REPORT,
+    characters: {
+      ...REPORT.characters,
+      items: REPORT.characters.items.map((character) => character.code === 'Mage'
+        ? { ...character, skills: [], skill_options: [{ index: 0, name: 'Mage Skill' }] }
+        : character),
+    },
+  }
+  await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: withUnknown } } })
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  await page.goto('/partida')
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await page.getByLabel('Filtro').selectOption('incomplete')
+  await expect(page.getByTestId('skill-character-Mage')).toContainText('sin dato')
+  await expect(page.getByTestId('skill-option-Mage-0')).toContainText('Sin dato')
+  await expect(page.getByLabel('Seleccionar Mage Skill de Mage')).toHaveCount(0)
+  await page.getByLabel('Buscar personaje').fill('NoExiste')
+  await expect(page.getByTestId('skill-empty-filter')).toBeVisible()
 })
 
 test('las rutas antiguas llevan a Partida y no permiten cargar un archivo local', async ({ page }) => {

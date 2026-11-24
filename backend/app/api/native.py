@@ -29,6 +29,7 @@ from ..models import (
     CloudLabFishChipPrepareInput,
     CloudLabPrepareInput,
     CloudLabRestoreInput,
+    CloudLabSkillPrepareInput,
     CloudLabVerifyInput,
 )
 from ..net import client_ip
@@ -179,6 +180,10 @@ class CharacterPrepareInput(CloudLabCharacterPrepareInput):
     source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
 
 
+class SkillPrepareInput(CloudLabSkillPrepareInput):
+    source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
+
+
 def _disabled_config(settings) -> dict[str, object]:
     origin = settings.native_origin or settings.cloud_accounts_origin
     return {
@@ -193,7 +198,8 @@ def _disabled_config(settings) -> dict[str, object]:
         "min_fish_chip": MIN_FISH_CHIP,
         "max_fish_chip": MAX_FISH_CHIP,
         "fish_chip_write_policy": "confirmed_by_owner",
-        "character_write_policy": "experimental",
+        "character_write_policy": "confirmed_by_owner",
+        "skill_write_policy": "experimental",
         "login_available": False,
         "auto_identity": False,
         "requires_profile_selection": False,
@@ -305,12 +311,24 @@ def prepare_fish_chip(payload: FishChipPrepareInput, request: Request) -> dict[s
 
 @router.post(
     "/prepare-characters",
-    summary="Preparar el desbloqueo experimental de personajes y crear un respaldo",
+    summary="Preparar el desbloqueo confirmado de personajes y crear un respaldo",
 )
 def prepare_characters(payload: CharacterPrepareInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
     current = service.require_session(_cookie(request, service))
     return service.prepare_characters(current, payload.codes, payload.source_sha256)
+
+
+@router.post(
+    "/prepare-skills",
+    summary="Preparar el desbloqueo experimental de habilidades y crear un respaldo",
+)
+def prepare_skills(payload: SkillPrepareInput, request: Request) -> dict[str, object]:
+    service = _require_service(request)
+    current = service.require_session(_cookie(request, service))
+    return service.prepare_skills(
+        current, [skill.model_dump() for skill in payload.skills], payload.source_sha256
+    )
 
 
 @router.post("/confirm", summary="Subir el candidato y verificar la persistencia")

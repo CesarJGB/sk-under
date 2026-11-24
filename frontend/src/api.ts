@@ -97,9 +97,19 @@ export type SaveCharacter = {
   skins_status: 'not_validated'
 }
 
+export type SaveSkillSummary = {
+  total: number
+  unlocked: number
+  locked: number
+  selected: number
+  characters_with_data: number
+  status: 'read_only'
+}
+
 export type SaveCharacterReport = {
   items: SaveCharacter[]
   counts: { characters: number; unlocked: number; selected_skins: number }
+  skills?: SaveSkillSummary
   level_status: 'not_validated'
   skins_status: 'not_validated'
   catalog: {
@@ -167,7 +177,8 @@ export type LabSave = {
   material_fish?: number | null
   material_fish_path?: string
   fish_chip_write_policy?: 'confirmed_by_owner'
-  character_write_policy?: 'experimental'
+  character_write_policy?: 'confirmed_by_owner'
+  skill_write_policy?: 'experimental'
   size: number
   sha256: string
   serialzed_version: number
@@ -177,7 +188,7 @@ export type LabSave = {
 export type LabBackup = {
   id: string
   created_at: string
-  field?: 'gems' | 'fish_chip' | 'characters'
+  field?: 'gems' | 'fish_chip' | 'characters' | 'skills'
   changed: boolean
   original_size: number
   original_sha256: string
@@ -191,6 +202,7 @@ export type LabBackup = {
   remote_size: number
   remote_sha256: string
   character_codes?: string[]
+  skill_selections?: Array<{ code: string; index: number }>
 }
 
 export type LabByteDiff = {
@@ -264,7 +276,7 @@ export type LabCharacterPrepared = {
   newly_unlocked_codes: string[]
   original_value?: number
   new_value?: number
-  experimental: true
+  experimental: false
   changed: boolean
   candidate_size: number
   candidate_sha256: string
@@ -274,6 +286,36 @@ export type LabCharacterPrepared = {
     valid: true
     structure_valid: true
     only_characters_changed: boolean
+    experimental: false
+    evidence_level: 'confirmed_by_owner'
+    message: string
+  }
+}
+
+export type LabSkillRef = { code: string; index: number }
+
+export type LabSkillPrepared = {
+  remote: LabRemote
+  backup: LabBackup
+  field: 'gameData.heroSkillUnlock'
+  original_unlocked_count: number
+  new_unlocked_count: number
+  total_skills: number
+  selected_skills: LabSkillRef[]
+  newly_unlocked_skills: LabSkillRef[]
+  affected_codes: string[]
+  original_value?: number
+  new_value?: number
+  experimental: true
+  changed: boolean
+  candidate_size: number
+  candidate_sha256: string
+  byte_diff: LabByteDiff
+  changed_fields: string[]
+  validation: {
+    valid: true
+    structure_valid: true
+    only_skills_changed: boolean
     experimental: true
     evidence_level: 'E2'
     message: string
@@ -295,6 +337,7 @@ export type LabWriteResult = {
   remote_value?: number | null
   remote_material_fish?: number | null
   remote_characters?: number | null
+  remote_skills?: number | null
   status: number | null
   message: string
 }
@@ -310,6 +353,7 @@ export type LabVerification = {
   remote_value?: number | null
   remote_material_fish?: number | null
   remote_characters?: number | null
+  remote_skills?: number | null
   expected_candidate_sha256: string
   expected_original_sha256: string
   message: string
@@ -521,7 +565,8 @@ export type NativeSaveSummary = {
   material_fish?: number | null
   material_fish_path?: string
   fish_chip_write_policy?: 'confirmed_by_owner'
-  character_write_policy?: 'experimental'
+  character_write_policy?: 'confirmed_by_owner'
+  skill_write_policy?: 'experimental'
   sections: number | null
   remote_source: string
   report?: SaveReport | null
@@ -550,7 +595,8 @@ export type NativeSession = {
   min_fish_chip?: number
   max_fish_chip?: number
   fish_chip_write_policy?: 'confirmed_by_owner'
-  character_write_policy?: 'experimental'
+  character_write_policy?: 'confirmed_by_owner'
+  skill_write_policy?: 'experimental'
   save?: NativeSaveSummary | null
   save_error?: string | null
 }
@@ -567,7 +613,8 @@ export type NativeConfig = {
   min_fish_chip?: number
   max_fish_chip?: number
   fish_chip_write_policy?: 'confirmed_by_owner'
-  character_write_policy?: 'experimental'
+  character_write_policy?: 'confirmed_by_owner'
+  skill_write_policy?: 'experimental'
   login_available: boolean
   auto_identity?: boolean
   portal_enabled?: boolean
@@ -617,6 +664,8 @@ export const nativeAuth = {
     nativeRequest<LabFishChipPrepared>('/prepare-fish-chip', signal, { new_fish_chip, source_sha256 }),
   prepareCharacters: (codes: string[], source_sha256: string, signal: AbortSignal) =>
     nativeRequest<LabCharacterPrepared>('/prepare-characters', signal, { codes, source_sha256 }),
+  prepareSkills: (skills: LabSkillRef[], source_sha256: string, signal: AbortSignal) =>
+    nativeRequest<LabSkillPrepared>('/prepare-skills', signal, { skills, source_sha256 }),
   confirm: (backup_id: string, expected_sha256: string, signal: AbortSignal) =>
     nativeRequest<LabWriteResult>('/confirm', signal, { backup_id, expected_sha256, confirmation: 'SUBIR' }),
   restore: (backup_id: string, signal: AbortSignal) =>

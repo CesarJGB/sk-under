@@ -2,8 +2,15 @@
 
 Esta fase cierra la investigación pendiente de las fichas de pesca y añade el
 primer editor de personajes. El cambio de fichas deja de ser experimental; el
-desbloqueo de personajes se publica como experimental hasta que el propietario
-complete la comprobación en un dispositivo Android físico.
+desbloqueo de personajes se publicó como experimental hasta que el propietario
+completara la comprobación en un dispositivo Android físico.
+
+> **Actualización 6.17:** el propietario confirmó en Android físico la selección
+> masiva, la subida, la recuperación desde la nube con el cliente oficial y la
+> aparición de todos los personajes desbloqueados. La política interna pasa a
+> `confirmed_by_owner` y la interfaz deja de mostrar la etiqueta experimental.
+> La persistencia posterior tras guardar de nuevo desde el cliente sigue sin
+> probarse. Consulta la [fase 6.17](../phase6-17/README.md).
 
 > **Corrección 6.16.1:** el catálogo de personajes ahora viaja dentro del
 > backend (`backend/app/catalogs/characters-880.json`), se resuelve desde el
@@ -129,19 +136,22 @@ Dockerfile ejecuta `python -m app.catalogs.verify` y que un catálogo ausente no
 queda memorizado en la caché. La imagen Docker real se valida además con
 `backend/tests/verify_image_catalog.py`.
 
-## 7. Validación pendiente
+## 7. Validación
 
 | Capa | Estado |
 | --- | --- |
 | Estructura de `heroUnlock` en 8.8.0 | E2, observada en copias reales |
 | Cambio preparado y verificado en la nube | Cubierto por pruebas automatizadas |
 | Persistencia en la nube | Verificada por descarga posterior |
-| Desbloqueo visible dentro del juego | Pendiente de comprobación del propietario |
-| Niveles, habilidades y skins intactos en el cliente | Pendiente de comprobación del propietario |
+| Desbloqueo visible dentro del juego | Confirmado por el propietario en Android físico |
+| Niveles, habilidades y skins intactos en el cliente | Confirmado en el alcance de la prueba del propietario |
+| Persistencia tras guardar de nuevo desde el cliente | Pendiente; no se declara E4 |
 | Catálogo empaquetado en la imagen de producción | Validado en Docker local con `uid=10001`; pendiente el redespliegue en Coolify |
 
-La función se identifica como **Experimental · E2** en la interfaz para permitir
-una prueba controlada sin presentarla como definitiva.
+Desde la fase 6.17 la interfaz identifica el desbloqueo de personajes como
+**confirmado por el propietario**, con la persistencia posterior marcada como
+pendiente. El desbloqueo de habilidades es una función distinta y permanece
+como **Experimental · E2**.
 
 ## 8. Fuera de alcance
 

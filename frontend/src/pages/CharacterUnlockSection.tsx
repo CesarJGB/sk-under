@@ -77,7 +77,7 @@ export function CharacterUnlockSection({
     aria-labelledby="edit-characters-title" data-testid="character-unlock-section">
     <div className="cloud-section-head">
       <div>
-        <span className="cloud-kicker">Experimental · E2</span>
+        <span className="cloud-kicker">Confirmado por el propietario</span>
         <h2 id="edit-characters-title">Personajes</h2>
         <p className="cloud-state">
           gameData.heroUnlock · {characters.catalog.characters} personajes del catálogo · {accountLabel}
@@ -90,11 +90,14 @@ export function CharacterUnlockSection({
         </strong>
       </div>
     </div>
-    <Notice tone="warning">
-      El desbloqueo de personajes es una función experimental. Solo activa
-      <code> gameData.heroUnlock</code> para los personajes seleccionados; no modifica
-      niveles, habilidades, skins ni el resto de la partida. Los personajes que ya
-      estaban disponibles se conservan sin cambios.
+    <Notice tone="info">
+      <span data-testid="character-confirmed-notice">
+        Desbloqueo confirmado por el propietario en un dispositivo Android físico: la
+        selección masiva, la subida a la nube y la recuperación desde el cliente oficial
+        funcionaron y todos los personajes aparecieron disponibles en el juego.
+        Solo activa <code>gameData.heroUnlock</code>; no modifica niveles, habilidades,
+        skins ni el resto de la partida. Los personajes ya disponibles se conservan sin cambios.
+      </span>
     </Notice>
     {!writeReady && <Notice tone="warning">
       Puedes preparar el desbloqueo y su respaldo. La subida a la nube está deshabilitada.
@@ -207,7 +210,7 @@ export function CharacterUnlockSection({
     </div>}
     {result && <div role="status" className={`cloud-feedback ${result.persisted ? 'verified' : 'uncertain'}`}>
       {result.persisted
-        ? `Desbloqueo subido y verificado en la nube. Quedan ${amountFormat.format(result.remote_characters ?? prepared?.new_unlocked_count ?? 0)} de ${amountFormat.format(total)} personajes disponibles. Falta la comprobación manual dentro del juego.`
+        ? `Desbloqueo subido y verificado en la nube. Quedan ${amountFormat.format(result.remote_characters ?? prepared?.new_unlocked_count ?? 0)} de ${amountFormat.format(total)} personajes disponibles. La recuperación en el cliente oficial ya fue confirmada por el propietario en Android.`
         : 'No se pudo confirmar la subida del desbloqueo. Verifica el estado desde Partida.'}
     </div>}
     {operation.pending && <Loading>

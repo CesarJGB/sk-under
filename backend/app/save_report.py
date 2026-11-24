@@ -100,9 +100,45 @@ def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
             }
         )
         rows.append(row)
+
+    total_skills = sum(
+        len(row["skill_options"]) for row in rows if isinstance(row.get("skill_options"), list)
+    )
+    unlocked_skills = 0
+    selected_skills = 0
+    characters_with_skills = 0
+    for row in rows:
+        options = row.get("skill_options")
+        observed = row.get("skills")
+        if not isinstance(options, list) or not isinstance(observed, list):
+            continue
+        if observed:
+            characters_with_skills += 1
+        observed_by_index = {
+            entry.get("key"): entry.get("unlocked")
+            for entry in observed
+            if isinstance(entry, dict)
+        }
+        option_indices = {
+            option.get("index") for option in options if isinstance(option, dict)
+        }
+        unlocked_skills += sum(
+            1 for index in option_indices if observed_by_index.get(index) is True
+        )
+        selected = row.get("selected_skill")
+        if type(selected) is int and selected in option_indices:
+            selected_skills += 1
     return {
         "items": rows,
         "counts": report["counts"],
+        "skills": {
+            "total": total_skills,
+            "unlocked": unlocked_skills,
+            "locked": total_skills - unlocked_skills,
+            "selected": selected_skills,
+            "characters_with_data": characters_with_skills,
+            "status": READ_ONLY,
+        },
         "level_status": "not_validated",
         "skins_status": "not_validated",
         "catalog": {
@@ -117,7 +153,8 @@ def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
             "Solo Knight tiene un cambio de nivel observado experimentalmente (E3).",
             "La posesión de skins no se deduce de skinLock; solo se muestra la skin equipada y el número de entradas registradas.",
             "Las habilidades se muestran con nombre de catálogo y el estado observado en heroSkillUnlock.",
-            "El desbloqueo experimental solo activa gameData.heroUnlock; conserva niveles, habilidades y skins.",
+            "El desbloqueo de personajes está confirmado por el propietario en Android físico; solo activa gameData.heroUnlock y conserva niveles, habilidades y skins.",
+            "El desbloqueo de habilidades es experimental E2; solo activa posiciones existentes de gameData.heroSkillUnlock y conserva gameData.heroSkill.",
         ],
         "status": READ_ONLY,
     }

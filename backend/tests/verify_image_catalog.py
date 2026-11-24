@@ -6,7 +6,7 @@ imagen para comprobar que el catálogo empaquetado es legible y que los flujos
 de personajes, gemas y fichas de pesca siguen funcionando.
 
 Uso:
-    docker run --rm -v "$PWD/tests:/check:ro" \
+    docker run --rm -e PYTHONPATH=/app -v "$PWD/tests:/check:ro" \
         --entrypoint python <imagen> /check/verify_image_catalog.py
 """
 
@@ -29,6 +29,15 @@ from app.cloud.character_editor import (
 )
 from app.cloud.fish_chip_editor import prepare_fish_chip_edit
 from app.cloud.gems_editor import prepare_gems_edit
+from app.cloud.skill_editor import (
+    SkillCatalogMissing,
+    IncompleteSkillStructure,
+    UnknownSkillCharacter,
+    UnknownSkillIndex,
+    prepare_skill_unlock_edit,
+    read_skills,
+    skill_catalog,
+)
 from app.save_report import _load_character_catalog, read_save_report
 
 FIXTURE = Path(__file__).resolve().parent / "fixtures" / "cloud-save-gems.json"
@@ -48,8 +57,12 @@ def document(unlocked=("Knight",)) -> dict:
     data["gameData"]["heroLevel"] = {code: 0 for code in codes}
     data["gameData"]["heroLevel"]["Knight"] = 2
     data["gameData"]["heroSkill"] = {code: 0 for code in codes}
+    catalog = load_character_catalog()
     data["gameData"]["heroSkillUnlock"] = {
-        code: [{"Key": 0, "Value": True}, {"Key": 1, "Value": False}, {"Key": 2, "Value": False}]
+        code: [
+            {"Key": skill["index"], "Value": skill["index"] == 0}
+            for skill in catalog["characters"][code]["skills"]
+        ]
         for code in codes
     }
     data["gameData"]["skinLock"] = {code: [0, 1, -1] for code in codes}
@@ -96,7 +109,76 @@ def main() -> int:
         massive = prepare_character_unlock_edit(source, remaining)
         check(massive.new_unlocked == codes, "la preparación masiva no desbloquea los 42")
         check(len(massive.changed_fields) == 41, "la preparación masiva cambió un número inesperado")
-        print("preparación individual, múltiple y masiva: correcta")
+        print("preparación individual, múltiple y masiva de personajes: correcta")
+
+        skill_catalog_data = skill_catalog()
+        check(skill_catalog_data.total == 105, "el catálogo no declara 105 habilidades")
+        skills = read_skills(source)
+        check(skills.total == 105, "la lectura no declara 105 habilidades")
+        check(len(skills.unlocked) == 42, "la lectura no conserva 42 habilidades disponibles")
+        check(skills.characters_with_data == 42, "la lectura no cubre 42 personajes")
+        skill_single = prepare_skill_unlock_edit(source, [{"code": "Knight", "index": 1}])
+        check(
+            [(ref.code, ref.index) for ref in skill_single.newly_unlocked] == [("Knight", 1)],
+            "la preparación individual de habilidades es incorrecta",
+        )
+        skill_multiple = prepare_skill_unlock_edit(
+            source,
+            [
+                {"code": "Knight", "index": 1},
+                {"code": "Transcendent", "index": 1},
+            ],
+        )
+        check(
+            [(ref.code, ref.index) for ref in skill_multiple.newly_unlocked]
+            == [("Knight", 1), ("Transcendent", 1)],
+            "la preparación múltiple de habilidades es incorrecta",
+        )
+        all_locked = [
+            {"code": code, "index": skill["index"]}
+            for code in codes
+            for skill in catalog["characters"][code]["skills"]
+            if skill["index"] != 0
+        ]
+        skill_massive = prepare_skill_unlock_edit(source, all_locked)
+        check(len(all_locked) == 63, "el catálogo no tiene 63 habilidades bloqueadas observadas")
+        check(len(skill_massive.new_unlocked) == 105, "la preparación masiva no llega a 105")
+        check(len(skill_massive.changed_fields) == 63, "la preparación masiva cambió un número inesperado")
+        skill_candidate = json.loads(skill_massive.candidate)
+        check(
+            skill_candidate["gameData"]["heroSkill"]
+            == json.loads(source)["gameData"]["heroSkill"],
+            "la preparación de habilidades alteró heroSkill",
+        )
+        check(
+            skill_candidate["gameData"]["heroUnlock"]
+            == json.loads(source)["gameData"]["heroUnlock"],
+            "la preparación de habilidades alteró heroUnlock",
+        )
+        print("lectura y preparación individual, múltiple y masiva de habilidades: correcta")
+
+        try:
+            prepare_skill_unlock_edit(source, [{"code": "Envoy", "index": 1}])
+        except UnknownSkillIndex:
+            pass
+        else:
+            raise AssertionError("un índice de habilidad inexistente no fue rechazado")
+        try:
+            prepare_skill_unlock_edit(source, [{"code": "NoExiste", "index": 0}])
+        except UnknownSkillCharacter:
+            pass
+        else:
+            raise AssertionError("un personaje desconocido no fue rechazado")
+        incomplete = json.loads(source)
+        incomplete["gameData"]["heroSkillUnlock"]["Envoy"] = []
+        try:
+            prepare_skill_unlock_edit(
+                canonical(incomplete), [{"code": "Envoy", "index": 0}]
+            )
+        except IncompleteSkillStructure:
+            pass
+        else:
+            raise AssertionError("una estructura incompleta de habilidades no fue rechazada")
 
         for selection, error in (
             (["NoExiste"], UnknownCharacter),
@@ -140,7 +222,24 @@ def main() -> int:
                 raise AssertionError("la preparación no se bloqueó sin catálogo")
         finally:
             editor.load_character_catalog = original_loader
-        print("ausencia, corrupción y bloqueo de la preparación: controlados")
+        import app.cloud.skill_editor as skill_module
+
+        original_skill_loader = skill_module.load_character_catalog
+        skill_module.load_character_catalog = lambda: {
+            "available": False,
+            "error": "catalog_missing",
+            "codes": [],
+        }
+        try:
+            try:
+                prepare_skill_unlock_edit(source, [{"code": "Knight", "index": 1}])
+            except SkillCatalogMissing:
+                pass
+            else:
+                raise AssertionError("la preparación de habilidades no se bloqueó sin catálogo")
+        finally:
+            skill_module.load_character_catalog = original_skill_loader
+        print("ausencia, corrupción y bloqueo de personajes y habilidades: controlados")
 
         gems = prepare_gems_edit(source, 1002)
         check(json.loads(gems.candidate)["gameData"]["gems"] == 1002, "la edición de gemas falló")

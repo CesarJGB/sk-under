@@ -113,7 +113,8 @@ class CloudLabStatus(BaseModel):
     min_fish_chip: int = 0
     max_fish_chip: int = 2_147_483_647
     fish_chip_write_policy: Literal["confirmed_by_owner"] = "confirmed_by_owner"
-    character_write_policy: Literal["experimental"] = "experimental"
+    character_write_policy: Literal["confirmed_by_owner"] = "confirmed_by_owner"
+    skill_write_policy: Literal["experimental"] = "experimental"
     message: str
 
 
@@ -131,7 +132,8 @@ class CloudLabSave(BaseModel):
     material_fish: int | None = None
     material_fish_path: str | None = None
     fish_chip_write_policy: Literal["confirmed_by_owner"] | None = None
-    character_write_policy: Literal["experimental"] | None = None
+    character_write_policy: Literal["confirmed_by_owner"] | None = None
+    skill_write_policy: Literal["experimental"] | None = None
     size: int
     sha256: str
     serialzed_version: int
@@ -141,7 +143,7 @@ class CloudLabSave(BaseModel):
 class CloudBackupSummary(BaseModel):
     id: str
     created_at: str
-    field: Literal["gems", "fish_chip", "characters"] = "gems"
+    field: Literal["gems", "fish_chip", "characters", "skills"] = "gems"
     changed: bool
     original_size: int
     original_sha256: str
@@ -155,6 +157,7 @@ class CloudBackupSummary(BaseModel):
     remote_size: int
     remote_sha256: str
     character_codes: list[str] = Field(default_factory=list)
+    skill_selections: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class CloudByteDiff(BaseModel):
@@ -223,6 +226,33 @@ class CloudLabCharacterPrepared(BaseModel):
     original_value: int | None = None
     new_value: int | None = None
     field: str
+    experimental: bool = False
+    changed: bool
+    candidate_size: int
+    candidate_sha256: str
+    byte_diff: CloudByteDiff
+    changed_fields: list[str]
+    validation: dict[str, Any]
+
+
+class CloudSkillSelection(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    code: StrictStr = Field(min_length=1, max_length=80)
+    index: StrictInt = Field(ge=0, le=104)
+
+
+class CloudLabSkillPrepared(BaseModel):
+    remote: CloudRemoteInfo
+    backup: CloudBackupSummary
+    original_unlocked_count: int
+    new_unlocked_count: int
+    total_skills: int
+    selected_skills: list[CloudSkillSelection]
+    newly_unlocked_skills: list[CloudSkillSelection]
+    affected_codes: list[str]
+    original_value: int | None = None
+    new_value: int | None = None
+    field: str
     experimental: Literal[True] = True
     changed: bool
     candidate_size: int
@@ -245,6 +275,11 @@ class CloudLabFishChipPrepareInput(BaseModel):
 class CloudLabCharacterPrepareInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     codes: list[StrictStr] = Field(min_length=1, max_length=42)
+
+
+class CloudLabSkillPrepareInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    skills: list[CloudSkillSelection] = Field(min_length=1, max_length=105)
 
 
 class CloudLabConfirmInput(BaseModel):
@@ -280,6 +315,7 @@ class CloudLabWriteResult(BaseModel):
     remote_value: int | None = None
     remote_material_fish: int | None = None
     remote_characters: int | None = None
+    remote_skills: int | None = None
     status: int | None
     message: str
 
@@ -295,6 +331,7 @@ class CloudLabVerification(BaseModel):
     remote_value: int | None = None
     remote_material_fish: int | None = None
     remote_characters: int | None = None
+    remote_skills: int | None = None
     expected_candidate_sha256: str
     expected_original_sha256: str
     message: str

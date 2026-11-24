@@ -15,7 +15,8 @@
     "phase6-13": "../research/phase6-13/README.md",
     "phase6-14": "../research/phase6-14/README.md",
     "phase6-15": "../research/phase6-15/README.md",
-    "phase6-16": "../research/phase6-16/README.md"
+    "phase6-16": "../research/phase6-16/README.md",
+    "phase6-17": "../research/phase6-17/README.md"
   },
   "fields": [
     {
@@ -1425,11 +1426,12 @@
       ],
       "known_dependencies": [],
       "pending_dependencies": [
-        "correspondencia con la selección oficial"
+        "confirmación de que el valor JSON es el índice de la habilidad equipada",
+        "comportamiento al cambiar de habilidad desde el cliente oficial"
       ],
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "experimental_evidence": "Índice seleccionado por personaje. En la muestra de nube todos valen 0. La relación con heroSkillUnlock es una hipótesis."
+      "edit_policy": "solo lectura; el editor de habilidades conserva gameData.heroSkill intacto",
+      "experimental_evidence": "Objeto de 42 códigos con un entero por personaje. En la copia local auténtica, el agregado de nube y PlayerPrefs de 8.8.0 todos los valores observados son 0, que coincide con el índice 0 de la primera habilidad del catálogo. Es la hipótesis principal de habilidad equipada, pero no se observó un cambio de selección controlado. La Fase 6.17 nunca lo modifica y exige que permanezca idéntico tras el desbloqueo de habilidades."
     },
     {
       "internal_name": "heroSkillUnlock",
@@ -1455,11 +1457,12 @@
       ],
       "known_dependencies": [],
       "pending_dependencies": [
+        "confirmación del propietario en el cliente oficial y en un dispositivo Android físico",
         "cómo materializa cada estado heroSkillUnlock y si intervienen planos o compras"
       ],
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "experimental_evidence": "105 entradas, tres por personaje en 8.8.0. La primera clave aparece verdadera y las otras dos falsas en la muestra; no se probó un desbloqueo."
+      "edit_policy": "escritura experimental E2 autorizada de posiciones existentes de gameData.heroSkillUnlock para la selección; activa Value=true sin crear personajes ni claves faltantes, conserva gameData.heroSkill, heroUnlock y el resto de la partida, y exige reproducción inversa byte a byte",
+      "experimental_evidence": "El catálogo 8.8.0 y la partida local auténtica contienen 105 habilidades: 28 personajes con 3, 7 con 2 y 7 con 1. heroSkillUnlock tiene exactamente esas 105 posiciones, cada una como {Key:int, Value:bool}, y la lista coincide con los índices y el orden del catálogo. En todas las muestras observadas solo Key=0 es true (42 en total), Key=1 es false en 35 posiciones y Key=2 es false en 28; PlayerPrefs contiene las mismas 105 claves c_<código>_skill_<N>_unlock. No se observó ninguna partida con una segunda habilidad desbloqueada ni una prueba controlada en el cliente. La Fase 6.17 añade el editor experimental que activa únicamente posiciones existentes, rechaza índices desconocidos y estructuras incompletas, y conserva heroSkill. La validación en el cliente oficial y la persistencia física siguen pendientes."
     },
     {
       "internal_name": "heroUnlock",
@@ -1484,12 +1487,12 @@
       ],
       "known_dependencies": [],
       "pending_dependencies": [
-        "confirmación del desbloqueo en un dispositivo Android físico",
+        "persistencia tras guardar de nuevo desde el cliente oficial y reabrir la partida",
         "fuente de cada desbloqueo"
       ],
-      "validation_level": "E2",
-      "edit_policy": "escritura experimental autorizada de gameData.heroUnlock para los personajes seleccionados; solo cambia el código elegido a true y conserva niveles, habilidades, skins y el resto de la partida; pendiente de validación en dispositivo",
-      "experimental_evidence": "42 códigos en 8.8.0. En la copia de nube real solo Knight y CostumePrince aparecen como true. Los personajes bloqueados conservan heroLevel=0, heroSkill=0, heroSkillUnlock con la misma forma y currentSkinDatas vacío, igual que los disponibles; ninguna otra ruta diferencia la disponibilidad. La Fase 6.16 añade un editor que activa únicamente heroUnlock[código] para la selección, añade el código si faltara y conserva el resto del mapa y del agregado. La verificación inversa exige reproducir el original byte a byte. La persistencia y el efecto dentro del cliente están pendientes de la comprobación manual del propietario."
+      "validation_level": "E3",
+      "edit_policy": "escritura confirmada por el propietario para gameData.heroUnlock: activa únicamente los códigos seleccionados, conserva niveles, habilidades, skins y el resto de la partida y exige reproducción inversa byte a byte. La política interna es confirmed_by_owner para el alcance probado; no se declara persistencia posterior.",
+      "experimental_evidence": "42 códigos en 8.8.0. En la copia de nube real solo Knight y CostumePrince aparecen como true. Los personajes bloqueados conservan heroLevel=0, heroSkill=0, heroSkillUnlock con la misma forma y currentSkinDatas vacío, igual que los disponibles; ninguna otra ruta diferencia la disponibilidad. La Fase 6.16 añadió el editor que activa únicamente heroUnlock[código] para la selección y conserva el resto del mapa y del agregado. El propietario confirmó en un dispositivo Android físico la selección masiva, la subida, la recuperación desde la nube con el cliente oficial y la aparición de todos los personajes desbloqueados en el juego. Esa evidencia no incluye una prueba posterior de persistencia tras guardar de nuevo desde el cliente; por eso el nivel es E3 y no E4."
     },
     {
       "internal_name": "petUnlock",

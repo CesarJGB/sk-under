@@ -49,6 +49,14 @@ from .gems_editor import (
     require_gems_write_compatibility,
 )
 from .provider import AcquiredCloudSave, CloudSaveMetadata
+from .skill_editor import (
+    SKILL_PATH,
+    SKILL_RECORD_FIELD,
+    SkillEdit,
+    prepare_skill_unlock_edit,
+    read_skills,
+    require_skill_write_compatibility,
+)
 
 
 class LabServiceError(CloudSaveError):
@@ -114,7 +122,8 @@ class LabStatus:
             "min_fish_chip": self.min_fish_chip,
             "max_fish_chip": self.max_fish_chip,
             "fish_chip_write_policy": "confirmed_by_owner",
-            "character_write_policy": "experimental",
+            "character_write_policy": "confirmed_by_owner",
+            "skill_write_policy": "experimental",
             "message": self.message,
         }
 
@@ -143,7 +152,8 @@ class LoadedSave:
             "material_fish": self.material_fish,
             "material_fish_path": MATERIAL_FISH_PATH,
             "fish_chip_write_policy": "confirmed_by_owner",
-            "character_write_policy": "experimental",
+            "character_write_policy": "confirmed_by_owner",
+            "skill_write_policy": "experimental",
             "size": self.size,
             "sha256": self.sha256,
             "serialzed_version": self.serialzed_version,
@@ -311,19 +321,76 @@ class PreparedCharacterEdit:
             "candidate_sha256": self.edit.candidate_sha256,
             "byte_diff": self.edit.binary.as_dict(),
             "changed_fields": list(self.edit.changed_fields),
-            "experimental": True,
+            "experimental": False,
             "validation": {
                 "valid": True,
                 "structure_valid": True,
                 "only_characters_changed": self.edit.changed
                 and all(path.startswith(CHARACTER_PATH + ".") for path in self.edit.changed_fields),
+                "experimental": False,
+                "evidence_level": "confirmed_by_owner",
+                "message": (
+                    "Campos modificados: " + ", ".join(self.edit.changed_fields) + ". "
+                    "Niveles, habilidades y skins no se modifican. El desbloqueo fue "
+                    "confirmado por el propietario en Android físico."
+                    if self.edit.changed
+                    else "Los personajes seleccionados ya están disponibles; no hay cambios que subir."
+                ),
+            },
+        }
+
+
+@dataclass(frozen=True)
+class PreparedSkillEdit:
+    """Resultado experimental de preparar un desbloqueo de habilidades."""
+
+    backup: BackupRecord
+    edit: SkillEdit
+    remote_source: str
+
+    @property
+    def changed(self) -> bool:
+        return self.edit.changed
+
+    @property
+    def candidate_sha256(self) -> str:
+        return self.edit.candidate_sha256
+
+    def summary(self) -> dict[str, object]:
+        return {
+            "field": SKILL_PATH,
+            "remote": {
+                "source": self.remote_source,
+                "size": self.edit.binary.original_size,
+                "sha256": self.edit.original_sha256,
+            },
+            "backup": self.backup.summary(),
+            "original_unlocked_count": len(self.edit.original_unlocked),
+            "new_unlocked_count": len(self.edit.new_unlocked),
+            "total_skills": self.edit.total,
+            "selected_skills": [ref.as_dict() for ref in self.edit.selected_skills],
+            "newly_unlocked_skills": [ref.as_dict() for ref in self.edit.newly_unlocked],
+            "affected_codes": list(self.edit.affected_codes),
+            "original_value": len(self.edit.original_unlocked),
+            "new_value": len(self.edit.new_unlocked),
+            "changed": self.edit.changed,
+            "candidate_size": len(self.edit.candidate),
+            "candidate_sha256": self.edit.candidate_sha256,
+            "byte_diff": self.edit.binary.as_dict(),
+            "changed_fields": list(self.edit.changed_fields),
+            "experimental": True,
+            "validation": {
+                "valid": True,
+                "structure_valid": True,
+                "only_skills_changed": self.edit.changed
+                and all(path.startswith(SKILL_PATH + ".") for path in self.edit.changed_fields),
                 "experimental": True,
                 "evidence_level": "E2",
                 "message": (
                     "Campos modificados: " + ", ".join(self.edit.changed_fields) + ". "
-                    "Niveles, habilidades y skins no se modifican."
+                    "gameData.heroSkill y los demás campos no se modifican."
                     if self.edit.changed
-                    else "Los personajes seleccionados ya están disponibles; no hay cambios que subir."
+                    else "Las habilidades seleccionadas ya están disponibles; no hay cambios que subir."
                 ),
             },
         }
@@ -347,6 +414,7 @@ class WriteResult:
     remote_value: int | None = None
     remote_material_fish: int | None = None
     remote_characters: int | None = None
+    remote_skills: int | None = None
 
     def summary(self) -> dict[str, object]:
         return {
@@ -364,6 +432,7 @@ class WriteResult:
             "remote_value": self.remote_value,
             "remote_material_fish": self.remote_material_fish,
             "remote_characters": self.remote_characters,
+            "remote_skills": self.remote_skills,
             "status": self.status,
             "message": self.message,
         }
@@ -384,6 +453,7 @@ class VerifyResult:
     remote_value: int | None = None
     remote_material_fish: int | None = None
     remote_characters: int | None = None
+    remote_skills: int | None = None
 
     def summary(self) -> dict[str, object]:
         return {
@@ -397,6 +467,7 @@ class VerifyResult:
             "remote_value": self.remote_value,
             "remote_material_fish": self.remote_material_fish,
             "remote_characters": self.remote_characters,
+            "remote_skills": self.remote_skills,
             "expected_candidate_sha256": self.expected_candidate_sha256,
             "expected_original_sha256": self.expected_original_sha256,
             "message": self.message,
@@ -493,6 +564,8 @@ class CloudLabService:
             return FISH_CHIP_PATH
         if field == CHARACTER_RECORD_FIELD:
             return CHARACTER_PATH
+        if field == SKILL_RECORD_FIELD:
+            return SKILL_PATH
         return "gameData.gems"
 
     @staticmethod
@@ -501,6 +574,8 @@ class CloudLabService:
             return "las fichas de pesca"
         if field == CHARACTER_RECORD_FIELD:
             return "los personajes"
+        if field == SKILL_RECORD_FIELD:
+            return "las habilidades"
         return "las gemas"
 
     @staticmethod
@@ -513,7 +588,13 @@ class CloudLabService:
         if field == CHARACTER_RECORD_FIELD:
             return (
                 f"La descarga posterior coincide con el agregado subido de {label}. "
-                "Falta la comprobación manual del desbloqueo dentro del juego."
+                "El propietario confirmó el desbloqueo masivo, la subida, la recuperación "
+                "desde la nube y el resultado dentro del juego en un Android físico."
+            )
+        if field == SKILL_RECORD_FIELD:
+            return (
+                f"La descarga posterior coincide con el agregado subido de {label}. "
+                "Falta la comprobación manual del desbloqueo de habilidades dentro del juego."
             )
         return (
             f"La descarga posterior coincide con el agregado subido de {label}. "
@@ -523,14 +604,15 @@ class CloudLabService:
     @staticmethod
     def _remote_values(
         payload: bytes, field: str
-    ) -> tuple[int | None, int | None, int | None, int | None]:
-        """Devuelve gemas, valor del campo, material_fish y personajes disponibles."""
+    ) -> tuple[int | None, int | None, int | None, int | None, int | None]:
+        """Devuelve gemas, valor del campo, material_fish, personajes y habilidades."""
         try:
             gems = read_gems(payload).gems
         except CloudSaveError:
             gems = None
         material: int | None = None
         characters: int | None = None
+        skills: int | None = None
         if field == FISH_CHIP_RECORD_FIELD:
             try:
                 snapshot = read_fish_chip(payload)
@@ -544,9 +626,15 @@ class CloudLabService:
             except CloudSaveError:
                 characters = None
             value = characters
+        elif field == SKILL_RECORD_FIELD:
+            try:
+                skills = len(read_skills(payload).unlocked)
+            except CloudSaveError:
+                skills = None
+            value = skills
         else:
             value = gems
-        return gems, value, material, characters
+        return gems, value, material, characters, skills
 
     def prepare(self, new_gems: object, *, expected_source: str | None = None) -> PreparedEdit:
         save = self.provider.download(self.max_input_bytes)
@@ -660,6 +748,49 @@ class CloudLabService:
         )
         return PreparedCharacterEdit(bundle.record, edit, save.metadata.source)
 
+    def prepare_skills(
+        self, selections: object, *, expected_source: str | None = None
+    ) -> PreparedSkillEdit:
+        """Prepara el desbloqueo de las habilidades seleccionadas.
+
+        Solo activa las posiciones existentes de ``gameData.heroSkillUnlock``.
+        No crea listas ni entradas ausentes y conserva ``gameData.heroSkill``
+        junto con cualquier otro campo de la partida.
+        """
+        save = self.provider.download(self.max_input_bytes)
+        if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
+            raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
+        edit = prepare_skill_unlock_edit(save.payload, selections)
+        if edit.original_sha256 != save.metadata.sha256:
+            raise LabServiceError("El original preparado no coincide con la descarga.")
+        bundle = self.store.save(
+            edit,
+            remote_source=save.metadata.source,
+            remote_size=save.metadata.size,
+            remote_sha256=save.metadata.sha256,
+            field=SKILL_RECORD_FIELD,
+            original_value=len(edit.original_unlocked),
+            new_value=len(edit.new_unlocked),
+            skill_selections=[ref.as_dict() for ref in edit.newly_unlocked],
+        )
+        self.store.append_event(
+            bundle.record.id,
+            {
+                "action": "prepare",
+                "field": SKILL_PATH,
+                "experimental": True,
+                "changed": edit.changed,
+                "original_unlocked": len(edit.original_unlocked),
+                "new_unlocked": len(edit.new_unlocked),
+                "newly_unlocked_skills": [ref.as_dict() for ref in edit.newly_unlocked],
+                "affected_codes": list(edit.affected_codes),
+                "candidate_sha256": edit.candidate_sha256,
+                "changed_fields": list(edit.changed_fields),
+                "remote_source": save.metadata.source,
+            },
+        )
+        return PreparedSkillEdit(bundle.record, edit, save.metadata.source)
+
     def confirm(self, backup_id: str, expected_sha256: str, *, single_attempt: bool = False) -> WriteResult:
         if not self.write_enabled or self.uploader is None:
             raise LabWriteDisabled("La escritura remota está deshabilitada en el servidor.")
@@ -682,6 +813,15 @@ class CloudLabService:
                 require_character_write_compatibility(
                     bundle.original, bundle.record.character_codes, bundle.candidate
                 )
+            elif bundle.record.field == SKILL_RECORD_FIELD:
+                require_skill_write_compatibility(
+                    bundle.original,
+                    [
+                        {"code": code, "index": index}
+                        for code, index in bundle.record.skill_selections
+                    ],
+                    bundle.candidate,
+                )
             else:
                 require_gems_write_compatibility(bundle.original, bundle.record.candidate_gems, bundle.candidate)
             current = self.provider.download(self.max_input_bytes)
@@ -697,7 +837,7 @@ class CloudLabService:
                 remote.metadata.size == bundle.record.candidate_size
                 and compare_digest(remote.metadata.sha256, bundle.record.candidate_sha256)
             )
-            remote_gems, remote_value, remote_material, remote_characters = self._remote_values(
+            remote_gems, remote_value, remote_material, remote_characters, remote_skills = self._remote_values(
                 remote.payload, bundle.record.field
             )
             result = WriteResult(
@@ -716,6 +856,7 @@ class CloudLabService:
                 remote_value=remote_value,
                 remote_material_fish=remote_material,
                 remote_characters=remote_characters,
+                remote_skills=remote_skills,
                 message=(
                     self._persisted_message(bundle.record.field, label)
                     if persisted
@@ -746,7 +887,7 @@ class CloudLabService:
                 raise LabNoChanges("El respaldo no contiene una modificación que restaurar.")
             current = self.provider.download(self.max_input_bytes)
             if current.metadata.sha256 == bundle.record.original_sha256:
-                remote_gems, remote_value, remote_material, remote_characters = self._remote_values(
+                remote_gems, remote_value, remote_material, remote_characters, remote_skills = self._remote_values(
                     current.payload, bundle.record.field
                 )
                 return WriteResult(
@@ -765,6 +906,7 @@ class CloudLabService:
                     remote_value=remote_value,
                     remote_material_fish=remote_material,
                     remote_characters=remote_characters,
+                    remote_skills=remote_skills,
                     message="La nube ya contiene el original; no se envió nada.",
                 )
             if current.metadata.sha256 != bundle.record.candidate_sha256:
@@ -777,7 +919,7 @@ class CloudLabService:
                 remote.metadata.size == bundle.record.original_size
                 and compare_digest(remote.metadata.sha256, bundle.record.original_sha256)
             )
-            remote_gems, remote_value, remote_material, remote_characters = self._remote_values(
+            remote_gems, remote_value, remote_material, remote_characters, remote_skills = self._remote_values(
                 remote.payload, bundle.record.field
             )
             result = WriteResult(
@@ -796,6 +938,7 @@ class CloudLabService:
                 remote_value=remote_value,
                 remote_material_fish=remote_material,
                 remote_characters=remote_characters,
+                remote_skills=remote_skills,
                 message=(
                     f"La descarga posterior coincide con el original respaldado de {label}."
                     if persisted
@@ -823,7 +966,7 @@ class CloudLabService:
             remote.metadata.size == bundle.record.original_size
             and compare_digest(remote.metadata.sha256, bundle.record.original_sha256)
         )
-        remote_gems, remote_value, remote_material, remote_characters = self._remote_values(
+        remote_gems, remote_value, remote_material, remote_characters, remote_skills = self._remote_values(
             remote.payload, bundle.record.field
         )
         self._event(
@@ -848,6 +991,7 @@ class CloudLabService:
             remote_sha256=remote.metadata.sha256,
             remote_size=remote.metadata.size,
             remote_gems=remote_gems,
+            remote_skills=remote_skills,
             expected_candidate_sha256=bundle.record.candidate_sha256,
             expected_original_sha256=bundle.record.original_sha256,
             message=message,

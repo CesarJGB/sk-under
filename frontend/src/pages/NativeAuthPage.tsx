@@ -13,6 +13,7 @@ import { Loading, Notice, PageTitle, Problem } from '../ui'
 import { CharacterUnlockSection } from './CharacterUnlockSection'
 import { HomePage } from './HomePage'
 import { SaveReportSections } from './SaveReportSections'
+import { SkillUnlockSection } from './SkillUnlockSection'
 import { useOperation } from '../useOperation'
 
 const gemFormat = new Intl.NumberFormat('es-MX')
@@ -77,6 +78,16 @@ const FRIENDLY: Record<string, string> = {
   character_catalog_missing: 'No está disponible el catálogo local de personajes.',
   character_verification_failed: 'La copia editada de personajes no superó la comprobación de integridad.',
   outdated_character_draft: 'El borrador de personajes usa una selección anterior. Prepara de nuevo el desbloqueo.',
+  skills_edit: 'No se pudo preparar el desbloqueo de habilidades.',
+  invalid_skill_selection: 'Selecciona entre 1 y 105 habilidades, sin repetir personaje e índice.',
+  unknown_skill_character: 'La selección contiene un personaje que no pertenece al catálogo.',
+  unknown_skill_index: 'La selección contiene una habilidad que no existe para ese personaje.',
+  skill_field_missing: 'La partida no contiene gameData.heroSkillUnlock; el desbloqueo de habilidades no está disponible.',
+  incomplete_skill_structure: 'La partida no contiene todas las posiciones de habilidad necesarias. No se crean estructuras faltantes.',
+  unsupported_skills_structure: 'gameData.heroSkillUnlock no tiene la estructura esperada; no se sobrescribe.',
+  skill_catalog_missing: 'No está disponible el catálogo local de habilidades.',
+  skill_verification_failed: 'La copia editada de habilidades no superó la comprobación de integridad.',
+  outdated_skill_draft: 'El borrador de habilidades usa una selección anterior. Prepara de nuevo el desbloqueo.',
   cloud_hash_mismatch: 'La huella del borrador no coincide con la del respaldo. Prepara de nuevo la edición.',
   backup_integrity: 'El respaldo no superó la comprobación de integridad.',
   backup_store: 'No se pudo guardar o leer el respaldo privado.',
@@ -719,6 +730,17 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     onExpired={onExpired}
     onPrepared={() => void historyOperation.run(refreshHistory)}
   /> : null}
+  {save.report?.characters ? <SkillUnlockSection
+    key={`skills-${save.sha256}`}
+    characters={save.report.characters}
+    saveSha={save.sha256}
+    writeReady={Boolean(session.write_ready)}
+    accountLabel={accountLabel}
+    disabled={disabled}
+    formatProblem={friendly}
+    onExpired={onExpired}
+    onPrepared={() => void historyOperation.run(refreshHistory)}
+  /> : null}
   {save.report ? <SaveReportSections report={save.report} showCharacters={false} /> : <section className="cloud-section panel cloud-empty" aria-labelledby="report-pending-title">
     <h2 id="report-pending-title">Recursos y personajes</h2>
     <p>Descarga la partida de nuevo para generar el informe de solo lectura.</p>
@@ -732,6 +754,7 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
 function backupFieldLabel(backup: LabBackup) {
   if (backup.field === 'fish_chip') return 'fichas de pesca'
   if (backup.field === 'characters') return 'personajes disponibles'
+  if (backup.field === 'skills') return 'habilidades'
   return 'gemas'
 }
 

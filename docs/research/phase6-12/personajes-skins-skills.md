@@ -24,7 +24,7 @@ Todas las rutas siguientes están en `gameData` del agregado y en
 | `heroUnlock` | objeto código → bool (42) | Disponibilidad declarada del personaje | E2 |
 | `heroLevel` | objeto código → entero (42) | Nivel de mejora del personaje | E3 para `Knight` |
 | `heroSkill` | objeto código → entero (42) | Índice de habilidad seleccionada | E2 |
-| `heroSkillUnlock` | objeto código → lista `[{Key, Value}]` | Tres entradas por personaje; `Value` booleano | E2 |
+| `heroSkillUnlock` | objeto código → lista `[{Key, Value}]` | 105 entradas; 28 personajes con 3, 7 con 2 y 7 con 1; `Value` booleano | E2 |
 | `skinLock` | objeto código → lista `[{Key, Value}]` | 802 entradas; `Value` entero | E2 |
 | `currentSkinDatas` | objeto código → entero | Selección de skin; disperso | E2 |
 | `petUnlock` | objeto código → bool (58) | Disponibilidad de mascota | E2 |
@@ -87,7 +87,7 @@ no se debe convertir un valor positivo en “desbloqueado” ni un negativo en
 “bloqueado” sin una prueba. Editar una skin podría romper una relación con
 `currentSkinDatas`, con la tienda o con las preferencias.
 
-La forma de `heroSkillUnlock` es análoga pero solo tiene tres claves por
+La forma de `heroSkillUnlock` es análoga pero tiene una clave por habilidad del catálogo (105 en total; no todos los personajes tienen tres). La descripción histórica que asumía tres claves por
 personaje. En la muestra, la clave 0 está desbloqueada y las claves 1 y 2 no.
 Las preferencias usan nombres como `<perfil>_c_<código>_skill_<N>_unlock`; el
 cruce exacto entre el índice del JSON y el sufijo XML está pendiente.

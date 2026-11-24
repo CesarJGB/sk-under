@@ -243,7 +243,8 @@ def test_prepare_creates_a_private_backup_and_confirm_restores(tmp_path):
     assert prepared.backup.character_codes == ("Ranger", "Mage")
     summary = prepared.summary()
     assert summary["field"] == "gameData.heroUnlock"
-    assert summary["experimental"] is True
+    assert summary["experimental"] is False
+    assert summary["validation"]["evidence_level"] == "confirmed_by_owner"
     assert summary["validation"]["only_characters_changed"] is True
     assert summary["changed_fields"] == [
         "gameData.heroUnlock.Ranger",
