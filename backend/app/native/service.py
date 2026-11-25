@@ -77,6 +77,16 @@ def _iso(timestamp: int) -> str:
     return datetime.fromtimestamp(timestamp, UTC).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def _older_than(created_at: str, now: float, seconds: int) -> bool:
+    try:
+        moment = datetime.fromisoformat(created_at)
+    except ValueError:
+        return False
+    if moment.utcoffset() is None:
+        return False
+    return now - moment.timestamp() >= seconds
+
+
 @dataclass(frozen=True)
 class NativeSaveProvider:
     """Proveedor por sesión que además fija la identidad de la partida."""
@@ -517,30 +527,63 @@ class NativeAuthService:
         with self._subject_lock(session.subject):
             return self._operate(session, lambda: self._lab(session).restore(backup_id).summary())
 
+    def restore_history(
+        self, session: NativeSessionRecord, backup_id: str, expected_sha256: str | None
+    ) -> dict[str, object]:
+        self._require_write(session)
+        with self._subject_lock(session.subject):
+            return self._operate(
+                session,
+                lambda: self._lab(session).restore_history(
+                    backup_id, expected_sha256=expected_sha256
+                ).summary(),
+            )
+
+    def create_backup(self, session: NativeSessionRecord) -> dict[str, object]:
+        """Crea una copia manual sin escribir en ChillyRoom."""
+        with self._subject_lock(session.subject):
+            record = self._operate(session, lambda: self._lab(session).create_manual_backup())
+            return {
+                "backup": record.summary(),
+                "message": "Respaldo manual creado y verificado.",
+            }
+
     def verify(self, session: NativeSessionRecord, backup_id: str) -> dict[str, object]:
         return self._operate(session, lambda: self._lab(session).verify(backup_id).summary())
 
-    def backups(self, session: NativeSessionRecord) -> dict[str, object]:
-        limit = 25
+    def backups(
+        self, session: NativeSessionRecord, *, limit: int = 25, cursor: str | None = None
+    ) -> dict[str, object]:
         store = self._backup_store(session)
-        index = store.index(require_parent=True)
+        page, next_cursor, total, unreadable = store.page(
+            limit, cursor=cursor, require_parent=True
+        )
 
-        unreadable = sum(entry.problem is not None for entry in index)
         backups = []
-        for entry in index[:limit]:
+        for entry in page:
             record = entry.record
             summary: dict[str, object] = {
                 "id": entry.id,
                 "created_at": record.created_at if record else None,
                 "field": record.field if record else None,
+                "kind": record.kind if record else None,
             }
             if record is None:
-                backups.append(summary | {"status": "unreadable", "problem": entry.problem})
+                backups.append(
+                    summary
+                    | {
+                        "status": "unreadable",
+                        "problem": entry.problem,
+                        "integrity": "unreadable",
+                        "can_restore": False,
+                    }
+                )
                 continue
             try:
                 bundle = store.load(record.id)
                 confirmation = store.confirmation(record.id)
-                attempted = store.confirmation_attempted(record.id)
+                attempted = False if record.is_snapshot else store.confirmation_attempted(record.id)
+                events = store.events(record.id)
                 if confirmation is not None and not (
                     confirmation.get("action") == "confirm"
                     and confirmation.get("backup_id") == record.id
@@ -550,34 +593,69 @@ class NativeAuthService:
                 ):
                     raise BackupIntegrityError("La confirmación no coincide con el respaldo.")
 
-                status = "verified" if confirmation else "unverified" if attempted else "prepared"
                 restoration = None
-                for event in store.events(record.id):
-                    if event.get("action") == "confirm" and event.get("uploaded") is True and not confirmation:
-                        status = "verified" if (
-                            event.get("persisted") is True and event.get("remote_sha256") == record.candidate_sha256
-                        ) else "unverified"
+                uploaded = False
+                for event in events:
+                    if event.get("action") == "confirm" and event.get("uploaded") is True:
+                        uploaded = True
+                        if not record.is_snapshot and not confirmation:
+                            confirmation = event
                     if event.get("action") == "restore":
-                        restoration = "verified" if (
-                            event.get("persisted") is True and event.get("remote_sha256") == record.original_sha256
-                        ) else "unverified"
+                        restoration = (
+                            "verified"
+                            if event.get("persisted") is True
+                            and event.get("remote_sha256") == record.original_sha256
+                            else "unverified"
+                        )
+                if record.is_snapshot:
+                    status = "available"
+                    interrupted = False
+                else:
+                    status = "verified" if confirmation else "unverified" if attempted else "prepared"
+                    if confirmation is not None and not (
+                        confirmation.get("persisted") is True
+                        and confirmation.get("remote_sha256") == record.candidate_sha256
+                    ):
+                        status = "unverified"
+                    interrupted = bool(attempted and not uploaded and _older_than(record.created_at, self.now(), 300))
             except BackupStorageUnavailable:
                 raise
             except (CloudSaveError, OSError) as exc:
                 unreadable += 1
-                backups.append(summary | {"status": "unreadable", "problem": backup_problem(exc)})
+                backups.append(
+                    summary
+                    | {
+                        "status": "unreadable",
+                        "problem": backup_problem(exc),
+                        "integrity": "unreadable",
+                        "can_restore": False,
+                    }
+                )
                 continue
 
             summary.update(
-                status=status, restoration=restoration, changed=record.changed,
+                status=status,
+                restoration=restoration,
+                interrupted=interrupted,
+                changed=record.changed,
                 original_size=record.original_size,
+                changes=record.change_count,
+                categories=list(record.categories) or list(bundle.categories),
+                original_value=record.original_value,
+                candidate_value=record.candidate_value,
+                summary=record.snapshot,
+                integrity="verified",
+                can_restore=bool(record.is_snapshot or record.changed),
             )
-            if record.field in {"advanced", "unified"}:
-                summary.update(changes=record.candidate_value, categories=list(bundle.categories))
-            else:
-                summary.update(original_value=record.original_value, candidate_value=record.candidate_value)
             backups.append(summary)
-        return {"backups": backups, "total": len(index), "listed": len(backups), "limit": limit, "unreadable": unreadable}
+        return {
+            "backups": backups,
+            "total": total,
+            "listed": len(backups),
+            "limit": limit,
+            "unreadable": unreadable,
+            "next_cursor": next_cursor,
+        }
 
     # Diagnóstico saneado ----------------------------------------------------
 

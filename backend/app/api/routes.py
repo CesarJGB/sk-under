@@ -6,6 +6,7 @@ from ..engine import Editor
 from ..file_validation import decode_file
 from ..models import EditInput, ErrorResponse, Formats, Health, Inspection, InspectInput, Validation
 from ..settings import Settings
+from ..version import version_info
 from .uploads import FileRoute, editor_bearer
 
 router = APIRouter(prefix="/api/v1")
@@ -41,6 +42,11 @@ type EditorService = Annotated[Editor, Depends(get_editor)]
 @router.get("/health", tags=["Servicio"], summary="Consultar el estado y límite de archivos")
 def health(settings: ServiceSettings) -> Health:
     return Health(access_mode=settings.access_mode, max_file_bytes=settings.max_file_bytes)
+
+
+@router.get("/version", tags=["Servicio"], summary="Consultar versión y capacidades del backend")
+def version() -> dict[str, object]:
+    return version_info()
 
 
 @router.get("/formats", tags=["Servicio"], summary="Consultar los formatos reconocidos por el motor")

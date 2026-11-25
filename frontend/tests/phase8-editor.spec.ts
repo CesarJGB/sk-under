@@ -90,8 +90,12 @@ const BACKUP = {
   remote_source: 'modern-cloud', remote_size: 505, remote_sha256: SHA,
 }
 
-function historyFixture(backups: NativeBackup[], total = backups.length) {
-  return { backups, total, listed: backups.length, limit: 25, unreadable: backups.filter(({ status }) => status === 'unreadable').length }
+function historyFixture(backups: NativeBackup[], total = backups.length, cursor: string | null = null) {
+  return {
+    backups, total, listed: backups.length, limit: 25,
+    unreadable: backups.filter(({ status }) => status === 'unreadable').length,
+    next_cursor: cursor,
+  }
 }
 
 const UNIFIED_BACKUP: NativeBackup = {
@@ -112,13 +116,18 @@ async function open(page: Page, options: {
   path?: string
   width?: number
   limits?: { max_gems?: number }
+  history?: boolean
 } = {}) {
   const save = options.save ?? SESSION_SAVE
   const sessionSave = options.sessionSave === undefined ? save : options.sessionSave
   await page.route('**/api/v1/health', (route) => route.fulfill({ json: { status: 'ok', access_mode: 'local', max_file_bytes: 1048576 } }))
   await page.route('**/api/v1/formats', (route) => route.fulfill({ json: { formats: [] } }))
+  await page.route('**/api/v1/version', (route) => route.fulfill({ json: {
+    service: 'sk-under', api_version: '2026.11.25', commit: null,
+    features: ['native_backup_history', 'native_backup_history_pagination', 'native_backup_manual'],
+  } }))
   await page.route('**/api/v1/cloud/native/config', (route) => route.fulfill({ json: { ...CONFIG, session: { ...ACTIVE, ...options.limits, save: sessionSave } } }))
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: historyFixture([]) }))
+  if (options.history !== false) await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: historyFixture([]) }))
   await page.route('**/api/v1/cloud/native/save', options.download ?? ((route) => route.fulfill({ json: downloaded(save) })))
   await page.setViewportSize({ width: options.width ?? 390, height: 844 })
   await page.goto(options.path ?? '/editor')
@@ -148,7 +157,7 @@ function prepared(plan: Record<string, unknown>, categories: Array<[string, stri
 for (const width of [320, 360, 375, 390, 430, 768, 1280]) {
   test(`Partida muestra tres bloques y respeta el ancho de ${width} px`, async ({ page }) => {
     await open(page, { path: '/partida', width, save: { ...SESSION_SAVE, downloaded_at: '2026-11-25T20:30:00Z' } })
-    await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
+    await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({
       json: historyFixture([
         { ...UNIFIED_BACKUP, created_at: '2026-11-25T20:26:00Z', status: 'verified' },
         { id: '3'.repeat(32), field: 'characters', created_at: '2026-11-25T19:45:00Z', status: 'prepared',
@@ -156,7 +165,7 @@ for (const width of [320, 360, 375, 390, 430, 768, 1280]) {
         { id: '4'.repeat(32), field: 'gems', created_at: '2026-11-25T18:20:00Z', status: 'unverified' },
         { id: '5'.repeat(32), field: 'fish_chip', created_at: '2026-11-25T17:21:00Z', status: 'verified',
           restoration: 'verified', original_value: 3, candidate_value: 5 },
-      ], 28),
+      ], 28, 'cursor-de-prueba'),
     }))
     await page.getByRole('button', { name: 'Actualizar historial' }).click()
     const account = page.getByRole('region', { name: 'Cuenta conectada' })
@@ -216,7 +225,7 @@ test('Partida diferencia el historial vacío, ilegible y el almacén indisponibl
   await open(page, { path: '/partida' })
   const list = page.getByRole('region', { name: 'Historial de respaldos' })
   await expect(list.getByText('Esta cuenta todavía no tiene respaldos.')).toBeVisible()
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({
     json: historyFixture([{ id: BACKUP.id, created_at: null, field: null, status: 'unreadable', problem: 'authentication' }]),
   }))
   await list.getByRole('button', { name: 'Actualizar historial' }).click()
@@ -224,7 +233,7 @@ test('Partida diferencia el historial vacío, ilegible y el almacén indisponibl
   await list.locator('summary').click()
   await expect(list.getByText('No se pudo autenticar el respaldo', { exact: false })).toBeVisible()
   await expect(list.getByRole('button', { name: 'Restaurar respaldo' })).toHaveCount(0)
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({
     status: 503, json: { error: { code: 'native_backup_unavailable', message: 'fixture', issues: [] } },
   }))
   await list.getByRole('button', { name: 'Actualizar historial' }).click()
@@ -236,7 +245,7 @@ test('actualiza el historial tras preparar, subir y volver de Editor a Partida',
   await open(page, { path: '/partida' })
   let status: NativeBackup['status'] | null = null
   const requested: Array<NativeBackup['status'] | null> = []
-  await page.route('**/api/v1/cloud/native/backups', (route) => {
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => {
     requested.push(status)
     return route.fulfill({ json: historyFixture(status ? [{ ...UNIFIED_BACKUP, status }] : []) })
   })
@@ -844,4 +853,99 @@ test('capturas móviles, tableta y escritorio sin desbordamiento', async ({ page
     await expect(page.getByTestId(`category-${slug}`)).toBeVisible()
     await screenshot(`${slug}-390`)
   }
+})
+
+const MANUAL_BACKUP: NativeBackup = {
+  id: '6'.repeat(32), created_at: '2026-11-25T21:10:00Z', field: 'snapshot', kind: 'manual',
+  status: 'available', changed: false, original_size: 11240, integrity: 'verified', can_restore: true,
+  summary: { gems: 1234, fish_chip: 7, characters: 12, save_size: 11240, game_version: '8.8.0' },
+}
+
+test('crea un respaldo manual verificado y lo muestra como copia independiente', async ({ page }) => {
+  await open(page, { path: '/partida', history: false })
+  let posts = 0
+  let gets = 0
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => {
+    if (route.request().method() === 'POST') {
+      posts += 1
+      expect(route.request().postDataJSON()).toEqual({ confirmation: 'RESPALDAR' })
+      return route.fulfill({ json: { message: 'Respaldo manual creado y verificado.' } })
+    }
+    gets += 1
+    return route.fulfill({ json: historyFixture([MANUAL_BACKUP]) })
+  })
+  await page.getByRole('button', { name: 'Crear respaldo' }).click()
+  await expect(page.getByText('Respaldo manual creado y verificado.')).toBeVisible()
+  expect(posts).toBe(1)
+  await expect.poll(() => gets).toBeGreaterThanOrEqual(2)
+  const item = page.locator('.partida-backup').first()
+  await expect(item.getByText('Respaldo manual', { exact: true })).toBeVisible()
+  await expect(item.getByText('Preventivo antes de restaurar')).toHaveCount(0)
+  await item.locator('summary').click()
+  await expect(item.getByText('Integridad del respaldo verificada')).toBeVisible()
+  await expect(item.getByText('Copia creada a voluntad; no se escribió nada en ChillyRoom.')).toBeVisible()
+  await expect(item.getByText('1,234')).toBeVisible()
+  await expect(item.getByText('11 KiB')).toBeVisible()
+})
+
+test('pagina el historial con cursor estable y muestra todos los respaldos', async ({ page }) => {
+  await open(page, { path: '/partida', history: false })
+  const cursors: Array<string | null> = []
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => {
+    const cursor = new URL(route.request().url()).searchParams.get('cursor')
+    cursors.push(cursor)
+    if (cursor === 'siguiente-pagina') {
+      return route.fulfill({
+        json: historyFixture(Array.from({ length: 3 }, (_, index) => ({
+          ...UNIFIED_BACKUP, id: (index + 26).toString(16).padStart(32, '0'),
+          created_at: `2026-11-2${index}T10:00:00Z`, status: 'verified' as const,
+        })), 28),
+      })
+    }
+    return route.fulfill({
+      json: historyFixture(Array.from({ length: 25 }, (_, index) => ({
+        ...UNIFIED_BACKUP, id: (index + 1).toString(16).padStart(32, '0'),
+        created_at: `2026-11-24T${String(23 - index).padStart(2, '0')}:00:00Z`, status: 'verified' as const,
+      })), 28, 'siguiente-pagina'),
+    })
+  })
+  const list = page.getByRole('region', { name: 'Historial de respaldos' })
+  await expect(list.getByText('25 de 28 respaldos')).toBeVisible()
+  await list.getByRole('button', { name: 'Cargar más respaldos' }).click()
+  await expect(list.getByText('28 respaldos', { exact: true })).toBeVisible()
+  await expect(list.locator('.partida-backup')).toHaveCount(28)
+  await expect(list.getByRole('button', { name: 'Cargar más respaldos' })).toHaveCount(0)
+  expect(cursors).toEqual([null, 'siguiente-pagina'])
+})
+
+test('muestra el respaldo preventivo y permite deshacer la restauración', async ({ page }) => {
+  await open(page, { path: '/partida' })
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({
+    json: historyFixture([{
+      ...MANUAL_BACKUP, kind: 'preventive', created_at: '2026-11-25T21:20:00Z',
+      summary: { gems: 1001, save_size: 11240 },
+    }]),
+  }))
+  await page.getByRole('button', { name: 'Actualizar historial' }).click()
+  const item = page.locator('.partida-backup').first()
+  await expect(item.getByText('Respaldo preventivo', { exact: true })).toBeVisible()
+  await expect(item.getByText('Preventivo antes de restaurar')).toBeVisible()
+  await item.locator('summary').click()
+  await expect(item.getByText('Se creó automáticamente antes de restaurar otra versión.')).toBeVisible()
+  await item.getByRole('button', { name: 'Deshacer restauración' }).click()
+  const dialog = page.getByRole('dialog')
+  await expect(dialog.getByRole('heading', { name: 'Restaurar respaldo preventivo' })).toBeVisible()
+  await expect(dialog).toContainText('podrás restaurar para deshacer este cambio')
+  await dialog.getByRole('button', { name: 'Cancelar' }).click()
+  await expect(dialog).toHaveCount(0)
+})
+
+test('distingue un backend sin historial de un historial vacío', async ({ page }) => {
+  await open(page, { path: '/partida' })
+  await page.route('**/api/v1/version', (route) => route.fulfill({ status: 404, json: { detail: 'Not Found' } }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ status: 404, json: { detail: 'Not Found' } }))
+  await page.getByRole('button', { name: 'Actualizar historial' }).click()
+  const list = page.getByRole('region', { name: 'Historial de respaldos' })
+  await expect(list.getByRole('alert').first()).toContainText('no incluye el historial de respaldos')
+  await expect(list.getByText('Esta cuenta todavía no tiene respaldos.')).toHaveCount(0)
 })

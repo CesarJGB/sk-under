@@ -11,6 +11,7 @@ from __future__ import annotations
 import re
 import threading
 from dataclasses import dataclass, field
+from hashlib import sha256
 from hmac import compare_digest
 from typing import Literal, Protocol
 
@@ -685,6 +686,8 @@ class WriteResult:
     remote_characters: int | None = None
     remote_skills: int | None = None
     remote_skins: int | None = None
+    historical: bool = False
+    preventive_backup_id: str | None = None
 
     def summary(self) -> dict[str, object]:
         return {
@@ -695,6 +698,8 @@ class WriteResult:
             "accepted": self.accepted,
             "persisted": self.persisted,
             "already_original": self.already_original,
+            "historical": self.historical,
+            "preventive_backup_id": self.preventive_backup_id,
             "expected_sha256": self.expected_sha256,
             "remote_sha256": self.remote_sha256,
             "remote_size": self.remote_size,
@@ -841,8 +846,198 @@ class CloudLabService:
         except BackupStoreError:
             pass
 
+    def _snapshot_summary(self, payload: bytes) -> dict[str, object]:
+        """Resumen saneado de la partida para el historial, sin rutas ni hashes."""
+        summary: dict[str, object] = {"save_size": len(payload)}
+        try:
+            gems = read_gems(payload)
+            summary["gems"] = gems.gems
+            summary["serialzed_version"] = gems.serialzed_version
+        except CloudSaveError:
+            pass
+        try:
+            fish = read_fish_chip(payload)
+            summary["fish_chip"] = fish.fish_chip
+            summary["material_fish"] = fish.material_fish
+        except CloudSaveError:
+            pass
+        try:
+            summary["cumulative_fish_count"] = read_fish_progress(payload).cumulative_fish_count
+        except CloudSaveError:
+            pass
+        try:
+            summary["characters"] = len(read_characters(payload).unlocked)
+        except CloudSaveError:
+            pass
+        try:
+            summary["skills"] = len(read_skills(payload).unlocked)
+        except CloudSaveError:
+            pass
+        try:
+            summary["skins"] = len(read_skins(payload).unlocked)
+        except CloudSaveError:
+            pass
+        try:
+            summary["game_version"] = read_save_report(payload).get("game_version")
+        except CloudSaveError:
+            pass
+        return summary
+
+    def create_manual_backup(self) -> BackupRecord:
+        """Crea una copia verificada sin escribir nada en ChillyRoom."""
+        save = self.provider.download(self.max_input_bytes)
+        if save.metadata.size != len(save.payload) or not compare_digest(
+            save.metadata.sha256, sha256(save.payload).hexdigest()
+        ):
+            raise LabServiceError("La copia descargada no coincide con sus metadatos.")
+        summary = self._snapshot_summary(save.payload)
+        bundle = self.store.save_snapshot(
+            save.payload,
+            kind="manual",
+            remote_source=save.metadata.source,
+            remote_size=save.metadata.size,
+            remote_sha256=save.metadata.sha256,
+            snapshot=summary,
+        )
+        self._event(
+            bundle.record.id,
+            {
+                "action": "snapshot",
+                "kind": "manual",
+                "size": bundle.record.original_size,
+                "changed": False,
+            },
+        )
+        return bundle.record
+
+    def restore_history(
+        self, backup_id: str, *, expected_sha256: str | None = None
+    ) -> WriteResult:
+        """Restaura cualquier copia verificable creando antes un punto preventivo.
+
+        A diferencia de ``restore``, no exige que la nube contenga el candidato:
+        recupera los bytes originales del respaldo y conserva el estado actual
+        como un respaldo independiente que permite deshacer la operación.
+        """
+        if not self.write_enabled or self.uploader is None:
+            raise LabWriteDisabled("La escritura remota está deshabilitada en el servidor.")
+        if expected_sha256 is not None and (
+            not isinstance(expected_sha256, str) or not _SHA256.fullmatch(expected_sha256)
+        ):
+            raise LabHashMismatch("La huella esperada no es válida.")
+        with self._write_lock:
+            bundle = self.store.load(backup_id)
+            label = (
+                "la copia completa de la partida"
+                if bundle.record.is_snapshot
+                else self._field_label(bundle.record.field)
+            )
+            if not bundle.record.is_snapshot and not bundle.record.changed:
+                raise LabNoChanges("El respaldo no contiene una modificación que restaurar.")
+            current = self.provider.download(self.max_input_bytes)
+            if expected_sha256 is not None and not compare_digest(expected_sha256, current.metadata.sha256):
+                raise LabRemoteChanged(
+                    "La partida remota cambió desde que abriste el historial. Actualiza la partida y vuelve a intentarlo."
+                )
+            target_sha256 = bundle.record.original_sha256
+            if current.metadata.sha256 == target_sha256:
+                remote_gems, remote_value, remote_material, remote_characters, remote_skills, remote_skins = self._remote_values(
+                    current.payload, bundle.record.field
+                )
+                return WriteResult(
+                    action="restore",
+                    backup_id=backup_id,
+                    uploaded=False,
+                    accepted=False,
+                    persisted=True,
+                    already_original=True,
+                    expected_sha256=target_sha256,
+                    remote_sha256=current.metadata.sha256,
+                    remote_size=current.metadata.size,
+                    remote_gems=remote_gems,
+                    status=None,
+                    field=self._field_path(bundle.record.field),
+                    remote_value=remote_value,
+                    remote_material_fish=remote_material,
+                    remote_characters=remote_characters,
+                    remote_skills=remote_skills,
+                    remote_skins=remote_skins,
+                    historical=True,
+                    message="La nube ya contiene exactamente este respaldo; no se envió nada.",
+                )
+            preventive = self.store.save_snapshot(
+                current.payload,
+                kind="preventive",
+                remote_source=current.metadata.source,
+                remote_size=current.metadata.size,
+                remote_sha256=current.metadata.sha256,
+                snapshot=self._snapshot_summary(current.payload),
+            )
+            self._event(
+                preventive.record.id,
+                {"action": "preventive", "for_backup": backup_id, "size": preventive.record.original_size},
+            )
+            # La descarga previa al respaldo preventivo debe seguir siendo la
+            # misma justo antes de escribir; si no, no se toca la nube.
+            check = self.provider.download(self.max_input_bytes)
+            if not compare_digest(check.metadata.sha256, current.metadata.sha256):
+                raise LabRemoteChanged(
+                    "La partida remota cambió mientras se preparaba la restauración. "
+                    "Se conservó un respaldo preventivo y no se escribió nada."
+                )
+            upload = self.uploader.upload(bundle.original)
+            remote = self.provider.download(self.max_input_bytes)
+            persisted = (
+                remote.metadata.size == bundle.record.original_size
+                and compare_digest(remote.metadata.sha256, target_sha256)
+            )
+            remote_gems, remote_value, remote_material, remote_characters, remote_skills, remote_skins = self._remote_values(
+                remote.payload, bundle.record.field
+            )
+            result = WriteResult(
+                action="restore",
+                backup_id=backup_id,
+                uploaded=True,
+                accepted=upload.accepted,
+                persisted=persisted,
+                already_original=False,
+                expected_sha256=target_sha256,
+                remote_sha256=remote.metadata.sha256,
+                remote_size=remote.metadata.size,
+                remote_gems=remote_gems,
+                status=upload.status,
+                field=self._field_path(bundle.record.field),
+                remote_value=remote_value,
+                remote_material_fish=remote_material,
+                remote_characters=remote_characters,
+                remote_skills=remote_skills,
+                remote_skins=remote_skins,
+                historical=True,
+                preventive_backup_id=preventive.record.id,
+                message=(
+                    f"La descarga posterior coincide con {label}. "
+                    "El estado anterior quedó guardado como respaldo preventivo."
+                    if persisted
+                    else "La restauración fue aceptada, pero la descarga posterior no coincide. "
+                    "El estado anterior sigue guardado como respaldo preventivo."
+                ),
+            )
+            self._event(
+                backup_id,
+                {
+                    "action": "restore",
+                    "mode": "historical",
+                    "persisted": persisted,
+                    "remote_sha256": remote.metadata.sha256,
+                    "preventive_backup_id": preventive.record.id,
+                },
+            )
+            return result
+
     @staticmethod
     def _field_path(field: str) -> str:
+        if field == "snapshot":
+            return "snapshot"
         if field == FISH_CHIP_RECORD_FIELD:
             return FISH_CHIP_PATH
         if field == PROGRESS_RECORD_FIELD:
@@ -864,6 +1059,8 @@ class CloudLabService:
 
     @staticmethod
     def _field_label(field: str) -> str:
+        if field == "snapshot":
+            return "la copia completa de la partida"
         if field == FISH_CHIP_RECORD_FIELD:
             return "las fichas de pesca"
         if field == PROGRESS_RECORD_FIELD:

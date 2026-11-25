@@ -194,7 +194,7 @@ async function mockBase(page: Page, save: object = SAVE) {
   await page.route('**/api/v1/cloud/native/config', (route) => route.fulfill({
     json: { ...CONFIG, session: { ...ACTIVE, save } },
   }))
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: { backups: [], total: 0, listed: 0, limit: 25, unreadable: 0, next_cursor: null } }))
 }
 
 test.fixme('edita materiales, semillas, monedas, renacimiento y pase en un lote confirmado', async ({ page }) => {

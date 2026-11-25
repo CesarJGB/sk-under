@@ -664,6 +664,8 @@ export type LabWriteResult = {
   remote_skins?: number | null
   status: number | null
   message: string
+  historical?: boolean
+  preventive_backup_id?: string | null
 }
 
 export type LabVerification = {
@@ -685,7 +687,7 @@ export type LabVerification = {
 }
 
 export class ApiProblem extends Error {
-  constructor(message: string, readonly issues: Issue[] = [], readonly code = '') {
+  constructor(message: string, readonly issues: Issue[] = [], readonly code = '', readonly status = 0) {
     super(message)
   }
 }
@@ -733,6 +735,7 @@ async function request(
       body?.error?.message ?? 'La API no pudo procesar la solicitud.',
       body?.error?.issues ?? [],
       body?.error?.code,
+      response.status,
     )
   }
   return response
@@ -898,19 +901,39 @@ export type NativeSaveSummary = {
   advanced?: LabAdvanced | null
 }
 
+export type NativeBackupKind = 'edit' | 'manual' | 'preventive'
+
+export type NativeBackupSummary = {
+  save_size?: number
+  gems?: number
+  fish_chip?: number
+  material_fish?: number
+  cumulative_fish_count?: number
+  characters?: number
+  skills?: number
+  skins?: number
+  game_version?: string | null
+  serialzed_version?: string | null
+}
+
 export type NativeBackup = {
   id: string
   created_at: string | null
-  field: NonNullable<LabBackup['field']> | null
-  status: 'prepared' | 'verified' | 'unverified' | 'unreadable'
+  field: NonNullable<LabBackup['field']> | 'snapshot' | null
+  kind?: NativeBackupKind
+  status: 'prepared' | 'verified' | 'unverified' | 'available' | 'unreadable'
   problem?: 'authentication' | 'incompatible' | 'file_unavailable' | 'integrity'
+  integrity?: 'verified' | 'unreadable'
+  can_restore?: boolean
   restoration?: 'verified' | 'unverified' | null
+  interrupted?: boolean
   changed?: boolean
   original_size?: number
   original_value?: number
   candidate_value?: number
   changes?: number
   categories?: Array<NonNullable<LabBackup['field']>>
+  summary?: NativeBackupSummary | null
 }
 
 export type NativeBackupHistory = {
@@ -919,6 +942,14 @@ export type NativeBackupHistory = {
   listed: number
   limit: number
   unreadable: number
+  next_cursor?: string | null
+}
+
+export type NativeVersion = {
+  service: string
+  api_version: string
+  features: string[]
+  commit: string | null
 }
 
 export type NativeSession = {
@@ -1032,14 +1063,29 @@ export const nativeAuth = {
     nativeRequest<LabWriteResult>('/confirm', signal, { backup_id, expected_sha256, confirmation: 'SUBIR' }),
   restore: (backup_id: string, signal: AbortSignal) =>
     nativeRequest<LabWriteResult>('/restore', signal, { backup_id, confirmation: 'RESTAURAR' }),
+  restoreHistory: (backup_id: string, expected_sha256: string | null, signal: AbortSignal) =>
+    nativeRequest<LabWriteResult>('/restore-history', signal, {
+      backup_id, confirmation: 'RESTAURAR', ...(expected_sha256 ? { expected_sha256 } : {}),
+    }),
   verify: (backup_id: string, signal: AbortSignal) =>
     nativeRequest<LabVerification>('/verify', signal, { backup_id }),
-  backups: async (signal: AbortSignal) => {
-    const history = await nativeRequest<NativeBackupHistory>('/backups', signal)
-    if (!Number.isInteger(history.total)) {
-      throw new ApiProblem('El servidor aún no ofrece el estado del historial.', [], 'native_backup_legacy')
+  createBackup: (signal: AbortSignal) =>
+    nativeRequest<{ message: string }>('/backups', signal, { confirmation: 'RESPALDAR' }),
+  backups: async (signal: AbortSignal, cursor?: string | null) => {
+    const query = new URLSearchParams({ limit: '25' })
+    if (cursor) query.set('cursor', cursor)
+    const history = await nativeRequest<NativeBackupHistory>(`/backups?${query}`, signal)
+    if (!Number.isInteger(history.total) || !Array.isArray(history.backups)) {
+      throw new ApiProblem(
+        'El servidor respondió con un formato de historial incompatible. Actualiza la página y vuelve a intentarlo.',
+        [], 'native_backup_incompatible',
+      )
     }
     return history
+  },
+  version: async (signal: AbortSignal): Promise<NativeVersion> => {
+    const response = await request('/version', signal)
+    return response.json()
   },
   diagnostics: (signal: AbortSignal) => nativeRequest<Record<string, unknown>>('/diagnostics', signal),
 }

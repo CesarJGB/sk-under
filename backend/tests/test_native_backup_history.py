@@ -13,7 +13,7 @@ from test_advanced_editor import payload as advanced_payload
 from test_character_editor import payload as character_payload
 from test_cloud_lab_api import FakeProvider, FakeUpload
 from test_fish_chip_editor import payload as fish_payload
-from test_native_api import API, HEADERS, PAYLOAD_A, assert_error, confirmation, login, make_native
+from test_native_api import API, HEADERS, PAYLOAD_A, assert_error, confirmation, login, make_native, prepare
 from test_skill_editor import payload as skill_payload
 from test_skin_editor import payload as skin_payload
 from test_unified_editor import plan, source_bytes
@@ -58,12 +58,17 @@ def test_unified_native_backup_survives_logout_and_service_restart(tmp_path):
     assert env["uploaders"]["unique-a"].calls == []
     listing = history(client)
     assert listing["total"] == listing["listed"] == 1 and listing["unreadable"] == 0
-    assert listing["backups"] == [{
-        "id": backup_id, "created_at": bundle.record.created_at, "field": "unified",
-        "status": "prepared", "restoration": None, "changed": True,
-        "original_size": len(original), "changes": draft["change_count"],
-        "categories": ["gems", "fish_chip", "fish_progress", "advanced"],
-    }]
+    assert listing["next_cursor"] is None
+    row = listing["backups"][0]
+    assert row["id"] == backup_id
+    assert row["created_at"] == bundle.record.created_at
+    assert row["field"] == "unified" and row["kind"] == "edit"
+    assert row["status"] == "prepared" and row["restoration"] is None
+    assert row["changed"] is True and row["original_size"] == len(original)
+    assert row["changes"] == draft["change_count"]
+    assert row["categories"] == ["gems", "fish_chip", "fish_progress", "advanced"]
+    assert row["integrity"] == "verified" and row["can_restore"] is True
+    assert row["interrupted"] is False
 
     assert client.post(API + "/confirm", headers=HEADERS, json=confirmation(draft)).json()["persisted"]
     assert provider.payload == bundle.candidate
@@ -161,7 +166,9 @@ def test_unreadable_records_remain_visible(tmp_path, failure, expected):
     assert report["total"] == report["listed"] == report["unreadable"] == 1
     row = report["backups"][0]
     assert row["status"] == "unreadable" and row["problem"] == expected
-    assert set(row) == {"id", "created_at", "field", "status", "problem"}
+    assert {"id", "created_at", "field", "kind", "status", "problem", "integrity", "can_restore"} <= set(row)
+    assert row["integrity"] == "unreadable" and row["can_restore"] is False
+    assert "original_size" not in row and "summary" not in row
 
 
 def test_missing_storage_and_root_filesystem_are_unavailable(tmp_path, monkeypatch):
@@ -201,6 +208,132 @@ def test_history_reports_total_and_lists_most_recent_first(tmp_path, monkeypatch
     report = history(client)
     assert report["total"] == 26 and report["listed"] == report["limit"] == 25
     assert [row["id"] for row in report["backups"]] == list(reversed(prepared[1:]))
+    assert report["next_cursor"]
+
+    # Una inserción nueva no desplaza la página ya pedida: el cursor es estable.
+    inserted = service.prepare(2000).backup.id
+    older = client.get(API + "/backups", headers=HEADERS, params={
+        "limit": 25, "cursor": report["next_cursor"],
+    })
+    assert older.status_code == 200, older.text
+    second = older.json()
+    assert second["total"] == 27 and second["listed"] == 1
+    assert second["backups"][0]["id"] == prepared[0]
+    assert second["next_cursor"] is None
+    assert inserted != prepared[0]
+
+    invalid = client.get(API + "/backups", headers=HEADERS, params={"cursor": "no-es-un-cursor"})
+    assert_error(invalid, 422, "invalid_backup_id")
+
+
+def test_manual_backup_is_verified_and_does_not_write(tmp_path):
+    env = make_native(tmp_path)
+    provider = env["providers"]["unique-a"]
+    provider.payload = source_bytes()
+    client = env["client"]
+    assert login(client).status_code == 200
+
+    response = client.post(API + "/backups", headers=HEADERS, json={"confirmation": "RESPALDAR"})
+    assert response.status_code == 200, response.text
+    assert "verificado" in response.json()["message"]
+    assert provider.payload == source_bytes()
+    assert env["uploaders"]["unique-a"].calls == []
+
+    row = history(client)["backups"][0]
+    assert row["kind"] == "manual" and row["field"] == "snapshot"
+    assert row["status"] == "available" and row["integrity"] == "verified"
+    assert row["can_restore"] is True and row["changed"] is False
+    assert row["summary"]["save_size"] == len(source_bytes())
+    assert row["summary"]["gems"] == 1000
+    directory = native_store(env).root / row["id"]
+    assert sorted(path.name for path in directory.iterdir()) == ["events.jsonl", "original.json", "record.json"]
+    assert native_store(env).load(row["id"]).original == source_bytes()
+
+    assert client.post(API + "/backups", headers=HEADERS, json={"confirmation": "SUBIR"}).status_code == 422
+
+
+def test_historical_restore_creates_preventive_and_can_be_undone(tmp_path):
+    env = make_native(tmp_path, write=True)
+    provider = env["providers"]["unique-a"]
+    provider.payload = source_bytes()
+    client = env["client"]
+    assert login(client).status_code == 200
+
+    draft = prepare(client)
+    original = source_bytes()
+    assert client.post(API + "/confirm", headers=HEADERS, json=confirmation(draft)).json()["persisted"]
+    edited = provider.payload
+    assert edited != original
+
+    changed = client.post(API + "/restore-history", headers=HEADERS, json={
+        "backup_id": draft["backup"]["id"], "confirmation": "RESTAURAR",
+        "expected_sha256": "0" * 64,
+    })
+    assert_error(changed, 409, "cloud_remote_changed")
+    assert provider.payload == edited
+    assert history(client)["total"] == 1
+
+    restored = client.post(API + "/restore-history", headers=HEADERS, json={
+        "backup_id": draft["backup"]["id"], "confirmation": "RESTAURAR",
+    })
+    assert restored.status_code == 200, restored.text
+    result = restored.json()
+    assert result["persisted"] is True and result["historical"] is True
+    assert result["preventive_backup_id"]
+    assert provider.payload == original
+
+    report = history(client)
+    assert report["total"] == 2
+    target = next(row for row in report["backups"] if row["id"] == draft["backup"]["id"])
+    preventive = next(row for row in report["backups"] if row["id"] == result["preventive_backup_id"])
+    assert target["restoration"] == "verified"
+    assert preventive["kind"] == "preventive" and preventive["status"] == "available"
+    assert preventive["summary"]["gems"] == 1002
+
+    undone = client.post(API + "/restore-history", headers=HEADERS, json={
+        "backup_id": preventive["id"], "confirmation": "RESTAURAR",
+    })
+    assert undone.status_code == 200, undone.text
+    assert undone.json()["persisted"] is True
+    assert provider.payload == edited
+    assert history(client)["total"] == 3
+
+
+def test_historical_restore_of_current_version_does_not_write(tmp_path):
+    env = make_native(tmp_path, write=True)
+    client = env["client"]
+    assert login(client).status_code == 200
+    draft = prepare(client)
+    result = client.post(API + "/restore-history", headers=HEADERS, json={
+        "backup_id": draft["backup"]["id"], "confirmation": "RESTAURAR",
+    })
+    assert result.status_code == 200, result.text
+    assert result.json()["already_original"] is True and result.json()["persisted"] is True
+    assert env["uploaders"]["unique-a"].calls == []
+    assert history(client)["total"] == 1
+
+
+def test_interrupted_upload_is_reported_after_timeout(tmp_path):
+    env = make_native(tmp_path)
+    client = env["client"]
+    assert login(client).status_code == 200
+    draft = prepare(client)
+    native_store(env).claim_confirmation_attempt(draft["backup"]["id"])
+    row = history(client)["backups"][0]
+    assert row["status"] == "unverified" and row["interrupted"] is False
+
+    created = datetime.fromisoformat(row["created_at"])
+    env["service"].now = lambda: created.timestamp() + 600
+    row = history(client)["backups"][0]
+    assert row["status"] == "unverified" and row["interrupted"] is True
+
+
+def test_version_endpoint_lists_backup_capabilities(tmp_path):
+    env = make_native(tmp_path)
+    body = env["client"].get("/api/v1/version").json()
+    assert body["service"] == "sk-under"
+    assert body["api_version"]
+    assert {"native_backup_history", "native_backup_manual", "native_backup_restore_historical"} <= set(body["features"])
 
 
 @pytest.mark.parametrize(("method", "payload", "argument", "field"), [

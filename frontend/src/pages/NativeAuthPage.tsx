@@ -13,7 +13,7 @@ import { Loading, Notice, PageTitle, Problem } from '../ui'
 import { HomePage } from './HomePage'
 import { EditorWorkspace } from './EditorWorkspace'
 import { EditorHeader } from './EditorOverview'
-import { BackupHistory, CloudSaveCard, formatDate } from './PartidaPanels'
+import { BackupHistory, CloudSaveCard, RestoreDialog, formatDate } from './PartidaPanels'
 import { useOperation } from '../useOperation'
 
 const FRIENDLY: Record<string, string> = {
@@ -105,7 +105,9 @@ const FRIENDLY: Record<string, string> = {
   backup_integrity: 'El respaldo no superó la comprobación de integridad.',
   backup_store: 'No se pudo guardar o leer el respaldo privado.',
   native_backup_unavailable: 'El almacén de respaldos no está disponible. Intenta actualizar el historial.',
-  native_backup_legacy: 'El servidor aún no ofrece el estado del historial.',
+  native_backup_legacy: 'La versión del servidor no incluye el historial actualizado. Actualiza el backend y vuelve a intentarlo.',
+  native_backup_incompatible: 'El servidor respondió con un formato de historial incompatible. Actualiza la página y vuelve a intentarlo.',
+  native_backup_restore_historical: 'La nube cambió desde la última descarga. Actualiza la partida y vuelve a intentar la restauración.',
 }
 
 function friendly(error: ApiProblem, fallback: string): ApiProblem {
@@ -116,6 +118,23 @@ function friendly(error: ApiProblem, fallback: string): ApiProblem {
     [],
     error.code,
   )
+}
+
+function historyProblemMessage(error: unknown): ApiProblem {
+  if (!(error instanceof ApiProblem)) return new ApiProblem('No se pudieron cargar los respaldos.')
+  if (error.code === 'native_backup_unavailable') {
+    return new ApiProblem(
+      'El almacén de respaldos no está disponible: falta el almacenamiento persistente. '
+      + 'No se muestra un historial vacío porque el estado es desconocido.',
+      [], error.code, error.status,
+    )
+  }
+  const message = error.code === 'network_error'
+    ? 'Error temporal de conexión. No se pudo consultar el historial; vuelve a intentarlo.'
+    : error.status === 404
+      ? 'El servidor desplegado no incluye el historial de respaldos. Actualiza el backend y vuelve a intentarlo.'
+      : FRIENDLY[error.code] ?? error.message
+  return new ApiProblem(message, [], error.code, error.status)
 }
 
 type CloudView = 'home' | 'save' | 'editor'
@@ -368,8 +387,12 @@ function NativeEditor({
   const [saveOutdated, setSaveOutdated] = useState(false)
   const [history, setHistory] = useState<NativeBackupHistory | null>(null)
   const [backupResult, setBackupResult] = useState<(LabWriteResult | LabVerification) | null>(null)
+  const [restoreTarget, setRestoreTarget] = useState<NativeBackup | null>(null)
+  const [backupNotice, setBackupNotice] = useState<string | null>(null)
+  const [serverNotice, setServerNotice] = useState<string | null>(null)
   const operation = useOperation()
   const historyOperation = useOperation()
+  const moreOperation = useOperation()
   const backupOperation = useOperation()
   const historyRequest = useRef<AbortSignal | null>(null)
 
@@ -384,6 +407,22 @@ function NativeEditor({
     })
   }
 
+  useEffect(() => {
+    const controller = new AbortController()
+    void nativeAuth.version(controller.signal).then((server) => {
+      if (controller.signal.aborted) return
+      if (!server.features?.includes('native_backup_history')) {
+        setServerNotice('El servidor desplegado no incluye el historial de respaldos actualizado.')
+      }
+    }).catch((error: unknown) => {
+      if (controller.signal.aborted) return
+      setServerNotice(error instanceof ApiProblem && error.status === 404
+        ? 'No se pudo comprobar la versión del servidor. Si el historial falla, actualiza el backend.'
+        : null)
+    })
+    return () => controller.abort()
+  }, [])
+
   function refreshHistory(afterMutation = false) {
     if (!afterMutation && historyRequest.current && !historyRequest.current.aborted) return
     void run(async (signal) => {
@@ -395,6 +434,21 @@ function NativeEditor({
         if (historyRequest.current === signal) historyRequest.current = null
       }
     }, historyOperation)
+  }
+
+  function loadMoreHistory() {
+    const cursor = history?.next_cursor
+    if (!cursor) return
+    void moreOperation.run(async (signal) => {
+      const next = await nativeAuth.backups(signal, cursor)
+      if (signal.aborted) return
+      setHistory((previous) => {
+        if (!previous) return next
+        const known = new Set(previous.backups.map(({ id }) => id))
+        const added = next.backups.filter(({ id }) => !known.has(id))
+        return { ...next, backups: [...previous.backups, ...added], listed: previous.listed + added.length }
+      })
+    })
   }
 
   useEffect(() => {
@@ -440,25 +494,46 @@ function NativeEditor({
 
   function verify(backup: NativeBackup) {
     setBackupResult(null)
+    setBackupNotice(null)
     void run(async (signal) => {
       const result = await nativeAuth.verify(backup.id, signal)
       if (!signal.aborted) setBackupResult(result)
     }, backupOperation)
   }
 
-  function restore(backup: NativeBackup) {
-    if (!window.confirm(`¿Restaurar el respaldo de ${accountLabel}? Se reemplazará la partida en la nube.`)) return
+  function requestRestore(backup: NativeBackup) {
     setBackupResult(null)
+    setBackupNotice(null)
+    setRestoreTarget(backup)
+  }
+
+  function restore() {
+    const target = restoreTarget
+    if (!target) return
     void run(async (signal) => {
       try {
-        const restored = await nativeAuth.restore(backup.id, signal)
+        const restored = await nativeAuth.restoreHistory(target.id, save?.sha256 ?? null, signal)
         if (signal.aborted) return
+        setRestoreTarget(null)
         setBackupResult(restored)
         setSaveOutdated(true)
+        refreshHistory(true)
         download()
-      } finally {
-        if (!signal.aborted) refreshHistory(true)
+      } catch (error) {
+        if (!signal.aborted) setRestoreTarget(null)
+        throw error
       }
+    }, backupOperation)
+  }
+
+  function createBackup() {
+    setBackupResult(null)
+    setBackupNotice(null)
+    void run(async (signal) => {
+      const result = await nativeAuth.createBackup(signal)
+      if (signal.aborted) return
+      setBackupNotice(result.message)
+      refreshHistory(true)
     }, backupOperation)
   }
 
@@ -479,14 +554,24 @@ function NativeEditor({
         {downloadFeedback}
         {!session.write_ready && <p className="partida-muted">Acceso a la nube de solo lectura.</p>}
       </>} />}
-    <BackupHistory history={history} pending={historyOperation.pending} result={backupResult}
-      problem={historyOperation.problem && <Problem problem={friendly(historyOperation.problem, 'No se pudieron cargar los respaldos.')} />}
+    <BackupHistory history={history} pending={historyOperation.pending} loadingMore={moreOperation.pending}
+      result={backupResult}
+      problem={(serverNotice || historyOperation.problem || moreOperation.problem) ? <>
+        {serverNotice && <Notice tone="warning">{serverNotice}</Notice>}
+        {historyOperation.problem && <Problem problem={historyProblemMessage(historyOperation.problem)} />}
+        {moreOperation.problem && <Problem problem={historyProblemMessage(moreOperation.problem)} />}
+      </> : null}
       feedback={<>
+        {backupNotice && <p className="partida-muted" role="status">{backupNotice}</p>}
         {backupOperation.pending && <Loading>Consultando la nube…</Loading>}
         {backupOperation.problem && <Problem problem={friendly(backupOperation.problem, 'No se pudo completar la operación del respaldo.')} />}
       </>}
-      canVerify={Boolean(session.installation_ready)} canRestore={Boolean(session.write_ready)} disabled={disabled}
-      onRefresh={() => refreshHistory()} onVerify={verify} onRestore={restore} />
+      canVerify={Boolean(session.installation_ready)} canRestore={Boolean(session.write_ready)}
+      canBackup={Boolean(session.installation_ready)} creatingBackup={backupOperation.pending}
+      disabled={disabled} onRefresh={() => refreshHistory(true)} onLoadMore={loadMoreHistory}
+      onVerify={verify} onRestore={requestRestore} onCreateBackup={createBackup} />
+    {restoreTarget && <RestoreDialog backup={restoreTarget} accountLabel={accountLabel}
+      pending={backupOperation.pending} onCancel={() => setRestoreTarget(null)} onConfirm={restore} />}
   </>
 
   if (!save) return <>

@@ -274,12 +274,16 @@ async function mockBase(page: Page, config: object = BASE_CONFIG) {
     json: { status: 'ok', access_mode: 'local', max_file_bytes: 1_048_576 },
   }))
   await page.route('**/api/v1/formats', (route) => route.fulfill({ json: { formats: [] } }))
+  await page.route('**/api/v1/version', (route) => route.fulfill({ json: {
+    service: 'sk-under', api_version: '2026.11.25', commit: null,
+    features: ['native_backup_history', 'native_backup_history_pagination', 'native_backup_manual'],
+  } }))
   await page.route('**/api/v1/cloud/native/config', (route) => route.fulfill({ json: config }))
 }
 
 async function mockEditor(page: Page, session: object = ACTIVE) {
   await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({ json: session }))
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.route('**/api/v1/cloud/native/prepare', (route) => {
     expect(route.request().postDataJSON()).toEqual({ new_gems: 1002, source_sha256: SHA })
     return route.fulfill({ json: PREPARED })
@@ -393,7 +397,7 @@ for (const [code, message] of [
 test('no pide identificadores y descarga con la identidad generada por el servidor', async ({ page }) => {
   await mockBase(page)
   await mockEditor(page, { ...ACTIVE, save: SAVE })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.goto('/partida')
   await expect(page.getByLabel('Identificador de instalación')).toHaveCount(0)
   await expect(page.getByLabel('Perfil de instalación')).toHaveCount(0)
@@ -410,7 +414,7 @@ test('explica la espera de vinculación de un dispositivo nuevo', async ({ page 
       binding_wait_until: '2026-11-25T08:00:00Z',
     },
   }))
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.goto('/partida')
   await submitLogin(page)
   await expect(page.getByText('En espera de ChillyRoom', { exact: true })).toBeVisible()
@@ -426,7 +430,7 @@ test('informa sesión caducada durante una descarga y vuelve al acceso', async (
       : BASE_CONFIG,
   }))
   await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({ json: { ...ACTIVE, save: SAVE } }))
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.route('**/api/v1/cloud/native/save', (route) => {
     expired = true
     return route.fulfill({
@@ -469,7 +473,7 @@ test('permite elegir el perfil cuando hay más de uno', async ({ page }) => {
       },
     })
   })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.goto('/partida')
   await page.getByLabel('Perfil de instalación').selectOption(SECOND_PROFILE.id)
   await submitLogin(page)
@@ -507,7 +511,7 @@ test('informa cuando la cuenta no tiene partida en la nube', async ({ page }) =>
   await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({
     json: { ...ACTIVE, save: null, save_error: 'native_no_cloud_save' },
   }))
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.goto('/partida')
   await submitLogin(page)
   await expect(page.getByText('Sin partida en la nube', { exact: true })).toBeVisible()
@@ -527,7 +531,7 @@ test.fixme('navega por el flujo de nube y mantiene el borrador solo para la cuen
     } })
   })
   await page.route('**/api/v1/cloud/native/logout', (route) => route.fulfill({ status: 204 }))
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({
     json: { backups: account === 1 ? [{ ...BACKUP, confirmed: true }] : [] },
   }))
 
@@ -563,7 +567,7 @@ test.fixme('navega por el flujo de nube y mantiene el borrador solo para la cuen
 
 test.fixme('muestra el editor rápido con saldos y tarjetas de desbloqueo', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/partida')
   await page.getByRole('link', { name: 'Abrir Editor' }).click()
@@ -585,7 +589,7 @@ test.fixme('muestra el editor rápido con saldos y tarjetas de desbloqueo', asyn
 
 test.fixme('sincroniza la selección rápida y detallada y la conserva al navegar', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/partida')
   await page.getByRole('link', { name: 'Abrir Editor' }).click()
@@ -609,7 +613,7 @@ test.fixme('sincroniza la selección rápida y detallada y la conserva al navega
 
 test.fixme('edita y sube el saldo de fichas con el flujo autenticado', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: SAVE } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({
     json: { backups: [{ ...FISH_BACKUP, confirmed: true }] },
   }))
   await page.route('**/api/v1/cloud/native/prepare-fish-chip', (route) => {
@@ -657,7 +661,7 @@ test.fixme('edita y sube el saldo de fichas con el flujo autenticado', async ({ 
 
 test.fixme('edita el progreso acumulado de fichas sin cambiar el saldo', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: SAVE } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({
     json: { backups: [{ ...PROGRESS_BACKUP, confirmed: true }] },
   }))
   await page.route('**/api/v1/cloud/native/prepare-fish-progress', (route) => {
@@ -699,7 +703,7 @@ test.fixme('edita el progreso acumulado de fichas sin cambiar el saldo', async (
 
 test.fixme('rechaza valores inválidos de fichas antes de preparar la edición', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: SAVE } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.goto('/partida')
   await page.getByRole('link', { name: 'Abrir Editor' }).click()
   const input = page.getByLabel('Nuevo saldo de fichas de pesca')
@@ -735,7 +739,7 @@ test.fixme('bloquea la preparación cuando el catálogo de personajes no está d
       },
     }
     await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: unavailable } } })
-    await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+    await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
     await page.goto('/partida')
     await openCategory(page, 'personajes')
     await expect(page.getByTestId('character-catalog-unavailable')).toBeVisible()
@@ -756,7 +760,7 @@ test.fixme('bloquea la preparación cuando el catálogo de personajes no está d
 
 test.fixme('desbloquea un personaje individual con resumen y verificación', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   let selectedCodes: string[] = []
   await page.route('**/api/v1/cloud/native/prepare-characters', (route) => {
     const payload = route.request().postDataJSON()
@@ -796,7 +800,7 @@ test.fixme('desbloquea un personaje individual con resumen y verificación', asy
 
 test.fixme('desbloquea varios personajes seleccionados sin tocar los disponibles', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   let selectedCodes: string[] = []
   await page.route('**/api/v1/cloud/native/prepare-characters', (route) => {
     selectedCodes = route.request().postDataJSON().codes
@@ -819,7 +823,7 @@ test.fixme('desbloquea varios personajes seleccionados sin tocar los disponibles
 
 test.fixme('selecciona todos, deselecciona y desbloquea el resto en masa', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   let selectedCodes: string[] = []
   await page.route('**/api/v1/cloud/native/prepare-characters', (route) => {
     selectedCodes = route.request().postDataJSON().codes
@@ -854,7 +858,7 @@ test.fixme('selecciona todos, deselecciona y desbloquea el resto en masa', async
 
 test.fixme('muestra el resumen y desbloquea una skin con respaldo y verificación', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   let selectedSkins: Array<{ code: string; index: number }> = []
   await page.route('**/api/v1/cloud/native/prepare-skins', (route) => {
     const payload = route.request().postDataJSON()
@@ -915,7 +919,7 @@ test.fixme('muestra el resumen y desbloquea una skin con respaldo y verificació
 
 test.fixme('selecciona todas las skins pendientes y prepara el lote sin renderizar tarjetas cerradas', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   let selectedSkins: Array<{ code: string; index: number }> = []
   await page.route('**/api/v1/cloud/native/prepare-skins', (route) => {
     selectedSkins = route.request().postDataJSON().skins
@@ -945,7 +949,7 @@ test.fixme('selecciona todas las skins pendientes y prepara el lote sin renderiz
 
 test.fixme('busca skins, filtra estados y muestra posiciones incompatibles', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.goto('/partida')
   await openCategory(page, 'skins')
 
@@ -970,7 +974,7 @@ test.fixme('busca skins, filtra estados y muestra posiciones incompatibles', asy
 
 test.fixme('muestra el resumen y desbloquea una habilidad con respaldo y verificación', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   let selectedSkills: Array<{ code: string; index: number }> = []
   await page.route('**/api/v1/cloud/native/prepare-skills', (route) => {
     const payload = route.request().postDataJSON()
@@ -1026,7 +1030,7 @@ test.fixme('muestra el resumen y desbloquea una habilidad con respaldo y verific
 
 test.fixme('selecciona todas las habilidades bloqueadas, deselecciona y prepara el lote', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: REPORT } } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   let selectedSkills: Array<{ code: string; index: number }> = []
   await page.route('**/api/v1/cloud/native/prepare-skills', (route) => {
     selectedSkills = route.request().postDataJSON().skills
@@ -1073,7 +1077,7 @@ test.fixme('filtra habilidades pendientes y muestra posiciones sin dato', async 
     },
   }
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, report: withUnknown } } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.goto('/partida')
   await openCategory(page, 'habilidades')
   await page.getByLabel('Filtro').selectOption('incomplete')
@@ -1095,18 +1099,18 @@ test('las rutas antiguas llevan a Partida y no permiten cargar un archivo local'
   }
 })
 
-test('verifica y restaura un respaldo desde Partida con una confirmación', async ({ page }) => {
+test('verifica y restaura un respaldo desde Partida con una confirmación clara', async ({ page }) => {
   let restoreCalls = 0
   let historyCalls = 0
   await mockBase(page, { ...BASE_CONFIG, session: { ...ACTIVE, save: { ...SAVE, gems: 1002, downloaded_at: '2026-11-23T20:00:00Z' } } })
-  await page.route('**/api/v1/cloud/native/backups', (route) => {
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => {
     historyCalls += 1
     return route.fulfill({
       json: { backups: [{
-        id: BACKUP.id, created_at: BACKUP.created_at, field: 'gems', status: 'verified',
+        id: BACKUP.id, created_at: BACKUP.created_at, field: 'gems', kind: 'edit', status: 'verified',
         original_value: 1001, candidate_value: 1002, changed: true, original_size: BACKUP.original_size,
-        restoration: restoreCalls ? 'verified' : null,
-      }], total: 1, listed: 1, limit: 25, unreadable: 0 },
+        restoration: restoreCalls ? 'verified' : null, integrity: 'verified', can_restore: true,
+      }], total: 1, listed: 1, limit: 25, unreadable: 0, next_cursor: null },
     })
   })
   await page.route('**/api/v1/cloud/native/save', (route) => route.fulfill({
@@ -1116,28 +1120,31 @@ test('verifica y restaura un respaldo desde Partida con una confirmación', asyn
     expect(route.request().postDataJSON()).toEqual({ backup_id: BACKUP.id })
     return route.fulfill({ json: { backup_id: BACKUP.id, matches_original: false, matches_candidate: true } })
   })
-  await page.route('**/api/v1/cloud/native/restore', (route) => {
+  await page.route('**/api/v1/cloud/native/restore-history', (route) => {
     restoreCalls += 1
-    expect(route.request().postDataJSON()).toEqual({ backup_id: BACKUP.id, confirmation: 'RESTAURAR' })
+    expect(route.request().postDataJSON()).toEqual({
+      backup_id: BACKUP.id, confirmation: 'RESTAURAR', expected_sha256: SHA,
+    })
     return route.fulfill({ json: {
-      action: 'restore', backup_id: BACKUP.id, persisted: true, remote_gems: 9,
+      action: 'restore', backup_id: BACKUP.id, persisted: true, remote_gems: 1001,
+      historical: true, preventive_backup_id: 'd'.repeat(32),
     } })
   })
   await page.goto('/partida')
   await page.locator('.partida-backup summary').click()
-  await page.getByRole('button', { name: 'Verificar nube' }).click()
+  await page.getByRole('button', { name: 'Verificar contra la nube' }).click()
   await expect(page.getByText('La nube coincide con la edición guardada.')).toBeVisible()
-  page.once('dialog', (dialog) => dialog.dismiss())
-  await page.getByRole('button', { name: 'Restaurar respaldo' }).click()
+  await page.getByRole('button', { name: 'Restaurar esta versión' }).click()
+  const dialog = page.getByRole('dialog')
+  await expect(dialog).toContainText('Se reemplazará el progreso actual')
+  await expect(dialog).toContainText('respaldo preventivo')
+  await dialog.getByRole('button', { name: 'Cancelar' }).click()
   expect(restoreCalls).toBe(0)
-  page.once('dialog', async (dialog) => {
-    expect(dialog.message()).toContain('Se reemplazará la partida en la nube.')
-    await dialog.accept()
-  })
-  await page.getByRole('button', { name: 'Restaurar respaldo' }).click()
-  await expect(page.getByText('Respaldo restaurado y verificado en la nube.')).toBeVisible()
+  await page.getByRole('button', { name: 'Restaurar esta versión' }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Restaurar esta versión' }).click()
+  await expect(page.getByText('Restauración verificada: la nube contiene exactamente la versión elegida.')).toBeVisible()
   await expect(page.getByTestId('native-current-gems')).toHaveText('1,001')
-  await expect(page.getByText('Restauración verificada')).toBeVisible()
+  await expect(page.locator('.partida-backup-status').getByText('Restauración verificada', { exact: true })).toBeVisible()
   await expect(page.getByRole('region', { name: 'Partida en la nube' }).locator('time')).toHaveAttribute('datetime', '2026-11-23T20:20:00Z')
   expect(restoreCalls).toBe(1)
   expect(historyCalls).toBe(2)
@@ -1148,7 +1155,7 @@ test('permite reintentar una descarga y conserva el resultado al abrir el Editor
   let finishDownload = () => {}
   const pendingDownload = new Promise<void>((resolve) => { finishDownload = resolve })
   await mockBase(page, { ...BASE_CONFIG, session: ACTIVE })
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({
     json: EMPTY_NATIVE_HISTORY,
   }))
   await page.route('**/api/v1/cloud/native/save', async (route) => {
@@ -1187,7 +1194,7 @@ test('descarta el historial anterior si la cuenta cambia mientras carga', async 
   await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({
     json: { ...ACTIVE, account: { ...ACTIVE.account, label: SECOND_PROFILE.label } },
   }))
-  await page.route('**/api/v1/cloud/native/backups', async (route) => {
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, async (route) => {
     if (!firstAccount) return route.fulfill({ json: EMPTY_NATIVE_HISTORY })
     firstRequested = true
     await pending

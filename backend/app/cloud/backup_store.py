@@ -9,6 +9,8 @@ los registros de eventos.
 
 from __future__ import annotations
 
+import base64
+import binascii
 import json
 import os
 import re
@@ -93,6 +95,23 @@ _RECORD_LIMIT = 64 * 1024
 _JOURNAL_LIMIT = 1024 * 1024
 _SEAL_MAGIC = b"SKB1"
 _SEAL_TAG = 16
+_RECORD_FORMAT = 2
+_SNAPSHOT_FIELD = "snapshot"
+_KINDS = frozenset({"edit", "manual", "preventive"})
+_SNAPSHOT_KEYS = frozenset(
+    {
+        "gems",
+        "fish_chip",
+        "material_fish",
+        "cumulative_fish_count",
+        "characters",
+        "skills",
+        "skins",
+        "game_version",
+        "serialzed_version",
+        "save_size",
+    }
+)
 
 
 class BackupStoreError(CloudSaveError):
@@ -147,6 +166,15 @@ class BackupRecord:
     skin_selections: tuple[tuple[str, int], ...] = ()
     advanced_plan: dict[str, object] = dataclass_field(default_factory=dict)
     unified_plan: dict[str, object] = dataclass_field(default_factory=dict)
+    kind: str = "edit"
+    format: int = 1
+    categories: tuple[str, ...] = ()
+    change_count: int = 0
+    snapshot: dict[str, object] = dataclass_field(default_factory=dict)
+
+    @property
+    def is_snapshot(self) -> bool:
+        return self.kind in {"manual", "preventive"}
 
     @property
     def original_value(self) -> int:
@@ -160,10 +188,15 @@ class BackupRecord:
 
     def summary(self) -> dict[str, object]:
         return {
+            "format": self.format,
+            "kind": self.kind,
             "id": self.id,
             "created_at": self.created_at,
             "field": self.field,
             "changed": self.changed,
+            "categories": list(self.categories),
+            "change_count": self.change_count,
+            "snapshot": self.snapshot,
             "original_size": self.original_size,
             "original_sha256": self.original_sha256,
             "original_gems": self.original_gems,
@@ -334,6 +367,79 @@ def _require_codes(value: object) -> tuple[str, ...]:
             )
         codes.append(code)
     return tuple(codes)
+
+
+def _require_categories(value: object) -> tuple[str, ...]:
+    if value is None:
+        return ()
+    if not isinstance(value, list) or len(value) > len(_FIELDS):
+        raise BackupIntegrityError("El registro de respaldo contiene categorías inválidas.")
+    categories: list[str] = []
+    for category in value:
+        if not isinstance(category, str) or category not in _FIELDS or category in categories:
+            raise BackupIntegrityError("El registro de respaldo contiene categorías inválidas.")
+        categories.append(category)
+    return tuple(categories)
+
+
+def _require_snapshot(value: object) -> dict[str, object]:
+    if value is None:
+        return {}
+    if not isinstance(value, dict) or len(value) > len(_SNAPSHOT_KEYS):
+        raise BackupIntegrityError("El registro de respaldo contiene un resumen inválido.")
+    summary: dict[str, object] = {}
+    for key, item in value.items():
+        if key not in _SNAPSHOT_KEYS:
+            raise BackupIncompatible("El resumen del respaldo contiene un campo desconocido.")
+        if item is None or isinstance(item, bool):
+            summary[key] = item
+        elif isinstance(item, int) and abs(item) <= 2**63:
+            summary[key] = item
+        elif isinstance(item, str) and len(item) <= 40:
+            summary[key] = item
+        else:
+            raise BackupIntegrityError("El resumen del respaldo contiene un valor inválido.")
+    return summary
+
+
+def _index_key(entry: BackupIndexEntry) -> tuple[datetime, str]:
+    moment = (
+        datetime.fromisoformat(entry.record.created_at)
+        if entry.record is not None
+        else datetime.min.replace(tzinfo=timezone.utc)
+    )
+    return moment, entry.id
+
+
+def _encode_cursor(entry: BackupIndexEntry) -> str:
+    moment, backup_id = _index_key(entry)
+    raw = json.dumps([moment.isoformat(), backup_id], separators=(",", ":")).encode("ascii")
+    return base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
+
+
+def _decode_cursor(cursor: object) -> tuple[datetime, str]:
+    if not isinstance(cursor, str) or not cursor or len(cursor) > 200:
+        raise InvalidBackupId("El cursor del historial no es válido.")
+    try:
+        raw = base64.urlsafe_b64decode(cursor + "=" * (-len(cursor) % 4))
+        data = json.loads(raw)
+    except (ValueError, binascii.Error, UnicodeDecodeError):
+        raise InvalidBackupId("El cursor del historial no es válido.") from None
+    if (
+        not isinstance(data, list)
+        or len(data) != 2
+        or not isinstance(data[0], str)
+        or not isinstance(data[1], str)
+        or not _ID.fullmatch(data[1])
+    ):
+        raise InvalidBackupId("El cursor del historial no es válido.")
+    try:
+        moment = datetime.fromisoformat(data[0])
+    except ValueError:
+        raise InvalidBackupId("El cursor del historial no es válido.") from None
+    if moment.utcoffset() is None:
+        raise InvalidBackupId("El cursor del historial no es válido.")
+    return moment, data[1]
 
 
 class LabBackupStore:
@@ -584,6 +690,17 @@ class LabBackupStore:
         original_value = _require_int(original_value, "original_value")
         new_value = _require_int(new_value, "candidate_value")
         source = _require_text(remote_source, "remote_source")
+        change_count = 1 if edit.changed else 0
+        categories: tuple[str, ...] = ()
+        if field == UNIFIED_RECORD_FIELD:
+            categories = tuple(
+                item.key for item in getattr(edit, "categories", ()) if getattr(item, "changes", 0)
+            )
+            change_count = int(getattr(edit, "change_count", change_count))
+        elif field == ADVANCED_RECORD_FIELD:
+            change_count = len(getattr(edit, "changes", {}))
+        elif field in {CHARACTER_RECORD_FIELD, SKILL_RECORD_FIELD, SKIN_RECORD_FIELD}:
+            change_count = max(0, new_value - original_value)
         self._ensure_root()
         backup_id = uuid4().hex
         staging = self.root / f".pending-{backup_id}"
@@ -620,6 +737,9 @@ class LabBackupStore:
             skin_selections=skins,
             advanced_plan=plan,
             unified_plan=unified,
+            format=_RECORD_FORMAT,
+            categories=categories,
+            change_count=change_count,
         )
         try:
             self._write_private(directory / "original.json", edit.original)
@@ -651,7 +771,103 @@ class LabBackupStore:
                 staging.rmdir()
             except OSError:
                 pass
+        # Un respaldo solo se entrega después de comprobar que es legible y
+        # reproducible; si no, la escritura remota queda bloqueada.
+        self.load(backup_id)
         return BackupBundle(record, edit.original, edit.candidate)
+
+    def save_snapshot(
+        self,
+        payload: bytes,
+        *,
+        kind: str,
+        remote_source: str,
+        remote_size: int,
+        remote_sha256: str,
+        snapshot: dict[str, object],
+    ) -> BackupBundle:
+        """Conserva una copia íntegra de la partida sin candidato ni escritura.
+
+        Se usa para respaldos manuales y para el punto preventivo anterior a una
+        restauración histórica. No duplica los bytes del candidato: el registro
+        declara ``candidate == original`` y ``load`` lo verifica explícitamente.
+        """
+        self._require_mount()
+        if kind not in {"manual", "preventive"}:
+            raise BackupIntegrityError("El tipo de copia de la partida no es válido.")
+        if not isinstance(payload, bytes) or not payload or len(payload) > self.limit:
+            raise BackupIntegrityError("La copia de la partida no es válida.")
+        if len(payload) != remote_size or sha256(payload).hexdigest() != remote_sha256:
+            raise BackupIntegrityError("La copia descargada no coincide con sus metadatos.")
+        reconstruct_cloud_save(payload)
+        summary = _require_snapshot(snapshot)
+        source = _require_text(remote_source, "remote_source")
+        gems = summary.get("gems")
+        self._ensure_root()
+        backup_id = uuid4().hex
+        staging = self.root / f".pending-{backup_id}"
+        try:
+            staging.mkdir(mode=0o700)
+        except OSError:
+            raise BackupStoreError("No se pudo preparar el directorio del respaldo.") from None
+        directory = staging / backup_id
+        try:
+            os.mkdir(directory, 0o700)
+        except OSError:
+            try:
+                staging.rmdir()
+            except OSError:
+                pass
+            raise BackupStoreError("No se pudo crear el directorio del respaldo.") from None
+        digest = sha256(payload).hexdigest()
+        record = BackupRecord(
+            id=backup_id,
+            created_at=_now(),
+            changed=False,
+            original_size=len(payload),
+            original_sha256=digest,
+            original_gems=gems if isinstance(gems, int) and not isinstance(gems, bool) else 0,
+            candidate_size=len(payload),
+            candidate_sha256=digest,
+            candidate_gems=gems if isinstance(gems, int) and not isinstance(gems, bool) else 0,
+            remote_source=source,
+            remote_size=remote_size,
+            remote_sha256=remote_sha256,
+            field=_SNAPSHOT_FIELD,
+            kind=kind,
+            format=_RECORD_FORMAT,
+            snapshot=summary,
+        )
+        try:
+            self._write_private(directory / "original.json", payload)
+            encoded = json.dumps(record.summary(), ensure_ascii=False, sort_keys=True).encode("utf-8")
+            if len(encoded) > _RECORD_LIMIT:
+                raise BackupIntegrityError("El registro de respaldo supera el límite.")
+            self._write_private(directory / "record.json", encoded)
+            self._sync_directory(directory)
+            directory = directory.rename(self._directory(backup_id))
+            self._sync_directory(self.root)
+            self._sync_directory(self.root.parent)
+        except (BackupStoreError, OSError) as exc:
+            for name in ("record.json", "original.json"):
+                try:
+                    (directory / name).unlink(missing_ok=True)
+                except OSError:
+                    pass
+            try:
+                directory.rmdir()
+            except OSError:
+                pass
+            if isinstance(exc, OSError):
+                raise BackupStoreError("No se pudo conservar el respaldo de forma persistente.") from None
+            raise
+        finally:
+            try:
+                staging.rmdir()
+            except OSError:
+                pass
+        self.load(backup_id)
+        return BackupBundle(record, payload, payload)
 
     def migrate_legacy(self) -> int:
         """Cifra respaldos de la Fase 6.8 que todavía están en claro.
@@ -734,9 +950,18 @@ class LabBackupStore:
             raise BackupIntegrityError("El registro de respaldo no es JSON válido.") from None
         if not isinstance(data, dict):
             raise BackupIntegrityError("El registro de respaldo no es un objeto.")
+        kind = data.get("kind", "edit")
+        if not isinstance(kind, str) or kind not in _KINDS:
+            raise BackupIncompatible("El registro de respaldo contiene un tipo desconocido.")
+        format_version = data.get("format", 1)
+        if type(format_version) is not int or format_version not in {1, _RECORD_FORMAT}:
+            raise BackupIncompatible("El registro de respaldo usa un formato desconocido.")
         field = data.get("field", "gems")
-        if not isinstance(field, str) or field not in _FIELDS:
-            raise BackupIncompatible("El registro de respaldo contiene un tipo de campo inválido.")
+        if kind == "edit":
+            if not isinstance(field, str) or field not in _FIELDS:
+                raise BackupIncompatible("El registro de respaldo contiene un tipo de campo inválido.")
+        elif field != _SNAPSHOT_FIELD:
+            raise BackupIncompatible("El registro de respaldo contiene una copia de partida inválida.")
         plan = _require_advanced_plan(data.get("advanced_plan"), historical=True) if field == ADVANCED_RECORD_FIELD else {}
         unified = _require_unified_plan(data.get("unified_plan")) if field == UNIFIED_RECORD_FIELD else {}
         record = BackupRecord(
@@ -758,11 +983,18 @@ class LabBackupStore:
             skin_selections=_require_skin_selections(data.get("skin_selections")),
             advanced_plan=plan,
             unified_plan=unified,
+            kind=kind,
+            format=format_version,
+            categories=_require_categories(data.get("categories")),
+            change_count=_require_int(data.get("change_count", 0), "change_count"),
+            snapshot=_require_snapshot(data.get("snapshot")),
         )
         if record.id != backup_id:
             raise BackupIntegrityError("El identificador del registro no coincide.")
         if not isinstance(data.get("changed"), bool):
             raise BackupIntegrityError("El registro de respaldo contiene changed inválido.")
+        if record.is_snapshot and (record.changed or record.original_sha256 != record.candidate_sha256):
+            raise BackupIntegrityError("La copia de la partida contiene un estado inválido.")
         try:
             if datetime.fromisoformat(record.created_at).utcoffset() is None:
                 raise ValueError
@@ -776,6 +1008,13 @@ class LabBackupStore:
         record = self._read_record(backup_id)
         directory = self._directory(backup_id)
         original = self._read_private(directory / "original.json", self.limit)
+        if record.is_snapshot:
+            if len(original) != record.original_size or sha256(original).hexdigest() != record.original_sha256:
+                raise BackupIntegrityError("La copia de la partida no coincide con su registro.")
+            if record.original_sha256 != record.candidate_sha256 or record.original_size != record.candidate_size:
+                raise BackupIntegrityError("La copia de la partida contiene un estado inválido.")
+            reconstruct_cloud_save(original)
+            return BackupBundle(record, original, original)
         candidate = self._read_private(directory / "candidate.json", self.limit)
         if len(original) != record.original_size or sha256(original).hexdigest() != record.original_sha256:
             raise BackupIntegrityError("El original del respaldo no coincide con su registro.")
@@ -973,14 +1212,29 @@ class LabBackupStore:
                 indexed.append(BackupIndexEntry(entry.name, self._read_record(entry.name)))
             except (BackupStoreError, OSError) as exc:
                 indexed.append(BackupIndexEntry(entry.name, None, backup_problem(exc)))
-        indexed.sort(
-            key=lambda entry: (
-                datetime.fromisoformat(entry.record.created_at) if entry.record else datetime.min.replace(tzinfo=timezone.utc),
-                entry.id,
-            ),
-            reverse=True,
-        )
+        indexed.sort(key=_index_key, reverse=True)
         return indexed
+
+    def page(
+        self, limit: int = 25, *, cursor: str | None = None, require_parent: bool = False
+    ) -> tuple[list[BackupIndexEntry], str | None, int, int]:
+        """Devuelve una página estable por (fecha, id) sin releer toda la partida.
+
+        Las inserciones nuevas no desplazan las páginas siguientes porque el
+        cursor fija la última clave entregada, no un desplazamiento numérico.
+        Devuelve además el total y la cantidad de registros ilegibles.
+        """
+        if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 100:
+            raise BackupStoreError("Límite de listado inválido.")
+        entries = self.index(require_parent=require_parent)
+        total = len(entries)
+        unreadable = sum(entry.problem is not None for entry in entries)
+        if cursor is not None:
+            after = _decode_cursor(cursor)
+            entries = [entry for entry in entries if _index_key(entry) < after]
+        selected = entries[:limit]
+        next_cursor = _encode_cursor(selected[-1]) if selected and len(entries) > limit else None
+        return selected, next_cursor, total, unreadable
 
     def list(self, limit: int = 25) -> list[BackupRecord]:
         if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 100:

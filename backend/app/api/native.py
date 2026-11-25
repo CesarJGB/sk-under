@@ -12,9 +12,9 @@ import logging
 import sqlite3
 from hmac import compare_digest
 from time import time
-from typing import Annotated
+from typing import Annotated, Literal
 
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter, Query, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.routing import APIRoute
 from pydantic import BaseModel, ConfigDict, StringConstraints, field_validator
@@ -202,6 +202,17 @@ class SkillPrepareInput(CloudLabSkillPrepareInput):
 
 class SkinPrepareInput(CloudLabSkinPrepareInput):
     source_sha256: Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)]
+
+
+class ManualBackupInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    confirmation: Literal["RESPALDAR"]
+
+
+class HistoricalRestoreInput(CloudLabRestoreInput):
+    expected_sha256: Annotated[
+        str, StringConstraints(pattern=r"^[0-9a-f]{64}$", min_length=64, max_length=64)
+    ] | None = None
 
 
 def _disabled_config(settings) -> dict[str, object]:
@@ -445,6 +456,16 @@ def restore(payload: CloudLabRestoreInput, request: Request) -> dict[str, object
     return service.restore(current, payload.backup_id)
 
 
+@router.post(
+    "/restore-history",
+    summary="Restaurar una copia histórica con respaldo preventivo",
+)
+def restore_history(payload: HistoricalRestoreInput, request: Request) -> dict[str, object]:
+    service = _require_service(request)
+    current = service.require_session(_cookie(request, service))
+    return service.restore_history(current, payload.backup_id, payload.expected_sha256)
+
+
 @router.post("/verify", summary="Verificar la nube frente a un respaldo")
 def verify(payload: CloudLabVerifyInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
@@ -452,11 +473,22 @@ def verify(payload: CloudLabVerifyInput, request: Request) -> dict[str, object]:
     return service.verify(current, payload.backup_id)
 
 
-@router.get("/backups", summary="Listar los respaldos de la cuenta autenticada")
-def backups(request: Request) -> dict[str, object]:
+@router.post("/backups", summary="Crear un respaldo manual verificado")
+def create_backup(payload: ManualBackupInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
     current = service.require_session(_cookie(request, service))
-    return service.backups(current)
+    return service.create_backup(current)
+
+
+@router.get("/backups", summary="Listar los respaldos de la cuenta autenticada")
+def backups(
+    request: Request,
+    limit: Annotated[int, Query(ge=1, le=100)] = 25,
+    cursor: Annotated[str | None, Query(max_length=200)] = None,
+) -> dict[str, object]:
+    service = _require_service(request)
+    current = service.require_session(_cookie(request, service))
+    return service.backups(current, limit=limit, cursor=cursor)
 
 
 @router.get("/diagnostics", summary="Diagnóstico saneado del servicio nativo")

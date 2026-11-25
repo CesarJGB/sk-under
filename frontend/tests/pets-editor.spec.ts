@@ -154,7 +154,7 @@ async function mockBase(page: Page) {
   await page.route('**/api/v1/cloud/native/config', (route) => route.fulfill({
     json: { ...CONFIG, session: { ...ACTIVE, save: SAVE } },
   }))
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: { backups: [], total: 0, listed: 0, limit: 25, unreadable: 0, next_cursor: null } }))
 }
 
 test.fixme('desbloquea mascotas y variantes, edita alimento y conserva la progresión de solo lectura', async ({ page }) => {
