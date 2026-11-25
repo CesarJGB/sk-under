@@ -98,12 +98,13 @@ async function open(page: Page, options: {
   sessionSave?: Record<string, unknown> | null
   download?: (route: Route) => Promise<void>
   path?: string
+  limits?: { max_gems?: number }
 } = {}) {
   const save = options.save ?? SESSION_SAVE
   const sessionSave = options.sessionSave === undefined ? save : options.sessionSave
   await page.route('**/api/v1/health', (route) => route.fulfill({ json: { status: 'ok', access_mode: 'local', max_file_bytes: 1048576 } }))
   await page.route('**/api/v1/formats', (route) => route.fulfill({ json: { formats: [] } }))
-  await page.route('**/api/v1/cloud/native/config', (route) => route.fulfill({ json: { ...CONFIG, session: { ...ACTIVE, save: sessionSave } } }))
+  await page.route('**/api/v1/cloud/native/config', (route) => route.fulfill({ json: { ...CONFIG, session: { ...ACTIVE, ...options.limits, save: sessionSave } } }))
   await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
   await page.route('**/api/v1/cloud/native/save', options.download ?? ((route) => route.fulfill({ json: downloaded(save) })))
   await page.setViewportSize({ width: 390, height: 844 })
@@ -156,15 +157,22 @@ test('compone gemas y desbloqueos en un candidato y una sola subida', async ({ p
   let uploads = 0
   await page.route('**/api/v1/cloud/native/confirm', (route) => {
     uploads += 1
-    return route.fulfill({ json: { action: 'confirm', backup_id: BACKUP.id, field: 'unified', uploaded: true, accepted: true, persisted: true, already_original: false, expected_sha256: CANDIDATE, remote_sha256: CANDIDATE, remote_size: 505, remote_gems: 1200, remote_characters: 4, status: 200, message: 'Verificado.' } })
+    return route.fulfill({ json: { action: 'confirm', backup_id: BACKUP.id, field: 'unified', uploaded: true, accepted: true, persisted: true, already_original: false, expected_sha256: CANDIDATE, remote_sha256: CANDIDATE, remote_size: 505, remote_gems: 1201, remote_characters: 4, status: 200, message: 'Verificado.' } })
   })
-  await page.getByLabel('Activar Gemas').check()
-  await page.getByLabel('Gemas', { exact: true }).fill('1200')
+  const gems = page.getByRole('textbox', { name: 'Gemas', exact: true })
+  await expect(gems).toHaveValue('1001')
+  await gems.click()
+  await gems.press('Home')
+  await gems.press('ArrowRight')
+  await gems.press('Shift+ArrowRight')
+  await gems.press('2')
+  await expect(gems).toHaveValue('1201')
+  expect(await gems.evaluate((input: HTMLInputElement) => input.selectionStart)).toBe(2)
   await page.getByLabel('Activar Todos los personajes').check()
+  await expect(page.getByTestId('editor-bar')).toContainText('4 cambios')
   await page.getByRole('button', { name: 'Guardar' }).click()
   await expect(page.getByTestId('unified-preview')).toContainText('Gemas')
-  expect(payload).toMatchObject({ gems: 1200 })
-  expect((payload as unknown as { characters: string[] }).characters.sort()).toEqual(['Alchemist', 'Mage', 'Ranger'])
+  expect(payload).toEqual({ gems: 1201, characters: ['Ranger', 'Mage', 'Alchemist'], source_sha256: SHA })
   await page.getByLabel(/Confirmo subir el candidato/).check()
   await page.getByRole('button', { name: 'Guardar en la nube' }).click()
   await expect(page.getByText('Guardado y verificado', { exact: false })).toBeVisible()
@@ -220,8 +228,8 @@ test('compone categorías detalladas en el mismo borrador', async ({ page }) => 
 
 test('los mínimos no reducen cantidades y el descarte pide confirmación', async ({ page }) => {
   await open(page)
-  await page.getByLabel('Activar Materiales').check()
-  await page.getByLabel('Materiales', { exact: true }).fill('10')
+  const materials = page.getByRole('textbox', { name: 'Materiales', exact: true })
+  await materials.fill('10')
   await expect(page.getByTestId('editor-bar')).toContainText('2 cambios')
   page.once('dialog', (dialog) => dialog.dismiss())
   await page.getByRole('button', { name: 'Descartar' }).click()
@@ -229,6 +237,8 @@ test('los mínimos no reducen cantidades y el descarte pide confirmación', asyn
   page.once('dialog', (dialog) => dialog.accept())
   await page.getByRole('button', { name: 'Descartar' }).click()
   await expect(page.getByTestId('editor-bar')).toContainText('0 cambios')
+  await expect(materials).toHaveValue('')
+  await expect(materials).toHaveAttribute('placeholder', 'Mínimo')
 })
 
 test('un conflicto remoto conserva el borrador', async ({ page }) => {
@@ -240,26 +250,45 @@ test('un conflicto remoto conserva el borrador', async ({ page }) => {
   await expect(page.getByTestId('editor-bar')).toContainText('3 cambios')
 })
 
-test('respeta importes originales en ambos modos, incluso sin activar los campos', async ({ page }) => {
+test('precarga los importes en ambos modos y solo conserva casillas para acciones sin entrada numérica', async ({ page }) => {
   await open(page)
   const quick = page.getByTestId('quick-edit')
   for (const [label, value] of [
-    ['Gemas', '1,001'], ['Fichas de pesca', '3'], ['Recompensas de pesca', '42'],
+    ['Gemas', '1001'], ['Fichas de pesca', '3'], ['Recompensas de pesca', '42'],
     ['Monedas de temporada', '100'], ['Semillas', '2'], ['Baterías', '5'],
   ]) {
-    const row = quick.locator('.quick-row').filter({ has: page.getByLabel(label, { exact: true }) })
-    await expect(row).toContainText(`Actual ${value}`)
-    await expect(row.getByLabel(label, { exact: true })).toBeDisabled()
-    await expect(row.getByLabel(label, { exact: true })).toHaveValue('')
+    const input = quick.getByRole('textbox', { name: label, exact: true })
+    await expect(input).toBeEnabled()
+    await expect(input).toHaveValue(value)
+    await expect(input).toHaveAttribute('inputmode', 'numeric')
   }
-  await expect(quick.locator('.quick-row').filter({ hasText: 'Materiales' })).toContainText('Cantidades distintas')
-  await expect(quick.locator('.quick-row').filter({ hasText: 'Alimento de mascotas' })).toContainText('Cantidades distintas')
+  for (const name of ['Materiales', 'Alimento de mascotas']) {
+    const input = quick.getByRole('textbox', { name, exact: true })
+    await expect(input).toBeEnabled()
+    await expect(input).toHaveValue('')
+    await expect(input).toHaveAttribute('placeholder', 'Mínimo')
+  }
+  for (const name of ['Recursos', 'Cantidades mínimas']) {
+    await expect(quick.getByRole('region', { name }).getByRole('checkbox')).toHaveCount(0)
+  }
+  await expect(quick.getByText(/^Actual /)).toHaveCount(0)
   await expect(quick.getByRole('region', { name: 'Desbloqueos' })).toContainText('1/4 desbloqueados')
+  await expect(quick.getByRole('region', { name: 'Desbloqueos' }).getByRole('checkbox')).toHaveCount(5)
+  await expect(quick.getByRole('region', { name: 'Beneficios' }).getByRole('checkbox')).toHaveCount(2)
   await openCategory(page, 'Mascotas')
-  await expect(page.locator('.number-row').filter({ hasText: 'Bocadillos' }).locator('.number-current')).toHaveText('Actual 10')
-  await expect(page.locator('.number-row').filter({ hasText: 'Batería' }).locator('.number-current')).toHaveText('Actual 5')
+  await expect(page.getByRole('textbox', { name: 'Cantidad de Bocadillos' })).toHaveValue('10')
+  await expect(page.getByRole('textbox', { name: 'Cantidad de Batería' })).toHaveValue('5')
   await openCategory(page, 'Recursos')
-  await expect(page.locator('.number-row').filter({ hasText: 'Gemas' }).locator('.number-current')).toHaveText('Actual 1,001')
+  await expect(page.getByRole('textbox', { name: 'Gemas', exact: true })).toHaveValue('1001')
+  await openCategory(page, 'Semillas')
+  await expect(page.getByRole('textbox', { name: 'Cantidad mínima', exact: true })).toHaveValue('2')
+  await expect(page.getByLabel('Nueva cantidad para Semilla de bambú')).toHaveValue('2')
+  await expect(page.getByRole('button', { name: 'Aplicar mínimo' })).toBeDisabled()
+  await openCategory(page, 'Pase de batalla')
+  await expect(page.getByRole('textbox', { name: 'Nivel', exact: true })).toHaveValue('2')
+  await expect(page.getByRole('textbox', { name: 'Experiencia', exact: true })).toHaveValue('4')
+  await expect(page.getByTestId('editor-bar')).toContainText('0 cambios')
+  await expect(page.getByRole('button', { name: 'Guardar', exact: true })).toBeDisabled()
 })
 
 test('carga el informe después de entrar desde una vista previa de inicio de sesión', async ({ page }) => {
@@ -276,14 +305,15 @@ test('carga el informe después de entrar desde una vista previa de inicio de se
   await expect(header).toContainText('Android Global · 8.8.0')
   await expect(page.getByRole('navigation', { name: 'Navegación principal' })).toHaveCount(0)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Editor')
-  await expect(page.getByLabel('Activar Gemas')).toBeDisabled()
+  await expect(page.getByRole('textbox', { name: 'Gemas', exact: true })).toBeDisabled()
   release()
   await expect(header).toContainText('Partida cargada')
+  await expect(page.getByRole('textbox', { name: 'Gemas', exact: true })).toHaveValue('1001')
   await expect(page.getByLabel('Activar Todos los personajes')).toBeEnabled()
   await expect(page.getByTestId('quick-edit')).toContainText('1/4 desbloqueados')
 })
 
-test('muestra ceros reales y permite usar cero como solicitud explícita', async ({ page }) => {
+test('precarga los ceros reales sin generar operaciones', async ({ page }) => {
   const zero = (item: ReturnType<typeof row>) => ({ ...item, count: 0 })
   const save = {
     ...SESSION_SAVE, gems: 0, fish_chip: 0, material_fish: 0, cumulative_fish_count: 0,
@@ -294,14 +324,14 @@ test('muestra ceros reales y permite usar cero como solicitud explícita', async
   await open(page, { save, sessionSave: null })
   await expect(page.locator('.editor-top')).toContainText('Partida pendiente de descargar')
   await page.getByRole('button', { name: 'Descargar partida' }).click()
-  await expect(page.getByTestId('quick-edit').getByText('Actual 0', { exact: true })).toHaveCount(8)
-  await page.getByLabel('Activar Gemas').check()
-  await page.getByLabel('Gemas', { exact: true }).fill('0')
+  const amounts = page.getByTestId('quick-edit').getByRole('textbox')
+  await expect(amounts).toHaveCount(8)
+  expect(await amounts.evaluateAll((inputs: HTMLInputElement[]) => inputs.map((input) => input.value))).toEqual(Array(8).fill('0'))
   await expect(page.getByRole('button', { name: 'Guardar', exact: true })).toBeDisabled()
   await expect(page.getByTestId('editor-bar')).toContainText('0 cambios')
 })
 
-test('guardar preserva las cantidades originales de todos los campos inactivos', async ({ page }) => {
+test('solo envía el cero explícito y omite valores restaurados, intactos y vacíos', async ({ page }) => {
   await open(page)
   let payload: Record<string, unknown> | undefined
   let uploads = 0
@@ -318,10 +348,18 @@ test('guardar preserva las cantidades originales de todos los campos inactivos',
     }))
     await route.fulfill({ json: { backup_id: BACKUP.id, persisted: true, remote_sha256: CANDIDATE } })
   })
-  await page.getByLabel('Activar Gemas').check()
-  await page.getByLabel('Gemas', { exact: true }).fill('900')
-  await page.getByLabel('Activar Gemas').uncheck()
+  const gems = page.getByRole('textbox', { name: 'Gemas', exact: true })
+  await gems.fill('900')
+  await expect(page.getByTestId('editor-bar')).toContainText('1 cambio')
+  await gems.fill('1001')
+  await expect(page.getByTestId('editor-bar')).toContainText('0 cambios')
+  await expect(page.getByRole('button', { name: 'Descartar', exact: true })).toBeDisabled()
+  await expect(page.getByRole('button', { name: 'Guardar', exact: true })).toBeDisabled()
+  await page.getByRole('textbox', { name: 'Monedas de temporada', exact: true }).clear()
+  await expect(page.getByTestId('editor-bar')).toContainText('0 cambios')
+  await expect(page.getByRole('button', { name: 'Descartar', exact: true })).toBeEnabled()
   await openCategory(page, 'Temporada')
+  await expect(page.getByRole('textbox', { name: 'Monedas de temporada', exact: true })).toHaveValue('')
   await page.getByLabel('Recompensas de pesca', { exact: true }).fill('0')
   await page.getByRole('button', { name: 'Guardar', exact: true }).evaluate((button: HTMLButtonElement) => {
     button.click()
@@ -339,9 +377,9 @@ test('guardar preserva las cantidades originales de todos los campos inactivos',
   expect(uploads).toBe(1)
   await page.getByRole('tab', { name: 'Rápida' }).click()
   const quick = page.getByTestId('quick-edit')
-  await expect(quick).toContainText('Actual 1,001')
-  await expect(quick).toContainText('Actual 0')
-  await expect(quick).toContainText('Actual 100')
+  await expect(quick.getByRole('textbox', { name: 'Gemas', exact: true })).toHaveValue('1001')
+  await expect(quick.getByRole('textbox', { name: 'Recompensas de pesca', exact: true })).toHaveValue('0')
+  await expect(quick.getByRole('textbox', { name: 'Monedas de temporada', exact: true })).toHaveValue('100')
 })
 
 test('distingue colecciones completas de datos ausentes o incompatibles', async ({ page }) => {
@@ -375,10 +413,15 @@ test('distingue colecciones completas de datos ausentes o incompatibles', async 
   await page.getByRole('button', { name: 'Descargar partida' }).click()
   await expect(unlocks.getByText('No disponible', { exact: true })).toHaveCount(5)
   await expect(unlocks.locator('.unlock-status.complete')).toHaveCount(0)
-  await expect(page.getByTestId('quick-edit').getByText('Actual 0', { exact: true })).toHaveCount(0)
-  await expect(page.getByLabel('Activar Gemas')).toBeDisabled()
+  const quick = page.getByTestId('quick-edit')
+  for (const name of ['Gemas', 'Fichas de pesca', 'Recompensas de pesca', 'Monedas de temporada', 'Materiales', 'Semillas', 'Alimento de mascotas', 'Baterías']) {
+    const input = quick.getByRole('textbox', { name, exact: true })
+    await expect(input).toBeDisabled()
+    await expect(input).toHaveValue('')
+    await expect(input).toHaveAccessibleDescription('No disponible')
+  }
   await openCategory(page, 'Recursos')
-  await expect(page.getByTestId('category-recursos').getByText('Sin dato', { exact: false })).toHaveCount(4)
+  await expect(page.getByTestId('category-recursos').getByText('Sin dato', { exact: true })).toHaveCount(4)
   await expect(page.getByLabel('Gemas', { exact: true })).toBeDisabled()
 })
 
@@ -386,30 +429,73 @@ test('los mínimos simultáneos se aplican por elemento e ignoran cantidades inc
   const advanced = {
     ...ADVANCED, materials: [...ADVANCED.materials, row('steel', 'Acero', 30),
       row('material_fish', 'Espejo de fichas', 3), { ...row('odd', 'Dato incompatible', 0), count: null, editable: false }],
+    seeds: [...ADVANCED.seeds, row('plant_carrot_seed', 'Semilla de zanahoria', 12)],
   }
   await open(page, { save: { ...SESSION_SAVE, advanced } })
   let payload: Record<string, unknown> | undefined
   await page.route('**/api/v1/cloud/native/prepare-unified', (route) => {
     payload = route.request().postDataJSON()
-    return route.fulfill({ json: prepared(payload!, [['advanced', 'Materiales', 4]]) })
+    return route.fulfill({ json: prepared(payload!, [['advanced', 'Materiales y semillas', 5]]) })
   })
-  for (const [label, requested] of [['Materiales', '15'], ['Alimento de mascotas', '20'], ['Baterías', '25']]) {
-    await page.getByLabel(`Activar ${label}`).check()
+  const seeds = page.getByRole('textbox', { name: 'Semillas', exact: true })
+  await expect(seeds).toBeEnabled()
+  await expect(seeds).toHaveValue('')
+  await expect(seeds).toHaveAttribute('placeholder', 'Mínimo')
+  await seeds.fill('0')
+  await expect(page.getByTestId('editor-bar')).toContainText('0 cambios')
+  for (const [label, requested] of [['Materiales', '15'], ['Alimento de mascotas', '20'], ['Baterías', '25'], ['Semillas', '3']]) {
     await page.getByLabel(label, { exact: true }).fill(requested)
   }
   await openCategory(page, 'Materiales')
   await expect(page.getByLabel('Nueva cantidad para Espejo de fichas')).toBeDisabled()
-  await expect(page.getByLabel('Nueva cantidad para Dato incompatible')).toBeDisabled()
+  const incompatible = page.getByLabel('Nueva cantidad para Dato incompatible')
+  await expect(incompatible).toBeDisabled()
+  await expect(incompatible).toHaveValue('')
+  await expect(incompatible).toHaveAccessibleDescription('Sin dato')
   await page.getByLabel('Cantidad mínima').fill('12')
   await page.getByRole('button', { name: 'Aplicar mínimo' }).click()
-  await expect(page.getByLabel('Nueva cantidad para Acero')).toHaveValue('')
-  await expect(page.getByLabel('Nueva cantidad para Hierro')).toHaveAttribute('placeholder', '15')
-  await expect(page.getByLabel('Nueva cantidad para Madera')).toHaveAttribute('placeholder', '15')
+  await expect(page.getByLabel('Nueva cantidad para Acero')).toHaveValue('30')
+  await expect(page.getByLabel('Nueva cantidad para Hierro')).toHaveValue('15')
+  await expect(page.getByLabel('Nueva cantidad para Madera')).toHaveValue('15')
   await page.getByRole('button', { name: 'Guardar', exact: true }).click()
   await expect(page.getByTestId('unified-preview')).toBeVisible()
-  expect(payload).toEqual({ source_sha256: SHA, advanced: { seeds: [], materials: [
+  expect(payload).toEqual({ source_sha256: SHA, advanced: { seeds: [{ id: 'plant_banboo_seed', value: 3 }], materials: [
     { id: 'wood', value: 15 }, { id: 'iron', value: 15 }, { id: 'material_grain', value: 20 },
     { id: 'material_battery', value: 25 },
+  ] } })
+})
+
+test('restaurar una cantidad detallada retira la edición exacta y conserva el mínimo solicitado por separado', async ({ page }) => {
+  const missing = { ...row('bronze', 'Bronce', 0), count: null, owned: false, insertable: true }
+  await open(page, { save: { ...SESSION_SAVE, advanced: { ...ADVANCED, materials: [...ADVANCED.materials, missing] } } })
+  const bar = page.getByTestId('editor-bar')
+  await page.getByRole('textbox', { name: 'Materiales', exact: true }).fill('8')
+  await openCategory(page, 'Materiales')
+  const wood = page.getByLabel('Nueva cantidad para Madera')
+  await expect(wood).toHaveValue('8')
+  await wood.fill('0')
+  await expect(wood).toHaveAccessibleDescription('Anterior 4')
+  await wood.fill('4')
+  await expect(wood).toHaveAccessibleDescription('Pendiente 8')
+  await wood.clear()
+  await expect(wood).toHaveValue('')
+  await expect(wood).toHaveAccessibleDescription('Pendiente 8')
+  const bronze = page.getByLabel('Nueva cantidad para Bronce')
+  await expect(bronze).toBeEnabled()
+  await expect(bronze).toHaveValue('')
+  await expect(bronze).toHaveAccessibleDescription('Sin registro')
+  await bronze.fill('0')
+  await expect(bar).toContainText('3 cambios')
+
+  let payload: Record<string, unknown> | undefined
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => {
+    payload = route.request().postDataJSON()
+    return route.fulfill({ json: prepared(payload!, [['advanced', 'Materiales', 3]]) })
+  })
+  await bar.getByRole('button', { name: 'Guardar', exact: true }).click()
+  await expect(page.getByTestId('unified-preview')).toBeVisible()
+  expect(payload).toEqual({ source_sha256: SHA, advanced: { seeds: [], materials: [
+    { id: 'wood', value: 8 }, { id: 'iron', value: 8 }, { id: 'bronze', value: 0 },
   ] } })
 })
 
@@ -437,24 +523,64 @@ test('protege el borrador al salir por el encabezado y por el historial', async 
   await expect(page.getByTestId('editor-bar')).toContainText('0 cambios')
 })
 
-test('distingue un dato de solo lectura y bloquea cantidades inválidas', async ({ page }) => {
+test('distingue un saldo de solo lectura y rechaza valores inválidos o fuera de los límites', async ({ page }) => {
   await open(page, { save: {
     ...SESSION_SAVE, fish_chip: null,
     report: { ...REPORT, fish_chips: { ...REPORT.fish_chips, balance: 17, balance_path: 'gameData.fishChip' } },
-  } })
-  const row = page.getByTestId('quick-edit').locator('.quick-row').filter({ hasText: 'Fichas de pesca' })
-  await expect(row).toContainText('Actual 17')
-  await expect(row.getByLabel('Activar Fichas de pesca')).toBeDisabled()
-  await page.getByLabel('Activar Gemas').check()
-  await page.getByLabel('Gemas', { exact: true }).fill('-5')
-  await expect(page.getByLabel('Gemas', { exact: true })).toHaveAttribute('aria-invalid', 'true')
-  await expect(page.getByTestId('editor-bar')).toContainText('Revisa las cantidades')
-  await expect(page.getByRole('button', { name: 'Guardar', exact: true })).toBeDisabled()
+  }, limits: { max_gems: 2000 } })
+  const fish = page.getByRole('textbox', { name: 'Fichas de pesca', exact: true })
+  await expect(fish).toHaveValue('17')
+  await expect(fish).toBeDisabled()
+  await expect(fish).toHaveAccessibleDescription('Solo lectura')
+  const gems = page.getByRole('textbox', { name: 'Gemas', exact: true })
+  const bar = page.getByTestId('editor-bar')
+  for (const value of ['-5', '1.5', '1e3', 'abc', ' ', '2147483648', '2001']) {
+    await gems.fill(value)
+    await expect(gems).toHaveAttribute('aria-invalid', 'true')
+    await expect(bar).toContainText('Revisa las cantidades')
+    await expect(bar).toContainText('0 cambios')
+    await expect(bar.getByRole('button', { name: 'Guardar', exact: true })).toBeDisabled()
+  }
+  await gems.fill('2000')
+  await expect(gems).not.toHaveAttribute('aria-invalid', 'true')
+  await expect(bar).toContainText('1 cambio')
+  await gems.fill('01001')
+  await expect(bar).toContainText('0 cambios')
+  await expect(bar.getByRole('button', { name: 'Guardar', exact: true })).toBeDisabled()
+})
+
+test('reinicializa el borrador y las cantidades al descargar otra partida tras un conflicto', async ({ page }) => {
+  const fresh = { ...SESSION_SAVE, sha256: CANDIDATE, gems: 90256, fish_chip: 0,
+    advanced: { ...ADVANCED, seeds: [], materials: ADVANCED.materials.map((item) => ({ ...item, count: 7 })) } }
+  await open(page, { download: (route) => route.fulfill({ json: downloaded(fresh) }) })
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => route.fulfill({
+    status: 409, json: { error: { code: 'cloud_remote_changed', message: 'La partida cambió.', issues: [] } },
+  }))
+  const bar = page.getByTestId('editor-bar')
+  await page.getByRole('textbox', { name: 'Gemas', exact: true }).fill('1200')
+  await page.getByLabel('Activar Todos los personajes').check()
+  await openCategory(page, 'Materiales')
+  const wood = page.getByLabel('Nueva cantidad para Madera')
+  await wood.fill('19')
+  await page.getByLabel('Cantidad mínima', { exact: true }).fill('40')
+  await bar.getByRole('button', { name: 'Guardar', exact: true }).click()
+  await expect(page.getByText('La partida cambió en la nube', { exact: false })).toBeVisible()
+  page.once('dialog', (dialog) => dialog.accept())
+  await page.getByRole('button', { name: 'Descargar de nuevo' }).click()
+  await expect(wood).toHaveValue('7')
+  await expect(page.getByLabel('Cantidad mínima', { exact: true })).toHaveValue('7')
+  await expect(bar).toContainText('0 cambios')
+  await page.getByRole('tab', { name: 'Rápida' }).click()
+  await expect(page.getByRole('textbox', { name: 'Gemas', exact: true })).toHaveValue('90256')
+  await expect(page.getByRole('textbox', { name: 'Fichas de pesca', exact: true })).toHaveValue('0')
+  await expect(page.getByRole('textbox', { name: 'Materiales', exact: true })).toHaveValue('7')
+  await expect(page.getByRole('textbox', { name: 'Semillas', exact: true })).toBeDisabled()
+  await expect(page.getByLabel('Activar Todos los personajes')).not.toBeChecked()
+  await expect(bar.getByRole('button', { name: 'Guardar', exact: true })).toBeDisabled()
 })
 
 test('mantiene visible la barra y desplaza el campo enfocado cuando se reduce la altura visible', async ({ page }) => {
   await open(page)
-  await page.getByLabel('Activar Baterías').check()
   const input = page.getByLabel('Baterías', { exact: true })
   await input.focus()
   const bar = page.getByTestId('editor-bar')
@@ -524,14 +650,22 @@ test('capturas móviles, tableta y escritorio sin desbordamiento', async ({ page
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), name).toBe(true)
     await expect(page.getByTestId('editor-bar')).toBeInViewport()
     await page.evaluate(() => document.fonts.ready)
-    await page.screenshot({ path: `test-results/phase8-1/${name}.png` })
+    await page.screenshot({ path: `test-results/edicion-numerica/${name}.png` })
+  }
+  const fits = (input: HTMLInputElement) => {
+    const styles = getComputedStyle(input)
+    const canvas = document.createElement('canvas').getContext('2d')!
+    canvas.font = styles.font
+    const available = input.clientWidth - parseFloat(styles.paddingLeft) - parseFloat(styles.paddingRight)
+    return input.offsetHeight >= 44 && canvas.measureText(input.value).width <= available
   }
   await page.getByLabel('Activar Todos los personajes').check()
-  await page.getByLabel('Activar Gemas').check()
-  await page.getByLabel('Gemas', { exact: true }).fill('1200')
+  const gems = page.getByRole('textbox', { name: 'Gemas', exact: true })
+  await gems.fill('2147483647')
   for (const size of sizes) {
     await page.setViewportSize(size)
     await page.getByRole('tab', { name: 'Rápida' }).click()
+    expect(await gems.evaluate(fits), `cantidad de diez dígitos a ${size.width} px`).toBe(true)
     await screenshot(`rapida-${size.width}`)
     await page.getByRole('tab', { name: 'Categorías' }).click()
     await expect(page.getByTestId('category-grid').getByRole('button')).toHaveCount(9)
@@ -542,6 +676,11 @@ test('capturas móviles, tableta y escritorio sin desbordamiento', async ({ page
       Promise.all(icons.map((icon) => (icon as HTMLImageElement).decode())).then(() => true))).toBe(true)
     await screenshot(`categorias-${size.width}`)
     await page.getByRole('button', { name: 'Materiales' }).click()
+    const minimum = page.getByRole('textbox', { name: 'Cantidad mínima', exact: true })
+    await minimum.fill('2147483647')
+    expect(await minimum.evaluate(fits), `mínimo de diez dígitos a ${size.width} px`).toBe(true)
+    await minimum.clear()
+    await minimum.blur()
     await screenshot(`materiales-${size.width}`)
     await page.getByRole('tab', { name: 'Rápida' }).click()
     const lastRow = page.getByLabel('Activar Pase de batalla al nivel máximo')

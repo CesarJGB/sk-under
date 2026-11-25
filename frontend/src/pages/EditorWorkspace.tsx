@@ -1,15 +1,15 @@
 import { ArrowLeft, CircleAlert, CircleCheck, CloudUpload, LoaderCircle } from 'lucide-react'
-import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import { useBlocker, useLocation, useNavigate } from 'react-router'
 import {
   ApiProblem, nativeAuth,
   type LabAdvanced, type LabUnifiedPrepared, type LabWriteResult, type NativeSaveSummary, type NativeSession,
 } from '../api'
 import {
-  advancedSnapshot, applyItemMinimum, buildDraftPlan, clearSelection, createEmptyDraft,
-  eligibility, isSelected, originalQuantity, parseQuantity, protectedMaterial, scalarQuantity,
+  advancedSnapshot, applyItemMinimum, battlePassRecord, buildDraftPlan, clearSelection, createEmptyDraft,
+  eligibility, isSelected, minimumSource, originalQuantity, parseQuantity, protectedMaterial, quantityInput,
   selectAll, selectedCount, setEdit, setQuick, toggleItem, type BuiltPlan, type BulkKey,
-  type Draft, type Eligibility, type QuantityKey,
+  type Draft, type Eligibility,
 } from '../draft'
 import { skillKey, skinKey } from '../unlockSelections'
 import { Notice, Problem } from '../ui'
@@ -135,31 +135,33 @@ function LockList({ save, draft, update, mode }: EditorInputs & { mode: 'charact
   </div>
 }
 
-function AmountRow({ label, current, value, proposed, disabled, invalid, inputLabel = label, onChange }: {
+function AmountRow({ label, current, edit, proposed, disabled, invalid, inputLabel = label, onChange }: {
   label: string
-  current: unknown
-  value: string
+  current: number | null
+  edit?: string
   proposed?: number
   disabled?: boolean
   invalid?: boolean
   inputLabel?: string
   onChange: (value: string) => void
 }) {
+  const statusId = useId()
+  const value = edit ?? String(proposed ?? current ?? '')
+  const status = disabled ? current === null ? 'Sin dato' : 'Solo lectura'
+    : proposed !== undefined && parseQuantity(value) !== proposed ? `Pendiente ${formatOriginal(proposed)}`
+    : proposed !== undefined && current !== null ? `Anterior ${formatOriginal(current)}`
+    : current === null ? 'Sin registro' : null
   return <label className={`number-row${proposed !== undefined ? ' changed' : ''}`}>
-    <span className="number-name">{label}</span>
-    <span className="number-current"><small className="sr-only">Actual </small>{formatOriginal(current)}</span>
-    <input inputMode="numeric" aria-label={inputLabel} value={value}
-      placeholder={proposed === undefined ? '—' : String(proposed)} disabled={disabled}
-      aria-invalid={invalid || undefined}
+    <span className="number-label"><span className="number-name">{label}</span>{status && <small id={statusId}>{status}</small>}</span>
+    <input inputMode="numeric" aria-label={inputLabel} value={value} aria-describedby={status ? statusId : undefined}
+      placeholder={disabled && current === null ? '—' : undefined} disabled={disabled}
+      aria-invalid={(invalid ?? quantityInput(current, edit).invalid) || undefined}
       onChange={(event) => onChange(event.target.value)} />
   </label>
 }
 
 function AmountList({ children }: { children: ReactNode }) {
-  return <div className="number-list">
-    <div className="number-head" aria-hidden="true"><span>Actual</span><span>Solicitud</span></div>
-    {children}
-  </div>
+  return <div className="number-list">{children}</div>
 }
 
 function NumberEdits({ save, draft, update, built, kind }: EditorInputs & {
@@ -167,7 +169,7 @@ function NumberEdits({ save, draft, update, built, kind }: EditorInputs & {
   kind: 'materials' | 'seeds'
 }) {
   const [query, setQuery] = useState('')
-  const [bulk, setBulk] = useState('')
+  const [bulk, setBulk] = useState<string>()
   const rows = advancedSnapshot(save)?.[kind]
   if (!rows?.length) return <Notice tone="warning">{kind === 'materials' ? 'Materiales' : 'Semillas'} sin datos.</Notice>
   const edits = kind === 'materials' ? draft.materialEdits : draft.seedEdits
@@ -175,23 +177,23 @@ function NumberEdits({ save, draft, update, built, kind }: EditorInputs & {
   const search = query.trim().toLowerCase()
   const visible = rows.filter((row) => (row.name.es ?? row.name.en ?? row.id).toLowerCase().includes(search)
     || row.id.toLowerCase().includes(search))
-  const bulkValue = parseQuantity(bulk)
-  const bulkAvailable = visible.some((row) => row.editable && row.owned && originalQuantity(row.count) !== null
-    && (kind !== 'materials' || row.id !== protectedMaterial))
+  const minimum = minimumSource(visible.filter((row) => kind !== 'materials' || row.id !== protectedMaterial))
+  const bulkQuantity = quantityInput(minimum.original, minimum.editable ? bulk : undefined)
 
   return <div className="detail-editor">
     <div className="detail-filters">
       <input type="search" aria-label={kind === 'materials' ? 'Buscar materiales' : 'Buscar semillas'}
         value={query} placeholder="Buscar" onChange={(event) => setQuery(event.target.value)} />
       <div className="bulk-apply">
-        <input inputMode="numeric" aria-label="Cantidad mínima" value={bulk} placeholder="Mínimo"
-          aria-invalid={bulk !== '' && bulkValue === null}
+        <input inputMode="numeric" aria-label="Cantidad mínima" value={bulkQuantity.value}
+          placeholder={minimum.editable ? 'Mínimo' : 'No disponible'} disabled={!minimum.editable}
+          aria-invalid={bulkQuantity.invalid || undefined}
           onChange={(event) => setBulk(event.target.value)} />
-        <button type="button" className="button quiet" disabled={bulkValue === null || !bulkAvailable}
+        <button type="button" className="button quiet" disabled={bulkQuantity.requested === null}
           onClick={() => {
-            if (bulkValue !== null) {
-              update(applyItemMinimum(kind, visible, bulkValue, draft))
-              setBulk('')
+            if (bulkQuantity.requested !== null) {
+              update(applyItemMinimum(kind, visible, bulkQuantity.requested, draft))
+              setBulk(undefined)
             }
           }}>Aplicar mínimo</button>
       </div>
@@ -199,11 +201,11 @@ function NumberEdits({ save, draft, update, built, kind }: EditorInputs & {
     {visible.length ? <AmountList>
       {visible.map((row) => {
         const name = row.name.es ?? row.name.en ?? row.id
-        const value = edits[row.id] ?? ''
-        return <AmountRow key={row.id} label={name} current={row.count} value={value} proposed={changes.get(row.id)}
-          inputLabel={`Nueva cantidad para ${name}`} disabled={!row.editable || (kind === 'materials' && row.id === protectedMaterial)}
-          invalid={value !== '' && parseQuantity(value) === null}
-          onChange={(next) => update(setEdit(kind, row.id, next, draft))} />
+        const current = originalQuantity(row.count)
+        return <AmountRow key={row.id} label={name} current={current} edit={edits[row.id]} proposed={changes.get(row.id)}
+          inputLabel={`Nueva cantidad para ${name}`} disabled={!row.editable || (current === null && !row.insertable)
+            || (kind === 'materials' && row.id === protectedMaterial)}
+          onChange={(next) => update(setEdit(kind, row.id, next, current, draft))} />
       })}
     </AmountList> : <p className="detail-note">Sin resultados</p>}
   </div>
@@ -240,31 +242,29 @@ function PetsEditor({ save, draft, update, built }: EditorInputs & { built: Buil
     {advanced.pet_food.length ? <AmountList>
       {advanced.pet_food.map((row) => {
         const name = row.name.es ?? row.name.en ?? row.id
-        const value = draft.materialEdits[row.id] ?? ''
-        return <AmountRow key={row.id} label={name} current={row.count} value={value} proposed={changes.get(row.id)}
-          inputLabel={`Cantidad de ${name}`} disabled={!row.editable} invalid={value !== '' && parseQuantity(value) === null}
-          onChange={(next) => update(setEdit('petFood', row.id, next, draft))} />
+        const current = originalQuantity(row.count)
+        return <AmountRow key={row.id} label={name} current={current} edit={draft.materialEdits[row.id]} proposed={changes.get(row.id)}
+          inputLabel={`Cantidad de ${name}`} disabled={!row.editable || (current === null && !row.insertable)}
+          onChange={(next) => update(setEdit('petFood', row.id, next, current, draft))} />
       })}
     </AmountList> : <p className="detail-note">Sin datos de alimento y baterías</p>}
     <p className="detail-note">Progreso y afinidad son de solo lectura.</p>
   </div>
 }
 
-function ResourceList({ save, draft, update, built, invalid, season = false }: EditorInputs & {
+function ResourceList({ save, draft, update, built, season = false }: EditorInputs & {
   built: BuiltPlan
-  invalid: Set<QuantityKey>
   season?: boolean
 }) {
   const reborn = advancedSnapshot(save)?.reborn_card
   return <div className="detail-editor">
     <AmountList>
       {resources.filter(({ key }) => !season || key === 'fishProgress' || key === 'seasonCoin')
-        .map(({ key, label, field }) => {
-          const { original, editable } = scalarQuantity(save, key)
-          const proposed = field === 'season_coin' ? built.plan.advanced?.season_coin : built.plan[field]
+        .map(({ key, label }) => {
+          const { original, editable, invalid, requested, value } = built.quantities[key]
           return <AmountRow key={key} label={label} current={original} disabled={!editable}
-            value={draft.quick[key].enabled ? draft.quick[key].value : ''} proposed={proposed ?? undefined} invalid={invalid.has(key)}
-            onChange={(value) => update(setQuick(key, { enabled: value !== '', value }, draft))} />
+            edit={value} proposed={requested ?? undefined} invalid={invalid}
+            onChange={(next) => update(setQuick(key, next, draft))} />
         })}
     </AmountList>
     {season && <label className="toggle-row">
@@ -279,17 +279,16 @@ function ResourceList({ save, draft, update, built, invalid, season = false }: E
 function BattlePassEditor({ save, draft, update, built }: EditorInputs & { built: BuiltPlan }) {
   const pass = advancedSnapshot(save)?.battle_pass
   const records = pass?.records ?? []
-  const record = records.find((item) => item.season_id === draft.battlePass.seasonId)
-    ?? records.find((item) => item.season_id === pass?.selected_season_id) ?? records[0]
+  const record = battlePassRecord(advancedSnapshot(save), draft.battlePass.seasonId)
   if (!record) return <Notice tone="warning">Pase de batalla sin datos.</Notice>
   const planned = built.plan.advanced?.battle_pass
   const edit = (patch: Partial<Draft['battlePass']>) =>
-    update({ ...draft, battlePass: { ...draft.battlePass, enabled: true, seasonId: record.season_id, ...patch } })
+    update({ ...draft, battlePass: { ...draft.battlePass, seasonId: record.season_id, ...patch } })
   return <div className="detail-editor">
     <div className="detail-filters">
       <select value={record.season_id ?? ''} aria-label="Temporada" onChange={(event) => {
         const seasonId = event.target.value === '' ? null : Number(event.target.value)
-        update({ ...draft, battlePass: { enabled: false, seasonId, level: '', exp: '', buy: null } })
+        update({ ...draft, battlePass: { seasonId, buy: null } })
       }}>
         {records.map((item) => <option key={item.index ?? item.season_id} value={item.season_id ?? ''}>{item.season_id == null ? 'Sin temporada' : `Temporada ${item.season_id}`}</option>)}
       </select>
@@ -297,13 +296,11 @@ function BattlePassEditor({ save, draft, update, built }: EditorInputs & { built
         onClick={() => edit({ level: String(record.max_level) })}>Nivel máximo</button>
     </div>
     <AmountList>
-      <AmountRow label="Nivel" current={record.cur_level} value={draft.battlePass.level}
+      <AmountRow label="Nivel" current={originalQuantity(record.cur_level)} edit={draft.battlePass.level}
         proposed={planned?.cur_level ?? undefined} disabled={!record.editable}
-        invalid={draft.battlePass.level !== '' && parseQuantity(draft.battlePass.level) === null}
         onChange={(value) => edit({ level: value })} />
-      <AmountRow label="Experiencia" current={record.cur_exp} value={draft.battlePass.exp}
+      <AmountRow label="Experiencia" current={originalQuantity(record.cur_exp)} edit={draft.battlePass.exp}
         proposed={planned?.cur_exp ?? undefined} disabled={!record.editable}
-        invalid={draft.battlePass.exp !== '' && parseQuantity(draft.battlePass.exp) === null}
         onChange={(value) => edit({ exp: value })} />
     </AmountList>
     <label className="toggle-row">
@@ -366,24 +363,20 @@ export function EditorWorkspace({
   const operation = useOperation()
   const { pathname } = useLocation()
   const navigate = useNavigate()
-  const built = buildDraftPlan(save, draft)
+  const built = buildDraftPlan(save, draft, session)
   const hasChanges = built.counts.changes > 0
   const canWrite = Boolean(session.write_ready)
   const busy = action !== null || loadingSave
 
-  const invalid = new Set<QuantityKey>()
-  for (const key of Object.keys(draft.quick) as QuantityKey[]) {
-    if (!draft.quick[key].enabled) continue
-    const value = parseQuantity(draft.quick[key].value)
-    const min = key === 'gems' ? session.min_gems : key === 'fishChip' ? session.min_fish_chip : undefined
-    const max = key === 'gems' ? session.max_gems : key === 'fishChip' ? session.max_fish_chip : undefined
-    if (value === null || (min != null && value < min) || (max != null && value > max)) invalid.add(key)
-  }
-  const invalidDetails = [...Object.values(draft.materialEdits), ...Object.values(draft.seedEdits),
-    ...(draft.battlePass.enabled ? [draft.battlePass.level, draft.battlePass.exp] : []),
-  ].some((value) => value !== '' && parseQuantity(value) === null)
-  const invalidDraft = invalid.size > 0 || invalidDetails
-  const dirty = hasChanges || invalidDraft
+  const pass = battlePassRecord(advancedSnapshot(save), draft.battlePass.seasonId)
+  const quantities = [...Object.values(built.quantities),
+    quantityInput(originalQuantity(pass?.cur_level), draft.battlePass.level),
+    quantityInput(originalQuantity(pass?.cur_exp), draft.battlePass.exp),
+  ]
+  const itemEdits = [...Object.values(draft.materialEdits), ...Object.values(draft.seedEdits)]
+  const invalidDraft = quantities.some(({ invalid }) => invalid)
+    || itemEdits.some((value) => value !== '' && parseQuantity(value) === null)
+  const dirty = hasChanges || invalidDraft || quantities.some(({ changed }) => changed) || itemEdits.includes('')
 
   const route = pathname.startsWith('/editor/categoria/')
     ? pathname.slice('/editor/categoria/'.length).split('/')[0]
@@ -572,7 +565,7 @@ export function EditorWorkspace({
       </label>
     </div>
     : <fieldset className="editor-content" disabled={busy || needsRefresh}>
-      {showQuick && <QuickEdit save={save} draft={draft} built={built} update={update} invalid={invalid} />}
+      {showQuick && <QuickEdit save={save} draft={draft} built={built} update={update} />}
       {route === 'categories' && <CategoryGrid built={built} onOpen={(id) => go(`/editor/categoria/${id}`)} />}
       {activeCategory && <div className="category-detail" data-testid={`category-${activeCategory.id}`}>
         <div className="detail-head">
@@ -582,14 +575,14 @@ export function EditorWorkspace({
           <CategoryIcon id={activeCategory.id} />
           <h2>{activeCategory.label}</h2>
         </div>
-        {activeCategory.id === 'recursos' && <ResourceList save={save} draft={draft} update={update} built={built} invalid={invalid} />}
+        {activeCategory.id === 'recursos' && <ResourceList save={save} draft={draft} update={update} built={built} />}
         {activeCategory.id === 'personajes' && <LockList key="characters" save={save} draft={draft} update={update} mode="characters" />}
         {activeCategory.id === 'habilidades' && <LockList key="skills" save={save} draft={draft} update={update} mode="skills" />}
         {activeCategory.id === 'skins' && <LockList key="skins" save={save} draft={draft} update={update} mode="skins" />}
         {activeCategory.id === 'mascotas' && <PetsEditor save={save} draft={draft} update={update} built={built} />}
-        {activeCategory.id === 'materiales' && <NumberEdits key="materials" save={save} draft={draft} update={update} built={built} kind="materials" />}
-        {activeCategory.id === 'semillas' && <NumberEdits key="seeds" save={save} draft={draft} update={update} built={built} kind="seeds" />}
-        {activeCategory.id === 'temporada' && <ResourceList save={save} draft={draft} update={update} built={built} invalid={invalid} season />}
+        {activeCategory.id === 'materiales' && <NumberEdits key={`materials:${save.sha256}`} save={save} draft={draft} update={update} built={built} kind="materials" />}
+        {activeCategory.id === 'semillas' && <NumberEdits key={`seeds:${save.sha256}`} save={save} draft={draft} update={update} built={built} kind="seeds" />}
+        {activeCategory.id === 'temporada' && <ResourceList save={save} draft={draft} update={update} built={built} season />}
         {activeCategory.id === 'pase' && <BattlePassEditor save={save} draft={draft} update={update} built={built} />}
       </div>}
     </fieldset>

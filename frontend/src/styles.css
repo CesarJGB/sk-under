@@ -1388,18 +1388,18 @@ html:has(.editor-bar) {
   border-top: 1px solid #e5ece7;
 }
 
-.quick-row.quantity { grid-template-columns: minmax(0, 1fr) 95px; }
+.quick-row.quantity { grid-template-columns: minmax(0, 1fr) 120px; }
 .quick-row.changed { background: #eaf5eb; }
 
-.quick-select {
+.quick-select, .quick-quantity-label {
   display: grid;
-  grid-template-columns: 20px 17px minmax(0, 1fr);
   align-items: center;
   gap: 7px;
   min-height: 46px;
-  cursor: pointer;
 }
 
+.quick-select { grid-template-columns: 20px 17px minmax(0, 1fr); cursor: pointer; }
+.quick-quantity-label { grid-template-columns: 17px minmax(0, 1fr); }
 .quick-select:has(input:disabled) { cursor: default; }
 .quick-select input, .toggle-row input {
   width: 18px;
@@ -1420,7 +1420,7 @@ html:has(.editor-bar) {
 }
 
 .quick-label strong { font-weight: 650; }
-.quick-label small, .unlock-status { color: var(--muted); font-size: .72rem; line-height: 1.16; }
+.quick-label small, .number-label small, .unlock-status { color: var(--muted); font-size: .72rem; line-height: 1.16; }
 .unlock-status { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px 4px; }
 .unlock-status.complete { color: var(--accent-dark); font-weight: 650; }
 .unlock-selected { color: var(--accent-dark); }
@@ -1531,7 +1531,8 @@ html:has(.editor-bar) {
 }
 
 .bulk-apply { display: flex; gap: 5px; max-width: 100%; }
-.bulk-apply input { flex: 0 1 90px; width: 90px; text-align: right; }
+.bulk-apply input { flex: 0 1 120px; width: 120px; font-variant-numeric: tabular-nums; text-align: right; }
+.bulk-apply input:disabled { border-color: #e1e9e3; background: #f3f6f3; }
 
 .detail-filters .button, .detail-toolbar .button {
   min-height: 44px;
@@ -1577,33 +1578,19 @@ html:has(.editor-bar) {
   padding: 4px 6px;
 }
 
-.number-row, .number-head {
+.number-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(66px, auto) 95px;
+  grid-template-columns: minmax(0, 1fr) 120px;
   align-items: center;
   gap: 6px;
-  padding-inline: 4px;
-}
-
-.number-head {
-  min-height: 24px;
-  color: var(--muted);
-  text-align: right;
-  font-size: .71rem;
-}
-
-.number-head span:first-child { grid-column: 2; }
-.number-head span:last-child { padding-right: 5px; }
-
-.number-row {
-  padding-block: 3px;
+  padding: 3px 4px;
   min-height: 48px;
   border-radius: 5px;
 }
 
 .number-row + .number-row { border-top: 1px solid #e5ece7; }
+.number-label { display: grid; gap: 2px; }
 .number-name { font-size: .85rem; font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; }
-.number-current { color: var(--muted); font-size: .74rem; font-variant-numeric: tabular-nums; text-align: right; }
 .toggle-row { display: flex; align-items: center; gap: 6px; min-height: 44px; padding-inline: 4px; font-size: .83rem; }
 .toggle-row small { margin-left: auto; color: var(--muted); }
 

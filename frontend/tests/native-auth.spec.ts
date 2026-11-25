@@ -382,7 +382,6 @@ for (const [code, message] of [
     await page.goto('/partida')
     await submitLogin(page)
     await page.getByRole('link', { name: 'Abrir Editor' }).click()
-    await page.getByLabel('Activar Gemas').check()
     await page.getByLabel('Gemas', { exact: true }).fill('1002')
     await page.getByRole('button', { name: 'Guardar' }).click()
     await expect(page.getByText(message, { exact: true })).toBeVisible()

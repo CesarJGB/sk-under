@@ -1,5 +1,5 @@
 import type {
-  LabAdvanced, LabAdvancedPlan, LabSkillRef, LabSkinRef, LabUnifiedPlan, NativeSaveSummary,
+  LabAdvanced, LabAdvancedPlan, LabSkillRef, LabSkinRef, LabUnifiedPlan, NativeSaveSummary, NativeSession,
   SaveCharacterReport,
 } from './api'
 import { pendingCharacterCodes, pendingSkillKeys, pendingSkinKeys, skillKey, skinKey } from './unlockSelections'
@@ -8,8 +8,6 @@ export type BulkKey = 'characters' | 'skills' | 'skins' | 'pets' | 'petSkins'
 export type QuantityKey =
   | 'gems' | 'fishChip' | 'fishProgress' | 'seasonCoin'
   | 'materialsMin' | 'seedsMin' | 'petFoodMin' | 'batteryMin'
-
-export type QuickToggle = { enabled: boolean; value: string }
 
 export type Draft = {
   bulk: Record<BulkKey, boolean>
@@ -27,13 +25,13 @@ export type Draft = {
     pets: Record<string, true>
     petSkins: Record<string, true>
   }
-  quick: Record<QuantityKey, QuickToggle>
+  quick: Partial<Record<QuantityKey, string>>
   materialEdits: Record<string, string>
   seedEdits: Record<string, string>
   materialMinimums: Record<string, number>
   seedMinimums: Record<string, number>
   reborn: boolean
-  battlePass: { enabled: boolean; seasonId: number | null; level: string; exp: string; buy: boolean | null }
+  battlePass: { seasonId: number | null; level?: string; exp?: string; buy: boolean | null }
 }
 
 export type DraftCounts = {
@@ -42,9 +40,8 @@ export type DraftCounts = {
   byCategory: Record<string, number>
 }
 
-const quantityKeys: QuantityKey[] = [
-  'gems', 'fishChip', 'fishProgress', 'seasonCoin', 'materialsMin', 'seedsMin', 'petFoodMin', 'batteryMin',
-]
+const scalarKeys = ['gems', 'fishChip', 'fishProgress', 'seasonCoin'] as const
+const minimumKeys = ['materialsMin', 'seedsMin', 'petFoodMin', 'batteryMin'] as const
 
 export const MAX_QUANTITY = 2_147_483_647
 export const protectedMaterial = 'material_fish'
@@ -58,7 +55,7 @@ export function advancedSnapshot(save: NativeSaveSummary | null) {
   return save?.advanced?.available === false ? null : save?.advanced
 }
 
-export function scalarQuantity(save: NativeSaveSummary, key: 'gems' | 'fishChip' | 'fishProgress' | 'seasonCoin') {
+function scalarQuantity(save: NativeSaveSummary, key: typeof scalarKeys[number]) {
   const coin = advancedSnapshot(save)?.season_coin
   const stored = originalQuantity({
     gems: save.gems, fishChip: save.fish_chip, fishProgress: save.cumulative_fish_count, seasonCoin: coin?.value,
@@ -69,12 +66,21 @@ export function scalarQuantity(save: NativeSaveSummary, key: 'gems' | 'fishChip'
   return { original: stored ?? observed, editable: stored !== null && (key !== 'seasonCoin' || !!coin?.available) }
 }
 
-export function minimumRows(save: NativeSaveSummary, key: 'materialsMin' | 'seedsMin' | 'petFoodMin' | 'batteryMin') {
+export function minimumRows(save: NativeSaveSummary, key: typeof minimumKeys[number]) {
   const advanced = advancedSnapshot(save)
   if (key === 'materialsMin') return (advanced?.materials ?? []).filter((row) => row.id !== protectedMaterial)
   if (key === 'seedsMin') return advanced?.seeds ?? []
   const food = advanced?.pet_food ?? []
   return key === 'batteryMin' ? food.filter((row) => row.id === batteryId) : food
+}
+
+export function minimumSource(rows: LabAdvanced['materials'] | LabAdvanced['pet_food']) {
+  const counts = new Set<number>()
+  for (const row of rows) {
+    const count = originalQuantity(row.count)
+    if (row.editable && row.owned && count !== null) counts.add(count)
+  }
+  return { original: counts.size === 1 ? (counts.values().next().value ?? null) : null, editable: counts.size > 0 }
 }
 
 function emptySet(): Record<string, true> {
@@ -90,13 +96,13 @@ export function createEmptyDraft(): Draft {
     excluded: {
       characters: emptySet(), skills: emptySet(), skins: emptySet(), pets: emptySet(), petSkins: emptySet(),
     },
-    quick: Object.fromEntries(quantityKeys.map((key) => [key, { enabled: false, value: '' }])) as Record<QuantityKey, QuickToggle>,
+    quick: {},
     materialEdits: {},
     seedEdits: {},
     materialMinimums: {},
     seedMinimums: {},
     reborn: false,
-    battlePass: { enabled: false, seasonId: null, level: '', exp: '', buy: null },
+    battlePass: { seasonId: null, buy: null },
   }
 }
 
@@ -109,6 +115,35 @@ function parseQuantity(value: string): number | null {
   if (!/^\d+$/.test(trimmed)) return null
   const number = Number(trimmed)
   return Number.isSafeInteger(number) && number <= MAX_QUANTITY ? number : null
+}
+
+export function quantityInput(original: number | null, edit: string | undefined, min = 0, max = MAX_QUANTITY) {
+  const initial = String(original ?? '')
+  const value = edit ?? initial
+  if (value === initial) return { value, changed: false, invalid: false, requested: null }
+  const parsed = parseQuantity(value)
+  const changed = parsed === null || parsed !== original
+  const invalid = changed && value !== '' && (parsed === null || parsed < min || parsed > max)
+  return { value, changed, invalid, requested: changed && !invalid ? parsed : null }
+}
+
+function quickQuantities(save: NativeSaveSummary, draft: Draft, session: NativeSession) {
+  function field(key: QuantityKey, source: { original: number | null; editable: boolean }, min?: number, max?: number) {
+    return { ...source, ...quantityInput(source.original, source.editable ? draft.quick[key] : undefined, min, max) }
+  }
+  const coin = advancedSnapshot(save)?.season_coin
+  const scalars = scalarKeys.map((key) => {
+    const min = key === 'gems' ? session.min_gems : key === 'fishChip' ? session.min_fish_chip : key === 'seasonCoin' ? coin?.min : undefined
+    const max = key === 'gems' ? session.max_gems : key === 'fishChip' ? session.max_fish_chip : key === 'seasonCoin' ? coin?.max : undefined
+    return [key, field(key, scalarQuantity(save, key), min, max)] as const
+  })
+  const minimums = minimumKeys.map((key) => {
+    const rows = minimumRows(save, key)
+    const source = minimumSource(rows)
+    const original = key === 'batteryMin' ? originalQuantity(rows[0]?.count) : source.original
+    return [key, field(key, { ...source, original })] as const
+  })
+  return Object.fromEntries([...scalars, ...minimums]) as Record<QuantityKey, ReturnType<typeof field>>
 }
 
 export function minimumTarget(original: unknown, ...minimums: Array<number | null>): number | null {
@@ -229,19 +264,20 @@ export function clearSelection(key: BulkKey, draft: Draft): Draft {
   return setBulk(key, false, { ...draft, manual: { ...draft.manual, [key]: {} }, excluded: { ...draft.excluded, [key]: {} } })
 }
 
-export function setQuick(key: QuantityKey, patch: Partial<QuickToggle>, draft: Draft): Draft {
-  return { ...draft, quick: { ...draft.quick, [key]: { ...draft.quick[key], ...patch } } }
+export function setQuick(key: QuantityKey, value: string, draft: Draft): Draft {
+  return { ...draft, quick: { ...draft.quick, [key]: value } }
 }
 
 export function setEdit(
   kind: 'materials' | 'seeds' | 'petFood',
   id: string,
   value: string,
+  original: number | null,
   draft: Draft,
 ): Draft {
   const field = kind === 'seeds' ? 'seedEdits' : 'materialEdits'
   const next = { ...draft[field] }
-  if (value.trim() === '') delete next[id]
+  if (value === '' && original === null) delete next[id]
   else next[id] = value
   return { ...draft, [field]: next }
 }
@@ -309,8 +345,8 @@ function materialPlan(
     if (!row.editable) continue
     const original = originalQuantity(row.count)
     const manual = parseQuantity(edits[row.id] ?? '')
-    if (manual !== null) {
-      if ((original !== null || row.insertable) && manual !== original) result.push({ id: row.id, value: manual })
+    if (manual !== null && manual !== original) {
+      if (original !== null || row.insertable) result.push({ id: row.id, value: manual })
       continue
     }
     const target = row.owned ? minimumTarget(original, minimum, itemMinimums[row.id] ?? null) : null
@@ -322,11 +358,19 @@ function materialPlan(
 export type BuiltPlan = {
   plan: LabUnifiedPlan
   counts: DraftCounts
-  battlePassRecord: NonNullable<LabAdvanced['battle_pass']['records']>[number] | null
+  quantities: ReturnType<typeof quickQuantities>
 }
 
-export function buildDraftPlan(save: NativeSaveSummary, draft: Draft): BuiltPlan {
+export function battlePassRecord(advanced: LabAdvanced | null | undefined, seasonId: number | null) {
+  const pass = advanced?.battle_pass
+  const records = pass?.records ?? []
+  return records.find((record) => record.season_id === seasonId)
+    ?? records.find((record) => record.season_id === pass?.selected_season_id) ?? records[0]
+}
+
+export function buildDraftPlan(save: NativeSaveSummary, draft: Draft, session: NativeSession): BuiltPlan {
   const advanced = advancedSnapshot(save)
+  const quantities = quickQuantities(save, draft, session)
   const counts: DraftCounts = { changes: 0, operations: 0, byCategory: {} }
   const plan: LabUnifiedPlan = {}
   const bump = (category: string, amount: number) => {
@@ -335,19 +379,14 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft): BuiltPlan
     counts.changes += amount
     counts.operations += 1
   }
-  const requested = (key: QuantityKey) => draft.quick[key].enabled ? parseQuantity(draft.quick[key].value) : null
-  const scalarChange = (key: 'gems' | 'fishChip' | 'fishProgress' | 'seasonCoin') => {
-    const source = scalarQuantity(save, key)
-    const value = requested(key)
-    return source.editable && value !== source.original ? value : null
-  }
+  const requested = (key: QuantityKey) => quantities[key].requested
 
   for (const [key, field, label] of [
     ['gems', 'gems', 'Gemas'],
     ['fishChip', 'fish_chip', 'Fichas de pesca'],
     ['fishProgress', 'fish_progress', 'Recompensas de pesca'],
   ] as const) {
-    const value = scalarChange(key)
+    const value = requested(key)
     if (value === null) continue
     plan[field] = value
     bump(label, 1)
@@ -376,9 +415,8 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft): BuiltPlan
     if (!row.editable || row.id === protectedMaterial) continue
     const current = originalQuantity(row.count)
     const explicit = parseQuantity(draft.materialEdits[row.id] ?? '')
-    if (explicit !== null) {
-      if (explicit === current) materialChanges.delete(row.id)
-      else if (current !== null || row.insertable) materialChanges.set(row.id, explicit)
+    if (explicit !== null && explicit !== current) {
+      if (current !== null || row.insertable) materialChanges.set(row.id, explicit)
       continue
     }
     if (!row.owned) continue
@@ -392,7 +430,7 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft): BuiltPlan
   advancedPlan.seeds = materialPlan(minimumRows(save, 'seedsMin'), draft.seedEdits, requested('seedsMin'), draft.seedMinimums)
   bump('Semillas', advancedPlan.seeds.length)
 
-  const seasonCoin = scalarChange('seasonCoin')
+  const seasonCoin = requested('seasonCoin')
   if (seasonCoin !== null) {
     advancedPlan.season_coin = seasonCoin
     bump('Monedas de temporada', 1)
@@ -409,33 +447,27 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft): BuiltPlan
     bump('Mascotas', pets.length)
   }
 
-  let battlePassRecord: BuiltPlan['battlePassRecord'] = null
-  if (draft.battlePass.enabled && advanced?.battle_pass?.records?.length) {
-    const record = advanced.battle_pass.records.find((item) => item.season_id === draft.battlePass.seasonId)
-      ?? advanced.battle_pass.records.find((item) => item.season_id === advanced.battle_pass.selected_season_id)
-      ?? advanced.battle_pass.records[0]
-    if (record.editable && record.season_id !== null) {
-      const level = parseQuantity(draft.battlePass.level)
-      const exp = parseQuantity(draft.battlePass.exp)
-      const next: NonNullable<LabAdvancedPlan['battle_pass']> = { season_id: record.season_id }
-      let changes = 0
-      if (level !== null && level !== record.cur_level) {
-        next.cur_level = level
-        changes += 1
-      }
-      if (exp !== null && exp !== record.cur_exp) {
-        next.cur_exp = exp
-        changes += 1
-      }
-      if (draft.battlePass.buy !== null && draft.battlePass.buy !== record.has_buy) {
-        next.has_buy = draft.battlePass.buy
-        changes += 1
-      }
-      if (changes > 0) {
-        advancedPlan.battle_pass = next
-        battlePassRecord = record
-        bump('Pase de batalla', changes)
-      }
+  const record = battlePassRecord(advanced, draft.battlePass.seasonId)
+  if (record?.editable && record.season_id !== null) {
+    const level = quantityInput(originalQuantity(record.cur_level), draft.battlePass.level).requested
+    const exp = quantityInput(originalQuantity(record.cur_exp), draft.battlePass.exp).requested
+    const next: NonNullable<LabAdvancedPlan['battle_pass']> = { season_id: record.season_id }
+    let changes = 0
+    if (level !== null) {
+      next.cur_level = level
+      changes += 1
+    }
+    if (exp !== null) {
+      next.cur_exp = exp
+      changes += 1
+    }
+    if (draft.battlePass.buy !== null && draft.battlePass.buy !== record.has_buy) {
+      next.has_buy = draft.battlePass.buy
+      changes += 1
+    }
+    if (changes > 0) {
+      advancedPlan.battle_pass = next
+      bump('Pase de batalla', changes)
     }
   }
 
@@ -444,11 +476,7 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft): BuiltPlan
     || advancedPlan.battle_pass || advancedPlan.pets?.length || advancedPlan.pet_food?.length) {
     plan.advanced = advancedPlan
   }
-  return { plan, counts, battlePassRecord }
-}
-
-export function draftHasChanges(save: NativeSaveSummary, draft: Draft): boolean {
-  return buildDraftPlan(save, draft).counts.changes > 0
+  return { plan, counts, quantities }
 }
 
 export function quickChecked(

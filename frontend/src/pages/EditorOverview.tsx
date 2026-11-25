@@ -2,12 +2,12 @@ import {
   ArrowLeft, BatteryCharging, Check, CircleCheck, CircleDot, Coins, Fish, Gem, Medal,
   PawPrint, Shirt, Sprout, Swords, Ticket, UserRound, Zap, Package, type LucideIcon,
 } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { useId, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import type { NativeSaveSummary } from '../api'
 import {
-  advancedSnapshot, batteryId, clearSelection, eligibility, minimumRows, originalQuantity, parseQuantity,
-  quickChecked, scalarQuantity, selectAll, selectedCount, setBulk, setQuick, unlockProgress,
+  advancedSnapshot, batteryId, battlePassRecord, clearSelection, eligibility, minimumRows, minimumTarget,
+  originalQuantity, parseQuantity, quickChecked, selectAll, selectedCount, setBulk, setQuick, unlockProgress,
   type BuiltPlan, type BulkKey, type Draft, type Eligibility, type QuantityKey,
 } from '../draft'
 
@@ -28,10 +28,10 @@ export const categories = [
 export type CategoryId = typeof categories[number]['id']
 
 export const resources = [
-  { key: 'gems', label: 'Gemas', icon: Gem, field: 'gems' },
-  { key: 'fishChip', label: 'Fichas de pesca', icon: Ticket, field: 'fish_chip' },
-  { key: 'fishProgress', label: 'Recompensas de pesca', icon: Fish, field: 'fish_progress' },
-  { key: 'seasonCoin', label: 'Monedas de temporada', icon: Coins, field: 'season_coin' },
+  { key: 'gems', label: 'Gemas', icon: Gem },
+  { key: 'fishChip', label: 'Fichas de pesca', icon: Ticket },
+  { key: 'fishProgress', label: 'Recompensas de pesca', icon: Fish },
+  { key: 'seasonCoin', label: 'Monedas de temporada', icon: Coins },
 ] as const
 
 const minimums = [
@@ -98,22 +98,18 @@ export function UnlockStatus({ save, group, eligible, selected = 0 }: {
   </span>
 }
 
-function QuickRow({ label, control = label, icon: Icon, checked, mixed, editable = true, invalid, changed, description, value, onChange, onValue, minimum }: {
+function QuickRow({ label, control = label, icon: Icon, checked, mixed, editable = true, changed, description, onChange }: {
   label: string
   control?: string
   icon: LucideIcon
   checked: boolean
   mixed?: boolean
   editable?: boolean
-  invalid?: boolean
   changed?: boolean
   description?: ReactNode
-  value?: string
   onChange: (checked: boolean) => void
-  onValue?: (value: string) => void
-  minimum?: boolean
 }) {
-  return <div className={`quick-row ${changed ? 'changed' : ''}${onValue ? ' quantity' : ''}`}>
+  return <div className={`quick-row${changed ? ' changed' : ''}`}>
     <label className="quick-select">
       <input type="checkbox" checked={checked} disabled={!editable} aria-label={`Activar ${control}`}
         ref={(input) => { if (input) input.indeterminate = Boolean(mixed) }}
@@ -121,65 +117,60 @@ function QuickRow({ label, control = label, icon: Icon, checked, mixed, editable
       <Icon size={16} className="quick-icon" aria-hidden="true" />
       <span className="quick-label"><strong>{label}</strong>{description}</span>
     </label>
-    {onValue && <input className="quick-value" inputMode="numeric" aria-label={label}
-      value={checked ? value : ''} placeholder={editable ? minimum ? 'Mínimo' : 'Nueva' : '—'}
-      disabled={!editable || !checked} aria-invalid={invalid || undefined}
-      onChange={(event) => onValue(event.target.value)} />}
   </div>
 }
 
-function minimumDescription(save: NativeSaveSummary, key: typeof minimums[number]['key']) {
-  const rows = minimumRows(save, key)
-  const eligible = rows.filter((row) => row.editable && row.owned && originalQuantity(row.count) !== null)
-  const observed = key === 'batteryMin' ? rows : eligible
-  const values = new Set(observed.map((row) => originalQuantity(row.count)))
-  if (!values.size || values.has(null)) return { text: 'No disponible', editable: false }
-  return {
-    text: values.size > 1 ? 'Cantidades distintas' : `Actual ${formatOriginal(values.values().next().value)}`,
-    editable: eligible.length > 0,
-  }
+function QuickQuantityRow({ label, icon: Icon, quantity, changed, minimum, onChange }: {
+  label: string
+  icon: LucideIcon
+  quantity: BuiltPlan['quantities'][QuantityKey]
+  changed: boolean
+  minimum?: boolean
+  onChange: (value: string) => void
+}) {
+  const statusId = useId()
+  const { value, editable, original, invalid } = quantity
+  const status = editable ? null : original === null ? 'No disponible' : 'Solo lectura'
+  return <label className={`quick-row quantity${changed ? ' changed' : ''}`}>
+    <span className="quick-quantity-label">
+      <Icon size={16} className="quick-icon" aria-hidden="true" />
+      <span className="quick-label"><strong>{label}</strong>{status && <small id={statusId}>{status}</small>}</span>
+    </span>
+    <input className="quick-value" inputMode="numeric" aria-label={label} aria-describedby={status ? statusId : undefined}
+      value={value} placeholder={!editable ? '—' : minimum && original === null ? 'Mínimo' : undefined}
+      disabled={!editable} aria-invalid={invalid || undefined}
+      onChange={(event) => onChange(event.target.value)} />
+  </label>
 }
 
-export function QuickEdit({ save, draft, built, update, invalid }: {
+export function QuickEdit({ save, draft, built, update }: {
   save: NativeSaveSummary
   draft: Draft
   built: BuiltPlan
   update: (next: Draft) => void
-  invalid: Set<QuantityKey>
 }) {
   const eligible = eligibility(save)
   const advanced = advancedSnapshot(save)
-  const pass = advanced?.battle_pass
-  const battlePass = pass?.records?.find((record) => record.season_id === draft.battlePass.seasonId)
-    ?? pass?.records?.find((record) => record.season_id === pass.selected_season_id) ?? pass?.records?.[0]
+  const battlePass = battlePassRecord(advanced, draft.battlePass.seasonId)
   const reborn = advanced?.reborn_card
-  const quantityRow = (key: QuantityKey, label: string, icon: LucideIcon, text: string, editable: boolean, changed: boolean, minimum = false) =>
-    <QuickRow key={key} label={label} icon={icon} checked={draft.quick[key].enabled}
-      value={draft.quick[key].value} editable={editable} invalid={invalid.has(key)} changed={changed} minimum={minimum}
-      description={<small>{text}</small>}
-      onChange={(enabled) => update(setQuick(key, { enabled }, draft))}
-      onValue={(value) => update(setQuick(key, { value }, draft))} />
+  const quantityRow = (key: QuantityKey, label: string, icon: LucideIcon, changed: boolean, minimum = false) =>
+    <QuickQuantityRow key={key} label={label} icon={icon} quantity={built.quantities[key]} changed={changed} minimum={minimum}
+      onChange={(value) => update(setQuick(key, value, draft))} />
   const allPendingSelected = unlocks.every(({ key }) => quickChecked(key, draft, eligible) === 'all' || eligible[key].length === 0)
 
   return <div className="quick-edit" data-testid="quick-edit">
     <section className="quick-group" aria-label="Recursos">
       <h2>Recursos</h2>
-      {resources.map(({ key, label, icon, field }) => {
-        const source = scalarQuantity(save, key)
-        const planned = field === 'season_coin' ? built.plan.advanced?.season_coin : built.plan[field]
-        return quantityRow(key, label, icon, source.original === null ? 'No disponible' : `Actual ${formatOriginal(source.original)}`,
-          source.editable, planned != null)
-      })}
+      {resources.map(({ key, label, icon }) => quantityRow(key, label, icon, built.quantities[key].requested !== null))}
     </section>
     <section className="quick-group" aria-label="Cantidades mínimas">
       <h2>Cantidades mínimas</h2>
       {minimums.map(({ key, label, icon }) => {
-        const { text, editable } = minimumDescription(save, key)
         const changes = key === 'seedsMin' ? built.plan.advanced?.seeds : built.plan.advanced?.materials
-        const value = parseQuantity(draft.quick[key].value)
-        const changed = draft.quick[key].enabled && value !== null && minimumRows(save, key).some((row) =>
-          changes?.some((change) => change.id === row.id && change.value === value))
-        return quantityRow(key, label, icon, text, editable, Boolean(changed), true)
+        const value = built.quantities[key].requested
+        const changed = value !== null && minimumRows(save, key).some((row) => row.editable && row.owned
+          && minimumTarget(row.count, value) !== null && changes?.some((change) => change.id === row.id && change.value === value))
+        return quantityRow(key, label, icon, changed, true)
       })}
     </section>
     <section className="quick-group" aria-label="Desbloqueos">
@@ -208,8 +199,8 @@ export function QuickEdit({ save, draft, built, update, invalid }: {
           : <small>{reborn?.available ? 'Inactiva' : 'No disponible'}</small>}
         onChange={(checked) => update({ ...draft, reborn: checked })} />
       <QuickRow label="Pase de batalla al nivel máximo" icon={Medal}
-        checked={Boolean(battlePass && draft.battlePass.enabled && draft.battlePass.seasonId === battlePass.season_id
-          && parseQuantity(draft.battlePass.level) === battlePass.max_level)}
+        checked={Boolean(battlePass?.max_level != null && draft.battlePass.seasonId === battlePass.season_id
+          && parseQuantity(draft.battlePass.level ?? '') === battlePass.max_level)}
         editable={Boolean(battlePass?.editable && battlePass.max_level != null)}
         changed={built.plan.advanced?.battle_pass?.cur_level === battlePass?.max_level && battlePass?.max_level != null}
         description={<small>{battlePass?.cur_level == null ? 'No disponible' : `Nivel actual ${formatOriginal(battlePass.cur_level)}`}</small>}
@@ -218,8 +209,8 @@ export function QuickEdit({ save, draft, built, update, invalid }: {
           update({
             ...draft,
             battlePass: {
-              ...draft.battlePass, enabled: checked || draft.battlePass.exp !== '' || draft.battlePass.buy !== null,
-              seasonId: battlePass.season_id, level: checked ? String(battlePass.max_level ?? '') : '',
+              ...draft.battlePass, seasonId: battlePass.season_id,
+              level: checked && battlePass.max_level !== null ? String(battlePass.max_level) : undefined,
             },
           })
         }} />
