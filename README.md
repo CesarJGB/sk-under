@@ -220,6 +220,7 @@ Swagger UI está en `http://127.0.0.1:8017/docs` y el esquema generado está en 
 | `SK_NATIVE_PORTAL_ENABLED` | Backend | `true` por defecto. Consulta el portal oficial de cuentas para recuperar el distro del jugador existente. Sin esta consulta, una cuenta con progreso anterior puede quedar en un jugador vacío. |
 | `SK_NATIVE_STORE_DIR` | Backend | Almacén SQLite de perfiles y sesiones. Por defecto `~/.local/share/sk-under/native`; en la imagen `/var/lib/sk-under/native`. |
 | `SK_NATIVE_BACKUP_DIR` | Backend | Respaldos por subject. Por defecto `~/.local/share/sk-under/native-backups`; en la imagen `/var/lib/sk-under/native-backups`. |
+| `SK_NATIVE_BACKUP_REQUIRE_MOUNT` | Backend | Exige un montaje persistente que cubra el directorio de respaldos. La imagen Docker lo activa por defecto. |
 | `SK_NATIVE_ORIGIN` | Backend | Origen HTTPS exacto del editor, incluido en `SK_ALLOWED_ORIGINS`. Si está vacío se usa `SK_CLOUD_ACCOUNTS_ORIGIN`. |
 | `SK_NATIVE_DISTRO_ID` | Backend | Opcional y solo administrativo/migración. `x-distro-id` privado de una instalación propia para crear un perfil inicial. El flujo normal no lo necesita. Nunca se publica ni se registra en claro. |
 | `SK_NATIVE_UNIQUE_ID` | Backend | Opcional y solo administrativo/migración. Identificador de instalación de esa misma instalación. El flujo normal lo genera y lo cifra. |
@@ -367,6 +368,8 @@ Para usar un subdominio como `editor.example.com`, abre **Custom domains → Set
 
 Las cuentas vinculadas, los volúmenes de producción y el diagnóstico del login están en la [guía de la Fase 6.4](docs/research/phase6-4/README.md).
 La [Fase 6.5](docs/research/phase6-5/README.md) verifica el acceso al portal de ChillyRoom y documenta qué falta para que ese acceso abra la partida en `/partida`.
+
+La autenticación nativa necesita almacenamiento persistente para `/var/lib/sk-under/native` y `/var/lib/sk-under/native-backups` con sus claves de runtime estables. [Auditoría de Partida y diagnóstico de los montajes](docs/partida/README.md).
 
 El puerto `8017` corresponde al desarrollo local. Dentro del contenedor, Uvicorn escucha en `0.0.0.0:8000` como usuario sin privilegios. El Dockerfile se construye usando únicamente el contexto `backend/`. En Coolify, deja desactivado el ajuste de healthcheck del panel para que se utilice el de la imagen. La inspección y exportación local no requieren volúmenes. El laboratorio de nube usa `/var/lib/sk-under/backups` dentro del contenedor; si vas a habilitar la escritura real, monta ahí un volumen persistente y privado. [Dockerfile en Coolify](https://coolify.io/docs/applications/builds/dockerfile) · [Healthchecks en Coolify](https://coolify.io/docs/applications/configuration/health-checks)
 

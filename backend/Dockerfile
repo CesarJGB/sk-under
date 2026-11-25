@@ -20,7 +20,8 @@ ENV PATH="/opt/venv/bin:$PATH" \
     SK_CLOUD_BACKUP_DIR=/var/lib/sk-under/backups \
     SK_CLOUD_ACCOUNTS_DIR=/var/lib/sk-under/accounts \
     SK_NATIVE_STORE_DIR=/var/lib/sk-under/native \
-    SK_NATIVE_BACKUP_DIR=/var/lib/sk-under/native-backups
+    SK_NATIVE_BACKUP_DIR=/var/lib/sk-under/native-backups \
+    SK_NATIVE_BACKUP_REQUIRE_MOUNT=true
 
 COPY --from=dependencies /opt/venv /opt/venv
 COPY app/ ./app/

@@ -1,22 +1,20 @@
 import {
-  ChevronDown, CloudDownload, Eye, EyeOff, LogOut,
+  ChevronDown, CloudDownload, Eye, EyeOff, LogOut, UserRound,
 } from 'lucide-react'
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import {
   ApiProblem, nativeAuth,
-  type LabBackup, type LabVerification, type LabWriteResult,
+  type LabVerification, type LabWriteResult, type NativeBackup, type NativeBackupHistory,
   type NativeConfig, type NativeSaveSummary, type NativeSession,
 } from '../api'
-import { formatSize } from '../session'
+import { formatGameVersion } from '../session'
 import { Loading, Notice, PageTitle, Problem } from '../ui'
 import { HomePage } from './HomePage'
 import { EditorWorkspace } from './EditorWorkspace'
 import { EditorHeader } from './EditorOverview'
+import { BackupHistory, CloudSaveCard, formatDate } from './PartidaPanels'
 import { useOperation } from '../useOperation'
-
-const gemFormat = new Intl.NumberFormat('es-MX')
-const dateFormat = new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium', timeStyle: 'short' })
 
 const FRIENDLY: Record<string, string> = {
   invalid_request: 'Revisa los datos del formulario y vuelve a intentarlo.',
@@ -106,6 +104,8 @@ const FRIENDLY: Record<string, string> = {
   cloud_hash_mismatch: 'La huella del borrador no coincide con la del respaldo. Prepara de nuevo la edición.',
   backup_integrity: 'El respaldo no superó la comprobación de integridad.',
   backup_store: 'No se pudo guardar o leer el respaldo privado.',
+  native_backup_unavailable: 'El almacén de respaldos no está disponible. Intenta actualizar el historial.',
+  native_backup_legacy: 'El servidor aún no ofrece el estado del historial.',
 }
 
 function friendly(error: ApiProblem, fallback: string): ApiProblem {
@@ -126,12 +126,6 @@ function isExpired(error: ApiProblem) {
 
 function distributionLabel(label: string) {
   return label.replace(/ \((?:GP(?:_VNM)?|IOS(?:_VNM|_CN)?)\)$/, '')
-}
-
-function formatDate(value?: string) {
-  if (!value) return '—'
-  const date = new Date(value)
-  return Number.isNaN(date.getTime()) ? '—' : dateFormat.format(date)
 }
 
 export function NativeAuthPage({ view }: { view: CloudView }) {
@@ -229,6 +223,9 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
   const account = session?.account
   const version = config?.distributions.find(({ id }) => id === account?.distribution)?.game_version
   const distribution = distributionLabel(account?.distribution_label ?? '')
+  const platformName = account?.platform === 'ios' ? 'iOS' : account?.platform === 'android' ? 'Android' : ''
+  const distributionPlatform = distribution.toLowerCase().includes(platformName.toLowerCase())
+    ? distribution : [distribution, platformName].filter(Boolean).join(' · ')
   const platform = [distribution, version].filter(Boolean).join(' · ')
 
   if (view === 'home' && !active) {
@@ -237,19 +234,36 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
 
   const accountLabel = account?.label && !/^Cuenta [a-f0-9]{12}$/i.test(account.label)
     ? account.label : accountHint || 'Cuenta ChillyRoom'
-  const accountBar = active && <section className="account-bar" aria-label="Cuenta conectada">
-    <div className="account-identity">
+  const accountCard = (saveVersion?: string) => <section className="panel partida-card partida-account" aria-label="Cuenta conectada">
+    <div className="partida-heading">
+      <span className="icon-tile"><UserRound size={20} aria-hidden="true" /></span>
       <div>
-        <span className="cloud-kicker">Cuenta conectada</span>
-        <strong>{accountLabel}</strong>
+        <h2>{accountLabel}</h2>
+        <p className="partida-muted">{[distributionPlatform, saveVersion ?? version].filter(Boolean).join(' · ')}</p>
       </div>
-      {platform && <span className="account-platform">{platform}</span>}
     </div>
-    <button className="button account-logout" type="button" disabled={authOperation.pending} onClick={logout}>
+    <span className="partida-connected">Conectada</span>
+    <button className="button quiet partida-logout" type="button" disabled={authOperation.pending} onClick={logout}>
       <LogOut size={16} aria-hidden="true" />
       {authOperation.pending ? 'Cerrando sesión…' : 'Cerrar sesión'}
     </button>
     {authOperation.problem && <Problem problem={friendly(authOperation.problem, 'No se pudo cerrar sesión. Vuelve a intentarlo.')} />}
+  </section>
+  const installationPanel = session && !session.installation_ready && <section className="panel partida-card">
+    <h2>Configuración de acceso pendiente</h2>
+    <p className="partida-muted">Contacta con el administrador para completar el acceso a la partida.</p>
+    {session.auto_identity === false && <details className="cloud-details">
+      <summary>Configuración de instalación</summary>
+      <form className="cloud-form" onSubmit={install}>
+        <label className="cloud-field"><span>Identificador de instalación</span>
+          <input name="unique_id" required maxLength={512} autoComplete="off" spellCheck={false} />
+        </label>
+        <button className="button primary" disabled={installOperation.pending}>
+          {installOperation.pending ? 'Comprobando instalación…' : 'Completar instalación'}
+        </button>
+      </form>
+      {installOperation.problem && <Problem problem={friendly(installOperation.problem, 'No se pudo completar la instalación.')} />}
+    </details>}
   </section>
 
   return <>
@@ -323,37 +337,22 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
     </>}
 
     {active && session && <>
-      {view === 'save' && accountBar}
-      {session.installation_ready ? <NativeEditor key={`${session.account?.label}-${session.session_expires_at}`}
+      {session.installation_ready || view === 'save'
+        ? <NativeEditor key={`${session.account?.label}-${session.session_expires_at}-${session.installation_ready}`}
         session={session} initialSave={session.save ?? null} view={view} platform={platform} accountLabel={accountLabel}
-        distribution={distribution} version={version} onExpired={expired} /> : view === 'home' ? <HomePage account={{ label: accountLabel, platform, saveStatus: 'Configuración de acceso pendiente' }} />
-          : view === 'editor' ? <>
+        distribution={distribution} version={version} onExpired={expired} accountCard={accountCard} installationPanel={installationPanel}
+      /> : view === 'home' ? <HomePage account={{ label: accountLabel, platform, saveStatus: 'Configuración de acceso pendiente' }} />
+          : <>
             <EditorHeader accountLabel={accountLabel} platform={distribution} version={version} status="Configuración de acceso pendiente" />
             <Link className="button primary" to="/partida">Ir a Partida</Link>
-          </> : <section className="cloud-empty panel">
-            <h2>Configuración de acceso pendiente</h2>
-            <p>Contacta con el administrador para completar el acceso a la partida.</p>
-            {session.auto_identity === false && <details className="cloud-details">
-              <summary>Configuración de instalación</summary>
-              <form className="cloud-form" onSubmit={install}>
-                <label className="cloud-field"><span>Identificador de instalación</span>
-                  <input name="unique_id" required maxLength={512} autoComplete="off" spellCheck={false} />
-                </label>
-                <button className="button primary" disabled={installOperation.pending}>
-                  {installOperation.pending ? 'Comprobando instalación…' : 'Completar instalación'}
-                </button>
-              </form>
-              {installOperation.problem && <Problem problem={friendly(installOperation.problem, 'No se pudo completar la instalación.')} />}
-            </details>}
-          </section>}
+          </>}
     </>}
-    {view === 'save' && <div className="cloud-secondary">
-      <Link className="cloud-text-link" to="/partida/vinculadas">Acceso por enlace privado</Link>
-    </div>}
   </>
 }
 
-function NativeEditor({ session, initialSave, onExpired, view, platform, accountLabel, distribution, version }: {
+function NativeEditor({
+  session, initialSave, onExpired, view, platform, accountLabel, distribution, version, accountCard, installationPanel,
+}: {
   session: NativeSession
   initialSave: NativeSaveSummary | null
   onExpired: () => void
@@ -362,21 +361,20 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
   accountLabel: string
   distribution: string
   version?: string
+  accountCard: (saveVersion?: string) => ReactNode
+  installationPanel: ReactNode
 }) {
   const [save, setSave] = useState<NativeSaveSummary | null>(initialSave)
-  const [syncResult, setSyncResult] = useState<LabWriteResult | null>(null)
-  const [history, setHistory] = useState<Array<LabBackup & { confirmed: boolean }>>([])
+  const [saveOutdated, setSaveOutdated] = useState(false)
+  const [history, setHistory] = useState<NativeBackupHistory | null>(null)
   const [backupResult, setBackupResult] = useState<(LabWriteResult | LabVerification) | null>(null)
   const operation = useOperation()
   const historyOperation = useOperation()
   const backupOperation = useOperation()
-
-  async function refreshHistory(signal: AbortSignal) {
-    setHistory((await nativeAuth.backups(signal)).backups)
-  }
+  const historyRequest = useRef<AbortSignal | null>(null)
 
   function run(task: (signal: AbortSignal) => Promise<unknown>, target = operation) {
-    void target.run(async (signal) => {
+    return target.run(async (signal) => {
       try {
         await task(signal)
       } catch (error) {
@@ -386,49 +384,83 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     })
   }
 
-  useEffect(() => { void historyOperation.run(refreshHistory) }, [])
+  function refreshHistory(afterMutation = false) {
+    if (!afterMutation && historyRequest.current && !historyRequest.current.aborted) return
+    void run(async (signal) => {
+      historyRequest.current = signal
+      try {
+        const next = await nativeAuth.backups(signal)
+        if (!signal.aborted) setHistory(next)
+      } finally {
+        if (historyRequest.current === signal) historyRequest.current = null
+      }
+    }, historyOperation)
+  }
+
+  useEffect(() => {
+    if (view !== 'save') return
+    let active = true
+    queueMicrotask(() => { if (active) refreshHistory() })
+    return () => { active = false }
+  }, [view])
 
   const downloading = operation.pending
   const downloadProblem = operation.problem
-  const initialProblem = !save && !downloadProblem && !syncResult && !downloading ? session.save_error : null
+  const initialProblem = !save && !downloadProblem && !downloading ? session.save_error : null
   const noCloudSave = initialProblem === 'native_no_cloud_save' || downloadProblem?.code === 'native_no_cloud_save'
   const waiting = initialProblem === 'native_device_binding_throttled'
     || downloadProblem?.code === 'native_device_binding_throttled'
   const waitUntil = session.binding_wait_until && formatDate(session.binding_wait_until)
-  const cloudGems = syncResult?.persisted ? syncResult.remote_gems : save?.gems
-  const disabled = operation.pending || backupOperation.pending
-  let saveStatus = save ? 'Copia verificada' : 'Partida pendiente de descargar'
+  const disabled = downloading || backupOperation.pending
+  let saveStatus = 'Partida pendiente de descargar'
   if (downloading) saveStatus = 'Descargando partida…'
-  else if (save) saveStatus = 'Editor listo'
+  else if (save) saveStatus = saveOutdated || downloadProblem ? 'Copia anterior · Actualización pendiente' : 'Copia descargada'
   else if (noCloudSave) saveStatus = 'Sin partida en la nube'
   else if (waiting) saveStatus = 'En espera de ChillyRoom'
+  else if (downloadProblem || initialProblem) saveStatus = 'Error de descarga'
 
   async function reload(signal: AbortSignal) {
     const next = await nativeAuth.save(signal)
     if (!signal.aborted) {
       setSave(next)
+      setSaveOutdated(false)
       operation.clearProblem()
     }
     return next
   }
 
   function download() {
-    run(async (signal) => {
-      setSyncResult(null)
-      setSave(null)
-      await reload(signal)
-    })
+    void run(reload)
   }
 
   useEffect(() => {
-    // The login preview can have balances without the per-item unlock report.
-    if (view === 'editor' && save && !save.report && !save.downloaded_at) run(reload)
+    // La descarga de acceso puede tener saldos y no incluir el informe del editor.
+    if (view === 'editor' && save && save === initialSave && !save.report && !downloading) download()
   }, [view])
 
-  const downloadButton = <button className={`button ${save ? 'quiet' : 'primary'}`} disabled={disabled} onClick={download}>
-    <CloudDownload size={18} aria-hidden="true" />
-    {downloading ? 'Descargando…' : 'Descargar partida'}
-  </button>
+  function verify(backup: NativeBackup) {
+    setBackupResult(null)
+    void run(async (signal) => {
+      const result = await nativeAuth.verify(backup.id, signal)
+      if (!signal.aborted) setBackupResult(result)
+    }, backupOperation)
+  }
+
+  function restore(backup: NativeBackup) {
+    if (!window.confirm(`¿Restaurar el respaldo de ${accountLabel}? Se reemplazará la partida en la nube.`)) return
+    setBackupResult(null)
+    void run(async (signal) => {
+      try {
+        const restored = await nativeAuth.restore(backup.id, signal)
+        if (signal.aborted) return
+        setBackupResult(restored)
+        setSaveOutdated(true)
+        download()
+      } finally {
+        if (!signal.aborted) refreshHistory(true)
+      }
+    }, backupOperation)
+  }
 
   const downloadFeedback = noCloudSave ? <p className="cloud-note">
     Guarda una copia desde Soul Knight y vuelve a intentar la descarga.
@@ -441,104 +473,35 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
   if (view === 'home') return <HomePage account={{ label: accountLabel, platform, saveStatus }} />
 
   if (view === 'save') return <>
-    <section className="cloud-section panel" aria-labelledby="save-title">
-      <div className="cloud-save-overview">
-        <div>
-          <h2 id="save-title">Partida en la nube</h2>
-          <p className="cloud-state" role="status">{saveStatus}</p>
-        </div>
-        {cloudGems != null && <dl className="cloud-save-data">
-          <div className="cloud-gems">
-            <dt>Gemas</dt>
-            <dd data-testid="native-current-gems">{gemFormat.format(cloudGems)}</dd>
-          </div>
-          {save?.downloaded_at && !syncResult && <div>
-            <dt>Última descarga</dt><dd>{formatDate(save.downloaded_at)}</dd>
-          </div>}
-        </dl>}
-        <div className="cloud-actions">
-          {save && <Link className="button primary" to="/editor">Abrir Editor</Link>}
-          {downloadButton}
-        </div>
-      </div>
-      {downloadFeedback}
-      {!session.write_ready && <p className="cloud-note">Acceso a la nube de solo lectura.</p>}
-    </section>
-
-    <section className="cloud-section cloud-backups" aria-labelledby="backups-title">
-      <h2 id="backups-title">Respaldos</h2>
-      {historyOperation.pending && <Loading>Cargando respaldos…</Loading>}
-      {historyOperation.problem && <>
-        <Problem problem={friendly(historyOperation.problem, 'No se pudieron cargar los respaldos.')} />
-        <button className="button quiet" onClick={() => void historyOperation.run(refreshHistory)}>
-          Actualizar respaldos
-        </button>
+    {accountCard(formatGameVersion(save?.report?.game_version))}
+    {installationPanel || <CloudSaveCard save={save} status={saveStatus} downloading={downloading}
+      disabled={disabled} onDownload={download} feedback={<>
+        {downloadFeedback}
+        {!session.write_ready && <p className="partida-muted">Acceso a la nube de solo lectura.</p>}
+      </>} />}
+    <BackupHistory history={history} pending={historyOperation.pending} result={backupResult}
+      problem={historyOperation.problem && <Problem problem={friendly(historyOperation.problem, 'No se pudieron cargar los respaldos.')} />}
+      feedback={<>
+        {backupOperation.pending && <Loading>Consultando la nube…</Loading>}
+        {backupOperation.problem && <Problem problem={friendly(backupOperation.problem, 'No se pudo completar la operación del respaldo.')} />}
       </>}
-      {history.length === 0 && !historyOperation.pending && !historyOperation.problem &&
-        <p className="cloud-note">Esta cuenta todavía no tiene respaldos.</p>}
-      {history.map((backup) => <details className="cloud-details backup-row" key={backup.id}>
-        <summary><span>{formatDate(backup.created_at)}</span>
-          <span className="backup-amount">
-            {gemFormat.format(backup.original_value ?? backup.original_gems)} {backupFieldLabel(backup)}
-          </span></summary>
-        <div className="backup-body">
-          <p>{backup.confirmed ? 'Subida verificada' : 'Edición preparada'} · {formatSize(backup.original_size)}</p>
-          <div className="cloud-actions">
-            <button className="button quiet" disabled={disabled} onClick={() => {
-              setBackupResult(null)
-              run(async (signal) => setBackupResult(await nativeAuth.verify(backup.id, signal)), backupOperation)
-            }}>Verificar nube</button>
-            {session.write_ready && backup.changed && <button className="button quiet" disabled={disabled}
-              onClick={() => {
-                if (window.confirm(`¿Restaurar el respaldo de ${accountLabel}? Se reemplazará la partida en la nube.`)) {
-                  setBackupResult(null)
-                  run(async (signal) => {
-                    const restored = await nativeAuth.restore(backup.id, signal)
-                    setBackupResult(restored)
-                    setSyncResult(restored)
-                    setSave(null)
-                  }, backupOperation)
-                }
-              }}>Restaurar respaldo</button>}
-          </div>
-          {backupResult?.backup_id === backup.id && <p role="status">{backupMessage(backupResult)}</p>}
-        </div>
-      </details>)}
-      {backupOperation.pending && <Loading>Consultando la nube…</Loading>}
-      {backupOperation.problem && <Problem problem={friendly(backupOperation.problem, 'No se pudo completar la operación del respaldo.')} />}
-    </section>
+      canVerify={Boolean(session.installation_ready)} canRestore={Boolean(session.write_ready)} disabled={disabled}
+      onRefresh={() => refreshHistory()} onVerify={verify} onRestore={restore} />
   </>
 
   if (!save) return <>
-    <EditorHeader accountLabel={accountLabel} platform={distribution} version={version}
-      status={downloadProblem && !noCloudSave && !waiting ? 'Error de descarga' : saveStatus} />
+    <EditorHeader accountLabel={accountLabel} platform={distribution} version={version} status={saveStatus} />
     <section className="cloud-empty panel">
       {downloadFeedback}
-      {downloadButton}
+      <button className="button primary" disabled={disabled} onClick={download}>
+        <CloudDownload size={18} aria-hidden="true" />
+        {downloading ? 'Descargando…' : 'Descargar partida'}
+      </button>
     </section>
   </>
 
   return <EditorWorkspace save={save} session={session}
     accountLabel={accountLabel} platform={distribution} version={version} onExpired={onExpired}
-    loadingSave={downloading} loadProblem={downloadProblem} onReload={reload} />
-}
-
-function backupFieldLabel(backup: LabBackup) {
-  if (backup.field === 'fish_chip') return 'fichas de pesca'
-  if (backup.field === 'fish_progress') return 'progreso acumulado de fichas'
-  if (backup.field === 'characters') return 'personajes disponibles'
-  if (backup.field === 'skills') return 'habilidades'
-  if (backup.field === 'skins') return 'skins'
-  if (backup.field === 'advanced') return 'materiales, recursos, beneficios, pase y mascotas'
-  if (backup.field === 'unified') return 'cambios combinados'
-  return 'gemas'
-}
-
-function backupMessage(result: LabWriteResult | LabVerification) {
-  if ('persisted' in result) {
-    return result.persisted ? 'Respaldo restaurado y verificado en la nube.' : 'No se pudo confirmar la restauración.'
-  }
-  if (result.matches_original) return 'La nube coincide con el respaldo original.'
-  if (result.matches_candidate) return 'La nube coincide con la edición guardada.'
-  return 'La partida en la nube difiere de las dos versiones del respaldo.'
+    loadingSave={downloading} loadProblem={downloadProblem} onReload={reload}
+    onBackupChanged={() => refreshHistory(true)} onCloudWrite={() => setSaveOutdated(true)} />
 }

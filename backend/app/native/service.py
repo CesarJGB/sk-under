@@ -22,7 +22,7 @@ from typing import Callable
 from urllib.parse import urlsplit
 
 from ..cloud.advanced_editor import read_advanced_source
-from ..cloud.backup_store import LabBackupStore
+from ..cloud.backup_store import BackupIntegrityError, BackupStorageUnavailable, LabBackupStore, backup_problem
 from ..cloud.fish_chip_editor import MAX_FISH_CHIP, MIN_FISH_CHIP, read_fish_chip
 from ..cloud.fish_progress_editor import read_fish_progress
 from ..cloud.gems_editor import MAX_GEMS, MIN_GEMS, read_gems
@@ -145,6 +145,7 @@ class NativeAuthService:
         auto_allow_write: bool = False,
         portal_client: PortalClient | None = None,
         backup_key: bytes | None = None,
+        backup_require_mount: bool = False,
         identity_factory: Callable[[], GeneratedIdentity] = generate_identity,
         now: Callable[[], float] = time,
     ) -> None:
@@ -167,6 +168,7 @@ class NativeAuthService:
         self.portal_client = portal_client
         self._discovery_lock = threading.Lock()
         self.backup_key = backup_key
+        self.backup_require_mount = backup_require_mount
         self.identity_factory = identity_factory
         self.now = now
         self.cookie_name = "__Host-sk_native" if secure else "sk_native_dev"
@@ -518,12 +520,64 @@ class NativeAuthService:
     def verify(self, session: NativeSessionRecord, backup_id: str) -> dict[str, object]:
         return self._operate(session, lambda: self._lab(session).verify(backup_id).summary())
 
-    def backups(self, session: NativeSessionRecord) -> list[dict[str, object]]:
-        store = LabBackupStore(self.backup_root / session.subject, cipher_key=self.backup_key)
-        return [
-            record.summary() | {"confirmed": store.confirmation(record.id) is not None}
-            for record in store.list()
-        ]
+    def backups(self, session: NativeSessionRecord) -> dict[str, object]:
+        limit = 25
+        store = self._backup_store(session)
+        index = store.index(require_parent=True)
+
+        unreadable = sum(entry.problem is not None for entry in index)
+        backups = []
+        for entry in index[:limit]:
+            record = entry.record
+            summary: dict[str, object] = {
+                "id": entry.id,
+                "created_at": record.created_at if record else None,
+                "field": record.field if record else None,
+            }
+            if record is None:
+                backups.append(summary | {"status": "unreadable", "problem": entry.problem})
+                continue
+            try:
+                bundle = store.load(record.id)
+                confirmation = store.confirmation(record.id)
+                attempted = store.confirmation_attempted(record.id)
+                if confirmation is not None and not (
+                    confirmation.get("action") == "confirm"
+                    and confirmation.get("backup_id") == record.id
+                    and confirmation.get("persisted") is True
+                    and confirmation.get("remote_sha256") == record.candidate_sha256
+                    and confirmation.get("remote_size") == record.candidate_size
+                ):
+                    raise BackupIntegrityError("La confirmación no coincide con el respaldo.")
+
+                status = "verified" if confirmation else "unverified" if attempted else "prepared"
+                restoration = None
+                for event in store.events(record.id):
+                    if event.get("action") == "confirm" and event.get("uploaded") is True and not confirmation:
+                        status = "verified" if (
+                            event.get("persisted") is True and event.get("remote_sha256") == record.candidate_sha256
+                        ) else "unverified"
+                    if event.get("action") == "restore":
+                        restoration = "verified" if (
+                            event.get("persisted") is True and event.get("remote_sha256") == record.original_sha256
+                        ) else "unverified"
+            except BackupStorageUnavailable:
+                raise
+            except (CloudSaveError, OSError) as exc:
+                unreadable += 1
+                backups.append(summary | {"status": "unreadable", "problem": backup_problem(exc)})
+                continue
+
+            summary.update(
+                status=status, restoration=restoration, changed=record.changed,
+                original_size=record.original_size,
+            )
+            if record.field in {"advanced", "unified"}:
+                summary.update(changes=record.candidate_value, categories=list(bundle.categories))
+            else:
+                summary.update(original_value=record.original_value, candidate_value=record.candidate_value)
+            backups.append(summary)
+        return {"backups": backups, "total": len(index), "listed": len(backups), "limit": limit, "unreadable": unreadable}
 
     # Diagnóstico saneado ----------------------------------------------------
 
@@ -869,6 +923,7 @@ class NativeAuthService:
             "character_write_policy": "confirmed_by_owner",
             "skill_write_policy": "confirmed_by_owner",
             "skin_write_policy": "confirmed_by_owner",
+            "downloaded_at": _iso(int(self.now())),
             "sections": None,
             "advanced": advanced,
             "remote_source": save.metadata.source,
@@ -1014,6 +1069,7 @@ class NativeAuthService:
         self._event("save_verify", "ok", subject=subject)
         return {
             "verified": True,
+            "downloaded_at": _iso(int(self.now())),
             "bytes": save.metadata.size,
             "sha256": save.metadata.sha256,
             "gems": gems.gems,
@@ -1031,6 +1087,13 @@ class NativeAuthService:
             "advanced": advanced,
             "remote_source": save.metadata.source,
         }
+
+    def _backup_store(self, session: NativeSessionRecord) -> LabBackupStore:
+        return LabBackupStore(
+            self.backup_root / session.subject,
+            cipher_key=self.backup_key,
+            required_mount=self.backup_root if self.backup_require_mount else None,
+        )
 
     def _lab(self, session: NativeSessionRecord) -> CloudLabService:
         if session.unique_id is None:
@@ -1051,7 +1114,7 @@ class NativeAuthService:
         )
         return CloudLabService(
             provider,
-            LabBackupStore(self.backup_root / session.subject, cipher_key=self.backup_key),
+            self._backup_store(session),
             uploader=uploader,
             write_enabled=write,
             admin_configured=True,
@@ -1126,13 +1189,6 @@ def _default_uploader(token: str, unique_id: str, distro_id: str):
     return BlobSaveUploader(token, unique_id, distro_id, enabled=True)
 
 
-def _native_dirs(settings: Settings) -> tuple[Path, Path]:
-    base = Path.home() / ".local" / "share" / "sk-under"
-    store_dir = settings.native_store_dir or base / "native"
-    backup_dir = settings.native_backup_dir or base / "native-backups"
-    return Path(store_dir).expanduser().absolute(), Path(backup_dir).expanduser().absolute()
-
-
 def build_native(settings: Settings) -> NativeRuntime:
     if not settings.native_auth_enabled:
         return NativeRuntime(None, None, False)
@@ -1156,7 +1212,8 @@ def build_native(settings: Settings) -> NativeRuntime:
             raise NativeMisconfigured(
                 "Falta SK_NATIVE_STORE_KEY (32 bytes aleatorios en 64 dígitos hexadecimales)."
             )
-        store_dir, backup_dir = _native_dirs(settings)
+        store_dir = settings.native_store_path.expanduser().absolute()
+        backup_dir = settings.native_backup_path.expanduser().absolute()
         if store_dir == backup_dir:
             raise NativeMisconfigured("Los directorios nativos de sesiones y respaldos deben ser distintos.")
         store = NativeStore(
@@ -1167,6 +1224,13 @@ def build_native(settings: Settings) -> NativeRuntime:
             login_attempts=settings.native_login_attempts,
             login_window_seconds=settings.native_login_window_seconds,
         )
+        if settings.env == "development":
+            # La imagen Docker ya aprovisiona la ruta. Un volumen ausente en
+            # producción debe poder distinguirse de una cuenta sin historial.
+            try:
+                backup_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
+            except OSError:
+                pass
         service = NativeAuthService(
             store=store,
             client=NativeAuthClient(),
@@ -1184,6 +1248,7 @@ def build_native(settings: Settings) -> NativeRuntime:
                 else None
             ),
             backup_key=settings.native_backup_key_bytes(),
+            backup_require_mount=settings.native_backup_require_mount,
         )
         distro = settings.native_distro_id.get_secret_value() if settings.native_distro_id else ""
         unique = settings.native_unique_id.get_secret_value() if settings.native_unique_id else None

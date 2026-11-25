@@ -55,7 +55,7 @@ export function advancedSnapshot(save: NativeSaveSummary | null) {
   return save?.advanced?.available === false ? null : save?.advanced
 }
 
-function scalarQuantity(save: NativeSaveSummary, key: typeof scalarKeys[number]) {
+export function scalarQuantity(save: NativeSaveSummary, key: typeof scalarKeys[number]) {
   const coin = advancedSnapshot(save)?.season_coin
   const stored = originalQuantity({
     gems: save.gems, fishChip: save.fish_chip, fishProgress: save.cumulative_fish_count, seasonCoin: coin?.value,

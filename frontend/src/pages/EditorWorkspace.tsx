@@ -11,6 +11,7 @@ import {
   selectAll, selectedCount, setEdit, setQuick, toggleItem, type BuiltPlan, type BulkKey,
   type Draft, type Eligibility,
 } from '../draft'
+import { formatGameVersion } from '../session'
 import { skillKey, skinKey } from '../unlockSelections'
 import { Notice, Problem } from '../ui'
 import { useOperation } from '../useOperation'
@@ -339,6 +340,7 @@ type EditorAction = 'prepare' | 'upload' | 'reload'
 
 export function EditorWorkspace({
   save, session, accountLabel, platform, version, loadingSave, loadProblem, onExpired, onReload,
+  onBackupChanged, onCloudWrite,
 }: {
   save: SaveBundle
   session: NativeSession
@@ -349,6 +351,8 @@ export function EditorWorkspace({
   loadProblem: ApiProblem | null
   onExpired: () => void
   onReload: (signal: AbortSignal) => Promise<SaveBundle>
+  onBackupChanged: () => void
+  onCloudWrite: () => void
 }) {
   const [draft, setDraft] = useState<Draft>(createEmptyDraft)
   const [review, setReview] = useState(false)
@@ -482,6 +486,7 @@ export function EditorWorkspace({
       setConfirm(false)
       const next = await nativeAuth.prepareUnified(built.plan, save.sha256, signal)
       if (signal.aborted) return
+      onBackupChanged()
       setPrepared(next)
       setReview(true)
     })
@@ -491,7 +496,9 @@ export function EditorWorkspace({
     if (!prepared || !confirm || !canWrite) return
     run('upload', async (signal) => {
       const uploaded = await nativeAuth.confirm(prepared.backup.id, prepared.candidate_sha256, signal)
+        .finally(() => { if (!signal.aborted) onBackupChanged() })
       if (signal.aborted) return
+      if (uploaded.uploaded || uploaded.persisted) onCloudWrite()
       setResult(uploaded)
       setConfirm(false)
       setReview(false)
@@ -535,9 +542,7 @@ export function EditorWorkspace({
   const barError = operation.problem || (result && !result.persisted)
   const barStatus = progress ?? (invalidDraft ? 'Revisa las cantidades'
     : barError ? 'Revisa el resultado' : result?.persisted ? 'Verificado' : null)
-  const gameVersion = save.report?.game_version
-  const displayedVersion = gameVersion && gameVersion >= 10_000
-    ? [Math.floor(gameVersion / 10_000), Math.floor(gameVersion / 100) % 100, gameVersion % 100].join('.') : version
+  const displayedVersion = formatGameVersion(save.report?.game_version) ?? version
 
   const content = review && prepared
     ? <div className="review-panel" data-testid="unified-preview" ref={preview} tabIndex={-1}>

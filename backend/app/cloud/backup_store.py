@@ -90,6 +90,7 @@ _FIELDS = frozenset(
     }
 )
 _RECORD_LIMIT = 64 * 1024
+_JOURNAL_LIMIT = 1024 * 1024
 _SEAL_MAGIC = b"SKB1"
 _SEAL_TAG = 16
 
@@ -108,6 +109,18 @@ class BackupNotFound(BackupStoreError):
 
 class BackupIntegrityError(BackupStoreError):
     code = "backup_integrity"
+
+
+class BackupStorageUnavailable(BackupStoreError):
+    code = "native_backup_unavailable"
+
+
+class BackupUnreadable(BackupIntegrityError):
+    """Los datos no se pueden autenticar con el formato y la clave actuales."""
+
+
+class BackupIncompatible(BackupIntegrityError):
+    """Metadatos de un formato o plan que el lector actual no reconoce."""
 
 
 class BackupAlreadyConfirmed(BackupStoreError):
@@ -179,6 +192,24 @@ class BackupBundle:
     record: BackupRecord
     original: bytes = dataclass_field(repr=False)
     candidate: bytes = dataclass_field(repr=False)
+    categories: tuple[str, ...] = ()
+
+
+def backup_problem(error: CloudSaveError | OSError) -> str:
+    if isinstance(error, BackupUnreadable):
+        return "authentication"
+    if isinstance(error, BackupIncompatible):
+        return "incompatible"
+    if isinstance(error, (BackupNotFound, OSError)) or type(error) is BackupStoreError:
+        return "file_unavailable"
+    return "integrity"
+
+
+@dataclass(frozen=True)
+class BackupIndexEntry:
+    id: str
+    record: BackupRecord | None
+    problem: str | None = None
 
 
 def _now() -> str:
@@ -203,27 +234,30 @@ def _require_text(value: object, name: str) -> str:
     return value
 
 
-def _require_advanced_plan(value: object) -> dict[str, object]:
+def _require_advanced_plan(value: object, *, historical: bool = False) -> dict[str, object]:
     if not isinstance(value, dict):
-        raise BackupIntegrityError("El registro de respaldo no contiene un plan avanzado válido.")
+        raise BackupIncompatible("El registro de respaldo no contiene un plan avanzado válido.")
+    if historical and set(value) == {"materials", "seeds", "season_coin", "reborn_card", "battle_pass"}:
+        # Fase 7.1: ambos campos se añadieron como operaciones opcionales en 7.2.
+        value = value | {"pets": [], "pet_food": {}}
     try:
         plan = normalize_advanced_plan(value)
     except CloudSaveError as exc:
-        raise BackupIntegrityError("El plan avanzado del respaldo no es válido.") from exc
+        raise BackupIncompatible("El plan avanzado del respaldo no es válido.") from exc
     if plan != value:
-        raise BackupIntegrityError("El plan avanzado del respaldo no está normalizado.")
+        raise BackupIncompatible("El plan avanzado del respaldo no está normalizado.")
     return plan
 
 
 def _require_unified_plan(value: object) -> dict[str, object]:
     if not isinstance(value, dict):
-        raise BackupIntegrityError("El registro de respaldo no contiene un plan unificado válido.")
+        raise BackupIncompatible("El registro de respaldo no contiene un plan unificado válido.")
     try:
         plan = normalize_unified_plan(value)
     except CloudSaveError as exc:
-        raise BackupIntegrityError("El plan unificado del respaldo no es válido.") from exc
+        raise BackupIncompatible("El plan unificado del respaldo no es válido.") from exc
     if plan != value:
-        raise BackupIntegrityError("El plan unificado del respaldo no está normalizado.")
+        raise BackupIncompatible("El plan unificado del respaldo no está normalizado.")
     return plan
 
 
@@ -311,6 +345,7 @@ class LabBackupStore:
         *,
         limit: int = MAX_INPUT_BYTES,
         cipher_key: bytes | None = None,
+        required_mount: Path | None = None,
     ) -> None:
         if isinstance(limit, bool) or not isinstance(limit, int) or not 0 < limit <= MAX_INPUT_BYTES:
             raise BackupStoreError("Límite de respaldo inválido.")
@@ -319,6 +354,26 @@ class LabBackupStore:
         self.root = Path(root).expanduser().absolute()
         self.limit = limit
         self.cipher_key = cipher_key
+        self.required_mount = required_mount
+
+    def _require_mount(self) -> None:
+        if self.required_mount is None:
+            return
+        try:
+            root = self.required_mount.resolve(strict=True)
+            covering = []
+            for line in Path("/proc/self/mountinfo").read_text().splitlines():
+                mount, filesystem = line.split(" - ", 1)
+                encoded = mount.split()[4]
+                path = Path(re.sub(r"\\([0-7]{3})", lambda match: chr(int(match[1], 8)), encoded))
+                if root.is_relative_to(path):
+                    covering.append((path, filesystem.split()[0]))
+            nearest, storage_type = max(covering, key=lambda item: len(item[0].parts))
+            if nearest != Path("/") and storage_type not in {"overlay", "tmpfs", "ramfs", "rootfs"}:
+                return
+        except (OSError, ValueError, IndexError, RuntimeError):
+            pass
+        raise BackupStorageUnavailable("El volumen persistente de respaldos no está disponible.")
 
     def _context(self, path: Path) -> bytes:
         return b"sk-under/backup\x00" + path.parent.name.encode("ascii") + b"\x00" + path.name.encode("ascii")
@@ -335,7 +390,7 @@ class LabBackupStore:
         if self.cipher_key is None:
             return data
         if not data.startswith(_SEAL_MAGIC) or len(data) < len(_SEAL_MAGIC) + _SEAL_TAG:
-            raise BackupIntegrityError(
+            raise BackupUnreadable(
                 "El respaldo no está cifrado con la clave actual. Migra los respaldos antes de continuar."
             )
         cipher = AES.new(self.cipher_key, AES.MODE_SIV)
@@ -343,12 +398,12 @@ class LabBackupStore:
         try:
             return cipher.decrypt_and_verify(data[len(_SEAL_MAGIC) + _SEAL_TAG:], data[len(_SEAL_MAGIC):len(_SEAL_MAGIC) + _SEAL_TAG])
         except (ValueError, KeyError):
-            raise BackupIntegrityError("El respaldo no se pudo descifrar o fue alterado.") from None
+            raise BackupUnreadable("El respaldo no se pudo descifrar o fue alterado.") from None
 
     def _ensure_root(self) -> None:
         try:
             self.root.mkdir(mode=0o700, parents=True, exist_ok=True)
-            info = self.root.stat()
+            info = self.root.lstat()
             if not stat.S_ISDIR(info.st_mode):
                 raise BackupStoreError("La ruta de respaldos no es un directorio.")
             os.chmod(self.root, 0o700)
@@ -359,6 +414,17 @@ class LabBackupStore:
         if not isinstance(backup_id, str) or not _ID.fullmatch(backup_id):
             raise InvalidBackupId("El identificador de respaldo no es válido.")
         return self.root / backup_id
+
+    def _existing_directory(self, backup_id: str) -> Path:
+        directory = self._directory(backup_id)
+        try:
+            if not stat.S_ISDIR(self.root.lstat().st_mode) or not stat.S_ISDIR(directory.lstat().st_mode):
+                raise BackupIntegrityError("El directorio del respaldo no es válido.")
+        except FileNotFoundError:
+            raise BackupNotFound("No se encontró el respaldo solicitado.") from None
+        except OSError:
+            raise BackupStoreError("No se pudo acceder al directorio privado de respaldo.") from None
+        return directory
 
     def claim_confirmation_attempt(self, backup_id: str) -> None:
         path = self._directory(backup_id) / "upload-attempt"
@@ -392,9 +458,11 @@ class LabBackupStore:
 
     def _read_private(self, path: Path, limit: int) -> bytes:
         try:
-            descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
-        except OSError:
+            descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        except FileNotFoundError:
             raise BackupNotFound("No se encontró el respaldo solicitado.") from None
+        except OSError:
+            raise BackupStoreError("No se pudo abrir el archivo privado de respaldo.") from None
         try:
             info = os.fstat(descriptor)
             wire_limit = limit + len(_SEAL_MAGIC) + _SEAL_TAG if self.cipher_key is not None else limit
@@ -410,12 +478,20 @@ class LabBackupStore:
                 remaining -= len(chunk)
             data = self._open(path, b"".join(chunks))
         except OSError:
-            raise BackupNotFound("No se pudo leer el respaldo solicitado.") from None
+            raise BackupStoreError("No se pudo leer el archivo privado de respaldo.") from None
         finally:
             os.close(descriptor)
         if len(data) > limit:
             raise BackupIntegrityError("El archivo de respaldo supera el límite.")
         return data
+
+    @staticmethod
+    def _sync_directory(path: Path) -> None:
+        descriptor = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        try:
+            os.fsync(descriptor)
+        finally:
+            os.close(descriptor)
 
     def save(
         self,
@@ -440,6 +516,7 @@ class LabBackupStore:
         ``candidate_gems`` como el valor del campo respaldado para mantener la
         compatibilidad de la Fase 6.13.
         """
+        self._require_mount()
         if field not in _FIELDS:
             raise BackupIntegrityError("El tipo de campo del respaldo no es válido.")
         codes = _require_codes(list(character_codes) if character_codes is not None else None)
@@ -509,10 +586,20 @@ class LabBackupStore:
         source = _require_text(remote_source, "remote_source")
         self._ensure_root()
         backup_id = uuid4().hex
-        directory = self._directory(backup_id)
+        staging = self.root / f".pending-{backup_id}"
+        try:
+            staging.mkdir(mode=0o700)
+        except OSError:
+            raise BackupStoreError("No se pudo preparar el directorio del respaldo.") from None
+        # El nombre final también se usa como contexto de autenticación AES-SIV.
+        directory = staging / backup_id
         try:
             os.mkdir(directory, 0o700)
         except OSError:
+            try:
+                staging.rmdir()
+            except OSError:
+                pass
             raise BackupStoreError("No se pudo crear el directorio del respaldo.") from None
         record = BackupRecord(
             id=backup_id,
@@ -538,8 +625,14 @@ class LabBackupStore:
             self._write_private(directory / "original.json", edit.original)
             self._write_private(directory / "candidate.json", edit.candidate)
             encoded = json.dumps(record.summary(), ensure_ascii=False, sort_keys=True).encode("utf-8")
+            if len(encoded) > _RECORD_LIMIT:
+                raise BackupIntegrityError("El registro de respaldo supera el límite.")
             self._write_private(directory / "record.json", encoded)
-        except BackupStoreError:
+            self._sync_directory(directory)
+            directory = directory.rename(self._directory(backup_id))
+            self._sync_directory(self.root)
+            self._sync_directory(self.root.parent)
+        except (BackupStoreError, OSError) as exc:
             # El directorio es nuevo y su nombre lo generó este proceso.
             for name in ("record.json", "candidate.json", "original.json"):
                 try:
@@ -550,7 +643,14 @@ class LabBackupStore:
                 directory.rmdir()
             except OSError:
                 pass
+            if isinstance(exc, OSError):
+                raise BackupStoreError("No se pudo conservar el respaldo de forma persistente.") from None
             raise
+        finally:
+            try:
+                staging.rmdir()
+            except OSError:
+                pass
         return BackupBundle(record, edit.original, edit.candidate)
 
     def migrate_legacy(self) -> int:
@@ -607,9 +707,11 @@ class LabBackupStore:
     @staticmethod
     def _read_plain(path: Path, limit: int) -> bytes:
         try:
-            descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
-        except OSError:
+            descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        except FileNotFoundError:
             raise BackupNotFound("No se encontró el respaldo solicitado.") from None
+        except OSError:
+            raise BackupStoreError("No se pudo abrir el archivo privado de respaldo.") from None
         try:
             info = os.fstat(descriptor)
             if not stat.S_ISREG(info.st_mode) or info.st_size > limit:
@@ -625,7 +727,7 @@ class LabBackupStore:
             os.close(descriptor)
 
     def _read_record(self, backup_id: str) -> BackupRecord:
-        raw = self._read_private(self._directory(backup_id) / "record.json", _RECORD_LIMIT)
+        raw = self._read_private(self._existing_directory(backup_id) / "record.json", _RECORD_LIMIT)
         try:
             data = parse_json(raw)
         except (ValueError, RecursionError):
@@ -633,9 +735,9 @@ class LabBackupStore:
         if not isinstance(data, dict):
             raise BackupIntegrityError("El registro de respaldo no es un objeto.")
         field = data.get("field", "gems")
-        if field not in _FIELDS:
-            raise BackupIntegrityError("El registro de respaldo contiene un tipo de campo inválido.")
-        plan = _require_advanced_plan(data.get("advanced_plan")) if field == ADVANCED_RECORD_FIELD else {}
+        if not isinstance(field, str) or field not in _FIELDS:
+            raise BackupIncompatible("El registro de respaldo contiene un tipo de campo inválido.")
+        plan = _require_advanced_plan(data.get("advanced_plan"), historical=True) if field == ADVANCED_RECORD_FIELD else {}
         unified = _require_unified_plan(data.get("unified_plan")) if field == UNIFIED_RECORD_FIELD else {}
         record = BackupRecord(
             id=_require_text(data.get("id"), "id"),
@@ -661,10 +763,16 @@ class LabBackupStore:
             raise BackupIntegrityError("El identificador del registro no coincide.")
         if not isinstance(data.get("changed"), bool):
             raise BackupIntegrityError("El registro de respaldo contiene changed inválido.")
+        try:
+            if datetime.fromisoformat(record.created_at).utcoffset() is None:
+                raise ValueError
+        except ValueError:
+            raise BackupIntegrityError("La fecha del respaldo no es válida.") from None
         return record
 
     def load(self, backup_id: str) -> BackupBundle:
         """Carga y verifica el respaldo completo antes de cualquier reenvío."""
+        self._require_mount()
         record = self._read_record(backup_id)
         directory = self._directory(backup_id)
         original = self._read_private(directory / "original.json", self.limit)
@@ -691,7 +799,7 @@ class LabBackupStore:
                 raise BackupIntegrityError(
                     "El candidato del respaldo no es reproducible desde el original."
                 )
-            return BackupBundle(record, original, candidate)
+            return BackupBundle(record, original, candidate, tuple(item.key for item in current.categories if item.changes))
         if record.field == CHARACTER_RECORD_FIELD:
             try:
                 original_unlocked = read_characters(original).unlocked
@@ -840,30 +948,50 @@ class LabBackupStore:
                 raise BackupIntegrityError("El candidato del respaldo no es reproducible desde el original.")
         return BackupBundle(record, original, candidate)
 
+    def index(self, *, require_parent: bool = False) -> list[BackupIndexEntry]:
+        """Enumera registros e incidencias sin leer el contenido de las partidas."""
+        self._require_mount()
+        if require_parent:
+            try:
+                if not self.root.parent.is_dir() or not os.access(self.root.parent, os.R_OK | os.X_OK):
+                    raise BackupStorageUnavailable("El almacén de respaldos no está disponible.")
+            except OSError:
+                raise BackupStorageUnavailable("El almacén de respaldos no está disponible.") from None
+        try:
+            if not stat.S_ISDIR(self.root.lstat().st_mode):
+                raise BackupStorageUnavailable("La ruta de respaldos no es un directorio.")
+            entries = list(self.root.iterdir())
+        except FileNotFoundError:
+            return []
+        except OSError:
+            raise BackupStorageUnavailable("No se pudo leer el directorio de respaldos.") from None
+        indexed = []
+        for entry in entries:
+            if not _ID.fullmatch(entry.name):
+                continue
+            try:
+                indexed.append(BackupIndexEntry(entry.name, self._read_record(entry.name)))
+            except (BackupStoreError, OSError) as exc:
+                indexed.append(BackupIndexEntry(entry.name, None, backup_problem(exc)))
+        indexed.sort(
+            key=lambda entry: (
+                datetime.fromisoformat(entry.record.created_at) if entry.record else datetime.min.replace(tzinfo=timezone.utc),
+                entry.id,
+            ),
+            reverse=True,
+        )
+        return indexed
+
     def list(self, limit: int = 25) -> list[BackupRecord]:
         if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 100:
             raise BackupStoreError("Límite de listado inválido.")
-        if not self.root.exists():
-            return []
-        if not self.root.is_dir():
-            raise BackupStoreError("La ruta de respaldos no es un directorio.")
-        records: list[BackupRecord] = []
-        try:
-            entries = list(self.root.iterdir())
-        except OSError:
-            raise BackupStoreError("No se pudo leer el directorio de respaldos.") from None
-        for entry in entries:
-            if not _ID.fullmatch(entry.name) or entry.is_symlink() or not entry.is_dir():
-                continue
-            try:
-                records.append(self._read_record(entry.name))
-            except (BackupStoreError, OSError):
-                continue
-        records.sort(key=lambda record: (record.created_at, record.id), reverse=True)
-        return records[:limit]
+        records = [entry.record for entry in self.index()]
+        if any(record is None for record in records):
+            raise BackupIntegrityError("El historial contiene respaldos ilegibles.")
+        return [record for record in records[:limit] if record is not None]
 
     def count(self) -> int:
-        return len(self.list(limit=100))
+        return len(self.index())
 
     def append_event(self, backup_id: str, event: dict[str, Any]) -> None:
         """Añade una línea al diario privado; no acepta contenido de la partida."""
@@ -889,11 +1017,61 @@ class LabBackupStore:
         finally:
             os.close(descriptor)
 
+    @staticmethod
+    def _event_object(raw: bytes) -> dict[str, Any]:
+        try:
+            data = parse_json(raw)
+        except (ValueError, RecursionError):
+            raise BackupIntegrityError("El diario del respaldo no es válido.") from None
+        if not isinstance(data, dict):
+            raise BackupIntegrityError("El diario del respaldo no es válido.")
+        return data
+
+    def events(self, backup_id: str) -> list[dict[str, Any]]:
+        path = self._existing_directory(backup_id) / "events.jsonl"
+        try:
+            raw = self._read_plain(path, _JOURNAL_LIMIT)
+        except BackupNotFound:
+            return []
+        if self.cipher_key is None:
+            return [self._event_object(line) for line in raw.splitlines() if line]
+        events = []
+        offset = 0
+        while offset < len(raw):
+            # El cifrado histórico puede contener saltos de línea dentro de cada
+            # bloque. Solo se acepta un límite que autentique el bloque entero.
+            end = raw.find(b"\n", offset)
+            while end != -1 and end - offset <= _RECORD_LIMIT:
+                if end == len(raw) - 1 or raw.startswith(_SEAL_MAGIC, end + 1):
+                    try:
+                        event = self._open(path, raw[offset:end])
+                    except BackupUnreadable:
+                        pass
+                    else:
+                        events.append(self._event_object(event))
+                        offset = end + 1
+                        break
+                end = raw.find(b"\n", end + 1)
+            else:
+                raise BackupUnreadable("El diario del respaldo no se pudo autenticar.")
+        return events
+
+    def confirmation_attempted(self, backup_id: str) -> bool:
+        path = self._existing_directory(backup_id) / "upload-attempt"
+        try:
+            marker = self._read_private(path, 1)
+        except BackupNotFound:
+            return False
+        if marker != b"\n":
+            raise BackupIntegrityError("El marcador de subida del respaldo no es válido.")
+        return True
+
     def confirmation(self, backup_id: str) -> dict[str, Any] | None:
-        path = self._directory(backup_id) / "confirmation.json"
-        if not path.exists():
+        path = self._existing_directory(backup_id) / "confirmation.json"
+        try:
+            raw = self._read_private(path, _RECORD_LIMIT)
+        except BackupNotFound:
             return None
-        raw = self._read_private(path, _RECORD_LIMIT)
         try:
             data = parse_json(raw)
         except (ValueError, RecursionError):

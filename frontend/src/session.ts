@@ -43,3 +43,8 @@ export function formatSize(bytes: number) {
     : [bytes / (1024 * 1024), 'MiB']
   return `${new Intl.NumberFormat('es-MX', { maximumFractionDigits: 1 }).format(amount)} ${unit}`
 }
+
+export function formatGameVersion(version?: number | null) {
+  if (!version || version < 10_000) return undefined
+  return [Math.floor(version / 10_000), Math.floor(version / 100) % 100, version % 100].join('.')
+}

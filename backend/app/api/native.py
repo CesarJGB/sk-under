@@ -456,7 +456,7 @@ def verify(payload: CloudLabVerifyInput, request: Request) -> dict[str, object]:
 def backups(request: Request) -> dict[str, object]:
     service = _require_service(request)
     current = service.require_session(_cookie(request, service))
-    return {"backups": service.backups(current)}
+    return service.backups(current)
 
 
 @router.get("/diagnostics", summary="Diagnóstico saneado del servicio nativo")

@@ -274,7 +274,9 @@ def test_two_accounts_have_isolated_sessions_backups_and_saves(tmp_path):
     assert client_b.get(API + "/save", headers=HEADERS).json()["gems"] == 1000
 
     draft = prepare(client_a)
-    assert client_b.get(API + "/backups", headers=HEADERS).json() == {"backups": []}
+    assert client_b.get(API + "/backups", headers=HEADERS).json() == {
+        "backups": [], "total": 0, "listed": 0, "limit": 25, "unreadable": 0,
+    }
     foreign = client_b.post(API + "/verify", headers=HEADERS, json={"backup_id": draft["backup"]["id"]})
     assert_error(foreign, 404, "backup_not_found")
 

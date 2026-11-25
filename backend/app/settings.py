@@ -46,6 +46,7 @@ class Settings(BaseSettings):
     native_backup_key: SecretStr | None = None
     native_store_dir: Path | None = None
     native_backup_dir: Path | None = None
+    native_backup_require_mount: bool = False
     native_origin: str = ""
     native_auto_identity: bool = True
     native_auto_allow_write: bool = False

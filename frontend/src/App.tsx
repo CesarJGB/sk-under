@@ -71,7 +71,8 @@ export default function App() {
         </nav>
       </div>
     </header>}
-    <main id="content" ref={main} tabIndex={-1} className={`shell main-content${view === 'editor' ? ' main-editor' : ''}`}>
+    <main id="content" ref={main} tabIndex={-1}
+      className={`shell main-content${view === 'editor' ? ' main-editor' : view === 'save' ? ' main-partida' : ''}`}>
       {view ? <NativeAuthPage view={view} /> : <Routes>
         <Route path="/partida/vinculadas" element={<CloudAccountsPage />} />
         <Route path="/partida/laboratorio" element={<LabRoute />} />

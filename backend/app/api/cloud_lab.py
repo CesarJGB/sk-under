@@ -19,6 +19,7 @@ from ..cloud.backup_store import (
     BackupAlreadyConfirmed,
     BackupIntegrityError,
     BackupNotFound,
+    BackupStorageUnavailable,
     BackupStoreError,
     InvalidBackupId,
 )
@@ -126,6 +127,8 @@ async def require_cloud_admin(
 
 
 def _http_error(exc: CloudSaveError) -> EditorError:
+    if isinstance(exc, BackupStorageUnavailable):
+        return EditorError(503, exc.code, str(exc))
     if isinstance(exc, LabWriteDisabled):
         return EditorError(503, exc.code, "La escritura remota está deshabilitada en el servidor.")
     if isinstance(exc, (BackupNotFound,)):

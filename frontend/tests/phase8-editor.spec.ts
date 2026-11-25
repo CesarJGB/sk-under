@@ -1,4 +1,7 @@
 import { expect, test, type Page, type Route } from '@playwright/test'
+import { mkdir } from 'node:fs/promises'
+import { join } from 'node:path'
+import type { NativeBackup } from '../src/api'
 
 const SHA = 'a'.repeat(64)
 const CANDIDATE = 'b'.repeat(64)
@@ -87,6 +90,15 @@ const BACKUP = {
   remote_source: 'modern-cloud', remote_size: 505, remote_sha256: SHA,
 }
 
+function historyFixture(backups: NativeBackup[], total = backups.length) {
+  return { backups, total, listed: backups.length, limit: 25, unreadable: backups.filter(({ status }) => status === 'unreadable').length }
+}
+
+const UNIFIED_BACKUP: NativeBackup = {
+  id: BACKUP.id, created_at: BACKUP.created_at, field: 'unified', status: 'prepared',
+  original_size: BACKUP.original_size, changed: true, changes: 2, categories: ['gems', 'fish_chip'],
+}
+
 function downloaded(save: Record<string, unknown>) {
   const { verified: _verified, bytes, remote_source, sections: _sections, ...data } = save
   return { ...data, remote: { source: remote_source, size: bytes, sha256: data.sha256 },
@@ -98,6 +110,7 @@ async function open(page: Page, options: {
   sessionSave?: Record<string, unknown> | null
   download?: (route: Route) => Promise<void>
   path?: string
+  width?: number
   limits?: { max_gems?: number }
 } = {}) {
   const save = options.save ?? SESSION_SAVE
@@ -105,9 +118,9 @@ async function open(page: Page, options: {
   await page.route('**/api/v1/health', (route) => route.fulfill({ json: { status: 'ok', access_mode: 'local', max_file_bytes: 1048576 } }))
   await page.route('**/api/v1/formats', (route) => route.fulfill({ json: { formats: [] } }))
   await page.route('**/api/v1/cloud/native/config', (route) => route.fulfill({ json: { ...CONFIG, session: { ...ACTIVE, ...options.limits, save: sessionSave } } }))
-  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: historyFixture([]) }))
   await page.route('**/api/v1/cloud/native/save', options.download ?? ((route) => route.fulfill({ json: downloaded(save) })))
-  await page.setViewportSize({ width: 390, height: 844 })
+  await page.setViewportSize({ width: options.width ?? 390, height: 844 })
   await page.goto(options.path ?? '/editor')
   if (!options.path && sessionSave) await expect(page.getByTestId('quick-edit')).toBeVisible()
 }
@@ -131,6 +144,135 @@ function prepared(plan: Record<string, unknown>, categories: Array<[string, stri
     validation: { valid: true, structure_valid: true, atomic: true, message: 'Candidato compuesto.' },
   }
 }
+
+for (const width of [320, 360, 375, 390, 430, 768, 1280]) {
+  test(`Partida muestra tres bloques y respeta el ancho de ${width} px`, async ({ page }) => {
+    await open(page, { path: '/partida', width, save: { ...SESSION_SAVE, downloaded_at: '2026-11-25T20:30:00Z' } })
+    await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
+      json: historyFixture([
+        { ...UNIFIED_BACKUP, created_at: '2026-11-25T20:26:00Z', status: 'verified' },
+        { id: '3'.repeat(32), field: 'characters', created_at: '2026-11-25T19:45:00Z', status: 'prepared',
+          changed: true, original_size: 11240, original_value: 12, candidate_value: 13 },
+        { id: '4'.repeat(32), field: 'gems', created_at: '2026-11-25T18:20:00Z', status: 'unverified' },
+        { id: '5'.repeat(32), field: 'fish_chip', created_at: '2026-11-25T17:21:00Z', status: 'verified',
+          restoration: 'verified', original_value: 3, candidate_value: 5 },
+      ], 28),
+    }))
+    await page.getByRole('button', { name: 'Actualizar historial' }).click()
+    const account = page.getByRole('region', { name: 'Cuenta conectada' })
+    const cloud = page.getByRole('region', { name: 'Partida en la nube' })
+    const backups = page.getByRole('region', { name: 'Historial de respaldos' })
+    await expect(account).toContainText('Android Global · 8.8.0')
+    await expect(account.getByRole('button', { name: 'Cerrar sesión' })).toBeVisible()
+    await expect(cloud.locator('.partida-metrics > div')).toHaveCount(4)
+    await expect(cloud.locator('.partida-metrics dd')).toHaveText(['1,001', '3', '100', '1 / 42'])
+    await expect(cloud.locator('time')).toHaveAttribute('datetime', '2026-11-25T20:30:00Z')
+    await expect(cloud.getByRole('link', { name: 'Abrir editor' })).toBeVisible()
+    await expect(backups.getByText('4 de 28 respaldos')).toBeVisible()
+    await expect(backups.getByText('Restauración verificada')).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Acceso por enlace privado' })).toHaveCount(0)
+    await backups.locator('summary').first().click()
+    await expect(backups.getByText('2 cambios registrados')).toBeVisible()
+    await expect(backups.getByText('Gemas · Fichas de pesca')).toBeVisible()
+    if (width <= 430) {
+      expect(await cloud.locator('.partida-metrics').evaluate((element) =>
+        getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(2)
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
+    const destination = process.env.SK_PARTIDA_SCREENSHOTS_DIR
+    if (destination) {
+      await mkdir(destination, { recursive: true })
+      await page.screenshot({ path: join(destination, `partida-${width}.png`), fullPage: true, animations: 'disabled' })
+    }
+  })
+}
+
+test('Partida conserva la última descarga y muestra datos desconocidos como ausentes', async ({ page }) => {
+  let downloads = 0
+  await open(page, {
+    path: '/partida', sessionSave: null,
+    download: (route) => {
+      downloads += 1
+      return downloads === 1
+        ? route.fulfill({ json: downloaded({ ...SAVE, fish_chip: null }) })
+        : route.fulfill({ status: 502, json: { error: { code: 'native_save_error', message: 'fixture', issues: [] } } })
+    },
+  })
+  const cloud = page.getByRole('region', { name: 'Partida en la nube' })
+  await expect(cloud.getByText('Partida pendiente de descargar')).toBeVisible()
+  await expect(cloud.locator('dd')).toHaveCount(0)
+  await cloud.getByRole('button', { name: 'Descargar partida' }).click()
+  await expect(cloud.locator('.partida-metrics dd')).toHaveText(['1,001', '—', '—', '—'])
+  await cloud.getByRole('button', { name: 'Actualizar partida' }).click()
+  await expect(cloud.getByRole('alert')).toBeVisible()
+  await expect(cloud.locator('time')).toHaveAttribute('datetime', '2026-11-24T20:00:00Z')
+  await expect(cloud.locator('.partida-metrics dd')).toHaveText(['1,001', '—', '—', '—'])
+  await cloud.getByRole('link', { name: 'Abrir editor' }).click()
+  await expect(page.getByRole('textbox', { name: 'Gemas', exact: true })).toHaveValue('1001')
+  expect(downloads).toBe(2)
+})
+
+test('Partida diferencia el historial vacío, ilegible y el almacén indisponible', async ({ page }) => {
+  await open(page, { path: '/partida' })
+  const list = page.getByRole('region', { name: 'Historial de respaldos' })
+  await expect(list.getByText('Esta cuenta todavía no tiene respaldos.')).toBeVisible()
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
+    json: historyFixture([{ id: BACKUP.id, created_at: null, field: null, status: 'unreadable', problem: 'authentication' }]),
+  }))
+  await list.getByRole('button', { name: 'Actualizar historial' }).click()
+  await expect(list.getByText('Respaldo ilegible', { exact: true })).toBeVisible()
+  await list.locator('summary').click()
+  await expect(list.getByText('No se pudo autenticar el respaldo', { exact: false })).toBeVisible()
+  await expect(list.getByRole('button', { name: 'Restaurar respaldo' })).toHaveCount(0)
+  await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({
+    status: 503, json: { error: { code: 'native_backup_unavailable', message: 'fixture', issues: [] } },
+  }))
+  await list.getByRole('button', { name: 'Actualizar historial' }).click()
+  await expect(list.getByRole('alert')).toContainText('El almacén de respaldos no está disponible')
+  await expect(list.getByText('Esta cuenta todavía no tiene respaldos.')).toHaveCount(0)
+})
+
+test('actualiza el historial tras preparar, subir y volver de Editor a Partida', async ({ page }) => {
+  await open(page, { path: '/partida' })
+  let status: NativeBackup['status'] | null = null
+  const requested: Array<NativeBackup['status'] | null> = []
+  await page.route('**/api/v1/cloud/native/backups', (route) => {
+    requested.push(status)
+    return route.fulfill({ json: historyFixture(status ? [{ ...UNIFIED_BACKUP, status }] : []) })
+  })
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => {
+    status = 'prepared'
+    return route.fulfill({ json: prepared(route.request().postDataJSON(), [['gems', 'Gemas', 2]]) })
+  })
+  await page.route('**/api/v1/cloud/native/confirm', (route) => {
+    status = 'verified'
+    return route.fulfill({ json: { action: 'confirm', backup_id: BACKUP.id, uploaded: true, persisted: true } })
+  })
+  await page.route('**/api/v1/cloud/native/save', (route) => route.fulfill({
+    json: downloaded({ ...SESSION_SAVE, gems: status === 'verified' ? 1201 : 1001 }),
+  }))
+  await expect(page.getByText('Esta cuenta todavía no tiene respaldos.')).toBeVisible()
+  await page.getByRole('link', { name: 'Abrir editor' }).click()
+  await page.getByRole('textbox', { name: 'Gemas', exact: true }).fill('1201')
+  await page.getByRole('button', { name: 'Guardar', exact: true }).click()
+  await expect(page.getByTestId('unified-preview')).toBeVisible()
+  await expect.poll(() => requested).toContain('prepared')
+  await page.getByRole('link', { name: 'Volver a Partida' }).click()
+  await page.getByRole('button', { name: 'Descartar y salir' }).click()
+  await expect(page.getByText('Edición preparada', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('native-current-gems')).toHaveText('1,001')
+
+  await page.getByRole('link', { name: 'Abrir editor' }).click()
+  await page.getByRole('textbox', { name: 'Gemas', exact: true }).fill('1201')
+  await page.getByRole('button', { name: 'Guardar', exact: true }).click()
+  await page.getByLabel(/Confirmo subir el candidato/).check()
+  await page.getByRole('button', { name: 'Guardar en la nube' }).click()
+  await expect(page.getByText(/Guardado y verificado/)).toBeVisible()
+  await expect.poll(() => requested).toContain('verified')
+  await page.getByRole('link', { name: 'Volver a Partida' }).click()
+  await expect(page.getByText('Subida verificada', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('native-current-gems')).toHaveText('1,201')
+})
 
 test('la edición rápida es la pantalla inicial y comparte el borrador con categorías', async ({ page }) => {
   await open(page)

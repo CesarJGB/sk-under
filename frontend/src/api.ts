@@ -898,6 +898,29 @@ export type NativeSaveSummary = {
   advanced?: LabAdvanced | null
 }
 
+export type NativeBackup = {
+  id: string
+  created_at: string | null
+  field: NonNullable<LabBackup['field']> | null
+  status: 'prepared' | 'verified' | 'unverified' | 'unreadable'
+  problem?: 'authentication' | 'incompatible' | 'file_unavailable' | 'integrity'
+  restoration?: 'verified' | 'unverified' | null
+  changed?: boolean
+  original_size?: number
+  original_value?: number
+  candidate_value?: number
+  changes?: number
+  categories?: Array<NonNullable<LabBackup['field']>>
+}
+
+export type NativeBackupHistory = {
+  backups: NativeBackup[]
+  total: number
+  listed: number
+  limit: number
+  unreadable: number
+}
+
 export type NativeSession = {
   active: boolean
   reason?: 'none' | 'expired' | 'disabled' | 'unavailable'
@@ -1011,8 +1034,13 @@ export const nativeAuth = {
     nativeRequest<LabWriteResult>('/restore', signal, { backup_id, confirmation: 'RESTAURAR' }),
   verify: (backup_id: string, signal: AbortSignal) =>
     nativeRequest<LabVerification>('/verify', signal, { backup_id }),
-  backups: (signal: AbortSignal) =>
-    nativeRequest<{ backups: Array<LabBackup & { confirmed: boolean }> }>('/backups', signal),
+  backups: async (signal: AbortSignal) => {
+    const history = await nativeRequest<NativeBackupHistory>('/backups', signal)
+    if (!Number.isInteger(history.total)) {
+      throw new ApiProblem('El servidor aún no ofrece el estado del historial.', [], 'native_backup_legacy')
+    }
+    return history
+  },
   diagnostics: (signal: AbortSignal) => nativeRequest<Record<string, unknown>>('/diagnostics', signal),
 }
 
