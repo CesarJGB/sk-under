@@ -72,7 +72,7 @@ const ADVANCED = {
 const SESSION_SAVE = { ...SAVE, report: REPORT, advanced: ADVANCED }
 const ACTIVE = {
   active: true, identity_verified: true,
-  account: { label: PROFILE.label, distribution: 'android-global', distribution_label: 'Android Global (GP)', platform: 'android' },
+  account: { label: PROFILE.label, email: 'holder@example.test', distribution: 'android-global', distribution_label: 'Android Global (GP)', platform: 'android' },
   write_enabled: true, write_ready: true, installation_ready: true, auto_identity: true,
   min_gems: 0, max_gems: 2147483647, save: SESSION_SAVE, save_error: null,
 }
@@ -117,6 +117,7 @@ async function open(page: Page, options: {
   width?: number
   limits?: { max_gems?: number }
   history?: boolean
+  email?: string
 } = {}) {
   const save = options.save ?? SESSION_SAVE
   const sessionSave = options.sessionSave === undefined ? save : options.sessionSave
@@ -126,7 +127,13 @@ async function open(page: Page, options: {
     service: 'sk-under', api_version: '2026.11.25', commit: null,
     features: ['native_backup_history', 'native_backup_history_pagination', 'native_backup_manual'],
   } }))
-  await page.route('**/api/v1/cloud/native/config', (route) => route.fulfill({ json: { ...CONFIG, session: { ...ACTIVE, ...options.limits, save: sessionSave } } }))
+  await page.route('**/api/v1/cloud/native/config', (route) => route.fulfill({ json: {
+    ...CONFIG,
+    session: {
+      ...ACTIVE, ...options.limits, save: sessionSave,
+      account: options.email ? { ...ACTIVE.account, email: options.email } : ACTIVE.account,
+    },
+  } }))
   if (options.history !== false) await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: historyFixture([]) }))
   await page.route('**/api/v1/cloud/native/save', options.download ?? ((route) => route.fulfill({ json: downloaded(save) })))
   await page.setViewportSize({ width: options.width ?? 390, height: 844 })
@@ -170,22 +177,31 @@ for (const width of [320, 360, 375, 390, 430, 768, 1280]) {
     await page.getByRole('button', { name: 'Actualizar historial' }).click()
     const account = page.getByRole('region', { name: 'Cuenta conectada' })
     const cloud = page.getByRole('region', { name: 'Partida en la nube' })
-    const backups = page.getByRole('region', { name: 'Historial de respaldos' })
+    const backups = page.getByRole('region', { name: 'Respaldos' })
+    await expect(account).toContainText('holder@example.test')
     await expect(account).toContainText('Android Global · 8.8.0')
+    await expect(account).not.toContainText('Conectada')
     await expect(account.getByRole('button', { name: 'Cerrar sesión' })).toBeVisible()
-    await expect(cloud.locator('.partida-metrics > div')).toHaveCount(4)
-    await expect(cloud.locator('.partida-metrics dd')).toHaveText(['1,001', '3', '100', '1 / 42'])
+    await expect(cloud.locator('.partida-stat-page').first().locator('.partida-stat')).toHaveCount(4)
+    await expect(cloud.locator('.partida-stat-page').first().locator('.partida-stat-value'))
+      .toHaveText(['1,001', '3', '100', '1 / 42'])
     await expect(cloud.locator('time')).toHaveAttribute('datetime', '2026-11-25T20:30:00Z')
     await expect(cloud.getByRole('link', { name: 'Abrir editor' })).toBeVisible()
-    await expect(backups.getByText('4 de 28 respaldos')).toBeVisible()
-    await expect(backups.getByText('Restauración verificada')).toBeVisible()
+    await expect(backups.getByText('28 respaldos', { exact: true })).toBeVisible()
+    await expect(backups.getByRole('img', { name: /Restauración verificada/ })).toBeVisible()
     await expect(page.getByRole('link', { name: 'Acceso por enlace privado' })).toHaveCount(0)
     await backups.locator('summary').first().click()
     await expect(backups.getByText('2 cambios registrados')).toBeVisible()
     await expect(backups.getByText('Gemas · Fichas de pesca')).toBeVisible()
     if (width <= 430) {
-      expect(await cloud.locator('.partida-metrics').evaluate((element) =>
+      expect(await cloud.locator('.partida-stat-page').first().evaluate((element) =>
         getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(2)
+      const heading = backups.getByRole('heading', { name: 'Respaldos' })
+      const box = (await heading.boundingBox())!
+      const create = (await backups.getByRole('button', { name: 'Crear respaldo' }).boundingBox())!
+      expect(box.height).toBeLessThan(36)
+      if (width <= 340) expect(create.y).toBeGreaterThanOrEqual(box.y + box.height)
+      expect(await heading.evaluate((element) => getComputedStyle(element).whiteSpace)).toBe('nowrap')
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
     const destination = process.env.SK_PARTIDA_SCREENSHOTS_DIR
@@ -195,6 +211,81 @@ for (const width of [320, 360, 375, 390, 430, 768, 1280]) {
     }
   })
 }
+
+test('el carrusel genera páginas dinámicas y navega sin descargar de nuevo', async ({ page }) => {
+  let downloads = 0
+  await open(page, {
+    path: '/partida', width: 1280, save: { ...SESSION_SAVE, downloaded_at: '2026-11-25T20:30:00Z' },
+    download: (route) => {
+      downloads += 1
+      return route.fulfill({ json: downloaded(SESSION_SAVE) })
+    },
+  })
+  const cloud = page.getByRole('region', { name: 'Partida en la nube' })
+  const pages = cloud.locator('.partida-stat-page')
+  await expect(pages).toHaveCount(4)
+  await expect(cloud.getByRole('button', { name: /^Ir a la página/ })).toHaveCount(4)
+  await expect(cloud.getByText('Página 1 de 4', { exact: true })).toBeVisible()
+  await expect(pages.first().locator('.partida-stat').first()).toHaveAttribute('data-metric', 'gems')
+  await expect(pages.first().locator('.partida-stat')).toHaveCount(4)
+  await cloud.getByRole('button', { name: 'Ir a la página 2' }).click()
+  await expect(cloud.getByText('Página 2 de 4', { exact: true })).toBeVisible()
+  await expect(pages.nth(1).locator('.partida-stat')).toHaveCount(4)
+  await expect(pages.nth(1).locator('.partida-stat').first()).toHaveAttribute('data-metric', 'skills')
+  await expect(pages.first()).toHaveAttribute('aria-hidden', 'true')
+  const viewport = cloud.getByRole('group', { name: /Estadísticas, página/ })
+  await viewport.focus()
+  await page.keyboard.press('End')
+  await expect(cloud.getByText('Página 4 de 4', { exact: true })).toBeVisible()
+  await page.keyboard.press('Home')
+  await expect(cloud.getByText('Página 1 de 4', { exact: true })).toBeVisible()
+  expect(downloads).toBe(0)
+})
+
+test('distingue un cero real de un dato desconocido y actualiza el carrusel al descargar', async ({ page }) => {
+  let downloads = 0
+  await open(page, {
+    path: '/partida', sessionSave: null,
+    download: (route) => {
+      downloads += 1
+      const payload = downloads === 1
+        ? { ...SAVE, gems: 0, fish_chip: 0, cumulative_fish_count: 0, report: null, advanced: null }
+        : downloads === 2
+          ? { ...SAVE, report: REPORT, advanced: ADVANCED }
+          : { ...SAVE, report: REPORT, advanced: { available: false, error: 'No se pudo leer el editor avanzado' } }
+      return route.fulfill({ json: downloaded(payload) })
+    },
+  })
+  const cloud = page.getByRole('region', { name: 'Partida en la nube' })
+  await cloud.getByRole('button', { name: 'Descargar partida' }).click()
+  const firstPage = cloud.locator('.partida-stat-page').first()
+  await expect(firstPage.locator('.partida-stat-value')).toHaveText(['0', '0', '—', '—'])
+  await expect(cloud.getByTestId('stat-gems')).toHaveAttribute('data-state', 'count')
+  await expect(cloud.getByTestId('stat-season_coin')).toHaveAttribute('data-state', 'unavailable')
+  await expect(cloud.getByTestId('stat-characters')).toHaveAttribute('data-state', 'unavailable')
+  await cloud.getByRole('button', { name: 'Actualizar partida' }).click()
+  await expect(firstPage.locator('.partida-stat-value')).toHaveText(['1,001', '3', '100', '1 / 42'])
+  expect(downloads).toBe(2)
+  await cloud.getByRole('button', { name: 'Actualizar partida' }).click()
+  await expect(cloud.getByTestId('stat-materials')).toHaveAttribute('data-state', 'error')
+  await expect(cloud.getByTestId('stat-materials').locator('.partida-stat-value')).toHaveText('Error')
+  expect(downloads).toBe(3)
+})
+
+test('mantiene legibles correos y cantidades grandes en 320 px sin desbordar', async ({ page }) => {
+  const email = 'cuenta.con.un.correo.extremadamente.largo@example-domain.test'
+  await open(page, {
+    path: '/partida', width: 320, email,
+    save: { ...SESSION_SAVE, gems: 2_147_483_647, downloaded_at: '2026-11-25T20:30:00Z' },
+  })
+  const account = page.getByRole('region', { name: 'Cuenta conectada' })
+  const cloud = page.getByRole('region', { name: 'Partida en la nube' })
+  await expect(account.getByRole('heading', { name: email })).toBeVisible()
+  await expect(cloud.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('2,147,483,647')
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
+  expect(await account.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
+  expect(await cloud.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
+})
 
 test('Partida conserva la última descarga y muestra datos desconocidos como ausentes', async ({ page }) => {
   let downloads = 0
@@ -211,11 +302,11 @@ test('Partida conserva la última descarga y muestra datos desconocidos como aus
   await expect(cloud.getByText('Partida pendiente de descargar')).toBeVisible()
   await expect(cloud.locator('dd')).toHaveCount(0)
   await cloud.getByRole('button', { name: 'Descargar partida' }).click()
-  await expect(cloud.locator('.partida-metrics dd')).toHaveText(['1,001', '—', '—', '—'])
+  await expect(cloud.locator('.partida-stat-page').first().locator('.partida-stat-value')).toHaveText(['1,001', '—', '—', '—'])
   await cloud.getByRole('button', { name: 'Actualizar partida' }).click()
   await expect(cloud.getByRole('alert')).toBeVisible()
   await expect(cloud.locator('time')).toHaveAttribute('datetime', '2026-11-24T20:00:00Z')
-  await expect(cloud.locator('.partida-metrics dd')).toHaveText(['1,001', '—', '—', '—'])
+  await expect(cloud.locator('.partida-stat-page').first().locator('.partida-stat-value')).toHaveText(['1,001', '—', '—', '—'])
   await cloud.getByRole('link', { name: 'Abrir editor' }).click()
   await expect(page.getByRole('textbox', { name: 'Gemas', exact: true })).toHaveValue('1001')
   expect(downloads).toBe(2)
@@ -223,14 +314,15 @@ test('Partida conserva la última descarga y muestra datos desconocidos como aus
 
 test('Partida diferencia el historial vacío, ilegible y el almacén indisponible', async ({ page }) => {
   await open(page, { path: '/partida' })
-  const list = page.getByRole('region', { name: 'Historial de respaldos' })
+  const list = page.getByRole('region', { name: 'Respaldos' })
   await expect(list.getByText('Esta cuenta todavía no tiene respaldos.')).toBeVisible()
   await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({
     json: historyFixture([{ id: BACKUP.id, created_at: null, field: null, status: 'unreadable', problem: 'authentication' }]),
   }))
   await list.getByRole('button', { name: 'Actualizar historial' }).click()
-  await expect(list.getByText('Respaldo ilegible', { exact: true })).toBeVisible()
+  await expect(list.getByRole('img', { name: 'Respaldo ilegible' })).toBeVisible()
   await list.locator('summary').click()
+  await expect(list.getByText('Respaldo ilegible', { exact: true })).toBeVisible()
   await expect(list.getByText('No se pudo autenticar el respaldo', { exact: false })).toBeVisible()
   await expect(list.getByRole('button', { name: 'Restaurar respaldo' })).toHaveCount(0)
   await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({
@@ -268,8 +360,8 @@ test('actualiza el historial tras preparar, subir y volver de Editor a Partida',
   await expect.poll(() => requested).toContain('prepared')
   await page.getByRole('link', { name: 'Volver a Partida' }).click()
   await page.getByRole('button', { name: 'Descartar y salir' }).click()
-  await expect(page.getByText('Edición preparada', { exact: true })).toBeVisible()
-  await expect(page.getByTestId('native-current-gems')).toHaveText('1,001')
+  await expect(page.getByRole('img', { name: 'Edición preparada', exact: true })).toBeVisible()
+  await expect(page.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('1,001')
 
   await page.getByRole('link', { name: 'Abrir editor' }).click()
   await page.getByRole('textbox', { name: 'Gemas', exact: true }).fill('1201')
@@ -279,8 +371,8 @@ test('actualiza el historial tras preparar, subir y volver de Editor a Partida',
   await expect(page.getByText(/Guardado y verificado/)).toBeVisible()
   await expect.poll(() => requested).toContain('verified')
   await page.getByRole('link', { name: 'Volver a Partida' }).click()
-  await expect(page.getByText('Subida verificada', { exact: true })).toBeVisible()
-  await expect(page.getByTestId('native-current-gems')).toHaveText('1,201')
+  await expect(page.getByRole('img', { name: 'Subida verificada', exact: true })).toBeVisible()
+  await expect(page.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('1,201')
 })
 
 test('la edición rápida es la pantalla inicial y comparte el borrador con categorías', async ({ page }) => {
@@ -875,13 +967,17 @@ test('crea un respaldo manual verificado y lo muestra como copia independiente',
     return route.fulfill({ json: historyFixture([MANUAL_BACKUP]) })
   })
   await page.getByRole('button', { name: 'Crear respaldo' }).click()
-  await expect(page.getByText('Respaldo manual creado y verificado.')).toBeVisible()
+  await expect(page.getByText('Respaldo creado', { exact: true })).toBeVisible()
+  await expect(page.getByText('Respaldo manual creado y verificado.')).toHaveCount(0)
+  await expect(page.getByText('Respaldo creado', { exact: true })).toHaveCount(0, { timeout: 6000 })
   expect(posts).toBe(1)
   await expect.poll(() => gets).toBeGreaterThanOrEqual(2)
   const item = page.locator('.partida-backup').first()
   await expect(item.getByText('Respaldo manual', { exact: true })).toBeVisible()
+  await expect(item.locator('summary')).not.toContainText('Manual')
   await expect(item.getByText('Preventivo antes de restaurar')).toHaveCount(0)
   await item.locator('summary').click()
+  await expect(item.getByText('Preventivo antes de restaurar')).toHaveCount(0)
   await expect(item.getByText('Integridad del respaldo verificada')).toBeVisible()
   await expect(item.getByText('Copia creada a voluntad; no se escribió nada en ChillyRoom.')).toBeVisible()
   await expect(item.getByText('1,234')).toBeVisible()
@@ -909,11 +1005,12 @@ test('pagina el historial con cursor estable y muestra todos los respaldos', asy
       })), 28, 'siguiente-pagina'),
     })
   })
-  const list = page.getByRole('region', { name: 'Historial de respaldos' })
-  await expect(list.getByText('25 de 28 respaldos')).toBeVisible()
-  await list.getByRole('button', { name: 'Cargar más respaldos' }).click()
+  const list = page.getByRole('region', { name: 'Respaldos' })
   await expect(list.getByText('28 respaldos', { exact: true })).toBeVisible()
+  await expect(list.locator('.partida-backup')).toHaveCount(25)
+  await list.getByRole('button', { name: 'Cargar más respaldos' }).click()
   await expect(list.locator('.partida-backup')).toHaveCount(28)
+  await expect(list.getByText('28 respaldos', { exact: true })).toBeVisible()
   await expect(list.getByRole('button', { name: 'Cargar más respaldos' })).toHaveCount(0)
   expect(cursors).toEqual([null, 'siguiente-pagina'])
 })
@@ -929,7 +1026,6 @@ test('muestra el respaldo preventivo y permite deshacer la restauración', async
   await page.getByRole('button', { name: 'Actualizar historial' }).click()
   const item = page.locator('.partida-backup').first()
   await expect(item.getByText('Respaldo preventivo', { exact: true })).toBeVisible()
-  await expect(item.getByText('Preventivo antes de restaurar')).toBeVisible()
   await item.locator('summary').click()
   await expect(item.getByText('Se creó automáticamente antes de restaurar otra versión.')).toBeVisible()
   await item.getByRole('button', { name: 'Deshacer restauración' }).click()
@@ -945,7 +1041,7 @@ test('distingue un backend sin historial de un historial vacío', async ({ page 
   await page.route('**/api/v1/version', (route) => route.fulfill({ status: 404, json: { detail: 'Not Found' } }))
   await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ status: 404, json: { detail: 'Not Found' } }))
   await page.getByRole('button', { name: 'Actualizar historial' }).click()
-  const list = page.getByRole('region', { name: 'Historial de respaldos' })
+  const list = page.getByRole('region', { name: 'Respaldos' })
   await expect(list.getByRole('alert').first()).toContainText('no incluye el historial de respaldos')
   await expect(list.getByText('Esta cuenta todavía no tiene respaldos.')).toHaveCount(0)
 })

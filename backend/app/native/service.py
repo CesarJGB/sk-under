@@ -35,6 +35,7 @@ from ..cloud.provider import (
     CloudSaveMetadata,
 )
 from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError
+from ..save_report import read_save_report
 from ..settings import Settings
 from .client import (
     GatewaySession,
@@ -236,9 +237,18 @@ class NativeAuthService:
         return self.store.session(cookie)
 
     def _view(self, session: NativeSessionRecord) -> dict[str, object]:
-        return self._view_values(session.profile, session.expires_at, session.idle_expires_at)
+        return self._view_values(
+            session.profile, session.expires_at, session.idle_expires_at, email=session.email
+        )
 
-    def _view_values(self, profile: Profile, expires_at: int, idle_expires_at: int) -> dict[str, object]:
+    def _view_values(
+        self,
+        profile: Profile,
+        expires_at: int,
+        idle_expires_at: int,
+        *,
+        email: str | None = None,
+    ) -> dict[str, object]:
         distribution = get_distribution(profile.distribution)
         installation_ready = profile.installation_ready
         return {
@@ -246,6 +256,7 @@ class NativeAuthService:
             "identity_verified": True,
             "account": {
                 "label": profile.label,
+                "email": email,
                 "distribution": distribution.id,
                 "distribution_label": distribution.label,
                 "platform": distribution.platform,
@@ -356,10 +367,11 @@ class NativeAuthService:
             email_hash=email_hash,
             uid_hash=self.store.hash_uid(session.uid),
             player_hash=self.store.hash_player(session.player_id),
+            email=session.email or email,
         )
         idle_expires_at = int(self.now()) + self.store.idle_seconds
         self._event("login", "ok", subject=subject)
-        view = self._view_values(profile, expires_at, idle_expires_at)
+        view = self._view_values(profile, expires_at, idle_expires_at, email=session.email or email)
         view["save"] = save
         view["save_error"] = save_error
         return LoginResult(
@@ -389,7 +401,9 @@ class NativeAuthService:
             ) from None
         except (NativeError, CloudSaveError) as exc:
             save_error = exc.code
-        view = self._view_values(profile, session.expires_at, session.idle_expires_at)
+        view = self._view_values(
+            profile, session.expires_at, session.idle_expires_at, email=session.email
+        )
         view["save"] = save
         view["save_error"] = save_error
         self._event("installation", "ok" if save else "pending", subject=session.subject)
@@ -986,6 +1000,10 @@ class NativeAuthService:
             advanced = read_advanced_source(save.payload)
         except CloudSaveError as exc:
             advanced = {"available": False, "error": str(exc)}
+        try:
+            report = read_save_report(save.payload)
+        except CloudSaveError:
+            report = None
         return {
             "verified": True,
             "bytes": save.metadata.size,
@@ -1004,6 +1022,7 @@ class NativeAuthService:
             "downloaded_at": _iso(int(self.now())),
             "sections": None,
             "advanced": advanced,
+            "report": report,
             "remote_source": save.metadata.source,
         }
 
@@ -1144,6 +1163,10 @@ class NativeAuthService:
             advanced = read_advanced_source(save.payload)
         except CloudSaveError as exc:
             advanced = {"available": False, "error": str(exc)}
+        try:
+            report = read_save_report(save.payload)
+        except CloudSaveError:
+            report = None
         self._event("save_verify", "ok", subject=subject)
         return {
             "verified": True,
@@ -1163,6 +1186,7 @@ class NativeAuthService:
             "skin_write_policy": "confirmed_by_owner",
             "sections": None,
             "advanced": advanced,
+            "report": report,
             "remote_source": save.metadata.source,
         }
 

@@ -959,6 +959,7 @@ export type NativeSession = {
   identity_verified?: boolean
   account?: {
     label: string
+    email?: string | null
     distribution: string
     distribution_label: string
     platform: string | null

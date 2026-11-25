@@ -252,19 +252,18 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
   }
 
   const accountLabel = account?.label && !/^Cuenta [a-f0-9]{12}$/i.test(account.label)
-    ? account.label : accountHint || 'Cuenta ChillyRoom'
+    ? account.label : accountHint || 'Cuenta de ChillyRoom'
+  const accountTitle = account?.email || accountHint
+    || (account?.label && !/^Cuenta [a-f0-9]{12}$/i.test(account.label) ? account.label : 'Cuenta de ChillyRoom')
   const accountCard = (saveVersion?: string) => <section className="panel partida-card partida-account" aria-label="Cuenta conectada">
-    <div className="partida-heading">
-      <span className="icon-tile"><UserRound size={20} aria-hidden="true" /></span>
-      <div>
-        <h2>{accountLabel}</h2>
-        <p className="partida-muted">{[distributionPlatform, saveVersion ?? version].filter(Boolean).join(' · ')}</p>
-      </div>
+    <span className="icon-tile"><UserRound size={20} aria-hidden="true" /></span>
+    <div className="partida-account-copy">
+      <h2 title={accountTitle}>{accountTitle}</h2>
+      <p className="partida-muted">{[distributionPlatform, saveVersion ?? version].filter(Boolean).join(' · ')}</p>
     </div>
-    <span className="partida-connected">Conectada</span>
-    <button className="button quiet partida-logout" type="button" disabled={authOperation.pending} onClick={logout}>
-      <LogOut size={16} aria-hidden="true" />
-      {authOperation.pending ? 'Cerrando sesión…' : 'Cerrar sesión'}
+    <button className="button quiet partida-logout" type="button" disabled={authOperation.pending}
+      aria-label="Cerrar sesión" aria-busy={authOperation.pending} title="Cerrar sesión" onClick={logout}>
+      <LogOut size={17} aria-hidden="true" />
     </button>
     {authOperation.problem && <Problem problem={friendly(authOperation.problem, 'No se pudo cerrar sesión. Vuelve a intentarlo.')} />}
   </section>
@@ -395,6 +394,12 @@ function NativeEditor({
   const moreOperation = useOperation()
   const backupOperation = useOperation()
   const historyRequest = useRef<AbortSignal | null>(null)
+
+  useEffect(() => {
+    if (!backupNotice) return
+    const timer = window.setTimeout(() => setBackupNotice(null), 4000)
+    return () => window.clearTimeout(timer)
+  }, [backupNotice])
 
   function run(task: (signal: AbortSignal) => Promise<unknown>, target = operation) {
     return target.run(async (signal) => {
@@ -532,7 +537,7 @@ function NativeEditor({
     void run(async (signal) => {
       const result = await nativeAuth.createBackup(signal)
       if (signal.aborted) return
-      setBackupNotice(result.message)
+      setBackupNotice(result.message.includes('manual') ? 'Respaldo creado' : result.message)
       refreshHistory(true)
     }, backupOperation)
   }
@@ -562,7 +567,6 @@ function NativeEditor({
         {moreOperation.problem && <Problem problem={historyProblemMessage(moreOperation.problem)} />}
       </> : null}
       feedback={<>
-        {backupNotice && <p className="partida-muted" role="status">{backupNotice}</p>}
         {backupOperation.pending && <Loading>Consultando la nube…</Loading>}
         {backupOperation.problem && <Problem problem={friendly(backupOperation.problem, 'No se pudo completar la operación del respaldo.')} />}
       </>}
@@ -572,6 +576,7 @@ function NativeEditor({
       onVerify={verify} onRestore={requestRestore} onCreateBackup={createBackup} />
     {restoreTarget && <RestoreDialog backup={restoreTarget} accountLabel={accountLabel}
       pending={backupOperation.pending} onCancel={() => setRestoreTarget(null)} onConfirm={restore} />}
+    {backupNotice && <p className="partida-toast" role="status">{backupNotice}</p>}
   </>
 
   if (!save) return <>

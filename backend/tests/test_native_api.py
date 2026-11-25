@@ -154,6 +154,7 @@ def test_config_lists_all_distributions_but_only_global_is_enabled(tmp_path):
     assert body["profiles"][0]["installation_ready"] is True
     assert body["session"]["active"] is False
     text = response.text
+    assert "a@example.test" not in text
     assert "distro-a" not in text and "unique-a" not in text
     assert "ab" * 32 not in text
 
@@ -169,11 +170,15 @@ def test_login_sets_an_isolated_cookie_and_never_echoes_secrets(tmp_path):
     assert body["active"] is True and body["identity_verified"] is True
     assert body["installation_ready"] is True and body["write_ready"] is False
     assert body["save"]["gems"] == 1000
+    assert body["save"]["report"]["characters"]["counts"]["characters"] == 42
+    assert body["save"]["report"]["resources"]["groups"]
+    assert body["account"]["email"] == "a@example.test"
     text = response.text
-    for secret in ("a@example.test", "distro-a", "unique-a", "token-", "cloudSaveId"):
+    for secret in ("distro-a", "unique-a", "token-", "cloudSaveId"):
         assert secret not in text
     active = session_of(env["client"])
     assert active["active"] is True and active["account"]["label"] == "Instalación Android Global"
+    assert active["account"]["email"] == "a@example.test"
     raw = env["store"].database.read_bytes()
     for secret in (b"a@example.test", b"distro-a", b"unique-a", b"token-"):
         assert secret not in raw

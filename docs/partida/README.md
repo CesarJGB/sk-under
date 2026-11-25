@@ -32,6 +32,83 @@ Los archivos de la fase 6.8 guardados en claro bajo una instalación anterior se
 
 Los registros anteriores al formato 2 siguen siendo legibles: se interpretan como automáticos de edición y conservan sus hashes y planes. Los registros nuevos añaden tipo, categorías, conteo de cambios y un resumen saneado sin duplicar la partida. Un registro incompatible o ilegible no se restaura ni se reescribe.
 
+## Estadísticas de Partida
+
+La tarjeta «Partida en la nube» consume una sola copia de `NativeSaveSummary`: la última partida descargada, o la que devuelve la sesión autenticada al iniciar. El carrusel no realiza solicitudes propias, no descarga partidas al cambiar de página y solo se vuelve a calcular cuando cambia esa copia. Las páginas se generan en bloques de cuatro métricas ordenadas por prioridad; la primera conserva Gemas, Fichas de pesca, Monedas de temporada y Personajes desbloqueados.
+
+El carrusel usa desplazamiento horizontal con `scroll-snap`, páginas de 2 × 2 en móvil y cuatro columnas desde 640 px. Oculta las barras de desplazamiento, contiene el gesto horizontal para no interferir con el desplazamiento vertical, no se reproduce automáticamente y ofrece puntos de paginación, flechas en escritorio y navegación con flechas, Inicio y Fin cuando el visor tiene el foco. La altura de las cuatro páginas es común y el contenido no es editable.
+
+### Registro central
+
+`frontend/src/partidaStats.ts` es la única fuente de verdad de las métricas. Cada entrada declara:
+
+- `id` estable y `label` visible.
+- `icon` de la iconografía existente y `category` (`Recursos`, `Colección`, `Inventario`, `Progreso`).
+- `priority`, usada para ordenar y paginar sin tocar el componente visual.
+- `evidence` con nivel (`E2`, `E3`, `E4`), nota y marca de experimentalidad.
+- `extract(save)`, que devuelve un `StatValue` tipado.
+
+Los formatos soportados son cantidad, proporción desbloqueados/total, nivel con máximo opcional, porcentaje, booleano, estado, inventario resumido y los estados explícitos `unavailable` y `error`. `readStat()` captura fallos de extracción y los convierte en `error`; `formatStat()` decide el texto y `statPages()` corta el registro en páginas de cuatro. El componente `StatsCarousel` no conoce métricas concretas.
+
+### Métricas implementadas
+
+| Métrica | Categoría | Formato | Evidencia |
+| --- | --- | --- | --- |
+| Gemas | Recursos | Cantidad | E4, confirmada |
+| Fichas de pesca | Recursos | Cantidad | E4, confirmada |
+| Monedas de temporada | Recursos | Cantidad | E3, confirmada |
+| Personajes desbloqueados | Colección | Desbloqueados / catálogo | E3, confirmada |
+| Habilidades desbloqueadas | Colección | Desbloqueados / catálogo | E3, confirmada |
+| Skins desbloqueadas | Colección | Desbloqueados / catálogo | E3, confirmada |
+| Mascotas desbloqueadas | Colección | Desbloqueadas / filas observadas | E3, confirmada |
+| Materiales | Inventario | Unidades y tipos con cantidad legible | E3, confirmada |
+| Alimentos de mascota | Inventario | Unidades y tipos con cantidad legible | E3, confirmada |
+| Baterías | Inventario | Cantidad de `material_battery` | E3, confirmada |
+| Progreso de pesca | Progreso | Contador acumulado | E3, confirmada |
+| Nivel del pase | Progreso | Nivel y máximo solo si existe | E2, experimental |
+| Estado del pase | Progreso | Temporada activa o inactiva | E2, experimental |
+| Tarjeta de renacimiento | Progreso | Booleano obtenida/no obtenida | E3, confirmada |
+| Semillas | Inventario | Unidades y tipos con cantidad legible | E3, confirmada |
+| Objetos desbloqueados | Colección | Longitud real de la lista observada | E2, confirmada |
+
+Los inventarios no crean una tarjeta por objeto. Muestran el total de unidades legibles y el número de tipos; si alguna cantidad no se puede interpretar, no se suma y se advierte en la tarjeta. Las proporciones de mascotas usan solo filas con un booleano observado y muestran cuántas filas tienen dato, en lugar de inventar un total de catálogo.
+
+### Cómo añadir una métrica
+
+Añade una entrada a `statMetrics` y devuelve uno de los formatos existentes. No hace falta modificar `StatsCarousel` ni el CSS de paginación:
+
+```ts
+{
+  id: 'claimed_rewards', label: 'Recompensas reclamadas', icon: Trophy,
+  category: 'Progreso', priority: 170,
+  evidence: confirmed('E3', 'Lectura validada con una partida real.'),
+  extract: (save) => {
+    const value = save.report?.some_confirmed_field
+    return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0
+      ? { kind: 'count', value }
+      : { kind: 'unavailable', reason: 'La partida no expone este contador' }
+  },
+}
+```
+
+La extracción debe distinguir un cero real de un dato ausente. Nunca debe devolver cero por defecto, sumar cantidades ilegibles, inventar máximos o totales de catálogo ni presentar un campo experimental como confirmado. Para una métrica nueva conviene añadir un fixture de partida y una aserción de estado en `frontend/tests/phase8-editor.spec.ts`.
+
+### Parámetros que todavía no se leen de forma fiable
+
+- **Recompensas de pesca reclamadas.** El informe conserva contadores internos de cofres y fichas extra, pero no una semántica validada de recompensas obtenidas. Mostrarlos como total sería interpretar un detalle de implementación.
+- **Máximo y recompensas del pase de batalla.** `max_level` suele faltar y los niveles reclamados son experimentales. Solo se muestra el máximo cuando aparece de forma numérica en la partida; el pase sigue marcado E2.
+- **Progreso e intimidad de mascotas.** `pet_progression.available` es falso en las partidas observadas. El catálogo de 58 mascotas no se usa como denominador si faltan observaciones.
+- **Totales de colecciones sin catálogo fiable.** Los objetos desbloqueados se muestran como longitud de la lista observada, no como «X de Y». No se inventan totales para categorías sin catálogo validado.
+- **Inventario genérico de recursos.** Solo se muestran materiales, alimentos, baterías y semillas con cantidades conocidas. Un recorrido genérico de claves numéricas produciría falsos positivos.
+- **Monedas o recursos no confirmados.** No se añaden divisas nuevas sin una validación de lectura y evidencia por plataforma.
+- **Estado de personajes bloqueados.** Si la partida no distingue un personaje bloqueado de un dato ausente, la proporción se muestra como no disponible, no como cero.
+
+### Cuenta y respaldos
+
+El correo autenticado se guarda solo dentro del sobre cifrado de la sesión existente y se expone únicamente en la sesión autenticada. No se añadió una tabla ni un almacén de credenciales. Las sesiones anteriores sin correo muestran el alias enmascarado disponible. La tarjeta usa una fila compacta con correo, plataforma, región y versión; el cierre de sesión es un icono de 44 px con nombre accesible y conserva la confirmación.
+
+El historial contraído muestra nombre, fecha y hora, un indicador de estado compacto y el control de expansión. El título es «Respaldos» y debajo solo aparece el total. «Crear respaldo» comparte fila cuando cabe y baja a una fila propia en 320–360 px sin comprimir el título. El detalle expandido conserva integridad, resumen, explicaciones, verificación, restauración y mensajes de error. La confirmación de creación es un aviso temporal de cuatro segundos; los errores y advertencias siguen visibles.
+
 ## Crecimiento y mantenimiento
 
 Cada edición guarda el original y el candidato; cada respaldo manual o preventivo guarda una copia completa. Los archivos se cifran individualmente y no se comprimen. El historial no borra ni rota respaldos automáticamente: hacerlo impediría deshacer restauraciones antiguas y ocultaría evidencia. El propietario debe revisar el espacio del volumen y conservar copias externas. Un respaldo en el volumen de Docker sobrevive a reinicios y recreaciones del contenedor, pero no protege de perder el VPS, el disco o la configuración de Coolify: no sustituye una copia independiente y cifrada fuera del servidor.
@@ -109,13 +186,21 @@ PY
 ## Validación
 
 - Backend local con dependencias bloqueadas. 675 pruebas aprobadas, 16 omitidas. Compilación y verificación del catálogo correctas.
-- TypeScript y compilación de Vite correctos. Playwright Chromium con 63 pruebas aprobadas y 23 omitidas. Los tamaños 320, 360, 375, 390 y 430 px mantuvieron el historial sin desplazamiento horizontal, también con el botón de paginación. Tableta y escritorio pasaron la comprobación de ancho.
+- TypeScript y compilación de Vite correctos (`tsc --noEmit && vite build`, 2226 módulos). Playwright Chromium con 66 pruebas aprobadas y 23 omitidas. Los tamaños 320, 360, 375, 390, 430, 768 y 1280 px mantuvieron el historial, la cuenta y el carrusel sin desbordamiento horizontal; el carrusel conserva 2 columnas en móvil y 4 desde tableta, y el botón «Crear respaldo» baja a una fila propia cuando no cabe.
 - Docker aislado sin red. La imagen rechazó la ruta efímera sin volumen. En contenedores sucesivos con el mismo montaje se conservaron el perfil nativo y los bytes exactos de los respaldos cifrados. Las pruebas de almacén cubren respaldo manual, preventivo, restauración histórica, deshacer, paginación con inserción intermedia, interrupción y ausencia de montaje.
 - Producción. Publicado `eb9cacf8747409e1e045e6a296e4eebd386ef4d0` sin `[skip cd]`. Coolify desplegó un contenedor saludable con los cuatro montajes (`accounts`, `backups`, `native`, `native-backups`); `/api/v1/version` devuelve ese commit y las seis capacidades; `/backups` sin sesión responde 401. Una recreación real con `docker compose … up -d --force-recreate` conservó la integridad del SQLite y los conteos (2 cuentas, 2 perfiles, 1 sesión, 3 eventos), y el sondeo de escritura/borrado en `native-backups` confirmó permisos `10001:10001` y `0700`. Cloudflare Pages sirve la compilación con el historial nuevo. El estado nativo anterior (un SQLite, cero respaldos nativos) se preservó y migró; no se encontraron respaldos nativos históricos recuperables.
 
+## Archivos de esta fase
+
+- Backend: `backend/app/native/store.py`, `backend/app/native/service.py`, `backend/tests/test_native_api.py`.
+- Registro y carrusel: `frontend/src/partidaStats.ts`, `frontend/src/StatsCarousel.tsx`.
+- Interfaz: `frontend/src/pages/NativeAuthPage.tsx`, `frontend/src/pages/PartidaPanels.tsx`, `frontend/src/styles.css`, `frontend/src/api.ts`.
+- Pruebas: `frontend/tests/phase8-editor.spec.ts`, `frontend/tests/native-auth.spec.ts`.
+- Documentación y capturas: `docs/partida/README.md`, `docs/partida/capturas/partida-*.png`.
+
 ## Capturas
 
-Datos sintéticos y API simulada en Chromium.
+Datos sintéticos y API simulada en Chromium. El carrusel se captura en su primera página; las páginas restantes usan el mismo alto y se navegan con puntos, flechas o teclado.
 
 - [320 px](capturas/partida-320.png) · [360 px](capturas/partida-360.png) · [375 px](capturas/partida-375.png) · [390 px](capturas/partida-390.png) · [430 px](capturas/partida-430.png)
 - [Tableta](capturas/partida-768.png) · [Escritorio](capturas/partida-1280.png)

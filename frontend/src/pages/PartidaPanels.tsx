@@ -1,9 +1,9 @@
-import { Archive, ChevronDown, Cloud, CloudDownload, Coins, Fish, Gem, Plus, RefreshCw, RotateCcw, ShieldCheck, UsersRound } from 'lucide-react'
+import { AlertTriangle, Archive, CheckCircle2, ChevronDown, Cloud, CloudDownload, Pencil, Plus, RefreshCw, RotateCcw, ShieldCheck, XCircle } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import type { LabVerification, LabWriteResult, NativeBackup, NativeBackupHistory, NativeSaveSummary } from '../api'
-import { scalarQuantity } from '../draft'
 import { formatSize } from '../session'
+import { StatsCarousel } from '../StatsCarousel'
 import { Loading, Notice } from '../ui'
 
 const amountFormat = new Intl.NumberFormat('es-MX')
@@ -19,14 +19,6 @@ function amount(value?: number | null) {
   return value == null ? '—' : amountFormat.format(value)
 }
 
-function characters(save: NativeSaveSummary) {
-  const report = save.report?.characters
-  if (!report?.catalog.available || !report.counts.characters) return '—'
-  const observed = report.items.filter(({ unlocked }) => typeof unlocked === 'boolean')
-  if (!observed.some(({ unlocked }) => unlocked) && observed.length < report.counts.characters) return '—'
-  return `${amount(report.counts.unlocked)} / ${amount(report.counts.characters)}`
-}
-
 export function CloudSaveCard({ save, status, downloading, disabled, onDownload, feedback }: {
   save: NativeSaveSummary | null
   status: string
@@ -35,13 +27,6 @@ export function CloudSaveCard({ save, status, downloading, disabled, onDownload,
   onDownload: () => void
   feedback: ReactNode
 }) {
-  const metrics = save && [
-    { label: 'Gemas', value: amount(scalarQuantity(save, 'gems').original), icon: Gem, testId: 'native-current-gems' },
-    { label: 'Fichas de pesca', value: amount(scalarQuantity(save, 'fishChip').original), icon: Fish },
-    { label: 'Monedas de temporada', value: amount(scalarQuantity(save, 'seasonCoin').original), icon: Coins },
-    { label: 'Personajes desbloqueados', value: characters(save), icon: UsersRound },
-  ]
-
   return <section className="panel partida-card partida-cloud" aria-labelledby="save-title" aria-busy={downloading}>
     <div className="partida-heading">
       <span className="icon-tile"><Cloud size={21} aria-hidden="true" /></span>
@@ -50,13 +35,8 @@ export function CloudSaveCard({ save, status, downloading, disabled, onDownload,
         <p className="partida-muted" role="status">{status}</p>
       </div>
     </div>
-    {metrics && <>
-      <dl className="partida-metrics">
-        {metrics.map(({ label, value, icon: Icon, testId }) => <div key={label}>
-          <dt><Icon size={15} aria-hidden="true" />{label}</dt>
-          <dd data-testid={testId}>{value}</dd>
-        </div>)}
-      </dl>
+    {save && <>
+      <StatsCarousel save={save} />
       <dl className="partida-download-date">
         <dt>Última descarga</dt>
         <dd><time dateTime={save.downloaded_at}>{formatDate(save.downloaded_at)}</time></dd>
@@ -89,6 +69,23 @@ const backupKinds: Record<NonNullable<NativeBackup['kind']>, string> = {
   edit: 'Automático antes de editar',
   manual: 'Manual',
   preventive: 'Preventivo antes de restaurar',
+}
+
+const backupStatusIcons = {
+  prepared: Pencil,
+  verified: CheckCircle2,
+  unverified: AlertTriangle,
+  available: null,
+  unreadable: XCircle,
+} as const
+
+function backupStatusSummary(backup: NativeBackup) {
+  const parts = [backupStatuses[backup.status]]
+  if (backup.interrupted) parts.push('Operación interrumpida')
+  if (!backup.interrupted && backup.restoration) {
+    parts.push(backup.restoration === 'verified' ? 'Restauración verificada' : 'Restauración no verificada')
+  }
+  return parts.join(' · ')
 }
 
 const backupProblems: Record<NonNullable<NativeBackup['problem']>, string> = {
@@ -215,10 +212,9 @@ export function BackupHistory({ history, pending, loadingMore, problem, result, 
     <div className="partida-heading partida-history-heading">
       <span className="icon-tile"><Archive size={19} aria-hidden="true" /></span>
       <div>
-        <h2 id="backups-title">Historial de respaldos</h2>
+        <h2 id="backups-title">Respaldos</h2>
         {history && !problem && <p className="partida-muted">
-          {history.listed < history.total ? `${amount(history.listed)} de ${amount(history.total)} respaldos`
-            : `${amount(history.total)} ${history.total === 1 ? 'respaldo' : 'respaldos'}`}
+          {amount(history.total)} {history.total === 1 ? 'respaldo' : 'respaldos'}
         </p>}
       </div>
       {canBackup && <button className="button quiet partida-create-backup" type="button" disabled={disabled || creatingBackup}
@@ -239,49 +235,53 @@ export function BackupHistory({ history, pending, loadingMore, problem, result, 
       Esta cuenta todavía no tiene respaldos. Se creará uno automáticamente antes de cada edición.
     </p>}
     {!problem && history?.backups.length ? <div className="partida-backup-list">
-      {history.backups.map((backup) => <details className="partida-backup" key={backup.id}>
-        <summary>
-          <span>
-            <strong>{backupTitle(backup)}</strong>
-            <time className="partida-muted" dateTime={backup.created_at ?? undefined}>{formatDate(backup.created_at)}</time>
-            {backup.kind && <small className="partida-backup-kind">{backupKinds[backup.kind]}</small>}
-          </span>
-          <span className="partida-backup-status" data-status={backup.status}>
-            {backupStatuses[backup.status]}
-            {backup.interrupted && <small>Operación interrumpida</small>}
-            {!backup.interrupted && backup.restoration && <small>
-              {backup.restoration === 'verified' ? 'Restauración verificada' : 'Restauración no verificada'}
-            </small>}
-          </span>
-          <ChevronDown size={16} aria-hidden="true" />
-        </summary>
-        <div className="partida-backup-body">
-          {backup.status === 'unreadable' ? <>
-            <p className="partida-muted">{backup.problem ? backupProblems[backup.problem] : 'No se pudo leer este respaldo.'}</p>
-            <p className="partida-muted">No se restaurará porque no superó la comprobación de integridad.</p>
-          </> : <>
-            <BackupSummary backup={backup} />
-            <p className="partida-backup-integrity">
-              <ShieldCheck size={14} aria-hidden="true" />
-              {backup.integrity === 'verified' ? 'Integridad del respaldo verificada' : 'Integridad comprobada'}
-            </p>
-            {backup.kind === 'manual' && <p className="partida-muted">
-              Copia creada a voluntad; no se escribió nada en ChillyRoom.
-            </p>}
-            {backup.kind === 'preventive' && <p className="partida-muted">
-              Se creó automáticamente antes de restaurar otra versión. Restáuralo para deshacer esa restauración.
-            </p>}
-            {canVerify && <div className="partida-actions">
-              <button className="button quiet" disabled={disabled} onClick={() => onVerify(backup)}>Verificar contra la nube</button>
-              {canRestore && backup.can_restore !== false && <button className="button quiet" disabled={disabled}
-                onClick={() => onRestore(backup)}>
-                {backup.kind === 'preventive' ? 'Deshacer restauración' : 'Restaurar esta versión'}
-              </button>}
-            </div>}
-            {result?.backup_id === backup.id && <p role="status">{backupMessage(result)}</p>}
-          </>}
-        </div>
-      </details>)}
+      {history.backups.map((backup) => {
+        const StatusIcon = backupStatusIcons[backup.status]
+        const statusSummary = backupStatusSummary(backup)
+        return <details className="partida-backup" key={backup.id}>
+          <summary>
+            <span className="partida-backup-main">
+              <strong>{backupTitle(backup)}</strong>
+              <time className="partida-muted" dateTime={backup.created_at ?? undefined}>{formatDate(backup.created_at)}</time>
+            </span>
+            <span className="partida-backup-status" data-status={backup.status}
+              role="img" aria-label={statusSummary} title={statusSummary}>
+              {StatusIcon
+                ? <StatusIcon size={15} aria-hidden="true" />
+                : <span className="partida-backup-dot" aria-hidden="true" />}
+            </span>
+            <ChevronDown size={16} aria-hidden="true" />
+          </summary>
+          <div className="partida-backup-body">
+            <p className="partida-backup-state partida-muted">{statusSummary}</p>
+            {backup.kind === 'edit' && <p className="partida-muted">{backupKinds.edit}</p>}
+            {backup.status === 'unreadable' ? <>
+              <p className="partida-muted">{backup.problem ? backupProblems[backup.problem] : 'No se pudo leer este respaldo.'}</p>
+              <p className="partida-muted">No se restaurará porque no superó la comprobación de integridad.</p>
+            </> : <>
+              <BackupSummary backup={backup} />
+              <p className="partida-backup-integrity">
+                <ShieldCheck size={14} aria-hidden="true" />
+                {backup.integrity === 'verified' ? 'Integridad del respaldo verificada' : 'Integridad comprobada'}
+              </p>
+              {backup.kind === 'manual' && <p className="partida-muted">
+                Copia creada a voluntad; no se escribió nada en ChillyRoom.
+              </p>}
+              {backup.kind === 'preventive' && <p className="partida-muted">
+                Se creó automáticamente antes de restaurar otra versión. Restáuralo para deshacer esa restauración.
+              </p>}
+              {canVerify && <div className="partida-actions">
+                <button className="button quiet" disabled={disabled} onClick={() => onVerify(backup)}>Verificar contra la nube</button>
+                {canRestore && backup.can_restore !== false && <button className="button quiet" disabled={disabled}
+                  onClick={() => onRestore(backup)}>
+                  {backup.kind === 'preventive' ? 'Deshacer restauración' : 'Restaurar esta versión'}
+                </button>}
+              </div>}
+              {result?.backup_id === backup.id && <p role="status">{backupMessage(result)}</p>}
+            </>}
+          </div>
+        </details>
+      })}
     </div> : null}
     {!problem && history?.next_cursor && <button className="button quiet partida-load-more" type="button"
       disabled={loadingMore} onClick={onLoadMore}>

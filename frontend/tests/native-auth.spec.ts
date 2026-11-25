@@ -31,7 +31,7 @@ const SAVE = {
 const ACTIVE = {
   active: true, identity_verified: true,
   account: {
-    label: PROFILE.label, distribution: 'android-global',
+    label: PROFILE.label, email: 'holder@example.test', distribution: 'android-global',
     distribution_label: 'Android Global (GP)', platform: 'android',
   },
   session_expires_at: '2026-12-01T00:05:40Z',
@@ -353,7 +353,7 @@ test.fixme('inicia sesión, descarga, prepara, confirma y cierra sesión', async
   await page.goto('/partida')
   await submitLogin(page)
   await expect(page.getByLabel('Cuenta conectada')).toContainText(PROFILE.label)
-  await expect(page.getByTestId('native-current-gems')).toHaveText('1,001')
+  await expect(page.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('1,001')
   await page.getByRole('link', { name: 'Abrir Editor' }).click()
   await page.getByLabel('Nueva cantidad de gemas').fill('1002')
   await page.getByRole('button', { name: 'Preparar edición' }).click()
@@ -365,11 +365,11 @@ test.fixme('inicia sesión, descarga, prepara, confirma y cierra sesión', async
   await confirm.click()
   await expect(page.getByText('Cambios guardados y verificados en la nube.')).toBeVisible()
   await page.getByRole('navigation').getByRole('link', { name: 'Partida' }).click()
-  await expect(page.getByTestId('native-current-gems')).toHaveText('1,002')
+  await expect(page.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('1,002')
   page.once('dialog', (dialog) => dialog.accept())
   await page.getByRole('button', { name: 'Cerrar sesión' }).click()
   await expect(page.getByRole('heading', { name: 'Iniciar sesión en ChillyRoom' })).toBeVisible()
-  await expect(page.getByTestId('native-current-gems')).toHaveCount(0)
+  await expect(page.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveCount(0)
 })
 
 for (const [code, message] of [
@@ -402,7 +402,7 @@ test('no pide identificadores y descarga con la identidad generada por el servid
   await expect(page.getByLabel('Identificador de instalación')).toHaveCount(0)
   await expect(page.getByLabel('Perfil de instalación')).toHaveCount(0)
   await submitLogin(page)
-  await expect(page.getByTestId('native-current-gems')).toHaveText('1,001')
+  await expect(page.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('1,001')
   await expect(page.getByLabel('Cuenta conectada')).toBeVisible()
 })
 
@@ -468,7 +468,7 @@ test('permite elegir el perfil cuando hay más de uno', async ({ page }) => {
     await route.fulfill({
       json: {
         ...ACTIVE,
-        account: { label: SECOND_PROFILE.label, distribution: 'android-global', distribution_label: 'Android Global (GP)', platform: 'android' },
+        account: { label: SECOND_PROFILE.label, email: 'holder@example.test', distribution: 'android-global', distribution_label: 'Android Global (GP)', platform: 'android' },
         save: SAVE,
       },
     })
@@ -478,7 +478,7 @@ test('permite elegir el perfil cuando hay más de uno', async ({ page }) => {
   await page.getByLabel('Perfil de instalación').selectOption(SECOND_PROFILE.id)
   await submitLogin(page)
   expect(requested).toBe(SECOND_PROFILE.id)
-  await expect(page.getByText(SECOND_PROFILE.label, { exact: false }).first()).toBeVisible()
+  await expect(page.getByLabel('Cuenta conectada')).toContainText('holder@example.test')
 })
 
 test.fixme('mantiene el editor en solo lectura cuando la escritura está deshabilitada', async ({ page }) => {
@@ -558,7 +558,7 @@ test.fixme('navega por el flujo de nube y mantiene el borrador solo para la cuen
   await expect(page.getByLabel('Nueva cantidad de gemas')).toHaveCount(0)
   await page.getByRole('link', { name: 'Conectar cuenta' }).click()
   await submitLogin(page, 'second@example.test')
-  await expect(page.getByTestId('native-current-gems')).toHaveText('42')
+  await expect(page.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('42')
   await expect(page.getByText('Esta cuenta todavía no tiene respaldos.')).toBeVisible()
   await page.getByRole('link', { name: 'Abrir Editor' }).click()
   await expect(page.getByLabel('Nueva cantidad de gemas')).toHaveValue('42')
@@ -1143,8 +1143,8 @@ test('verifica y restaura un respaldo desde Partida con una confirmación clara'
   await page.getByRole('button', { name: 'Restaurar esta versión' }).click()
   await page.getByRole('dialog').getByRole('button', { name: 'Restaurar esta versión' }).click()
   await expect(page.getByText('Restauración verificada: la nube contiene exactamente la versión elegida.')).toBeVisible()
-  await expect(page.getByTestId('native-current-gems')).toHaveText('1,001')
-  await expect(page.locator('.partida-backup-status').getByText('Restauración verificada', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('1,001')
+  await expect(page.getByRole('img', { name: /Restauración verificada/ })).toBeVisible()
   await expect(page.getByRole('region', { name: 'Partida en la nube' }).locator('time')).toHaveAttribute('datetime', '2026-11-23T20:20:00Z')
   expect(restoreCalls).toBe(1)
   expect(historyCalls).toBe(2)
@@ -1192,7 +1192,7 @@ test('descarta el historial anterior si la cuenta cambia mientras carga', async 
     return route.fulfill({ status: 204 })
   })
   await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({
-    json: { ...ACTIVE, account: { ...ACTIVE.account, label: SECOND_PROFILE.label } },
+    json: { ...ACTIVE, account: { ...ACTIVE.account, email: 'other@example.test', label: SECOND_PROFILE.label } },
   }))
   await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, async (route) => {
     if (!firstAccount) return route.fulfill({ json: EMPTY_NATIVE_HISTORY })
@@ -1208,8 +1208,8 @@ test('descarta el historial anterior si la cuenta cambia mientras carga', async 
   page.once('dialog', (dialog) => dialog.accept())
   await page.getByRole('button', { name: 'Cerrar sesión' }).click()
   await submitLogin(page, 'other@example.test')
-  await expect(page.getByRole('region', { name: 'Cuenta conectada' })).toContainText(SECOND_PROFILE.label)
+  await expect(page.getByRole('region', { name: 'Cuenta conectada' })).toContainText('other@example.test')
   releaseResponse()
   await expect(page.getByText('Esta cuenta todavía no tiene respaldos.')).toBeVisible()
-  await expect(page.getByText('Subida verificada', { exact: true })).toHaveCount(0)
+  await expect(page.getByRole('img', { name: /Subida verificada/ })).toHaveCount(0)
 })

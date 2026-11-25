@@ -127,6 +127,7 @@ class NativeSessionRecord:
     expires_at: int
     idle_expires_at: int
     created_at: int
+    email: str | None = field(default=None, repr=False)
 
 
 @dataclass(frozen=True)
@@ -618,11 +619,14 @@ class NativeStore:
         email_hash: str,
         uid_hash: str,
         player_hash: str,
+        email: str | None = None,
     ) -> int:
         if not isinstance(cookie, str) or not _COOKIE.fullmatch(cookie):
             raise NativeStoreMisconfigured("El identificador de sesión generado no es válido.")
         if not _credential(token):
             raise NativeStoreMisconfigured("La sesión recibida no contiene un token válido.")
+        if email is not None and (not isinstance(email, str) or not email.strip() or len(email) > 320):
+            raise NativeStoreMisconfigured("El correo de la sesión no es válido.")
         if type(session_expire) is not int:
             raise NativeStoreMisconfigured("La caducidad de la sesión no es válida.")
         now = int(self.now())
@@ -630,7 +634,10 @@ class NativeStore:
         if expires_at <= now:
             raise NativeSessionExpired("La sesión del proveedor ya está caducada.")
         session_id = sha256(cookie.encode("ascii")).hexdigest()
-        sealed = self._seal("session:" + session_id, {"token": token})
+        values: dict[str, object] = {"token": token}
+        if email is not None:
+            values["email"] = email.strip()
+        sealed = self._seal("session:" + session_id, values)
         with closing(self.connect()) as db, db:
             db.execute("BEGIN IMMEDIATE")
             profile = db.execute("SELECT subject FROM profiles WHERE id = ?", (profile_id,)).fetchone()
@@ -675,9 +682,13 @@ class NativeStore:
         profile = self.profile(profile_id)
         if profile.subject is None or not compare_digest(profile.subject, subject):
             raise NativeSessionExpired("La sesión ya no corresponde al perfil. Vuelve a iniciar sesión.")
-        token = self._open("session:" + session_id, sealed).get("token")
+        opened = self._open("session:" + session_id, sealed)
+        token = opened.get("token")
+        email = opened.get("email")
         if not isinstance(token, str) or not token:
             raise NativeStoreMisconfigured("La sesión no se puede descifrar.")
+        if email is not None and not isinstance(email, str):
+            raise NativeStoreMisconfigured("La sesión contiene un correo inválido.")
         return NativeSessionRecord(
             id=session_id,
             cookie=cookie,
@@ -688,6 +699,7 @@ class NativeStore:
             expires_at=expires_at,
             idle_expires_at=idle_expires,
             created_at=created_at,
+            email=email,
         )
 
     def revoke(self, cookie: str) -> None:
