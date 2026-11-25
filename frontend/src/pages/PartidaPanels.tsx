@@ -19,13 +19,14 @@ function amount(value?: number | null) {
   return value == null ? '—' : amountFormat.format(value)
 }
 
-export function CloudSaveCard({ save, status, downloading, disabled, onDownload, feedback }: {
+export function CloudSaveCard({ save, status, downloading, disabled, onDownload, feedback, editorHref }: {
   save: NativeSaveSummary | null
   status: string
   downloading: boolean
   disabled: boolean
   onDownload: () => void
   feedback: ReactNode
+  editorHref: string
 }) {
   return <section className="panel partida-card partida-cloud" aria-labelledby="save-title" aria-busy={downloading}>
     <div className="partida-heading">
@@ -44,7 +45,7 @@ export function CloudSaveCard({ save, status, downloading, disabled, onDownload,
     </>}
     {feedback}
     <div className="partida-actions">
-      {save && <Link className="button primary" to="/editor">Abrir editor</Link>}
+      {save && <Link className="button primary" to={editorHref}>Abrir editor</Link>}
       <button className={`button ${save ? 'quiet' : 'primary'}`} disabled={disabled} onClick={onDownload}>
         {save ? <RefreshCw size={16} aria-hidden="true" /> : <CloudDownload size={17} aria-hidden="true" />}
         {downloading ? 'Descargando…' : save ? 'Actualizar partida' : 'Descargar partida'}

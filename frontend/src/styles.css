@@ -1946,3 +1946,221 @@ html:has(.editor-bar) {
   .editor-bar .button { padding-inline: 6px; }
   .editor-context { font-size: .67rem; }
 }
+
+/* Dashboard multicuenta */
+.topbar-simple { justify-content: space-between; }
+.topbar-utility {
+  width: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  color: #d8e8dc;
+  border-color: #335344;
+  background: #ffffff0d;
+}
+.topbar-utility:hover { color: var(--lime); background: #ffffff14; }
+.topbar-utility:focus-visible { outline-color: var(--lime); }
+
+.dashboard { gap: 1.25rem; }
+.account-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+.account-card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 96px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 1px 0 #1b3b2a0a;
+}
+.account-card-main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: .8rem;
+  min-width: 0;
+  padding: 1rem 3.6rem 1rem 1rem;
+  color: inherit;
+}
+.account-card-main:hover { background: #f7fbf7; }
+.account-card-main:focus-visible { outline: 3px solid #54865a; outline-offset: -3px; }
+.account-card-icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  color: var(--accent);
+  background: var(--subtle);
+}
+.account-card-copy { display: grid; gap: .38rem; min-width: 0; }
+.account-card-copy strong {
+  font-size: 1rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.account-tags { display: flex; flex-wrap: wrap; gap: .3rem; }
+.account-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  padding: .18rem .45rem;
+  border-radius: 6px;
+  color: var(--muted);
+  background: #f0f4f1;
+  font-size: .75rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.account-tag.expired { color: #7a4b16; background: #fdf1df; }
+.account-unlink {
+  position: absolute;
+  top: 50%;
+  right: .45rem;
+  z-index: 1;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  transform: translateY(-50%);
+  color: var(--muted);
+}
+.account-unlink:hover { color: #8a2c24; background: #fdf0ee; }
+.account-card-problem {
+  position: absolute;
+  inset: auto .5rem .5rem;
+  z-index: 2;
+}
+.account-card-problem .notice { padding: .45rem .55rem; font-size: .78rem; }
+.account-card-add {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: .5rem;
+  padding: 1.15rem;
+  border: 2px dashed #a9bfaf;
+  color: var(--accent-dark);
+  background: #f8fbf7;
+  text-align: center;
+}
+.account-card-add:hover { border-color: var(--accent); background: #f0f8ef; }
+.account-card-add strong { font-size: .95rem; }
+.account-add-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  color: var(--accent);
+  background: #e2efdf;
+}
+.dashboard-retry { justify-self: start; }
+
+/* Cabecera y menú lateral de una cuenta */
+.account-topbar-inner { justify-content: flex-start; gap: .7rem; }
+.account-menu-button {
+  width: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  color: #eef8f0;
+  border-color: #335344;
+  background: #ffffff0d;
+}
+.account-menu-button:hover { color: var(--lime); background: #ffffff14; }
+.account-menu-button:focus-visible { outline-color: var(--lime); }
+.account-topbar-label {
+  margin-left: auto;
+  max-width: min(45vw, 22rem);
+  overflow: hidden;
+  color: #d2e3d8;
+  font-size: .8rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.drawer-layer {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+  display: flex;
+  background: #0b1b12a8;
+  animation: drawer-fade .16s ease-out;
+}
+.account-drawer {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+  width: min(21rem, calc(100% - 2.5rem));
+  height: 100%;
+  overflow-y: auto;
+  padding: max(1rem, env(safe-area-inset-top)) 1.1rem max(1.5rem, env(safe-area-inset-bottom));
+  color: var(--ink);
+  background: var(--surface);
+  box-shadow: 12px 0 34px #0c241733;
+  animation: drawer-slide .18s ease-out;
+}
+.account-drawer-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.account-drawer-head p {
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.drawer-close { width: 44px; min-width: 44px; height: 44px; padding: 0; }
+.account-drawer-account {
+  display: grid;
+  gap: .25rem;
+  min-width: 0;
+  padding: .9rem 1rem;
+  border-radius: 12px;
+  background: var(--subtle);
+}
+.account-drawer-account strong { overflow-wrap: anywhere; }
+.account-drawer-account span { color: var(--muted); font-size: .8rem; }
+.account-drawer-nav { display: grid; gap: .3rem; }
+.account-drawer-link {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  min-height: 46px;
+  padding: .55rem .8rem;
+  border-radius: 9px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.account-drawer-link:hover { background: #f0f6f1; }
+.account-drawer-link.active { color: var(--accent-dark); background: var(--subtle); }
+.account-drawer-link:focus-visible { outline: 3px solid #54865a; outline-offset: -2px; }
+@keyframes drawer-fade { from { opacity: 0; } }
+@keyframes drawer-slide { from { transform: translateX(-12px); opacity: .65; } }
+@media (prefers-reduced-motion: reduce) {
+  .drawer-layer, .account-drawer { animation: none; }
+}
+
+@media (max-width: 430px) {
+  .account-grid { grid-template-columns: minmax(0, 1fr); }
+  .account-card { min-height: 88px; }
+  .account-card-main { padding-left: .8rem; }
+  .account-topbar-label { display: none; }
+}
+
+@media (max-width: 690px) {
+  .topbar-inner.topbar-simple,
+  .topbar-inner.account-topbar-inner {
+    display: flex;
+    align-items: center;
+    min-height: calc(70px + env(safe-area-inset-top));
+    padding-block: max(.65rem, env(safe-area-inset-top)) .65rem;
+  }
+  .topbar-inner.topbar-simple { justify-content: space-between; }
+  .topbar-inner.account-topbar-inner { justify-content: flex-start; gap: .7rem; }
+}

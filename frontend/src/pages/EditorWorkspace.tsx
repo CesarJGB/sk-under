@@ -11,12 +11,11 @@ import {
   selectAll, selectedCount, setEdit, setQuick, toggleItem, type BuiltPlan, type BulkKey,
   type Draft, type Eligibility,
 } from '../draft'
-import { formatGameVersion } from '../session'
 import { skillKey, skinKey } from '../unlockSelections'
 import { Notice, Problem } from '../ui'
 import { useOperation } from '../useOperation'
 import {
-  amountFormat, categories, CategoryGrid, CategoryIcon, EditorHeader, formatOriginal, QuickEdit,
+  amountFormat, categories, CategoryGrid, CategoryIcon, formatOriginal, QuickEdit,
   resources, UnlockStatus,
 } from './EditorOverview'
 
@@ -339,14 +338,14 @@ function LeaveEditor({ blocked, busy, stay, leave }: {
 type EditorAction = 'prepare' | 'upload' | 'reload'
 
 export function EditorWorkspace({
-  save, session, accountLabel, platform, version, loadingSave, loadProblem, onExpired, onReload,
+  save, session, accountId, basePath, accountLabel, loadingSave, loadProblem, onExpired, onReload,
   onBackupChanged, onCloudWrite,
 }: {
   save: SaveBundle
   session: NativeSession
+  accountId: string
+  basePath: string
   accountLabel: string
-  platform: string
-  version?: string
   loadingSave: boolean
   loadProblem: ApiProblem | null
   onExpired: () => void
@@ -382,22 +381,24 @@ export function EditorWorkspace({
     || itemEdits.some((value) => value !== '' && parseQuantity(value) === null)
   const dirty = hasChanges || invalidDraft || quantities.some(({ changed }) => changed) || itemEdits.includes('')
 
-  const route = pathname.startsWith('/editor/categoria/')
-    ? pathname.slice('/editor/categoria/'.length).split('/')[0]
-    : pathname.startsWith('/editor/categorias') ? 'categories' : 'quick'
+  const editorBase = `${basePath}/editor`
+  const editorSuffix = pathname.startsWith(editorBase) ? pathname.slice(editorBase.length) : ''
+  const route = editorSuffix.startsWith('/categoria/')
+    ? editorSuffix.slice('/categoria/'.length).split('/')[0]
+    : editorSuffix.startsWith('/categorias') ? 'categories' : 'quick'
   const activeCategory = categories.find((category) => category.id === route)
   const showQuick = !activeCategory && route !== 'categories'
   const blocker = useBlocker(({ nextLocation }) =>
-    (dirty || inFlight.current) && !nextLocation.pathname.match(/^\/editor(?:\/|$)/))
+    (dirty || inFlight.current) && !nextLocation.pathname.startsWith(`${basePath}/editor`))
 
   useEffect(() => {
-    const legacy = pathname.slice('/editor/'.length).replace(/\/$/, '')
+    const legacy = editorSuffix.slice(1).replace(/\/$/, '')
     if (['personajes', 'habilidades', 'skins', 'mascotas'].includes(legacy)) {
-      void navigate(`/editor/categoria/${legacy}`, { replace: true })
+      void navigate(`${editorBase}/categoria/${legacy}`, { replace: true })
     }
     setReview(false)
     setConfirm(false)
-  }, [navigate, pathname])
+  }, [editorBase, editorSuffix, navigate])
 
   useEffect(() => {
     if (!dirty && !busy) return
@@ -484,7 +485,7 @@ export function EditorWorkspace({
     run('prepare', async (signal) => {
       setResult(null)
       setConfirm(false)
-      const next = await nativeAuth.prepareUnified(built.plan, save.sha256, signal)
+      const next = await nativeAuth.prepareUnified(built.plan, save.sha256, signal, accountId)
       if (signal.aborted) return
       onBackupChanged()
       setPrepared(next)
@@ -495,7 +496,7 @@ export function EditorWorkspace({
   function upload() {
     if (!prepared || !confirm || !canWrite) return
     run('upload', async (signal) => {
-      const uploaded = await nativeAuth.confirm(prepared.backup.id, prepared.candidate_sha256, signal)
+      const uploaded = await nativeAuth.confirm(prepared.backup.id, prepared.candidate_sha256, signal, accountId)
         .finally(() => { if (!signal.aborted) onBackupChanged() })
       if (signal.aborted) return
       if (uploaded.uploaded || uploaded.persisted) onCloudWrite()
@@ -547,7 +548,6 @@ export function EditorWorkspace({
   const barError = operation.problem || (result && !result.persisted)
   const barStatus = progress ?? (invalidDraft ? 'Revisa las cantidades'
     : barError ? 'Revisa el resultado' : result?.persisted ? 'Verificado' : null)
-  const displayedVersion = formatGameVersion(save.report?.game_version) ?? version
 
   const content = review && prepared
     ? <div className="review-panel" data-testid="unified-preview" ref={preview} tabIndex={-1}>
@@ -576,10 +576,10 @@ export function EditorWorkspace({
     </div>
     : <fieldset className="editor-content" disabled={busy || needsRefresh}>
       {showQuick && <QuickEdit save={save} draft={draft} built={built} update={update} />}
-      {route === 'categories' && <CategoryGrid built={built} onOpen={(id) => go(`/editor/categoria/${id}`)} />}
+      {route === 'categories' && <CategoryGrid built={built} onOpen={(id) => go(`${editorBase}/categoria/${id}`)} />}
       {activeCategory && <div className="category-detail" data-testid={`category-${activeCategory.id}`}>
         <div className="detail-head">
-          <button type="button" aria-label="← Categorías" className="editor-back" onClick={() => go('/editor/categorias')}>
+          <button type="button" aria-label="← Categorías" className="editor-back" onClick={() => go(`${editorBase}/categorias`)}>
             <ArrowLeft size={17} aria-hidden="true" />
           </button>
           <CategoryIcon id={activeCategory.id} />
@@ -602,21 +602,15 @@ export function EditorWorkspace({
     event.preventDefault()
     const quick = event.key === 'Home' || (event.key !== 'End' && !showQuick)
     event.currentTarget.querySelector<HTMLButtonElement>(quick ? '#editor-quick-tab' : '#editor-categories-tab')?.focus()
-    go(quick ? '/editor' : '/editor/categorias')
+    go(quick ? editorBase : `${editorBase}/categorias`)
   }
 
-  const downloading = action === 'reload' || loadingSave
-  const saveStatus = downloading ? 'Descargando partida…'
-    : needsRefresh ? 'Actualización pendiente' : loadProblem && !save.report ? 'Copia parcial' : 'Partida cargada'
-
   return <div className="editor-shell">
-    <EditorHeader accountLabel={accountLabel} platform={platform} version={displayedVersion} status={saveStatus}
-      ready={saveStatus === 'Partida cargada'} />
     <div className="editor-mode" role="tablist" aria-label="Modo de edición" onKeyDown={tabKeys}>
       <button id="editor-quick-tab" type="button" role="tab" aria-controls="editor-panel" aria-selected={showQuick}
-        tabIndex={showQuick ? 0 : -1} disabled={busy} onClick={() => go('/editor')}>Rápida</button>
+        tabIndex={showQuick ? 0 : -1} disabled={busy} onClick={() => go(editorBase)}>Rápida</button>
       <button id="editor-categories-tab" type="button" role="tab" aria-controls="editor-panel" aria-selected={!showQuick}
-        tabIndex={showQuick ? -1 : 0} disabled={busy} onClick={() => go('/editor/categorias')}>Categorías</button>
+        tabIndex={showQuick ? -1 : 0} disabled={busy} onClick={() => go(`${editorBase}/categorias`)}>Categorías</button>
     </div>
     {!canWrite && <Notice tone="warning">Partida de solo lectura.</Notice>}
     {expiredConflict && <div className="conflict-banner" role="alert">

@@ -105,6 +105,13 @@ class NativeSessionRejected(NativeError):
     status = 502
 
 
+class NativeAccountDenied(NativeError):
+    """La cuenta solicitada no pertenece al navegador autenticado."""
+
+    code = "native_account_denied"
+    status = 403
+
+
 class NativeInstallationRequired(NativeError):
     code = "native_installation_required"
     status = 409

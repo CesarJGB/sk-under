@@ -1,17 +1,14 @@
-import { Cloud, FilePenLine, House, ScanLine } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
-import { Link, matchPath, Navigate, NavLink, Route, Routes, useLocation } from 'react-router'
+import { useEffect, useState } from 'react'
+import { Link, Navigate, Route, Routes, matchPath, useLocation } from 'react-router'
 import { api, type Health } from './api'
-import { LabEditorPage } from './pages/LabEditorPage'
+import { AccountsProvider, useAccounts } from './AccountContext'
+import { SimpleTopbar } from './Brand'
+import { DashboardPage } from './pages/DashboardPage'
+import { AddAccountPage } from './pages/AddAccountPage'
+import { AccountPage } from './pages/AccountPage'
 import { CloudAccountsPage } from './pages/CloudAccountsPage'
-import { NativeAuthPage } from './pages/NativeAuthPage'
-import { PageTitle } from './ui'
-
-const navigation = [
-  { path: '/', label: 'Inicio', icon: House, view: 'home' },
-  { path: '/partida', label: 'Partida', icon: Cloud, view: 'save' },
-  { path: '/editor', label: 'Editor', icon: FilePenLine, view: 'editor' },
-] as const
+import { LabEditorPage } from './pages/LabEditorPage'
+import { Loading, PageTitle } from './ui'
 
 function LabRoute() {
   const [health, setHealth] = useState<Health | null>(null)
@@ -40,49 +37,59 @@ function LabRoute() {
     setAdminToken={setAdminToken} health={health} loading={loading} />
 }
 
-export default function App() {
-  const { pathname } = useLocation()
-  const main = useRef<HTMLElement>(null)
-  const view = pathname === '/editor' || pathname.startsWith('/editor/')
-    ? 'editor'
-    : navigation.find(({ path }) => matchPath(path, pathname))?.view
+function LegacyAccountRoute({ kind }: { kind: 'partida' | 'editor' }) {
+  const { accounts, loading } = useAccounts()
+  const { pathname, search } = useLocation()
 
-  useEffect(() => {
-    window.scrollTo(0, 0)
-    if (view !== 'editor' || !main.current?.contains(document.activeElement)) {
-      main.current?.focus({ preventScroll: true })
-    }
-  }, [pathname, view])
+  if (loading && accounts.length === 0) return <Loading>Comprobando las cuentas…</Loading>
+  if (accounts.length === 0) return <Navigate to="/cuentas/nueva" replace />
+  if (accounts.length > 1) return <Navigate to="/" replace />
+  const account = accounts[0]
+  const suffix = kind === 'editor' ? pathname.replace(/^\/editor/, '') : ''
+  return <Navigate to={`/cuentas/${account.id}/${kind}${suffix}${search}`} replace />
+}
 
+function NotFound() {
   return <>
-    <a className="skip-link" href="#content">Saltar al contenido</a>
-    {view !== 'editor' && <header className="topbar">
-      <div className="shell topbar-inner">
-        <Link to="/" className="brand">
-          <span className="brand-icon"><ScanLine size={22} aria-hidden="true" /></span>
-          SK-Under
-        </Link>
-        <nav className="navigation" aria-label="Navegación principal">
-          {navigation.map(({ path, label, icon: Icon }) => (
-            <NavLink key={path} to={path} end={path === '/'} className="nav-link">
-              <Icon size={17} aria-hidden="true" />{label}
-            </NavLink>
-          ))}
-        </nav>
-      </div>
-    </header>}
-    <main id="content" ref={main} tabIndex={-1}
-      className={`shell main-content${view === 'editor' ? ' main-editor' : view === 'save' ? ' main-partida' : ''}`}>
-      {view ? <NativeAuthPage view={view} /> : <Routes>
-        <Route path="/partida/vinculadas" element={<CloudAccountsPage />} />
-        <Route path="/partida/laboratorio" element={<LabRoute />} />
-        <Route path="/importar" element={<Navigate to="/partida" replace />} />
-        <Route path="/exportar" element={<Navigate to="/partida" replace />} />
-        <Route path="*" element={<>
-          <PageTitle title="Página no encontrada" />
-          <Link className="button primary" to="/">Volver a Inicio</Link>
-        </>} />
-      </Routes>}
+    <SimpleTopbar />
+    <main id="content" className="shell main-content">
+      <PageTitle title="Página no encontrada" />
+      <Link className="button primary" to="/">Volver al inicio</Link>
     </main>
   </>
+}
+
+function RouteScroll() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  return null
+}
+
+export default function App() {
+  const { pathname } = useLocation()
+  const accountMatch = matchPath('/cuentas/:accountId/*', pathname)
+  const inAccount = Boolean(accountMatch && accountMatch.params.accountId !== 'nueva')
+  return <AccountsProvider>
+    <a className="skip-link" href="#content">Saltar al contenido</a>
+    <RouteScroll />
+    {inAccount ? <AccountPage /> : <Routes>
+      <Route path="/" element={<DashboardPage />} />
+      <Route path="/cuentas/nueva" element={<AddAccountPage />} />
+      <Route path="/partida/vinculadas" element={<>
+        <SimpleTopbar />
+        <main id="content" className="shell main-content"><CloudAccountsPage /></main>
+      </>} />
+      <Route path="/partida/laboratorio" element={<>
+        <SimpleTopbar />
+        <main id="content" className="shell main-content"><LabRoute /></main>
+      </>} />
+      <Route path="/partida/*" element={<main id="content" className="shell main-content"><LegacyAccountRoute kind="partida" /></main>} />
+      <Route path="/editor/*" element={<main id="content" className="shell main-content"><LegacyAccountRoute kind="editor" /></main>} />
+      <Route path="/importar" element={<Navigate to="/partida" replace />} />
+      <Route path="/exportar" element={<Navigate to="/partida" replace />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>}
+  </AccountsProvider>
 }

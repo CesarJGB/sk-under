@@ -1,9 +1,8 @@
 import {
-  ArrowLeft, BatteryCharging, Check, CircleCheck, CircleDot, Coins, Fish, Gem, Medal,
+  BatteryCharging, Check, CircleCheck, Coins, Fish, Gem, Medal,
   PawPrint, Shirt, Sprout, Swords, Ticket, UserRound, Zap, Package, type LucideIcon,
 } from 'lucide-react'
 import { useId, type ReactNode } from 'react'
-import { Link } from 'react-router'
 import type { NativeSaveSummary } from '../api'
 import {
   advancedSnapshot, batteryId, battlePassRecord, clearSelection, eligibility, minimumRows, minimumTarget,
@@ -48,29 +47,6 @@ const unlocks: Array<{ key: BulkKey; label: string; control: string; icon: Lucid
   { key: 'pets', label: 'Mascotas', control: 'Todas las mascotas', icon: PawPrint },
   { key: 'petSkins', label: 'Skins de mascotas', control: 'Skins de mascotas', icon: Shirt },
 ]
-
-export function EditorHeader({ accountLabel, platform, version, status, ready }: {
-  accountLabel?: string
-  platform?: string
-  version?: string
-  status: string
-  ready?: boolean
-}) {
-  return <header className="editor-top">
-    <Link to="/partida" className="editor-back" aria-label="Volver a Partida">
-      <ArrowLeft size={20} aria-hidden="true" />
-    </Link>
-    <h1>Editor</h1>
-    <div className="editor-context">
-      {accountLabel && <strong title={accountLabel}>{accountLabel}</strong>}
-      {(platform || version) && <span>{[platform, version].filter(Boolean).join(' · ')}</span>}
-      <span className={`editor-load-state ${ready ? 'ready' : ''}`} role="status">
-        {ready ? <CircleCheck size={13} aria-hidden="true" /> : <CircleDot size={13} aria-hidden="true" />}
-        {status}
-      </span>
-    </div>
-  </header>
-}
 
 export function CategoryIcon({ id }: { id: CategoryId }) {
   return <img className="category-icon" src={`${import.meta.env.BASE_URL}editor-icons/${id}.png`}

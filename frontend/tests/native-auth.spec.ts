@@ -279,15 +279,36 @@ async function mockBase(page: Page, config: object = BASE_CONFIG) {
     features: ['native_backup_history', 'native_backup_history_pagination', 'native_backup_manual'],
   } }))
   await page.route('**/api/v1/cloud/native/config', (route) => route.fulfill({ json: config }))
+  await page.route('**/api/v1/cloud/native/session', (route) => {
+    const active = (config as { session?: { active?: boolean } }).session
+    if (active?.active) {
+      return route.fulfill({ json: { ...active, account_id: 'primary' } })
+    }
+    return route.fulfill({
+      status: 401,
+      json: { error: { code: 'native_session_required', message: 'Inicia sesión.', issues: [] } },
+    })
+  })
 }
 
 async function mockEditor(page: Page, session: object = ACTIVE) {
-  await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({ json: session }))
+  await page.route('**/api/v1/cloud/native/session', (route) => route.fulfill({
+    json: { ...session, account_id: 'primary' },
+  }))
+  await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({
+    json: { ...session, account_id: 'primary' },
+  }))
   await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.route('**/api/v1/cloud/native/prepare', (route) => {
     expect(route.request().postDataJSON()).toEqual({ new_gems: 1002, source_sha256: SHA })
     return route.fulfill({ json: PREPARED })
   })
+}
+
+async function mockSession(page: Page, session: object = ACTIVE) {
+  await page.route('**/api/v1/cloud/native/session', (route) => route.fulfill({
+    json: { ...session, account_id: 'primary' },
+  }))
 }
 
 async function submitLogin(page: Page, email = 'holder@example.test', password = 'fixture-password') {
@@ -403,17 +424,18 @@ test('no pide identificadores y descarga con la identidad generada por el servid
   await expect(page.getByLabel('Perfil de instalación')).toHaveCount(0)
   await submitLogin(page)
   await expect(page.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('1,001')
-  await expect(page.getByLabel('Cuenta conectada')).toBeVisible()
+  await page.getByRole('button', { name: 'Abrir menú de cuenta' }).click()
+  await expect(page.getByRole('dialog')).toContainText('holder@example.test')
 })
 
 test('explica la espera de vinculación de un dispositivo nuevo', async ({ page }) => {
   await mockBase(page)
-  await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({
-    json: {
-      ...ACTIVE, save: null, save_error: 'native_device_binding_throttled',
-      binding_wait_until: '2026-11-25T08:00:00Z',
-    },
-  }))
+  const session = {
+    ...ACTIVE, save: null, save_error: 'native_device_binding_throttled',
+    binding_wait_until: '2026-11-25T08:00:00Z',
+  }
+  await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({ json: session }))
+  await mockSession(page, session)
   await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.goto('/partida')
   await submitLogin(page)
@@ -430,6 +452,7 @@ test('informa sesión caducada durante una descarga y vuelve al acceso', async (
       : BASE_CONFIG,
   }))
   await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({ json: { ...ACTIVE, save: SAVE } }))
+  await mockSession(page, { ...ACTIVE, save: SAVE })
   await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.route('**/api/v1/cloud/native/save', (route) => {
     expired = true
@@ -442,8 +465,8 @@ test('informa sesión caducada durante una descarga y vuelve al acceso', async (
   await page.goto('/partida')
   await submitLogin(page)
   await page.getByRole('button', { name: 'Actualizar partida' }).click()
-  await expect(page.getByRole('heading', { name: 'Iniciar sesión en ChillyRoom' })).toBeVisible()
-  await expect(page.getByText('La sesión caducó. Inicia sesión de nuevo.')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Renovar acceso a ChillyRoom' })).toBeVisible()
+  await expect(page.getByText('La sesión de esta cuenta caducó. Solo necesitas volver a autenticarla.')).toBeVisible()
 })
 
 test('presenta el servicio no disponible sin pedir credenciales', async ({ page }) => {
@@ -465,20 +488,25 @@ test('permite elegir el perfil cuando hay más de uno', async ({ page }) => {
   let requested = ''
   await page.route('**/api/v1/cloud/native/login', async (route) => {
     requested = String(route.request().postDataJSON().profile_id)
-    await route.fulfill({
-      json: {
-        ...ACTIVE,
-        account: { label: SECOND_PROFILE.label, email: 'holder@example.test', distribution: 'android-global', distribution_label: 'Android Global (GP)', platform: 'android' },
-        save: SAVE,
-      },
-    })
+    const session = {
+      ...ACTIVE,
+      account: { label: SECOND_PROFILE.label, email: 'holder@example.test', distribution: 'android-global', distribution_label: 'Android Global (GP)', platform: 'android' },
+      save: SAVE,
+    }
+    await route.fulfill({ json: session })
+  })
+  await mockSession(page, {
+    ...ACTIVE,
+    account: { label: SECOND_PROFILE.label, email: 'holder@example.test', distribution: 'android-global', distribution_label: 'Android Global (GP)', platform: 'android' },
+    save: SAVE,
   })
   await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.goto('/partida')
   await page.getByLabel('Perfil de instalación').selectOption(SECOND_PROFILE.id)
   await submitLogin(page)
   expect(requested).toBe(SECOND_PROFILE.id)
-  await expect(page.getByLabel('Cuenta conectada')).toContainText('holder@example.test')
+  await page.getByRole('button', { name: 'Abrir menú de cuenta' }).click()
+  await expect(page.getByRole('dialog')).toContainText('holder@example.test')
 })
 
 test('oculta el correo y conserva la preferencia sin guardarlo en texto plano', async ({ page }) => {
@@ -488,31 +516,39 @@ test('oculta el correo y conserva la preferencia sin guardarlo en texto plano', 
     session: { ...ACTIVE, save: { ...SAVE, report: REPORT, downloaded_at: '2026-11-23T20:00:00Z' } },
   })
   await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
-  await page.goto('/partida')
-  const account = page.getByLabel('Cuenta conectada')
-  await expect(account.getByRole('heading', { name: email })).toBeVisible()
+  await page.goto('/')
+  const card = page.getByRole('article', { name: email })
+  await expect(card).toContainText(email)
 
-  await page.getByRole('button', { name: 'Ocultar correo' }).click()
-  await expect(account.locator('h2')).toHaveText('••••••••@••••.•••')
-  await expect(account).not.toContainText(email)
-  await expect(account.locator('h2')).not.toHaveAttribute('title', /.+/)
+  await page.getByRole('button', { name: 'Ocultar correos' }).click()
+  const hidden = page.getByRole('article', { name: '••••••••@••••.•••' })
+  await expect(hidden).toBeVisible()
+  await expect(hidden).not.toContainText(email)
+  await expect(hidden.locator('strong')).not.toHaveAttribute('title', /.+/)
   await expect(page.locator(`[title*="${email}"]`)).toHaveCount(0)
   expect(await page.evaluate(() => localStorage.getItem('sk-under.hide-email'))).toBe('true')
   expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain(email)
 
   await page.reload()
-  await expect(page.getByLabel('Cuenta conectada').locator('h2')).toHaveText('••••••••@••••.•••')
-  await expect(page.getByRole('button', { name: 'Mostrar correo' })).toBeVisible()
-  await page.getByRole('button', { name: 'Mostrar correo' }).click()
-  await expect(page.getByLabel('Cuenta conectada')).toContainText(email)
-  await page.reload()
-  await expect(page.getByLabel('Cuenta conectada')).toContainText(email)
-
-  await page.getByRole('button', { name: 'Ocultar correo' }).click()
-  await page.goto('/')
+  await expect(page.getByRole('article', { name: '••••••••@••••.•••' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Mostrar correos' })).toBeVisible()
   await expect(page.locator('body')).not.toContainText(email)
-  await expect(page.getByText('••••••••@••••.•••')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Mostrar correos' }).click()
+  await expect(page.getByRole('article', { name: email })).toContainText(email)
+  await page.reload()
+  await expect(page.getByRole('article', { name: email })).toContainText(email)
+
+  await page.getByRole('button', { name: 'Ocultar correos' }).click()
+  await page.goto('/partida')
+  await expect(page.getByRole('heading', { name: 'Partida', exact: true })).toBeVisible()
+  await expect(page.locator('body')).not.toContainText(email)
   await expect(page.locator(`[title*="${email}"]`)).toHaveCount(0)
+  await page.getByRole('button', { name: 'Abrir menú de cuenta' }).click()
+  await expect(page.getByRole('dialog')).not.toContainText(email)
+  await expect(page.getByRole('dialog')).toContainText('••••••••@••••.•••')
+  await page.keyboard.press('Escape')
+
   await page.goto('/editor')
   await expect(page.locator('body')).not.toContainText(email)
   await expect(page.locator(`[title*="${email}"]`)).toHaveCount(0)
@@ -545,9 +581,9 @@ test('explica el desafío del portal y no simula una sesión', async ({ page }) 
 
 test('informa cuando la cuenta no tiene partida en la nube', async ({ page }) => {
   await mockBase(page)
-  await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({
-    json: { ...ACTIVE, save: null, save_error: 'native_no_cloud_save' },
-  }))
+  const session = { ...ACTIVE, save: null, save_error: 'native_no_cloud_save' }
+  await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({ json: session }))
+  await mockSession(page, session)
   await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
   await page.goto('/partida')
   await submitLogin(page)
@@ -1130,8 +1166,8 @@ test('las rutas antiguas llevan a Partida y no permiten cargar un archivo local'
   await mockBase(page)
   for (const path of ['/importar', '/exportar']) {
     await page.goto(path)
-    await expect(page).toHaveURL(/\/partida$/)
-    await expect(page.getByRole('heading', { name: 'Partida', exact: true })).toBeVisible()
+    await expect(page).toHaveURL(/\/cuentas\/nueva$/)
+    await expect(page.getByRole('heading', { name: 'Añadir cuenta' })).toBeVisible()
     await expect(page.locator('input[type=file]')).toHaveCount(0)
   }
 })
@@ -1218,20 +1254,29 @@ test('permite reintentar una descarga y conserva el resultado al abrir el Editor
 })
 
 test('descarta el historial anterior si la cuenta cambia mientras carga', async ({ page }) => {
-  let firstAccount = true
+  const firstId = 'a'.repeat(32)
+  const secondId = 'b'.repeat(32)
   let firstRequested = false
   let releaseResponse = () => {}
   const pending = new Promise<void>((resolve) => { releaseResponse = resolve })
-  await mockBase(page, { ...BASE_CONFIG, session: ACTIVE })
-  await page.route('**/api/v1/cloud/native/logout', (route) => {
-    firstAccount = false
-    return route.fulfill({ status: 204 })
+  const first = { ...ACTIVE, account_id: firstId }
+  const second = {
+    ...ACTIVE, account_id: secondId,
+    account: { ...ACTIVE.account, email: 'other@example.test', label: SECOND_PROFILE.label },
+  }
+  await mockBase(page, {
+    ...BASE_CONFIG,
+    accounts: [{ ...first, id: firstId }, { ...second, id: secondId }],
+    session: first,
   })
-  await page.route('**/api/v1/cloud/native/login', (route) => route.fulfill({
-    json: { ...ACTIVE, account: { ...ACTIVE.account, email: 'other@example.test', label: SECOND_PROFILE.label } },
-  }))
+  await page.route('**/api/v1/cloud/native/session', (route) => {
+    const selected = route.request().headers()['x-sk-account']
+    return route.fulfill({ json: selected === secondId ? second : first })
+  })
   await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, async (route) => {
-    if (!firstAccount) return route.fulfill({ json: EMPTY_NATIVE_HISTORY })
+    if (route.request().headers()['x-sk-account'] === secondId) {
+      return route.fulfill({ json: EMPTY_NATIVE_HISTORY })
+    }
     firstRequested = true
     await pending
     await route.fulfill({
@@ -1239,12 +1284,11 @@ test('descarta el historial anterior si la cuenta cambia mientras carga', async 
         backups: [{ id: BACKUP.id, created_at: BACKUP.created_at, field: 'gems', status: 'verified' }] },
     }).catch(() => undefined)
   })
-  await page.goto('/partida')
+  await page.goto(`/cuentas/${firstId}/partida`)
   await expect.poll(() => firstRequested).toBe(true)
-  page.once('dialog', (dialog) => dialog.accept())
-  await page.getByRole('button', { name: 'Cerrar sesión' }).click()
-  await submitLogin(page, 'other@example.test')
-  await expect(page.getByRole('region', { name: 'Cuenta conectada' })).toContainText('other@example.test')
+  await page.goto('/')
+  await page.getByRole('link', { name: 'Abrir partida de other@example.test' }).click()
+  await expect(page).toHaveURL(new RegExp(`/cuentas/${secondId}/partida$`))
   releaseResponse()
   await expect(page.getByText('Esta cuenta todavía no tiene respaldos.')).toBeVisible()
   await expect(page.getByRole('img', { name: /Subida verificada/ })).toHaveCount(0)

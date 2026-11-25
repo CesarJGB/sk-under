@@ -127,18 +127,30 @@ async function open(page: Page, options: {
     service: 'sk-under', api_version: '2026.11.25', commit: null,
     features: ['native_backup_history', 'native_backup_history_pagination', 'native_backup_manual'],
   } }))
+  const session = {
+    ...ACTIVE, ...options.limits, save: sessionSave, account_id: 'primary',
+    account: options.email ? { ...ACTIVE.account, email: options.email } : ACTIVE.account,
+  }
   await page.route('**/api/v1/cloud/native/config', (route) => route.fulfill({ json: {
     ...CONFIG,
-    session: {
-      ...ACTIVE, ...options.limits, save: sessionSave,
-      account: options.email ? { ...ACTIVE.account, email: options.email } : ACTIVE.account,
-    },
+    session,
   } }))
+  await page.route('**/api/v1/cloud/native/session', (route) => route.fulfill({ json: session }))
   if (options.history !== false) await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: historyFixture([]) }))
   await page.route('**/api/v1/cloud/native/save', options.download ?? ((route) => route.fulfill({ json: downloaded(save) })))
   await page.setViewportSize({ width: options.width ?? 390, height: 844 })
   await page.goto(options.path ?? '/editor')
   if (!options.path && sessionSave) await expect(page.getByTestId('quick-edit')).toBeVisible()
+}
+
+async function openDrawer(page: Page) {
+  await page.getByRole('button', { name: 'Abrir menú de cuenta' }).click()
+  return page.getByRole('dialog')
+}
+
+async function goToPartida(page: Page) {
+  const drawer = await openDrawer(page)
+  await drawer.getByRole('link', { name: 'Partida', exact: true }).click()
 }
 
 async function openCategory(page: Page, name: string) {
@@ -175,13 +187,14 @@ for (const width of [320, 360, 375, 390, 430, 768, 1280]) {
       ], 28, 'cursor-de-prueba'),
     }))
     await page.getByRole('button', { name: 'Actualizar historial' }).click()
-    const account = page.getByRole('region', { name: 'Cuenta conectada' })
     const cloud = page.getByRole('region', { name: 'Partida en la nube' })
     const backups = page.getByRole('region', { name: 'Respaldos' })
-    await expect(account).toContainText('holder@example.test')
-    await expect(account).toContainText('Android Global · 8.8.0')
-    await expect(account).not.toContainText('Conectada')
-    await expect(account.getByRole('button', { name: 'Cerrar sesión' })).toBeVisible()
+    const drawer = await openDrawer(page)
+    await expect(drawer).toContainText('holder@example.test')
+    await expect(drawer).toContainText('Android · Global')
+    await expect(drawer).not.toContainText('Conectada')
+    await expect(drawer.getByRole('button', { name: 'Cerrar sesión' })).toHaveCount(0)
+    await page.keyboard.press('Escape')
     await expect(cloud.locator('.partida-stat-page').first().locator('.partida-stat')).toHaveCount(4)
     await expect(cloud.locator('.partida-stat-page').first().locator('.partida-stat-value'))
       .toHaveText(['1,001', '3', '100', '1 / 42'])
@@ -282,17 +295,22 @@ test('mantiene legibles correos y cantidades grandes en 320 px sin desbordar', a
     path: '/partida', width: 320, email,
     save: { ...SESSION_SAVE, gems: 2_147_483_647, downloaded_at: '2026-11-25T20:30:00Z' },
   })
-  const account = page.getByRole('region', { name: 'Cuenta conectada' })
   const cloud = page.getByRole('region', { name: 'Partida en la nube' })
-  await expect(account.getByRole('heading', { name: email })).toBeVisible()
   await expect(cloud.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('2,147,483,647')
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
-  expect(await account.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
   expect(await cloud.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
-  await page.getByRole('button', { name: 'Ocultar correo' }).click()
-  await expect(account.locator('h2')).toHaveText('••••••••@••••.•••')
+  let drawer = await openDrawer(page)
+  await expect(drawer).toContainText(email)
+  expect(await drawer.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
+  await page.keyboard.press('Escape')
+  await page.evaluate(() => localStorage.setItem('sk-under.hide-email', 'true'))
+  await page.reload()
+  await expect(cloud.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('2,147,483,647')
+  drawer = await openDrawer(page)
+  await expect(drawer).toContainText('••••••••@••••.•••')
+  await expect(drawer).not.toContainText(email)
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
-  expect(await account.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
+  expect(await drawer.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
 })
 
 test('Partida conserva la última descarga y muestra datos desconocidos como ausentes', async ({ page }) => {
@@ -364,7 +382,7 @@ test('actualiza el historial tras preparar, subir y volver de Editor a Partida',
   await page.getByRole('button', { name: 'Guardar', exact: true }).click()
   await expect(page.getByTestId('unified-preview')).toBeVisible()
   await expect.poll(() => requested).toContain('prepared')
-  await page.getByRole('link', { name: 'Volver a Partida' }).click()
+  await goToPartida(page)
   await page.getByRole('button', { name: 'Descartar y salir' }).click()
   const backups = page.getByRole('region', { name: 'Respaldos' })
   await expect(backups.locator('.partida-backup-warning')).toHaveCount(0)
@@ -379,7 +397,7 @@ test('actualiza el historial tras preparar, subir y volver de Editor a Partida',
   await page.getByRole('button', { name: 'Guardar en la nube' }).click()
   await expect(page.getByText(/Guardado y verificado/)).toBeVisible()
   await expect.poll(() => requested).toContain('verified')
-  await page.getByRole('link', { name: 'Volver a Partida' }).click()
+  await goToPartida(page)
   await expect(backups.locator('.partida-backup-warning')).toHaveCount(0)
   await backups.locator('summary').first().click()
   await expect(backups.locator('.partida-backup-state').first()).toHaveText('Subida verificada')
@@ -428,10 +446,11 @@ test('descarga una sola vez al abrir Inicio y comparte la partida', async ({ pag
       return route.fulfill({ json: downloaded(SESSION_SAVE) })
     },
   })
-  await expect(page.getByText('Copia descargada', { exact: true })).toBeVisible()
-  expect(downloads).toBe(1)
+  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Abrir partida de holder@example.test' })).toBeVisible()
+  expect(downloads).toBe(0)
 
-  await page.getByRole('link', { name: 'Abrir partida' }).click()
+  await page.getByRole('link', { name: 'Abrir partida de holder@example.test' }).click()
   await expect(page.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('1,001')
   expect(downloads).toBe(1)
 
@@ -641,15 +660,15 @@ test('carga el informe después de entrar desde una vista previa de inicio de se
     await pending
     await route.fulfill({ json: downloaded(SESSION_SAVE) })
   } })
-  const header = page.locator('.editor-top')
-  await expect(header).toContainText('Descargando partida…')
-  await expect(header).toContainText('holder@example.test')
-  await expect(header).toContainText('Android Global · 8.8.0')
+  await expect(page.getByTestId('editor-bar')).toContainText('Descargando partida…')
   await expect(page.getByRole('navigation', { name: 'Navegación principal' })).toHaveCount(0)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Editor')
   await expect(page.getByRole('textbox', { name: 'Gemas', exact: true })).toBeDisabled()
+  const drawer = await openDrawer(page)
+  await expect(drawer).toContainText('holder@example.test')
+  await expect(drawer).toContainText('Android · Global')
+  await page.keyboard.press('Escape')
   release()
-  await expect(header).toContainText('Partida cargada')
   await expect(page.getByRole('textbox', { name: 'Gemas', exact: true })).toHaveValue('1001')
   await expect(page.getByLabel('Activar Todos los personajes')).toBeEnabled()
   await expect(page.getByTestId('quick-edit')).toContainText('1/4 desbloqueados')
@@ -843,7 +862,7 @@ test('protege el borrador al salir por el encabezado y por el historial', async 
   await page.getByRole('link', { name: 'Abrir Editor' }).click()
   await page.getByLabel('Activar Todos los personajes').check()
   const leave = page.getByRole('dialog', { name: '¿Salir del editor?' })
-  await page.getByRole('link', { name: 'Volver a Partida' }).click()
+  await goToPartida(page)
   await expect(leave).toBeVisible()
   await leave.getByRole('button', { name: 'Seguir editando' }).click()
   await expect(leave).not.toBeVisible()
@@ -857,7 +876,7 @@ test('protege el borrador al salir por el encabezado y por el historial', async 
   await expect(leave).toBeVisible()
   await leave.getByRole('button', { name: 'Descartar y salir' }).click()
   await expect(page).toHaveURL(/\/partida$/)
-  await expect(page.getByRole('navigation', { name: 'Navegación principal' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Abrir menú de cuenta' })).toBeVisible()
   await page.getByRole('link', { name: 'Abrir Editor' }).click()
   await expect(page.getByTestId('editor-bar')).toContainText('0 cambios')
 })
@@ -967,7 +986,7 @@ test('muestra los estados de guardado y conserva el borrador si la subida queda 
   await expect(bar).toContainText('Guardando y verificando…')
   await expect(bar.getByRole('button', { name: 'Guardar en la nube' })).toBeDisabled()
   await expect(bar.getByRole('button', { name: 'Descartar' })).toBeDisabled()
-  await page.getByRole('link', { name: 'Volver a Partida' }).click()
+  await goToPartida(page)
   const leave = page.getByRole('dialog', { name: 'Operación en curso' })
   await expect(leave).toBeVisible()
   await expect(leave.getByRole('button', { name: 'Descartar y salir' })).toHaveCount(0)

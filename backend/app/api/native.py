@@ -1,9 +1,10 @@
 """API privada de autenticación nativa y editor de gemas por sesión.
 
-La cookie de sesión es ``HttpOnly``, ``SameSite=Strict`` y ``Secure`` en HTTPS.
-Las operaciones POST exigen el origen exacto, JSON sin compresión y un cuerpo
-limitado. Ninguna ruta acepta un identificador de cuenta desde el navegador:
-la sesión se resuelve siempre a partir de la cookie del titular.
+La cookie del navegador es ``HttpOnly``, ``SameSite=Strict`` y ``Secure`` en
+HTTPS. Agrupa varias cuentas autorizadas y nunca se usa directamente como
+autorización de una cuenta: cada operación envía un selector opaco en
+``X-SK-Account`` y el servidor comprueba que pertenece a esa agrupación. Los
+POST exigen el origen exacto, JSON sin compresión y un cuerpo limitado.
 """
 
 from __future__ import annotations
@@ -83,6 +84,15 @@ def _cookie(request: Request, service: NativeAuthService | None = None) -> str:
     return request.cookies.get(name, "")
 
 
+def _account_id(request: Request) -> str | None:
+    value = request.headers.get("x-sk-account", "").strip()
+    return value or None
+
+
+def _account_session(request: Request, service: NativeAuthService):
+    return service.require_account(_cookie(request, service), _account_id(request))
+
+
 class NativeRoute(APIRoute):
     def get_route_handler(self):
         handle = super().get_route_handler()
@@ -143,6 +153,7 @@ Email = Annotated[str, StringConstraints(min_length=3, max_length=254, strip_whi
 Password = Annotated[str, StringConstraints(min_length=1, max_length=1024)]
 DistributionId = Annotated[str, StringConstraints(min_length=1, max_length=64)]
 ProfileId = Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{32}$")]
+AccountId = Annotated[str, StringConstraints(pattern=r"^[0-9a-f]{32}$")]
 UniqueId = Annotated[str, StringConstraints(min_length=1, max_length=512, pattern=r"^[!-~]+$")]
 
 
@@ -274,7 +285,19 @@ def session(request: Request) -> dict[str, object]:
             "reason": "disabled" if not enabled else "unavailable",
             "message": str(problem) if problem else None,
         }
-    return service.session_state(_cookie(request, service))
+    return service.session_state(_cookie(request, service), _account_id(request))
+
+
+@router.get("/accounts", summary="Cuentas vinculadas a este navegador")
+def accounts(request: Request) -> dict[str, object]:
+    service, problem, enabled = _runtime(request)
+    if service is None:
+        return {
+            "accounts": [],
+            "available": enabled,
+            "message": str(problem) if problem else None,
+        }
+    return {"accounts": service.accounts(_cookie(request, service))}
 
 
 @router.post("/login", summary="Autenticar con ChillyRoom y crear una sesión aislada")
@@ -303,7 +326,7 @@ def login(payload: LoginInput, request: Request, response: Response) -> dict[str
     return result.body
 
 
-@router.post("/logout", status_code=204, summary="Revocar la sesión del navegador")
+@router.post("/logout", status_code=204, summary="Revocar todas las cuentas del navegador")
 def logout(request: Request, response: Response) -> None:
     service = _require_service(request)
     cookie = _cookie(request, service)
@@ -311,23 +334,30 @@ def logout(request: Request, response: Response) -> None:
     response.delete_cookie(service.cookie_name, secure=service.secure, httponly=True, samesite="strict", path="/")
 
 
+@router.post("/accounts/{account_id}/logout", status_code=204, summary="Desvincular una cuenta del navegador")
+def logout_account(account_id: AccountId, request: Request) -> None:
+    service = _require_service(request)
+    service.logout_account(_cookie(request, service), account_id)
+
+
 @router.post("/installation", summary="Completar el identificador de instalación del perfil")
 def installation(payload: InstallationInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
-    return service.complete_installation(_cookie(request, service), payload.unique_id)
+    current = _account_session(request, service)
+    return service.complete_installation(current, payload.unique_id, _account_id(request) or "")
 
 
 @router.get("/save", summary="Descargar la partida de la cuenta autenticada")
 def save(request: Request) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     return service.load(current)
 
 
 @router.post("/prepare", summary="Preparar la edición de gemas y crear un respaldo")
 def prepare(payload: PrepareInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     return service.prepare(current, payload.new_gems, payload.source_sha256)
 
 
@@ -337,7 +367,7 @@ def prepare(payload: PrepareInput, request: Request) -> dict[str, object]:
 )
 def prepare_fish_chip(payload: FishChipPrepareInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     return service.prepare_fish_chip(current, payload.new_fish_chip, payload.source_sha256)
 
 
@@ -349,7 +379,7 @@ def prepare_fish_progress(
     payload: FishProgressPrepareInput, request: Request
 ) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     return service.prepare_fish_progress(
         current, payload.new_cumulative_fish_count, payload.source_sha256
     )
@@ -361,7 +391,7 @@ def prepare_fish_progress(
 )
 def prepare_unified(payload: UnifiedPrepareInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     advanced = None
     if payload.advanced is not None:
         advanced = {
@@ -395,7 +425,7 @@ def prepare_unified(payload: UnifiedPrepareInput, request: Request) -> dict[str,
 )
 def prepare_advanced(payload: AdvancedPrepareInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     plan = {
         "materials": [item.model_dump() for item in payload.materials],
         "seeds": [item.model_dump() for item in payload.seeds],
@@ -414,7 +444,7 @@ def prepare_advanced(payload: AdvancedPrepareInput, request: Request) -> dict[st
 )
 def prepare_characters(payload: CharacterPrepareInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     return service.prepare_characters(current, payload.codes, payload.source_sha256)
 
 
@@ -424,7 +454,7 @@ def prepare_characters(payload: CharacterPrepareInput, request: Request) -> dict
 )
 def prepare_skills(payload: SkillPrepareInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     return service.prepare_skills(
         current, [skill.model_dump() for skill in payload.skills], payload.source_sha256
     )
@@ -436,7 +466,7 @@ def prepare_skills(payload: SkillPrepareInput, request: Request) -> dict[str, ob
 )
 def prepare_skins(payload: SkinPrepareInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     return service.prepare_skins(
         current, [skin.model_dump() for skin in payload.skins], payload.source_sha256
     )
@@ -445,14 +475,14 @@ def prepare_skins(payload: SkinPrepareInput, request: Request) -> dict[str, obje
 @router.post("/confirm", summary="Subir el candidato y verificar la persistencia")
 def confirm(payload: CloudLabConfirmInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     return service.confirm(current, payload.backup_id, payload.expected_sha256)
 
 
 @router.post("/restore", summary="Restaurar el original de un respaldo confirmado")
 def restore(payload: CloudLabRestoreInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     return service.restore(current, payload.backup_id)
 
 
@@ -462,21 +492,21 @@ def restore(payload: CloudLabRestoreInput, request: Request) -> dict[str, object
 )
 def restore_history(payload: HistoricalRestoreInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     return service.restore_history(current, payload.backup_id, payload.expected_sha256)
 
 
 @router.post("/verify", summary="Verificar la nube frente a un respaldo")
 def verify(payload: CloudLabVerifyInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     return service.verify(current, payload.backup_id)
 
 
 @router.post("/backups", summary="Crear un respaldo manual verificado")
 def create_backup(payload: ManualBackupInput, request: Request) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     return service.create_backup(current)
 
 
@@ -487,7 +517,7 @@ def backups(
     cursor: Annotated[str | None, Query(max_length=200)] = None,
 ) -> dict[str, object]:
     service = _require_service(request)
-    current = service.require_session(_cookie(request, service))
+    current = _account_session(request, service)
     return service.backups(current, limit=limit, cursor=cursor)
 
 
@@ -511,5 +541,5 @@ def diagnostics(request: Request) -> dict[str, object]:
         and compare_digest(candidate, token.get_secret_value())
     )
     if not authorized:
-        service.require_session(_cookie(request, service))
+        _account_session(request, service)
     return service.diagnostics()

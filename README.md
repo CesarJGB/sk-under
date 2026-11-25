@@ -56,6 +56,8 @@ La [Fase 6.19](docs/research/phase6-19/README.md) consolida las skins: el propie
 
 La [Fase 7.0](docs/research/phase7-0/README.md) construye el [Save Knowledge Engine](knowledge/README.md): 616 campos técnicos (66 históricos conservados y 550 declarados desde metadata), 24 catálogos normalizados con 4.286 elementos, 8.526 nombres en inglés/español/chino, 32 dependencias documentadas, 16 fuentes con procedencia y comparación determinista de 8.6.0, 8.7.0 y 8.8.0. Incluye herramientas CLI para generar catálogos, buscar, comparar versiones, validar evidencia y generar informes, además de una fixture sintética para pruebas. La [Fase 7.1](docs/research/phase7-1/README.md) añade editores avanzados de materiales, semillas, monedas de temporada, beneficios permanentes y pase de batalla, integrados con el flujo de respaldo y confirmación existente. No modifica autenticación, facturación ni compras. El [informe de oportunidades](docs/research/phase7-0/oportunidades.md) prioriza inventario, mascotas, niveles de personaje y armas para futuras validaciones controladas.
 
+El [dashboard multicuenta](docs/research/multi-account/README.md) convierte la portada en una lista de cuentas vinculadas y añade rutas contextuales por cuenta. La cookie del navegador agrupa sesiones independientes mediante un selector opaco verificado en el servidor; añadir una cuenta no cierra las demás, cada una conserva su caducidad y borradores, y desvincular una no elimina perfiles ni respaldos. Las rutas antiguas se redirigen cuando hay una sola cuenta y la preferencia de ocultar correos sigue siendo puramente visual.
+
 ## Arquitectura
 
 ```text

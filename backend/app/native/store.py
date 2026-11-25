@@ -27,6 +27,7 @@ from Crypto.Cipher import AES
 
 from .distributions import get_distribution
 from .errors import (
+    NativeAccountDenied,
     NativeInstallationInvalid,
     NativeLoginThrottled,
     NativeProfileExists,
@@ -42,6 +43,7 @@ from .errors import (
 
 _COOKIE = re.compile(r"^[A-Za-z0-9_-]{43}$")
 _PROFILE = re.compile(r"^[0-9a-f]{32}$")
+_ACCOUNT = re.compile(r"^[0-9a-f]{32}$")
 _DISTRO = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
 _SUBJECT = re.compile(r"^[0-9a-f]{64}$")
 _EMAIL_HASH = re.compile(r"^[0-9a-f]{64}$")
@@ -128,6 +130,19 @@ class NativeSessionRecord:
     idle_expires_at: int
     created_at: int
     email: str | None = field(default=None, repr=False)
+
+
+@dataclass(frozen=True)
+class BrowserAccountRecord:
+    id: str
+    browser_id: str = field(repr=False)
+    session_id: str = field(repr=False)
+    profile: Profile
+    email: str | None = field(default=None, repr=False)
+    created_at: int = 0
+    session_expires_at: int | None = None
+    idle_expires_at: int | None = None
+    active: bool = False
 
 
 @dataclass(frozen=True)
@@ -237,6 +252,25 @@ class NativeStore:
                         created_at INTEGER NOT NULL,
                         last_seen INTEGER NOT NULL
                     );
+                    CREATE TABLE IF NOT EXISTS browser_sessions (
+                        id TEXT PRIMARY KEY,
+                        created_at INTEGER NOT NULL,
+                        last_seen INTEGER NOT NULL,
+                        expires_at INTEGER NOT NULL
+                    );
+                    CREATE TABLE IF NOT EXISTS browser_accounts (
+                        id TEXT PRIMARY KEY,
+                        browser_id TEXT NOT NULL REFERENCES browser_sessions(id) ON DELETE CASCADE,
+                        session_id TEXT NOT NULL,
+                        profile_id TEXT NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+                        sealed_identity BLOB NOT NULL,
+                        created_at INTEGER NOT NULL,
+                        UNIQUE (browser_id, profile_id)
+                    );
+                    CREATE INDEX IF NOT EXISTS browser_accounts_by_browser
+                        ON browser_accounts(browser_id, created_at);
+                    CREATE INDEX IF NOT EXISTS browser_accounts_by_session
+                        ON browser_accounts(session_id);
                     """
                 )
                 self._migrate_profiles(db)
@@ -608,6 +642,224 @@ class NativeStore:
 
     # Sesiones ---------------------------------------------------------------
 
+    def _browser_id(self, cookie: str) -> str:
+        if not isinstance(cookie, str) or not _COOKIE.fullmatch(cookie):
+            raise NativeSessionRequired("Inicia sesión para continuar.")
+        return sha256(cookie.encode("ascii")).hexdigest()
+
+    def create_browser(self, cookie: str, *, expires_at: int | None = None) -> tuple[str, int]:
+        """Crea (o renueva) la sesión de navegador que agrupa varias cuentas."""
+
+        browser_id = self._browser_id(cookie)
+        now = int(self.now())
+        expiry = expires_at if expires_at is not None else now + self.absolute_seconds
+        if type(expiry) is not int or expiry <= now:
+            raise NativeSessionExpired("La sesión del navegador ya está caducada.")
+        with closing(self.connect()) as db, db:
+            db.execute(
+                "INSERT INTO browser_sessions (id, created_at, last_seen, expires_at) "
+                "VALUES (?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET "
+                "last_seen = excluded.last_seen, expires_at = MAX(expires_at, excluded.expires_at)",
+                (browser_id, now, now, expiry),
+            )
+            row = db.execute(
+                "SELECT expires_at FROM browser_sessions WHERE id = ?", (browser_id,)
+            ).fetchone()
+        return browser_id, int(row["expires_at"])
+
+    def browser(self, cookie: str, *, touch: bool = True) -> tuple[str, int]:
+        """Resuelve la cookie de navegador y migra una sesión anterior.
+
+        Las versiones previas usaban la cookie también como sesión de una sola
+        cuenta. La migración conserva esa cookie, crea la agrupación y asocia la
+        sesión existente, sin invalidarla ni pedir credenciales de nuevo.
+        """
+
+        browser_id = self._browser_id(cookie)
+        now = int(self.now())
+        with closing(self.connect()) as db, db:
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute(
+                "SELECT expires_at FROM browser_sessions WHERE id = ?", (browser_id,)
+            ).fetchone()
+            if row is not None:
+                if row["expires_at"] <= now:
+                    raise NativeSessionExpired("La sesión del navegador caducó. Inicia sesión de nuevo.")
+                if touch:
+                    db.execute(
+                        "UPDATE browser_sessions SET last_seen = ? WHERE id = ?", (now, browser_id)
+                    )
+                return browser_id, int(row["expires_at"])
+            legacy = db.execute("SELECT * FROM sessions WHERE id = ?", (browser_id,)).fetchone()
+            if legacy is None:
+                raise NativeSessionRequired("Inicia sesión para continuar.")
+            expires_at = now + self.absolute_seconds
+            db.execute(
+                "INSERT INTO browser_sessions (id, created_at, last_seen, expires_at) VALUES (?, ?, ?, ?)",
+                (browser_id, now, now, expires_at),
+            )
+            opened = self._open("session:" + browser_id, legacy["token"])
+            email = opened.get("email") if isinstance(opened.get("email"), str) else None
+            account_id = uuid4().hex
+            sealed = self._seal("browser-account:" + account_id, {"email": email})
+            db.execute(
+                "INSERT OR IGNORE INTO browser_accounts "
+                "(id, browser_id, session_id, profile_id, sealed_identity, created_at) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
+                (account_id, browser_id, browser_id, legacy["profile_id"], sealed, now),
+            )
+        return browser_id, expires_at
+
+    def link_account(
+        self,
+        browser_id: str,
+        *,
+        profile_id: str,
+        session_cookie: str,
+        email: str | None,
+    ) -> str:
+        """Asocia una sesión autorizada de cuenta al navegador actual.
+
+        La cuenta se deduplica por navegador y perfil (identidad y
+        distribución). Al volver a autenticarla se conserva el mismo selector y
+        solo se sustituye su sesión interna, revocando la anterior de este
+        navegador. Otras cuentas y otros navegadores no se tocan.
+        """
+
+        if not _PROFILE.fullmatch(profile_id):
+            raise NativeProfileNotFound("El perfil de instalación no existe.")
+        session_id = sha256(session_cookie.encode("ascii")).hexdigest()
+        now = int(self.now())
+        with closing(self.connect()) as db, db:
+            db.execute("BEGIN IMMEDIATE")
+            profile = db.execute("SELECT id FROM profiles WHERE id = ?", (profile_id,)).fetchone()
+            if profile is None:
+                raise NativeProfileNotFound("El perfil de instalación no existe.")
+            existing = db.execute(
+                "SELECT * FROM browser_accounts WHERE browser_id = ? AND profile_id = ?",
+                (browser_id, profile_id),
+            ).fetchone()
+            account_id = existing["id"] if existing is not None else uuid4().hex
+            sealed = self._seal("browser-account:" + account_id, {"email": email})
+            if existing is None:
+                db.execute(
+                    "INSERT INTO browser_accounts "
+                    "(id, browser_id, session_id, profile_id, sealed_identity, created_at) "
+                    "VALUES (?, ?, ?, ?, ?, ?)",
+                    (account_id, browser_id, session_id, profile_id, sealed, now),
+                )
+            else:
+                db.execute(
+                    "DELETE FROM sessions WHERE id = ? AND id != ?",
+                    (existing["session_id"], session_id),
+                )
+                db.execute(
+                    "UPDATE browser_accounts SET session_id = ?, sealed_identity = ? WHERE id = ?",
+                    (session_id, sealed, account_id),
+                )
+        return account_id
+
+    def list_browser_accounts(self, browser_id: str) -> list[BrowserAccountRecord]:
+        now = int(self.now())
+        with closing(self.connect()) as db:
+            rows = db.execute(
+                "SELECT p.*, ba.id AS account_id, ba.session_id AS account_session_id, "
+                "ba.sealed_identity AS account_identity, ba.created_at AS account_created_at, "
+                "s.id AS current_session, s.session_expires AS current_expires, "
+                "s.last_seen AS current_seen, s.revoked AS current_revoked "
+                "FROM browser_accounts ba JOIN profiles p ON p.id = ba.profile_id "
+                "LEFT JOIN sessions s ON s.id = ba.session_id "
+                "WHERE ba.browser_id = ? ORDER BY ba.created_at",
+                (browser_id,),
+            ).fetchall()
+        accounts: list[BrowserAccountRecord] = []
+        for row in rows:
+            opened = self._open("browser-account:" + row["account_id"], row["account_identity"])
+            email = opened.get("email") if isinstance(opened.get("email"), str) else None
+            expires_at = row["current_expires"]
+            idle_expires = (
+                int(row["current_seen"]) + self.idle_seconds if row["current_seen"] is not None else None
+            )
+            active = bool(
+                row["current_session"] is not None
+                and not row["current_revoked"]
+                and expires_at is not None
+                and expires_at > now
+                and idle_expires is not None
+                and idle_expires > now
+            )
+            accounts.append(
+                BrowserAccountRecord(
+                    id=row["account_id"],
+                    browser_id=browser_id,
+                    session_id=row["account_session_id"],
+                    profile=self._profile(row),
+                    email=email,
+                    created_at=int(row["account_created_at"]),
+                    session_expires_at=int(expires_at) if expires_at is not None else None,
+                    idle_expires_at=idle_expires,
+                    active=active,
+                )
+            )
+        return accounts
+
+    def browser_account(self, browser_id: str, account_id: str) -> BrowserAccountRecord:
+        if not isinstance(account_id, str) or not _ACCOUNT.fullmatch(account_id):
+            raise NativeAccountDenied("La cuenta seleccionada no pertenece a este navegador.")
+        matches = [item for item in self.list_browser_accounts(browser_id) if item.id == account_id]
+        if not matches:
+            raise NativeAccountDenied("La cuenta seleccionada no pertenece a este navegador.")
+        return matches[0]
+
+    def account_session(
+        self, browser_id: str, account_id: str, *, touch: bool = True
+    ) -> NativeSessionRecord:
+        account = self.browser_account(browser_id, account_id)
+        return self.session_by_id(account.session_id, touch=touch)
+
+    def revoke_session(self, session_id: str) -> None:
+        if not isinstance(session_id, str) or not _SUBJECT.fullmatch(session_id):
+            return
+        with closing(self.connect()) as db, db:
+            db.execute("DELETE FROM sessions WHERE id = ?", (session_id,))
+
+    def unlink_account(self, browser_id: str, account_id: str) -> bool:
+        """Quita una cuenta del navegador sin borrar perfil ni respaldos."""
+
+        if not isinstance(account_id, str) or not _ACCOUNT.fullmatch(account_id):
+            raise NativeAccountDenied("La cuenta seleccionada no pertenece a este navegador.")
+        with closing(self.connect()) as db, db:
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute(
+                "SELECT session_id FROM browser_accounts WHERE id = ? AND browser_id = ?",
+                (account_id, browser_id),
+            ).fetchone()
+            if row is None:
+                raise NativeAccountDenied("La cuenta seleccionada no pertenece a este navegador.")
+            db.execute("DELETE FROM sessions WHERE id = ?", (row["session_id"],))
+            db.execute(
+                "DELETE FROM browser_accounts WHERE id = ? AND browser_id = ?",
+                (account_id, browser_id),
+            )
+        return True
+
+    def logout_browser(self, cookie: str) -> None:
+        if not isinstance(cookie, str) or not _COOKIE.fullmatch(cookie):
+            return
+        browser_id = sha256(cookie.encode("ascii")).hexdigest()
+        with closing(self.connect()) as db, db:
+            db.execute("BEGIN IMMEDIATE")
+            ids = [
+                row["session_id"]
+                for row in db.execute(
+                    "SELECT session_id FROM browser_accounts WHERE browser_id = ?", (browser_id,)
+                ).fetchall()
+            ]
+            for session_id in ids:
+                db.execute("DELETE FROM sessions WHERE id = ?", (session_id,))
+            db.execute("DELETE FROM browser_accounts WHERE browser_id = ?", (browser_id,))
+            db.execute("DELETE FROM browser_sessions WHERE id = ?", (browser_id,))
+
     def create_session(
         self,
         cookie: str,
@@ -661,7 +913,13 @@ class NativeStore:
     def session(self, cookie: str) -> NativeSessionRecord:
         if not isinstance(cookie, str) or not _COOKIE.fullmatch(cookie):
             raise NativeSessionRequired("Inicia sesión para continuar.")
-        session_id = sha256(cookie.encode("ascii")).hexdigest()
+        return self.session_by_id(sha256(cookie.encode("ascii")).hexdigest(), cookie=cookie)
+
+    def session_by_id(
+        self, session_id: str, *, touch: bool = True, cookie: str = ""
+    ) -> NativeSessionRecord:
+        if not isinstance(session_id, str) or not _SUBJECT.fullmatch(session_id):
+            raise NativeSessionRequired("Inicia sesión para continuar.")
         now = int(self.now())
         with closing(self.connect()) as db, db:
             row = db.execute("SELECT * FROM sessions WHERE id = ?", (session_id,)).fetchone()
@@ -672,13 +930,14 @@ class NativeStore:
             idle_expires = row["last_seen"] + self.idle_seconds
             if idle_expires <= now:
                 raise NativeSessionExpired("La sesión caducó por inactividad. Vuelve a iniciar sesión.")
-            db.execute("UPDATE sessions SET last_seen = ? WHERE id = ?", (now, session_id))
+            if touch:
+                db.execute("UPDATE sessions SET last_seen = ? WHERE id = ?", (now, session_id))
+                idle_expires = now + self.idle_seconds
             profile_id = row["profile_id"]
             subject = row["subject"]
             sealed = row["token"]
             expires_at = row["session_expires"]
             created_at = row["created_at"]
-            idle_expires = now + self.idle_seconds
         profile = self.profile(profile_id)
         if profile.subject is None or not compare_digest(profile.subject, subject):
             raise NativeSessionExpired("La sesión ya no corresponde al perfil. Vuelve a iniciar sesión.")
@@ -822,6 +1081,7 @@ class NativeStore:
 
         now = int(self.now())
         with closing(self.connect()) as db, db:
+            db.execute("DELETE FROM browser_sessions WHERE expires_at <= ?", (now,))
             db.execute(
                 "DELETE FROM sessions WHERE session_expires <= ? OR revoked = 1",
                 (now - 86400,),

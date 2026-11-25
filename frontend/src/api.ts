@@ -704,12 +704,13 @@ async function request(
   token = '',
   admin = '',
   credentials: RequestCredentials = 'omit',
+  extraHeaders?: Record<string, string>,
 ) {
   if (!baseUrl) throw new ApiProblem('Falta configurar la URL de la API.')
   if (window.location.protocol === 'https:' && !baseUrl.toLowerCase().startsWith('https://')) {
     throw new ApiProblem('Configura una URL HTTPS para la API.')
   }
-  const headers = new Headers()
+  const headers = new Headers(extraHeaders)
   if (payload) headers.set('Content-Type', 'application/json')
   if (token) headers.set('Authorization', `Bearer ${token}`)
   if (admin) headers.set('X-SK-Cloud-Admin', admin)
@@ -956,6 +957,8 @@ export type NativeSession = {
   active: boolean
   reason?: 'none' | 'expired' | 'disabled' | 'unavailable'
   message?: string | null
+  account_id?: string
+  expired?: boolean
   identity_verified?: boolean
   account?: {
     label: string
@@ -983,6 +986,8 @@ export type NativeSession = {
   save_error?: string | null
 }
 
+export type NativeAccount = NativeSession & { id: string }
+
 export type NativeConfig = {
   available: boolean
   enabled: boolean
@@ -1004,6 +1009,7 @@ export type NativeConfig = {
   requires_profile_selection?: boolean
   profiles: NativeProfile[]
   distributions: NativeDistribution[]
+  accounts?: NativeAccount[]
   session: NativeSession
   problem_code?: string | null
   message?: string | null
@@ -1024,13 +1030,23 @@ function requireSecureLogin() {
   }
 }
 
-async function nativeRequest<T>(path: string, signal: AbortSignal, payload?: object): Promise<T> {
-  return (await request(`/cloud/native${path}`, signal, payload, '', '', 'include')).json()
+async function nativeRequest<T>(
+  path: string, signal: AbortSignal, payload?: object, accountId?: string,
+): Promise<T> {
+  return (await request(
+    `/cloud/native${path}`, signal, payload, '', '', 'include',
+    accountId ? { 'X-SK-Account': accountId } : undefined,
+  )).json()
 }
 
 export const nativeAuth = {
   config: (signal: AbortSignal) => nativeRequest<NativeConfig>('/config', signal),
-  session: (signal: AbortSignal) => nativeRequest<NativeSession>('/session', signal),
+  accounts: async (signal: AbortSignal) => {
+    const response = await nativeRequest<{ accounts: NativeAccount[] }>('/accounts', signal)
+    return response.accounts
+  },
+  session: (signal: AbortSignal, accountId?: string) =>
+    nativeRequest<NativeSession>('/session', signal, undefined, accountId),
   login(input: NativeLoginInput, signal: AbortSignal) {
     requireSecureLogin()
     return nativeRequest<NativeSession>('/login', signal, input)
@@ -1038,44 +1054,49 @@ export const nativeAuth = {
   async logout(signal: AbortSignal): Promise<void> {
     await request('/cloud/native/logout', signal, {}, '', '', 'include')
   },
-  save: (signal: AbortSignal) => nativeRequest<NativeSaveSummary & { downloaded_at: string }>('/save', signal),
-  installation: (unique_id: string, signal: AbortSignal) =>
-    nativeRequest<NativeSession>('/installation', signal, { unique_id }),
-  prepare: (new_gems: number, source_sha256: string, signal: AbortSignal) =>
-    nativeRequest<LabPrepared>('/prepare', signal, { new_gems, source_sha256 }),
-  prepareFishChip: (new_fish_chip: number, source_sha256: string, signal: AbortSignal) =>
-    nativeRequest<LabFishChipPrepared>('/prepare-fish-chip', signal, { new_fish_chip, source_sha256 }),
-  prepareFishProgress: (new_cumulative_fish_count: number, source_sha256: string, signal: AbortSignal) =>
-    nativeRequest<LabFishProgressPrepared>('/prepare-fish-progress', signal, {
-      new_cumulative_fish_count,
-      source_sha256,
-    }),
-  prepareAdvanced: (plan: LabAdvancedPlan, source_sha256: string, signal: AbortSignal) =>
-    nativeRequest<LabAdvancedPrepared>('/prepare-advanced', signal, { ...plan, source_sha256 }),
-  prepareCharacters: (codes: string[], source_sha256: string, signal: AbortSignal) =>
-    nativeRequest<LabCharacterPrepared>('/prepare-characters', signal, { codes, source_sha256 }),
-  prepareSkills: (skills: LabSkillRef[], source_sha256: string, signal: AbortSignal) =>
-    nativeRequest<LabSkillPrepared>('/prepare-skills', signal, { skills, source_sha256 }),
-  prepareSkins: (skins: LabSkinRef[], source_sha256: string, signal: AbortSignal) =>
-    nativeRequest<LabSkinPrepared>('/prepare-skins', signal, { skins, source_sha256 }),
-  prepareUnified: (plan: LabUnifiedPlan, source_sha256: string, signal: AbortSignal) =>
-    nativeRequest<LabUnifiedPrepared>('/prepare-unified', signal, { ...plan, source_sha256 }),
-  confirm: (backup_id: string, expected_sha256: string, signal: AbortSignal) =>
-    nativeRequest<LabWriteResult>('/confirm', signal, { backup_id, expected_sha256, confirmation: 'SUBIR' }),
-  restore: (backup_id: string, signal: AbortSignal) =>
-    nativeRequest<LabWriteResult>('/restore', signal, { backup_id, confirmation: 'RESTAURAR' }),
-  restoreHistory: (backup_id: string, expected_sha256: string | null, signal: AbortSignal) =>
+  async logoutAccount(accountId: string, signal: AbortSignal): Promise<void> {
+    await request(`/cloud/native/accounts/${encodeURIComponent(accountId)}/logout`, signal, {}, '', '', 'include')
+  },
+  save: (signal: AbortSignal, accountId?: string) =>
+    nativeRequest<NativeSaveSummary & { downloaded_at: string }>('/save', signal, undefined, accountId),
+  installation: (unique_id: string, signal: AbortSignal, accountId?: string) =>
+    nativeRequest<NativeSession>('/installation', signal, { unique_id }, accountId),
+  prepare: (new_gems: number, source_sha256: string, signal: AbortSignal, accountId?: string) =>
+    nativeRequest<LabPrepared>('/prepare', signal, { new_gems, source_sha256 }, accountId),
+  prepareFishChip: (new_fish_chip: number, source_sha256: string, signal: AbortSignal, accountId?: string) =>
+    nativeRequest<LabFishChipPrepared>('/prepare-fish-chip', signal, { new_fish_chip, source_sha256 }, accountId),
+  prepareFishProgress: (
+    new_cumulative_fish_count: number, source_sha256: string, signal: AbortSignal, accountId?: string,
+  ) => nativeRequest<LabFishProgressPrepared>('/prepare-fish-progress', signal, {
+    new_cumulative_fish_count,
+    source_sha256,
+  }, accountId),
+  prepareAdvanced: (plan: LabAdvancedPlan, source_sha256: string, signal: AbortSignal, accountId?: string) =>
+    nativeRequest<LabAdvancedPrepared>('/prepare-advanced', signal, { ...plan, source_sha256 }, accountId),
+  prepareCharacters: (codes: string[], source_sha256: string, signal: AbortSignal, accountId?: string) =>
+    nativeRequest<LabCharacterPrepared>('/prepare-characters', signal, { codes, source_sha256 }, accountId),
+  prepareSkills: (skills: LabSkillRef[], source_sha256: string, signal: AbortSignal, accountId?: string) =>
+    nativeRequest<LabSkillPrepared>('/prepare-skills', signal, { skills, source_sha256 }, accountId),
+  prepareSkins: (skins: LabSkinRef[], source_sha256: string, signal: AbortSignal, accountId?: string) =>
+    nativeRequest<LabSkinPrepared>('/prepare-skins', signal, { skins, source_sha256 }, accountId),
+  prepareUnified: (plan: LabUnifiedPlan, source_sha256: string, signal: AbortSignal, accountId?: string) =>
+    nativeRequest<LabUnifiedPrepared>('/prepare-unified', signal, { ...plan, source_sha256 }, accountId),
+  confirm: (backup_id: string, expected_sha256: string, signal: AbortSignal, accountId?: string) =>
+    nativeRequest<LabWriteResult>('/confirm', signal, { backup_id, expected_sha256, confirmation: 'SUBIR' }, accountId),
+  restore: (backup_id: string, signal: AbortSignal, accountId?: string) =>
+    nativeRequest<LabWriteResult>('/restore', signal, { backup_id, confirmation: 'RESTAURAR' }, accountId),
+  restoreHistory: (backup_id: string, expected_sha256: string | null, signal: AbortSignal, accountId?: string) =>
     nativeRequest<LabWriteResult>('/restore-history', signal, {
       backup_id, confirmation: 'RESTAURAR', ...(expected_sha256 ? { expected_sha256 } : {}),
-    }),
-  verify: (backup_id: string, signal: AbortSignal) =>
-    nativeRequest<LabVerification>('/verify', signal, { backup_id }),
-  createBackup: (signal: AbortSignal) =>
-    nativeRequest<{ message: string }>('/backups', signal, { confirmation: 'RESPALDAR' }),
-  backups: async (signal: AbortSignal, cursor?: string | null) => {
+    }, accountId),
+  verify: (backup_id: string, signal: AbortSignal, accountId?: string) =>
+    nativeRequest<LabVerification>('/verify', signal, { backup_id }, accountId),
+  createBackup: (signal: AbortSignal, accountId?: string) =>
+    nativeRequest<{ message: string }>('/backups', signal, { confirmation: 'RESPALDAR' }, accountId),
+  backups: async (signal: AbortSignal, cursor?: string | null, accountId?: string) => {
     const query = new URLSearchParams({ limit: '25' })
     if (cursor) query.set('cursor', cursor)
-    const history = await nativeRequest<NativeBackupHistory>(`/backups?${query}`, signal)
+    const history = await nativeRequest<NativeBackupHistory>(`/backups?${query}`, signal, undefined, accountId)
     if (!Number.isInteger(history.total) || !Array.isArray(history.backups)) {
       throw new ApiProblem(
         'El servidor respondió con un formato de historial incompatible. Actualiza la página y vuelve a intentarlo.',
@@ -1088,7 +1109,8 @@ export const nativeAuth = {
     const response = await request('/version', signal)
     return response.json()
   },
-  diagnostics: (signal: AbortSignal) => nativeRequest<Record<string, unknown>>('/diagnostics', signal),
+  diagnostics: (signal: AbortSignal, accountId?: string) =>
+    nativeRequest<Record<string, unknown>>('/diagnostics', signal, undefined, accountId),
 }
 
 export async function encodeFile(file: File): Promise<string> {

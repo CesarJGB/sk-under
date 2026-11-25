@@ -1,10 +1,10 @@
 """Servicio de autenticación nativa, sesiones y editor de gemas por cuenta.
 
-Cada sesión web queda ligada a una sola identidad de ChillyRoom: el perfil de
-instalación se vincula a la identidad en el primer acceso y los respaldos viven
-en un directorio derivado de esa identidad. No hay una sesión global ni un
-``account_id`` elegible desde el navegador; todas las operaciones usan
-exclusivamente la cookie del titular.
+Una cookie de navegador HttpOnly agrupa varias sesiones de ChillyRoom. El
+navegador solo envía un selector opaco de cuenta; el servidor comprueba que ese
+selector pertenece a la agrupación autenticada antes de usar la sesión interna
+correspondiente. Los perfiles, tokens cifrados y respaldos siguen viviendo en el
+almacén privado, sin exponer identificadores ni credenciales al cliente.
 """
 
 from __future__ import annotations
@@ -113,6 +113,7 @@ class LoginResult:
     expires_at: int
     idle_expires_at: int
     body: dict[str, object]
+    account_id: str = ""
 
 
 @dataclass(frozen=True)
@@ -187,8 +188,11 @@ class NativeAuthService:
     # Configuración y estado -------------------------------------------------
 
     def config(self, cookie: str = "") -> dict[str, object]:
+        # ``profiles`` sigue existiendo solo para el modo manual de selección de
+        # instalación. La lista de cuentas del navegador se construye aparte y
+        # nunca a partir de todos los perfiles del servidor.
         profiles = []
-        if self.store is not None:
+        if not self.auto_identity and self.store is not None:
             profiles = [
                 profile.public()
                 for profile in self.store.list_profiles()
@@ -215,14 +219,15 @@ class NativeAuthService:
             "requires_profile_selection": (not self.auto_identity and len(profiles) > 1),
             "profiles": profiles,
             "distributions": [distribution.public() for distribution in DISTRIBUTIONS],
+            "accounts": self.accounts(cookie),
             "session": self.session_state(cookie),
         }
 
-    def session_state(self, cookie: str = "") -> dict[str, object]:
+    def session_state(self, cookie: str = "", account_id: str | None = None) -> dict[str, object]:
         if not cookie:
             return {"active": False, "reason": "none"}
         try:
-            session = self.store.session(cookie)
+            browser_id, _ = self.store.browser(cookie, touch=False)
         except NativeSessionExpired:
             return {
                 "active": False,
@@ -231,10 +236,104 @@ class NativeAuthService:
             }
         except NativeSessionRequired:
             return {"active": False, "reason": "none"}
-        return self._view(session)
+        records = self.store.list_browser_accounts(browser_id)
+        if not records:
+            return {"active": False, "reason": "none"}
+        if account_id:
+            record = self.store.browser_account(browser_id, account_id)
+        else:
+            record = next((item for item in records if item.active), records[0])
+        if not record.active:
+            body: dict[str, object] = {
+                "active": False,
+                "reason": "expired",
+                "message": "La sesión caducó. Inicia sesión de nuevo.",
+            }
+            if account_id:
+                body.update(
+                    {
+                        "account_id": record.id,
+                        "expired": True,
+                        "account": self._account_metadata(record),
+                        "installation_ready": record.profile.installation_ready,
+                    }
+                )
+            return body
+        session = self.store.account_session(browser_id, record.id)
+        view = self._view(session)
+        view["account_id"] = record.id
+        view["expired"] = False
+        return view
+
+    @staticmethod
+    def _account_metadata(record) -> dict[str, object]:
+        profile = record.profile
+        distribution = get_distribution(profile.distribution)
+        return {
+            "label": profile.label,
+            "email": record.email,
+            "distribution": distribution.id,
+            "distribution_label": distribution.label,
+            "platform": distribution.platform,
+        }
+
+    def accounts(self, cookie: str = "") -> list[dict[str, object]]:
+        """Cuentas asociadas exclusivamente al navegador de esta cookie."""
+
+        if not cookie:
+            return []
+        try:
+            browser_id, _ = self.store.browser(cookie, touch=False)
+        except (NativeSessionExpired, NativeSessionRequired):
+            return []
+        result: list[dict[str, object]] = []
+        for record in self.store.list_browser_accounts(browser_id):
+            base: dict[str, object] = {
+                "id": record.id,
+                "account_id": record.id,
+                "account": self._account_metadata(record),
+                "installation_ready": record.profile.installation_ready,
+                "auto_identity": record.profile.auto_generated,
+                "save_error": record.profile.last_save_error,
+                "active": record.active,
+                "expired": not record.active,
+            }
+            if record.active:
+                try:
+                    session = self.store.account_session(browser_id, record.id, touch=False)
+                except NativeSessionExpired:
+                    base["active"] = False
+                    base["expired"] = True
+                    result.append(base)
+                    continue
+                view = self._view(session)
+                view.update(
+                    {
+                        "id": record.id,
+                        "account_id": record.id,
+                        "active": True,
+                        "expired": False,
+                    }
+                )
+                result.append(view)
+            else:
+                result.append(base)
+        return result
 
     def require_session(self, cookie: str) -> NativeSessionRecord:
-        return self.store.session(cookie)
+        return self.require_account(cookie, None)
+
+    def require_account(self, cookie: str, account_id: str | None = None) -> NativeSessionRecord:
+        browser_id, _ = self.store.browser(cookie)
+        if account_id:
+            return self.store.account_session(browser_id, account_id)
+        records = self.store.list_browser_accounts(browser_id)
+        if not records:
+            raise NativeSessionRequired("Inicia sesión para continuar.")
+        for record in records:
+            if record.active:
+                return self.store.account_session(browser_id, record.id)
+        raise NativeSessionExpired("La sesión caducó. Vuelve a iniciar sesión.")
 
     def _view(self, session: NativeSessionRecord) -> dict[str, object]:
         return self._view_values(
@@ -350,16 +449,25 @@ class NativeAuthService:
                 # Un fallo del diario no debe ocultar el resultado del login.
                 pass
 
-        if existing_cookie:
-            self.store.revoke(existing_cookie)
-
         if profile is None:
             raise NativeProfileNotFound("No se pudo resolver el perfil de instalación.")
         profile = self.store.profile(profile.id)
 
-        cookie = token_urlsafe(32)
+        # La cookie del navegador agrupa cuentas. Si ya existe, se conserva y se
+        # añade o renueva solo esta cuenta; nunca se revocan las demás.
+        browser_cookie = existing_cookie
+        try:
+            browser_id, browser_expires = self.store.browser(existing_cookie)
+        except (NativeSessionRequired, NativeSessionExpired):
+            browser_cookie = token_urlsafe(32)
+            browser_expires = int(self.now()) + self.store.absolute_seconds
+            browser_id, browser_expires = self.store.create_browser(
+                browser_cookie, expires_at=browser_expires
+            )
+
+        session_cookie = token_urlsafe(32)
         expires_at = self.store.create_session(
-            cookie,
+            session_cookie,
             profile_id=profile.id,
             subject=subject,
             token=session.token,
@@ -369,32 +477,47 @@ class NativeAuthService:
             player_hash=self.store.hash_player(session.player_id),
             email=session.email or email,
         )
+        account_id = self.store.link_account(
+            browser_id,
+            profile_id=profile.id,
+            session_cookie=session_cookie,
+            email=session.email or email,
+        )
         idle_expires_at = int(self.now()) + self.store.idle_seconds
         self._event("login", "ok", subject=subject)
         view = self._view_values(profile, expires_at, idle_expires_at, email=session.email or email)
+        view["account_id"] = account_id
+        view["expired"] = False
         view["save"] = save
         view["save_error"] = save_error
         return LoginResult(
-            cookie=cookie,
-            expires_at=expires_at,
+            cookie=browser_cookie,
+            expires_at=browser_expires,
             idle_expires_at=idle_expires_at,
             body=view,
+            account_id=account_id,
         )
 
     def logout(self, cookie: str) -> None:
-        self.store.revoke(cookie)
+        self.store.logout_browser(cookie)
         self._event("logout", "ok")
 
-    def complete_installation(self, cookie: str, unique_id: str) -> dict[str, object]:
-        session = self.store.session(cookie)
+    def logout_account(self, cookie: str, account_id: str) -> None:
+        browser_id, _ = self.store.browser(cookie)
+        self.store.unlink_account(browser_id, account_id)
+        self._event("logout", "ok")
+
+    def complete_installation(
+        self, session: NativeSessionRecord, unique_id: str, account_id: str = ""
+    ) -> dict[str, object]:
         profile = self.store.set_installation(session.profile.id, unique_id, session.subject)
-        session = self.store.session(cookie)
+        session = self.store.session_by_id(session.id)
         save: dict[str, object] | None = None
         save_error: str | None = None
         try:
             save = self._verify_save(profile, session.token, session.subject)
         except CloudProviderUnauthenticated:
-            self.store.revoke(cookie)
+            self.store.revoke_session(session.id)
             self._event("installation", "rejected", code="native_session_expired", subject=session.subject)
             raise NativeSessionExpired(
                 "ChillyRoom rechazó la sesión al comprobar la instalación. Vuelve a iniciar sesión."
@@ -404,6 +527,7 @@ class NativeAuthService:
         view = self._view_values(
             profile, session.expires_at, session.idle_expires_at, email=session.email
         )
+        view["account_id"] = account_id
         view["save"] = save
         view["save_error"] = save_error
         self._event("installation", "ok" if save else "pending", subject=session.subject)
@@ -1236,7 +1360,7 @@ class NativeAuthService:
         try:
             return operation()
         except CloudProviderUnauthenticated:
-            self.store.revoke(session.cookie)
+            self.store.revoke_session(session.id)
             self._event("session", "rejected", code="native_session_expired", subject=session.subject)
             raise NativeSessionExpired(
                 "ChillyRoom rechazó la sesión. Vuelve a iniciar sesión."
