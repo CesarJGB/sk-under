@@ -139,6 +139,26 @@ function historyProblemMessage(error: unknown): ApiProblem {
 
 type CloudView = 'home' | 'save' | 'editor'
 
+const HIDDEN_EMAIL = '••••••••@••••.•••'
+const EMAIL_PRIVACY_KEY = 'sk-under.hide-email'
+const AUTO_ACCOUNT_LABEL = /^Cuenta [a-f0-9]{12}$/i
+const BLOCKED_AUTO_SAVE_ERRORS = new Set([
+  'native_no_cloud_save',
+  'native_device_binding_throttled',
+  'native_installation_required',
+  'native_session_expired',
+  'native_session_required',
+  'native_session_rejected',
+])
+
+function readEmailPrivacy() {
+  try {
+    return window.localStorage.getItem(EMAIL_PRIVACY_KEY) === 'true'
+  } catch {
+    return false
+  }
+}
+
 function isExpired(error: ApiProblem) {
   return error.code === 'native_session_expired' || error.code === 'native_session_required'
 }
@@ -152,6 +172,7 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
   const [session, setSession] = useState<NativeSession | null>(null)
   const [profileId, setProfileId] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [hideEmail, setHideEmail] = useState(readEmailPrivacy)
   const [accountHint, setAccountHint] = useState('')
   const [revision, setRevision] = useState(0)
   const configOperation = useOperation()
@@ -175,6 +196,14 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
   useEffect(() => {
     if (view !== 'save') setShowPassword(false)
   }, [view])
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(EMAIL_PRIVACY_KEY, String(hideEmail))
+    } catch {
+      // La preferencia es solo visual; el bloqueo de almacenamiento no debe romper la cuenta.
+    }
+  }, [hideEmail])
 
   function refresh() {
     setRevision((value) => value + 1)
@@ -251,20 +280,28 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
     return <HomePage loading={loading} unavailable={unavailable} retry={refresh} />
   }
 
-  const accountLabel = account?.label && !/^Cuenta [a-f0-9]{12}$/i.test(account.label)
-    ? account.label : accountHint || 'Cuenta de ChillyRoom'
-  const accountTitle = account?.email || accountHint
-    || (account?.label && !/^Cuenta [a-f0-9]{12}$/i.test(account.label) ? account.label : 'Cuenta de ChillyRoom')
+  const accountEmail = account?.email?.trim() ?? ''
+  const legacyLabel = accountHint || (account?.label && !AUTO_ACCOUNT_LABEL.test(account.label) ? account.label : '')
+  const accountTitle = accountEmail || legacyLabel || 'Cuenta de ChillyRoom'
+  const hidesAccount = hideEmail && (Boolean(accountEmail) || accountTitle.includes('@'))
+  const accountLabel = hidesAccount ? HIDDEN_EMAIL : accountTitle
   const accountCard = (saveVersion?: string) => <section className="panel partida-card partida-account" aria-label="Cuenta conectada">
     <span className="icon-tile"><UserRound size={20} aria-hidden="true" /></span>
     <div className="partida-account-copy">
-      <h2 title={accountTitle}>{accountTitle}</h2>
+      <h2 title={hidesAccount ? undefined : accountTitle}>{accountLabel}</h2>
       <p className="partida-muted">{[distributionPlatform, saveVersion ?? version].filter(Boolean).join(' · ')}</p>
     </div>
-    <button className="button quiet partida-logout" type="button" disabled={authOperation.pending}
-      aria-label="Cerrar sesión" aria-busy={authOperation.pending} title="Cerrar sesión" onClick={logout}>
-      <LogOut size={17} aria-hidden="true" />
-    </button>
+    <div className="partida-account-actions">
+      <button className="button quiet partida-icon-button" type="button"
+        aria-label={hideEmail ? 'Mostrar correo' : 'Ocultar correo'} aria-pressed={hideEmail}
+        title={hideEmail ? 'Mostrar correo' : 'Ocultar correo'} onClick={() => setHideEmail((value) => !value)}>
+        {hideEmail ? <Eye size={17} aria-hidden="true" /> : <EyeOff size={17} aria-hidden="true" />}
+      </button>
+      <button className="button quiet partida-icon-button" type="button" disabled={authOperation.pending}
+        aria-label="Cerrar sesión" aria-busy={authOperation.pending} title="Cerrar sesión" onClick={logout}>
+        <LogOut size={17} aria-hidden="true" />
+      </button>
+    </div>
     {authOperation.problem && <Problem problem={friendly(authOperation.problem, 'No se pudo cerrar sesión. Vuelve a intentarlo.')} />}
   </section>
   const installationPanel = session && !session.installation_ready && <section className="panel partida-card">
@@ -394,6 +431,7 @@ function NativeEditor({
   const moreOperation = useOperation()
   const backupOperation = useOperation()
   const historyRequest = useRef<AbortSignal | null>(null)
+  const autoDownloaded = useRef(false)
 
   useEffect(() => {
     if (!backupNotice) return
@@ -493,9 +531,25 @@ function NativeEditor({
   }
 
   useEffect(() => {
-    // La descarga de acceso puede tener saldos y no incluir el informe del editor.
-    if (view === 'editor' && save && save === initialSave && !save.report && !downloading) download()
-  }, [view])
+    if (!session.installation_ready) return
+    const needsSave = !save
+    const needsReport = view === 'editor' && Boolean(save && !save.report)
+    if (!needsSave && !needsReport) return
+    if (needsSave && session.save_error && BLOCKED_AUTO_SAVE_ERRORS.has(session.save_error)) return
+    if (autoDownloaded.current) return
+
+    autoDownloaded.current = true
+    let fired = false
+    // Espera un turno: StrictMode cancela este efecto antes de lanzar la descarga duplicada.
+    const timer = window.setTimeout(() => {
+      fired = true
+      download()
+    }, 0)
+    return () => {
+      window.clearTimeout(timer)
+      if (!fired) autoDownloaded.current = false
+    }
+  }, [session.installation_ready, session.save_error, save?.sha256, save?.report, view])
 
   function verify(backup: NativeBackup) {
     setBackupResult(null)

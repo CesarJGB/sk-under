@@ -188,9 +188,13 @@ for (const width of [320, 360, 375, 390, 430, 768, 1280]) {
     await expect(cloud.locator('time')).toHaveAttribute('datetime', '2026-11-25T20:30:00Z')
     await expect(cloud.getByRole('link', { name: 'Abrir editor' })).toBeVisible()
     await expect(backups.getByText('28 respaldos', { exact: true })).toBeVisible()
-    await expect(backups.getByRole('img', { name: /Restauración verificada/ })).toBeVisible()
     await expect(page.getByRole('link', { name: 'Acceso por enlace privado' })).toHaveCount(0)
+    await expect(backups.locator('.partida-backup-warning')).toHaveCount(1)
+    await expect(backups.locator('.partida-backup-warning')).toHaveAttribute('aria-label', /Subida no verificada/)
     await backups.locator('summary').first().click()
+    await expect(backups.locator('.partida-backup-state').first()).toContainText('Subida verificada')
+    await backups.locator('summary').nth(3).click()
+    await expect(backups.locator('.partida-backup-state').nth(3)).toContainText('Restauración verificada')
     await expect(backups.getByText('2 cambios registrados')).toBeVisible()
     await expect(backups.getByText('Gemas · Fichas de pesca')).toBeVisible()
     if (width <= 430) {
@@ -257,12 +261,12 @@ test('distingue un cero real de un dato desconocido y actualiza el carrusel al d
     },
   })
   const cloud = page.getByRole('region', { name: 'Partida en la nube' })
-  await cloud.getByRole('button', { name: 'Descargar partida' }).click()
   const firstPage = cloud.locator('.partida-stat-page').first()
   await expect(firstPage.locator('.partida-stat-value')).toHaveText(['0', '0', '—', '—'])
   await expect(cloud.getByTestId('stat-gems')).toHaveAttribute('data-state', 'count')
   await expect(cloud.getByTestId('stat-season_coin')).toHaveAttribute('data-state', 'unavailable')
   await expect(cloud.getByTestId('stat-characters')).toHaveAttribute('data-state', 'unavailable')
+  expect(downloads).toBe(1)
   await cloud.getByRole('button', { name: 'Actualizar partida' }).click()
   await expect(firstPage.locator('.partida-stat-value')).toHaveText(['1,001', '3', '100', '1 / 42'])
   expect(downloads).toBe(2)
@@ -285,6 +289,10 @@ test('mantiene legibles correos y cantidades grandes en 320 px sin desbordar', a
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
   expect(await account.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
   expect(await cloud.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
+  await page.getByRole('button', { name: 'Ocultar correo' }).click()
+  await expect(account.locator('h2')).toHaveText('••••••••@••••.•••')
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
+  expect(await account.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
 })
 
 test('Partida conserva la última descarga y muestra datos desconocidos como ausentes', async ({ page }) => {
@@ -299,10 +307,8 @@ test('Partida conserva la última descarga y muestra datos desconocidos como aus
     },
   })
   const cloud = page.getByRole('region', { name: 'Partida en la nube' })
-  await expect(cloud.getByText('Partida pendiente de descargar')).toBeVisible()
-  await expect(cloud.locator('dd')).toHaveCount(0)
-  await cloud.getByRole('button', { name: 'Descargar partida' }).click()
   await expect(cloud.locator('.partida-stat-page').first().locator('.partida-stat-value')).toHaveText(['1,001', '—', '—', '—'])
+  await expect(cloud.locator('dd')).toHaveCount(1)
   await cloud.getByRole('button', { name: 'Actualizar partida' }).click()
   await expect(cloud.getByRole('alert')).toBeVisible()
   await expect(cloud.locator('time')).toHaveAttribute('datetime', '2026-11-24T20:00:00Z')
@@ -360,7 +366,10 @@ test('actualiza el historial tras preparar, subir y volver de Editor a Partida',
   await expect.poll(() => requested).toContain('prepared')
   await page.getByRole('link', { name: 'Volver a Partida' }).click()
   await page.getByRole('button', { name: 'Descartar y salir' }).click()
-  await expect(page.getByRole('img', { name: 'Edición preparada', exact: true })).toBeVisible()
+  const backups = page.getByRole('region', { name: 'Respaldos' })
+  await expect(backups.locator('.partida-backup-warning')).toHaveCount(0)
+  await backups.locator('summary').first().click()
+  await expect(backups.locator('.partida-backup-state').first()).toHaveText('Edición preparada')
   await expect(page.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('1,001')
 
   await page.getByRole('link', { name: 'Abrir editor' }).click()
@@ -371,8 +380,98 @@ test('actualiza el historial tras preparar, subir y volver de Editor a Partida',
   await expect(page.getByText(/Guardado y verificado/)).toBeVisible()
   await expect.poll(() => requested).toContain('verified')
   await page.getByRole('link', { name: 'Volver a Partida' }).click()
-  await expect(page.getByRole('img', { name: 'Subida verificada', exact: true })).toBeVisible()
+  await expect(backups.locator('.partida-backup-warning')).toHaveCount(0)
+  await backups.locator('summary').first().click()
+  await expect(backups.locator('.partida-backup-state').first()).toHaveText('Subida verificada')
   await expect(page.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('1,201')
+})
+
+test('permite una segunda edición con el hash confirmado tras subir', async ({ page }) => {
+  const sourceShas: string[] = []
+  await open(page, { path: '/partida' })
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => {
+    const body = route.request().postDataJSON()
+    sourceShas.push(body.source_sha256)
+    return route.fulfill({ json: prepared(body, [['gems', 'Gemas', 100]]) })
+  })
+  await page.route('**/api/v1/cloud/native/confirm', (route) => route.fulfill({
+    json: { action: 'confirm', backup_id: BACKUP.id, uploaded: true, persisted: true },
+  }))
+  await page.route('**/api/v1/cloud/native/save', (route) => route.fulfill({
+    json: downloaded({ ...SESSION_SAVE, sha256: CANDIDATE, gems: 1201 }),
+  }))
+
+  await page.getByRole('link', { name: 'Abrir editor' }).click()
+  const gems = page.getByRole('textbox', { name: 'Gemas', exact: true })
+  const bar = page.getByTestId('editor-bar')
+  await gems.fill('1201')
+  await bar.getByRole('button', { name: 'Guardar', exact: true }).click()
+  await expect(page.getByTestId('unified-preview')).toBeVisible()
+  await page.getByLabel(/Confirmo subir el candidato/).check()
+  await page.getByRole('button', { name: 'Guardar en la nube' }).click()
+  await expect(page.getByText(/Guardado y verificado/)).toBeVisible()
+  await expect(gems).toHaveValue('1201')
+  await expect(bar).toContainText('0 cambios')
+
+  await gems.fill('1202')
+  await bar.getByRole('button', { name: 'Guardar', exact: true }).click()
+  await expect(page.getByTestId('unified-preview')).toBeVisible()
+  expect(sourceShas).toEqual([SHA, CANDIDATE])
+})
+
+test('descarga una sola vez al abrir Inicio y comparte la partida', async ({ page }) => {
+  let downloads = 0
+  await open(page, {
+    path: '/', sessionSave: null,
+    download: (route) => {
+      downloads += 1
+      return route.fulfill({ json: downloaded(SESSION_SAVE) })
+    },
+  })
+  await expect(page.getByText('Copia descargada', { exact: true })).toBeVisible()
+  expect(downloads).toBe(1)
+
+  await page.getByRole('link', { name: 'Abrir partida' }).click()
+  await expect(page.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('1,001')
+  expect(downloads).toBe(1)
+
+  await page.getByRole('link', { name: 'Abrir editor' }).click()
+  await expect(page.getByTestId('quick-edit')).toContainText('1/4 desbloqueados')
+  expect(downloads).toBe(1)
+})
+
+test('si la subida persiste pero falla la descarga, solo reintenta la descarga', async ({ page }) => {
+  let confirmations = 0
+  let downloads = 0
+  await open(page)
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) =>
+    route.fulfill({ json: prepared(route.request().postDataJSON(), [['gems', 'Gemas', 100]]) }))
+  await page.route('**/api/v1/cloud/native/confirm', (route) => {
+    confirmations += 1
+    return route.fulfill({ json: { action: 'confirm', backup_id: BACKUP.id, uploaded: true, persisted: true } })
+  })
+  await page.route('**/api/v1/cloud/native/save', (route) => {
+    downloads += 1
+    return downloads === 1
+      ? route.fulfill({ status: 502, json: { error: { code: 'native_save_error', message: 'fixture', issues: [] } } })
+      : route.fulfill({ json: downloaded({ ...SESSION_SAVE, sha256: CANDIDATE, gems: 1201 }) })
+  })
+
+  const gems = page.getByRole('textbox', { name: 'Gemas', exact: true })
+  await gems.fill('1201')
+  await page.getByTestId('editor-bar').getByRole('button', { name: 'Guardar', exact: true }).click()
+  await expect(page.getByTestId('unified-preview')).toBeVisible()
+  await page.getByLabel(/Confirmo subir el candidato/).check()
+  await page.getByRole('button', { name: 'Guardar en la nube' }).click()
+  await expect(page.getByText(/Subida confirmada\. No se pudo descargar la partida actualizada/)).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Reintentar descarga' })).toBeVisible()
+  expect(confirmations).toBe(1)
+
+  await page.getByRole('button', { name: 'Reintentar descarga' }).click()
+  await expect(gems).toHaveValue('1201')
+  await expect(page.getByText(/Guardado y verificado/)).toBeVisible()
+  expect(confirmations).toBe(1)
+  expect(downloads).toBe(2)
 })
 
 test('la edición rápida es la pantalla inicial y comparte el borrador con categorías', async ({ page }) => {
@@ -544,7 +643,7 @@ test('carga el informe después de entrar desde una vista previa de inicio de se
   } })
   const header = page.locator('.editor-top')
   await expect(header).toContainText('Descargando partida…')
-  await expect(header).toContainText(PROFILE.label)
+  await expect(header).toContainText('holder@example.test')
   await expect(header).toContainText('Android Global · 8.8.0')
   await expect(page.getByRole('navigation', { name: 'Navegación principal' })).toHaveCount(0)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Editor')
@@ -565,8 +664,6 @@ test('precarga los ceros reales sin generar operaciones', async ({ page }) => {
       pet_food: ADVANCED.pet_food.map((item) => ({ ...item, count: 0 })) },
   }
   await open(page, { save, sessionSave: null })
-  await expect(page.locator('.editor-top')).toContainText('Partida pendiente de descargar')
-  await page.getByRole('button', { name: 'Descargar partida' }).click()
   const amounts = page.getByTestId('quick-edit').getByRole('textbox')
   await expect(amounts).toHaveCount(8)
   expect(await amounts.evaluateAll((inputs: HTMLInputElement[]) => inputs.map((input) => input.value))).toEqual(Array(8).fill('0'))
@@ -653,7 +750,6 @@ test('distingue colecciones completas de datos ausentes o incompatibles', async 
     advanced: { available: false, error: 'Estructura incompatible.' },
   }
   await open(page, { save: unknown, sessionSave: null })
-  await page.getByRole('button', { name: 'Descargar partida' }).click()
   await expect(unlocks.getByText('No disponible', { exact: true })).toHaveCount(5)
   await expect(unlocks.locator('.unlock-status.complete')).toHaveCount(0)
   const quick = page.getByTestId('quick-edit')
@@ -861,7 +957,7 @@ test('muestra los estados de guardado y conserva el borrador si la subida queda 
   }))
   await page.route('**/api/v1/cloud/native/confirm', async (route) => {
     await uploadPending
-    await route.fulfill({ json: { backup_id: BACKUP.id, accepted: true, persisted: false } })
+    await route.fulfill({ json: { backup_id: BACKUP.id, uploaded: true, accepted: true, persisted: false } })
   })
   await page.getByLabel('Activar Todos los personajes').check()
   await page.getByRole('button', { name: 'Guardar', exact: true }).click()
@@ -879,7 +975,9 @@ test('muestra los estados de guardado y conserva el borrador si la subida queda 
   allowUpload()
   await expect(bar).toContainText('Revisa el resultado')
   await expect(bar).toContainText('3 cambios')
-  await expect(page.getByText('No se pudo verificar la subida.', { exact: false })).toBeVisible()
+  await expect(page.getByText('Subida sin confirmar. Actualiza la partida', { exact: false })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Actualizar partida' })).toBeVisible()
+  await expect(page.getByTestId('editor-bar').getByRole('button', { name: 'Guardar', exact: true })).toBeDisabled()
 })
 
 test('capturas móviles, tableta y escritorio sin desbordamiento', async ({ page }) => {

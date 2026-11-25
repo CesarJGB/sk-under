@@ -481,6 +481,43 @@ test('permite elegir el perfil cuando hay más de uno', async ({ page }) => {
   await expect(page.getByLabel('Cuenta conectada')).toContainText('holder@example.test')
 })
 
+test('oculta el correo y conserva la preferencia sin guardarlo en texto plano', async ({ page }) => {
+  const email = 'holder@example.test'
+  await mockBase(page, {
+    ...BASE_CONFIG,
+    session: { ...ACTIVE, save: { ...SAVE, report: REPORT, downloaded_at: '2026-11-23T20:00:00Z' } },
+  })
+  await page.route(/\/api\/v1\/cloud\/native\/backups(?:\?.*)?$/, (route) => route.fulfill({ json: EMPTY_NATIVE_HISTORY }))
+  await page.goto('/partida')
+  const account = page.getByLabel('Cuenta conectada')
+  await expect(account.getByRole('heading', { name: email })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Ocultar correo' }).click()
+  await expect(account.locator('h2')).toHaveText('••••••••@••••.•••')
+  await expect(account).not.toContainText(email)
+  await expect(account.locator('h2')).not.toHaveAttribute('title', /.+/)
+  await expect(page.locator(`[title*="${email}"]`)).toHaveCount(0)
+  expect(await page.evaluate(() => localStorage.getItem('sk-under.hide-email'))).toBe('true')
+  expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain(email)
+
+  await page.reload()
+  await expect(page.getByLabel('Cuenta conectada').locator('h2')).toHaveText('••••••••@••••.•••')
+  await expect(page.getByRole('button', { name: 'Mostrar correo' })).toBeVisible()
+  await page.getByRole('button', { name: 'Mostrar correo' }).click()
+  await expect(page.getByLabel('Cuenta conectada')).toContainText(email)
+  await page.reload()
+  await expect(page.getByLabel('Cuenta conectada')).toContainText(email)
+
+  await page.getByRole('button', { name: 'Ocultar correo' }).click()
+  await page.goto('/')
+  await expect(page.locator('body')).not.toContainText(email)
+  await expect(page.getByText('••••••••@••••.•••')).toBeVisible()
+  await expect(page.locator(`[title*="${email}"]`)).toHaveCount(0)
+  await page.goto('/editor')
+  await expect(page.locator('body')).not.toContainText(email)
+  await expect(page.locator(`[title*="${email}"]`)).toHaveCount(0)
+})
+
 test.fixme('mantiene el editor en solo lectura cuando la escritura está deshabilitada', async ({ page }) => {
   await mockBase(page, { ...BASE_CONFIG, write_enabled: false })
   await mockEditor(page, { ...ACTIVE, write_enabled: false, write_ready: false, save: SAVE })
@@ -1144,7 +1181,7 @@ test('verifica y restaura un respaldo desde Partida con una confirmación clara'
   await page.getByRole('dialog').getByRole('button', { name: 'Restaurar esta versión' }).click()
   await expect(page.getByText('Restauración verificada: la nube contiene exactamente la versión elegida.')).toBeVisible()
   await expect(page.getByTestId('stat-gems').locator('.partida-stat-value')).toHaveText('1,001')
-  await expect(page.getByRole('img', { name: /Restauración verificada/ })).toBeVisible()
+  await expect(page.locator('.partida-backup-state').first()).toContainText('Restauración verificada')
   await expect(page.getByRole('region', { name: 'Partida en la nube' }).locator('time')).toHaveAttribute('datetime', '2026-11-23T20:20:00Z')
   expect(restoreCalls).toBe(1)
   expect(historyCalls).toBe(2)
@@ -1169,7 +1206,6 @@ test('permite reintentar una descarga y conserva el resultado al abrir el Editor
   })
 
   await page.goto('/partida')
-  await page.getByRole('button', { name: 'Descargar partida' }).click()
   await expect(page.getByRole('alert')).toContainText('No se pudo descargar la partida.')
   await expect(page.locator('body')).not.toContainText('internal diagnostic')
   await page.getByRole('button', { name: 'Descargar partida' }).click()

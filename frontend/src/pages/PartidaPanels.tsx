@@ -1,4 +1,4 @@
-import { AlertTriangle, Archive, CheckCircle2, ChevronDown, Cloud, CloudDownload, Pencil, Plus, RefreshCw, RotateCcw, ShieldCheck, XCircle } from 'lucide-react'
+import { AlertTriangle, Archive, ChevronDown, Cloud, CloudDownload, Plus, RefreshCw, RotateCcw, ShieldCheck, XCircle } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import type { LabVerification, LabWriteResult, NativeBackup, NativeBackupHistory, NativeSaveSummary } from '../api'
@@ -71,14 +71,6 @@ const backupKinds: Record<NonNullable<NativeBackup['kind']>, string> = {
   preventive: 'Preventivo antes de restaurar',
 }
 
-const backupStatusIcons = {
-  prepared: Pencil,
-  verified: CheckCircle2,
-  unverified: AlertTriangle,
-  available: null,
-  unreadable: XCircle,
-} as const
-
 function backupStatusSummary(backup: NativeBackup) {
   const parts = [backupStatuses[backup.status]]
   if (backup.interrupted) parts.push('Operación interrumpida')
@@ -86,6 +78,11 @@ function backupStatusSummary(backup: NativeBackup) {
     parts.push(backup.restoration === 'verified' ? 'Restauración verificada' : 'Restauración no verificada')
   }
   return parts.join(' · ')
+}
+
+function backupNeedsWarning(backup: NativeBackup) {
+  return backup.status === 'unreadable' || backup.status === 'unverified'
+    || backup.interrupted === true || backup.restoration === 'unverified'
 }
 
 const backupProblems: Record<NonNullable<NativeBackup['problem']>, string> = {
@@ -236,7 +233,6 @@ export function BackupHistory({ history, pending, loadingMore, problem, result, 
     </p>}
     {!problem && history?.backups.length ? <div className="partida-backup-list">
       {history.backups.map((backup) => {
-        const StatusIcon = backupStatusIcons[backup.status]
         const statusSummary = backupStatusSummary(backup)
         return <details className="partida-backup" key={backup.id}>
           <summary>
@@ -244,13 +240,13 @@ export function BackupHistory({ history, pending, loadingMore, problem, result, 
               <strong>{backupTitle(backup)}</strong>
               <time className="partida-muted" dateTime={backup.created_at ?? undefined}>{formatDate(backup.created_at)}</time>
             </span>
-            <span className="partida-backup-status" data-status={backup.status}
+            {backupNeedsWarning(backup) && <span className="partida-backup-warning"
               role="img" aria-label={statusSummary} title={statusSummary}>
-              {StatusIcon
-                ? <StatusIcon size={15} aria-hidden="true" />
-                : <span className="partida-backup-dot" aria-hidden="true" />}
-            </span>
-            <ChevronDown size={16} aria-hidden="true" />
+              {backup.status === 'unreadable'
+                ? <XCircle size={16} aria-hidden="true" />
+                : <AlertTriangle size={16} aria-hidden="true" />}
+            </span>}
+            <ChevronDown className="partida-backup-chevron" size={16} aria-hidden="true" />
           </summary>
           <div className="partida-backup-body">
             <p className="partida-backup-state partida-muted">{statusSummary}</p>

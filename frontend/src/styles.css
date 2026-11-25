@@ -558,7 +558,8 @@ h3 { font-weight: 650; letter-spacing: -.02em; }
 .partida-heading h2 { font-size: 1.12rem; line-height: 1.15; }
 .partida-muted { color: var(--muted); font-size: .81rem; line-height: 1.35; }
 .partida-heading .partida-muted { margin-top: .2rem; }
-.partida-logout { justify-self: end; padding: 0; width: 44px; min-width: 44px; height: 44px; }
+.partida-account-actions { display: flex; align-items: center; gap: .25rem; justify-self: end; }
+.partida-account-actions .button { padding: 0; width: 44px; min-width: 44px; height: 44px; }
 .partida-account .notice { grid-column: 1 / -1; }
 .partida-cloud { border-color: #c4d9ca; }
 .partida-stats { min-width: 0; }
@@ -717,8 +718,7 @@ h3 { font-weight: 650; letter-spacing: -.02em; }
 .partida-icon-button { padding: 0; width: 44px; }
 .partida-backup { border-top: 1px solid var(--border); }
 .partida-backup > summary {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  display: flex;
   min-height: 48px;
   padding-block: .35rem;
   align-items: center;
@@ -728,29 +728,12 @@ h3 { font-weight: 650; letter-spacing: -.02em; }
   font-size: .82rem;
 }
 .partida-backup > summary::-webkit-details-marker { display: none; }
-.partida-backup[open] > summary > svg { transform: rotate(180deg); }
-.partida-backup-main { display: grid; gap: .06rem; min-width: 0; line-height: 1.25; }
+.partida-backup-main { display: grid; flex: 1 1 auto; gap: .06rem; min-width: 0; line-height: 1.25; }
 .partida-backup-main strong { overflow-wrap: anywhere; }
 .partida-backup-main time { font-size: .75rem; }
-.partida-backup-status {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: #edf1ed;
-  color: var(--muted);
-}
-.partida-backup-status[data-status="verified"], .partida-backup-status[data-status="available"] {
-  color: var(--accent-dark);
-  background: var(--subtle);
-}
-.partida-backup-status[data-status="prepared"] { color: var(--muted); background: #edf1ed; }
-.partida-backup-status[data-status="unverified"], .partida-backup-status[data-status="unreadable"] {
-  color: #6d4218;
-  background: #f8efdf;
-}
-.partida-backup-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.partida-backup-chevron { flex: none; transition: transform .15s ease; }
+.partida-backup[open] > summary > .partida-backup-chevron { transform: rotate(180deg); }
+.partida-backup-warning { display: grid; flex: none; place-items: center; color: #6d4218; }
 .partida-backup-body { display: grid; gap: .45rem; padding-bottom: .65rem; font-size: .8rem; }
 .partida-backup-state { font-size: .74rem; }
 .partida-backup-details { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .15rem .55rem; }

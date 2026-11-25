@@ -508,6 +508,10 @@ export function EditorWorkspace({
         setNeedsRefresh(true)
         await onReload(signal)
         if (!signal.aborted) setNeedsRefresh(false)
+      } else if (uploaded.uploaded) {
+        // La escritura se envió pero no se pudo confirmar la persistencia.
+        // Bloquea otra edición hasta verificar la copia real de la nube.
+        setNeedsRefresh(true)
       }
     })
   }
@@ -537,6 +541,7 @@ export function EditorWorkspace({
   }
 
   const expiredConflict = operation.problem?.code === 'cloud_remote_changed'
+  const refreshFailed = Boolean(result?.persisted && needsRefresh && operation.problem && !expiredConflict)
   const progress = action === 'prepare' ? 'Preparando candidato…'
     : action === 'upload' ? 'Guardando y verificando…' : action === 'reload' || loadingSave ? 'Descargando partida…' : null
   const barError = operation.problem || (result && !result.persisted)
@@ -621,12 +626,18 @@ export function EditorWorkspace({
       No se pudo descargar el informe. <button type="button" className="button quiet" disabled={busy} onClick={reload}>Reintentar descarga</button>
     </div>}
     {operation.problem && !expiredConflict && <Problem problem={operation.problem} />}
-    {result && <div className={`result-banner ${result.persisted ? 'ok' : 'warn'}`} role="status">
+    {result && <div className={`result-banner ${result.persisted && !refreshFailed ? 'ok' : 'warn'}`} role="status">
       {result.persisted
-        ? `Guardado y verificado. Respaldo ${result.backup_id.slice(0, 8)} disponible.`
-        : 'No se pudo verificar la subida. El borrador sigue disponible.'}
+        ? refreshFailed
+          ? 'Subida confirmada. No se pudo descargar la partida actualizada; el editor está bloqueado hasta reintentar solo la descarga.'
+          : `Guardado y verificado. Respaldo ${result.backup_id.slice(0, 8)} disponible.`
+        : needsRefresh
+          ? 'Subida sin confirmar. Actualiza la partida para comprobar su estado antes de volver a editar.'
+          : 'No se pudo verificar la subida. El borrador sigue disponible.'}
     </div>}
-    {needsRefresh && !busy && <button type="button" className="button quiet editor-reload" onClick={reload}>Actualizar partida</button>}
+    {needsRefresh && !busy && <button type="button" className="button quiet editor-reload" onClick={reload}>
+      {refreshFailed ? 'Reintentar descarga' : 'Actualizar partida'}
+    </button>}
     <div id="editor-panel" role="tabpanel" aria-labelledby={showQuick ? 'editor-quick-tab' : 'editor-categories-tab'}>
       {content}
     </div>
