@@ -49,12 +49,14 @@ export default function App() {
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    main.current?.focus({ preventScroll: true })
-  }, [pathname])
+    if (view !== 'editor' || !main.current?.contains(document.activeElement)) {
+      main.current?.focus({ preventScroll: true })
+    }
+  }, [pathname, view])
 
   return <>
     <a className="skip-link" href="#content">Saltar al contenido</a>
-    <header className="topbar">
+    {view !== 'editor' && <header className="topbar">
       <div className="shell topbar-inner">
         <Link to="/" className="brand">
           <span className="brand-icon"><ScanLine size={22} aria-hidden="true" /></span>
@@ -68,8 +70,8 @@ export default function App() {
           ))}
         </nav>
       </div>
-    </header>
-    <main id="content" ref={main} tabIndex={-1} className="shell main-content">
+    </header>}
+    <main id="content" ref={main} tabIndex={-1} className={`shell main-content${view === 'editor' ? ' main-editor' : ''}`}>
       {view ? <NativeAuthPage view={view} /> : <Routes>
         <Route path="/partida/vinculadas" element={<CloudAccountsPage />} />
         <Route path="/partida/laboratorio" element={<LabRoute />} />

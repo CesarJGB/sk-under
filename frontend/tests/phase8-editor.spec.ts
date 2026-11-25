@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Page, type Route } from '@playwright/test'
 
 const SHA = 'a'.repeat(64)
 const CANDIDATE = 'b'.repeat(64)
@@ -87,15 +87,33 @@ const BACKUP = {
   remote_source: 'modern-cloud', remote_size: 505, remote_sha256: SHA,
 }
 
-async function open(page: Page) {
+function downloaded(save: Record<string, unknown>) {
+  const { verified: _verified, bytes, remote_source, sections: _sections, ...data } = save
+  return { ...data, remote: { source: remote_source, size: bytes, sha256: data.sha256 },
+    size: bytes, serialzed_version: 1, downloaded_at: '2026-11-24T20:00:00Z' }
+}
+
+async function open(page: Page, options: {
+  save?: Record<string, unknown>
+  sessionSave?: Record<string, unknown> | null
+  download?: (route: Route) => Promise<void>
+  path?: string
+} = {}) {
+  const save = options.save ?? SESSION_SAVE
+  const sessionSave = options.sessionSave === undefined ? save : options.sessionSave
   await page.route('**/api/v1/health', (route) => route.fulfill({ json: { status: 'ok', access_mode: 'local', max_file_bytes: 1048576 } }))
   await page.route('**/api/v1/formats', (route) => route.fulfill({ json: { formats: [] } }))
-  await page.route('**/api/v1/cloud/native/config', (route) => route.fulfill({ json: { ...CONFIG, session: ACTIVE } }))
+  await page.route('**/api/v1/cloud/native/config', (route) => route.fulfill({ json: { ...CONFIG, session: { ...ACTIVE, save: sessionSave } } }))
   await page.route('**/api/v1/cloud/native/backups', (route) => route.fulfill({ json: { backups: [] } }))
-  await page.route('**/api/v1/cloud/native/save', (route) => route.fulfill({ json: SESSION_SAVE }))
+  await page.route('**/api/v1/cloud/native/save', options.download ?? ((route) => route.fulfill({ json: downloaded(save) })))
   await page.setViewportSize({ width: 390, height: 844 })
-  await page.goto('/editor')
-  await expect(page.getByTestId('quick-edit')).toBeVisible()
+  await page.goto(options.path ?? '/editor')
+  if (!options.path && sessionSave) await expect(page.getByTestId('quick-edit')).toBeVisible()
+}
+
+async function openCategory(page: Page, name: string) {
+  await page.getByRole('tab', { name: 'Categorías' }).click()
+  await page.getByRole('button', { name: new RegExp(`^${name}($| Cambios pendientes)`) }).click()
 }
 
 function prepared(plan: Record<string, unknown>, categories: Array<[string, string, number]>) {
@@ -222,27 +240,327 @@ test('un conflicto remoto conserva el borrador', async ({ page }) => {
   await expect(page.getByTestId('editor-bar')).toContainText('3 cambios')
 })
 
-test('capturas móviles sin desbordamiento horizontal', async ({ page }) => {
+test('respeta importes originales en ambos modos, incluso sin activar los campos', async ({ page }) => {
+  await open(page)
+  const quick = page.getByTestId('quick-edit')
+  for (const [label, value] of [
+    ['Gemas', '1,001'], ['Fichas de pesca', '3'], ['Recompensas de pesca', '42'],
+    ['Monedas de temporada', '100'], ['Semillas', '2'], ['Baterías', '5'],
+  ]) {
+    const row = quick.locator('.quick-row').filter({ has: page.getByLabel(label, { exact: true }) })
+    await expect(row).toContainText(`Actual ${value}`)
+    await expect(row.getByLabel(label, { exact: true })).toBeDisabled()
+    await expect(row.getByLabel(label, { exact: true })).toHaveValue('')
+  }
+  await expect(quick.locator('.quick-row').filter({ hasText: 'Materiales' })).toContainText('Cantidades distintas')
+  await expect(quick.locator('.quick-row').filter({ hasText: 'Alimento de mascotas' })).toContainText('Cantidades distintas')
+  await expect(quick.getByRole('region', { name: 'Desbloqueos' })).toContainText('1/4 desbloqueados')
+  await openCategory(page, 'Mascotas')
+  await expect(page.locator('.number-row').filter({ hasText: 'Bocadillos' }).locator('.number-current')).toHaveText('Actual 10')
+  await expect(page.locator('.number-row').filter({ hasText: 'Batería' }).locator('.number-current')).toHaveText('Actual 5')
+  await openCategory(page, 'Recursos')
+  await expect(page.locator('.number-row').filter({ hasText: 'Gemas' }).locator('.number-current')).toHaveText('Actual 1,001')
+})
+
+test('carga el informe después de entrar desde una vista previa de inicio de sesión', async ({ page }) => {
+  const { report: _report, ...preview } = SESSION_SAVE
+  let release!: () => void
+  const pending = new Promise<void>((resolve) => { release = resolve })
+  await open(page, { sessionSave: preview, download: async (route) => {
+    await pending
+    await route.fulfill({ json: downloaded(SESSION_SAVE) })
+  } })
+  const header = page.locator('.editor-top')
+  await expect(header).toContainText('Descargando partida…')
+  await expect(header).toContainText(PROFILE.label)
+  await expect(header).toContainText('Android Global · 8.8.0')
+  await expect(page.getByRole('navigation', { name: 'Navegación principal' })).toHaveCount(0)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Editor')
+  await expect(page.getByLabel('Activar Gemas')).toBeDisabled()
+  release()
+  await expect(header).toContainText('Partida cargada')
+  await expect(page.getByLabel('Activar Todos los personajes')).toBeEnabled()
+  await expect(page.getByTestId('quick-edit')).toContainText('1/4 desbloqueados')
+})
+
+test('muestra ceros reales y permite usar cero como solicitud explícita', async ({ page }) => {
+  const zero = (item: ReturnType<typeof row>) => ({ ...item, count: 0 })
+  const save = {
+    ...SESSION_SAVE, gems: 0, fish_chip: 0, material_fish: 0, cumulative_fish_count: 0,
+    advanced: { ...ADVANCED, season_coin: { ...ADVANCED.season_coin, value: 0 },
+      materials: ADVANCED.materials.map(zero), seeds: ADVANCED.seeds.map(zero),
+      pet_food: ADVANCED.pet_food.map((item) => ({ ...item, count: 0 })) },
+  }
+  await open(page, { save, sessionSave: null })
+  await expect(page.locator('.editor-top')).toContainText('Partida pendiente de descargar')
+  await page.getByRole('button', { name: 'Descargar partida' }).click()
+  await expect(page.getByTestId('quick-edit').getByText('Actual 0', { exact: true })).toHaveCount(8)
+  await page.getByLabel('Activar Gemas').check()
+  await page.getByLabel('Gemas', { exact: true }).fill('0')
+  await expect(page.getByRole('button', { name: 'Guardar', exact: true })).toBeDisabled()
+  await expect(page.getByTestId('editor-bar')).toContainText('0 cambios')
+})
+
+test('guardar preserva las cantidades originales de todos los campos inactivos', async ({ page }) => {
+  await open(page)
+  let payload: Record<string, unknown> | undefined
+  let uploads = 0
+  let preparations = 0
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => {
+    preparations++
+    payload = route.request().postDataJSON()
+    return route.fulfill({ json: prepared(payload!, [['fish_progress', 'Recompensas de pesca', 1]]) })
+  })
+  await page.route('**/api/v1/cloud/native/confirm', async (route) => {
+    uploads++
+    await page.route('**/api/v1/cloud/native/save', (load) => load.fulfill({
+      json: downloaded({ ...SESSION_SAVE, sha256: CANDIDATE, cumulative_fish_count: 0 }),
+    }))
+    await route.fulfill({ json: { backup_id: BACKUP.id, persisted: true, remote_sha256: CANDIDATE } })
+  })
+  await page.getByLabel('Activar Gemas').check()
+  await page.getByLabel('Gemas', { exact: true }).fill('900')
+  await page.getByLabel('Activar Gemas').uncheck()
+  await openCategory(page, 'Temporada')
+  await page.getByLabel('Recompensas de pesca', { exact: true }).fill('0')
+  await page.getByRole('button', { name: 'Guardar', exact: true }).evaluate((button: HTMLButtonElement) => {
+    button.click()
+    button.click()
+  })
+  await expect(page.getByTestId('unified-preview')).toBeVisible()
+  expect(preparations).toBe(1)
+  expect(payload).toEqual({ fish_progress: 0, source_sha256: SHA })
+  await page.getByLabel(/Confirmo subir el candidato/).check()
+  await page.getByRole('button', { name: 'Guardar en la nube' }).evaluate((button: HTMLButtonElement) => {
+    button.click()
+    button.click()
+  })
+  await expect(page.getByTestId('editor-bar')).toContainText('Verificado')
+  expect(uploads).toBe(1)
+  await page.getByRole('tab', { name: 'Rápida' }).click()
+  const quick = page.getByTestId('quick-edit')
+  await expect(quick).toContainText('Actual 1,001')
+  await expect(quick).toContainText('Actual 0')
+  await expect(quick).toContainText('Actual 100')
+})
+
+test('distingue colecciones completas de datos ausentes o incompatibles', async ({ page }) => {
+  const completeCharacters = REPORT.characters.items.map((item, index) => ({
+    ...item, unlocked: true, skills: item.skills.map((skill) => ({ ...skill, unlocked: true })),
+    skin_options: index > 0 ? [] : Array.from({ length: 142 }, (_, index) => ({
+      index, key: `skin-${index}`, name: `Skin ${index + 1}`, state: 'unlocked', value: 1, compatible: true,
+    })),
+  }))
+  const complete = {
+    ...SESSION_SAVE,
+    report: { ...REPORT, characters: { ...REPORT.characters, items: completeCharacters } },
+    advanced: { ...ADVANCED, pets: ADVANCED.pets.map((pet) => ({ ...pet, unlocked: true })),
+      pet_skins: ADVANCED.pet_skins.map((skin) => ({ ...skin, unlocked: true })) },
+  }
+  await open(page, { save: complete })
+  const unlocks = page.getByRole('region', { name: 'Desbloqueos' })
+  await expect(unlocks).toContainText('142/142 desbloqueadas')
+  await expect(unlocks.locator('.unlock-status.complete')).toHaveCount(5)
+  await expect(unlocks.getByRole('button', { name: 'Seleccionar pendientes' })).toBeDisabled()
+  await expect(unlocks.getByLabel('Activar Todas las skins')).toBeDisabled()
+  await openCategory(page, 'Skins')
+  await expect(page.getByTestId('category-skins')).toContainText('Completo')
+  await expect(page.getByTestId('category-skins').getByRole('checkbox')).toHaveCount(0)
+
+  const unknown = {
+    ...SESSION_SAVE, gems: null, fish_chip: null, cumulative_fish_count: null, report: null,
+    advanced: { available: false, error: 'Estructura incompatible.' },
+  }
+  await open(page, { save: unknown, sessionSave: null })
+  await page.getByRole('button', { name: 'Descargar partida' }).click()
+  await expect(unlocks.getByText('No disponible', { exact: true })).toHaveCount(5)
+  await expect(unlocks.locator('.unlock-status.complete')).toHaveCount(0)
+  await expect(page.getByTestId('quick-edit').getByText('Actual 0', { exact: true })).toHaveCount(0)
+  await expect(page.getByLabel('Activar Gemas')).toBeDisabled()
+  await openCategory(page, 'Recursos')
+  await expect(page.getByTestId('category-recursos').getByText('Sin dato', { exact: false })).toHaveCount(4)
+  await expect(page.getByLabel('Gemas', { exact: true })).toBeDisabled()
+})
+
+test('los mínimos simultáneos se aplican por elemento e ignoran cantidades incompatibles', async ({ page }) => {
+  const advanced = {
+    ...ADVANCED, materials: [...ADVANCED.materials, row('steel', 'Acero', 30),
+      row('material_fish', 'Espejo de fichas', 3), { ...row('odd', 'Dato incompatible', 0), count: null, editable: false }],
+  }
+  await open(page, { save: { ...SESSION_SAVE, advanced } })
+  let payload: Record<string, unknown> | undefined
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => {
+    payload = route.request().postDataJSON()
+    return route.fulfill({ json: prepared(payload!, [['advanced', 'Materiales', 4]]) })
+  })
+  for (const [label, requested] of [['Materiales', '15'], ['Alimento de mascotas', '20'], ['Baterías', '25']]) {
+    await page.getByLabel(`Activar ${label}`).check()
+    await page.getByLabel(label, { exact: true }).fill(requested)
+  }
+  await openCategory(page, 'Materiales')
+  await expect(page.getByLabel('Nueva cantidad para Espejo de fichas')).toBeDisabled()
+  await expect(page.getByLabel('Nueva cantidad para Dato incompatible')).toBeDisabled()
+  await page.getByLabel('Cantidad mínima').fill('12')
+  await page.getByRole('button', { name: 'Aplicar mínimo' }).click()
+  await expect(page.getByLabel('Nueva cantidad para Acero')).toHaveValue('')
+  await expect(page.getByLabel('Nueva cantidad para Hierro')).toHaveAttribute('placeholder', '15')
+  await expect(page.getByLabel('Nueva cantidad para Madera')).toHaveAttribute('placeholder', '15')
+  await page.getByRole('button', { name: 'Guardar', exact: true }).click()
+  await expect(page.getByTestId('unified-preview')).toBeVisible()
+  expect(payload).toEqual({ source_sha256: SHA, advanced: { seeds: [], materials: [
+    { id: 'wood', value: 15 }, { id: 'iron', value: 15 }, { id: 'material_grain', value: 20 },
+    { id: 'material_battery', value: 25 },
+  ] } })
+})
+
+test('protege el borrador al salir por el encabezado y por el historial', async ({ page }) => {
+  await open(page, { path: '/partida' })
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await page.getByLabel('Activar Todos los personajes').check()
+  const leave = page.getByRole('dialog', { name: '¿Salir del editor?' })
+  await page.getByRole('link', { name: 'Volver a Partida' }).click()
+  await expect(leave).toBeVisible()
+  await leave.getByRole('button', { name: 'Seguir editando' }).click()
+  await expect(leave).not.toBeVisible()
+  await expect(page.getByTestId('editor-bar')).toContainText('3 cambios')
+  await page.getByRole('tab', { name: 'Rápida' }).focus()
+  await page.keyboard.press('ArrowRight')
+  await expect(page.getByRole('tab', { name: 'Categorías' })).toBeFocused()
+  await page.evaluate(() => history.back())
+  await expect(page.getByRole('tab', { name: 'Rápida' })).toHaveAttribute('aria-selected', 'true')
+  await page.evaluate(() => history.back())
+  await expect(leave).toBeVisible()
+  await leave.getByRole('button', { name: 'Descartar y salir' }).click()
+  await expect(page).toHaveURL(/\/partida$/)
+  await expect(page.getByRole('navigation', { name: 'Navegación principal' })).toBeVisible()
+  await page.getByRole('link', { name: 'Abrir Editor' }).click()
+  await expect(page.getByTestId('editor-bar')).toContainText('0 cambios')
+})
+
+test('distingue un dato de solo lectura y bloquea cantidades inválidas', async ({ page }) => {
+  await open(page, { save: {
+    ...SESSION_SAVE, fish_chip: null,
+    report: { ...REPORT, fish_chips: { ...REPORT.fish_chips, balance: 17, balance_path: 'gameData.fishChip' } },
+  } })
+  const row = page.getByTestId('quick-edit').locator('.quick-row').filter({ hasText: 'Fichas de pesca' })
+  await expect(row).toContainText('Actual 17')
+  await expect(row.getByLabel('Activar Fichas de pesca')).toBeDisabled()
+  await page.getByLabel('Activar Gemas').check()
+  await page.getByLabel('Gemas', { exact: true }).fill('-5')
+  await expect(page.getByLabel('Gemas', { exact: true })).toHaveAttribute('aria-invalid', 'true')
+  await expect(page.getByTestId('editor-bar')).toContainText('Revisa las cantidades')
+  await expect(page.getByRole('button', { name: 'Guardar', exact: true })).toBeDisabled()
+})
+
+test('mantiene visible la barra y desplaza el campo enfocado cuando se reduce la altura visible', async ({ page }) => {
+  await open(page)
+  await page.getByLabel('Activar Baterías').check()
+  const input = page.getByLabel('Baterías', { exact: true })
+  await input.focus()
+  const bar = page.getByTestId('editor-bar')
+  await page.evaluate(() => {
+    const viewport = window.visualViewport!
+    Object.defineProperty(viewport, 'height', { configurable: true, value: window.innerHeight - 280 })
+    viewport.dispatchEvent(new Event('resize'))
+  })
+  await expect.poll(async () => {
+    const field = (await input.boundingBox())!
+    const footer = (await bar.boundingBox())!
+    return field.y + field.height < footer.y
+  }).toBe(true)
+  const footer = (await bar.boundingBox())!
+  expect(footer.y + footer.height).toBeCloseTo(844 - 280)
+  await input.fill('50')
+  await expect(bar).toContainText('1 cambio')
+  await page.evaluate(() => {
+    const viewport = window.visualViewport!
+    Reflect.deleteProperty(viewport, 'height')
+    viewport.dispatchEvent(new Event('resize'))
+  })
+  await expect.poll(async () => {
+    const footer = (await bar.boundingBox())!
+    return footer.y + footer.height
+  }).toBe(844)
+})
+
+test('muestra los estados de guardado y conserva el borrador si la subida queda sin verificar', async ({ page }) => {
+  await open(page)
+  let allowUpload!: () => void
+  const uploadPending = new Promise<void>((resolve) => { allowUpload = resolve })
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => route.fulfill({
+    json: prepared(route.request().postDataJSON(), [['characters', 'Personajes', 3]]),
+  }))
+  await page.route('**/api/v1/cloud/native/confirm', async (route) => {
+    await uploadPending
+    await route.fulfill({ json: { backup_id: BACKUP.id, accepted: true, persisted: false } })
+  })
+  await page.getByLabel('Activar Todos los personajes').check()
+  await page.getByRole('button', { name: 'Guardar', exact: true }).click()
+  await page.getByLabel(/Confirmo subir el candidato/).check()
+  await page.getByRole('button', { name: 'Guardar en la nube' }).click()
+  const bar = page.getByTestId('editor-bar')
+  await expect(bar).toContainText('Guardando y verificando…')
+  await expect(bar.getByRole('button', { name: 'Guardar en la nube' })).toBeDisabled()
+  await expect(bar.getByRole('button', { name: 'Descartar' })).toBeDisabled()
+  await page.getByRole('link', { name: 'Volver a Partida' }).click()
+  const leave = page.getByRole('dialog', { name: 'Operación en curso' })
+  await expect(leave).toBeVisible()
+  await expect(leave.getByRole('button', { name: 'Descartar y salir' })).toHaveCount(0)
+  await leave.getByRole('button', { name: 'Seguir editando' }).click()
+  allowUpload()
+  await expect(bar).toContainText('Revisa el resultado')
+  await expect(bar).toContainText('3 cambios')
+  await expect(page.getByText('No se pudo verificar la subida.', { exact: false })).toBeVisible()
+})
+
+test('capturas móviles, tableta y escritorio sin desbordamiento', async ({ page }) => {
   await open(page)
   const sizes = [
     { width: 320, height: 568 }, { width: 360, height: 800 }, { width: 375, height: 812 },
     { width: 390, height: 844 }, { width: 430, height: 932 },
     { width: 768, height: 1024 }, { width: 1280, height: 800 },
   ]
+  const screenshot = async (name: string) => {
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), name).toBe(true)
+    await expect(page.getByTestId('editor-bar')).toBeInViewport()
+    await page.evaluate(() => document.fonts.ready)
+    await page.screenshot({ path: `test-results/phase8-1/${name}.png` })
+  }
+  await page.getByLabel('Activar Todos los personajes').check()
+  await page.getByLabel('Activar Gemas').check()
+  await page.getByLabel('Gemas', { exact: true }).fill('1200')
   for (const size of sizes) {
     await page.setViewportSize(size)
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${size.width}`).toBe(true)
-    await expect(page.getByTestId('editor-bar')).toBeVisible()
-    await page.screenshot({ path: `test-results/phase8-quick-${size.width}.png`, fullPage: true })
+    await page.getByRole('tab', { name: 'Rápida' }).click()
+    await screenshot(`rapida-${size.width}`)
+    await page.getByRole('tab', { name: 'Categorías' }).click()
+    await expect(page.getByTestId('category-grid').getByRole('button')).toHaveCount(9)
+    if (size.width <= 430) {
+      expect(await page.locator('.category-grid').evaluate((grid) => getComputedStyle(grid).gridTemplateColumns.split(' ').length)).toBe(3)
+    }
+    expect(await page.locator('.category-icon').evaluateAll((icons) =>
+      Promise.all(icons.map((icon) => (icon as HTMLImageElement).decode())).then(() => true))).toBe(true)
+    await screenshot(`categorias-${size.width}`)
+    await page.getByRole('button', { name: 'Materiales' }).click()
+    await screenshot(`materiales-${size.width}`)
+    await page.getByRole('tab', { name: 'Rápida' }).click()
+    const lastRow = page.getByLabel('Activar Pase de batalla al nivel máximo')
+    await expect(lastRow).toBeVisible()
+    await expect.poll(async () => {
+      await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight))
+      const control = (await lastRow.boundingBox())!
+      const footer = (await page.getByTestId('editor-bar').boundingBox())!
+      return control.y + control.height < footer.y
+    }, { message: `fila final en ${size.width}` }).toBe(true)
+    if (size.width === 390) await screenshot('rapida-desbloqueos-390')
   }
   await page.setViewportSize({ width: 390, height: 844 })
-  await page.screenshot({ path: 'test-results/phase8-quick.png', fullPage: true })
-  await page.getByRole('tab', { name: 'Categorías' }).click()
-  await page.screenshot({ path: 'test-results/phase8-categories.png', fullPage: true })
-  for (const size of sizes) {
-    await page.setViewportSize(size)
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${size.width}`).toBe(true)
-    await expect(page.getByTestId('editor-bar')).toBeVisible()
-    await page.screenshot({ path: `test-results/phase8-categories-${size.width}.png`, fullPage: true })
+  for (const [category, slug] of [
+    ['Recursos', 'recursos'], ['Personajes', 'personajes'], ['Habilidades', 'habilidades'],
+    ['Skins', 'skins'], ['Mascotas', 'mascotas'], ['Semillas', 'semillas'], ['Temporada', 'temporada'], ['Pase de batalla', 'pase'],
+  ]) {
+    await openCategory(page, category)
+    await expect(page.getByTestId(`category-${slug}`)).toBeVisible()
+    await screenshot(`${slug}-390`)
   }
 })

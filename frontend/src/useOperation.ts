@@ -28,5 +28,5 @@ export function useOperation() {
     }
   }
 
-  return { pending, problem, run }
+  return { pending, problem, run, clearProblem: () => setProblem(null) }
 }

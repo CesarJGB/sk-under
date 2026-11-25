@@ -881,8 +881,6 @@ export type NativeProfile = {
 }
 
 export type NativeSaveSummary = {
-  verified: true
-  bytes: number
   sha256: string
   gems: number
   fish_chip?: number | null
@@ -895,8 +893,7 @@ export type NativeSaveSummary = {
   character_write_policy?: 'confirmed_by_owner'
   skill_write_policy?: 'confirmed_by_owner'
   skin_write_policy?: 'confirmed_by_owner'
-  sections: number | null
-  remote_source: string
+  downloaded_at?: string
   report?: SaveReport | null
   advanced?: LabAdvanced | null
 }

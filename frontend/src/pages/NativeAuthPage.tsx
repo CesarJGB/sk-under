@@ -12,6 +12,7 @@ import { formatSize } from '../session'
 import { Loading, Notice, PageTitle, Problem } from '../ui'
 import { HomePage } from './HomePage'
 import { EditorWorkspace } from './EditorWorkspace'
+import { EditorHeader } from './EditorOverview'
 import { useOperation } from '../useOperation'
 
 const gemFormat = new Intl.NumberFormat('es-MX')
@@ -139,7 +140,6 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
   const [profileId, setProfileId] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [accountHint, setAccountHint] = useState('')
-  const [editorDirty, setEditorDirty] = useState(false)
   const [revision, setRevision] = useState(0)
   const configOperation = useOperation()
   const authOperation = useOperation()
@@ -200,13 +200,9 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
   }
 
   function logout() {
-    const message = editorDirty
-      ? 'Hay cambios sin guardar. ¿Cerrar sesión y descartarlos? Se eliminará el acceso de este navegador a la cuenta.'
-      : '¿Cerrar sesión? Se eliminará el acceso de este navegador a la cuenta.'
-    if (!window.confirm(message)) return
+    if (!window.confirm('¿Cerrar sesión? Se eliminará el acceso de este navegador a la cuenta.')) return
     void authOperation.run(async (signal) => {
       await nativeAuth.logout(signal)
-      setEditorDirty(false)
       setAccountHint('')
       setSession({ active: false, reason: 'none' })
       setConfig((current) => current && { ...current, session: { active: false, reason: 'none' } })
@@ -232,7 +228,8 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
   const unavailable = Boolean(configOperation.problem) || Boolean(config && !config.login_available)
   const account = session?.account
   const version = config?.distributions.find(({ id }) => id === account?.distribution)?.game_version
-  const platform = [distributionLabel(account?.distribution_label ?? ''), version].filter(Boolean).join(' · ')
+  const distribution = distributionLabel(account?.distribution_label ?? '')
+  const platform = [distribution, version].filter(Boolean).join(' · ')
 
   if (view === 'home' && !active) {
     return <HomePage loading={loading} unavailable={unavailable} retry={refresh} />
@@ -256,14 +253,13 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
   </section>
 
   return <>
-    {view !== 'home' && <div className="cloud-title"><PageTitle title={view === 'editor' ? 'Editor' : 'Partida'} /></div>}
-    {!active && view === 'editor' && <section className="cloud-empty panel">
-      {loading ? <Loading>Comprobando conexión…</Loading> : <>
-        <h2>{unavailable ? 'Servicio temporalmente no disponible' : 'Conecta tu cuenta'}</h2>
-        {!unavailable && <p>Abre tu partida en la nube para editarla.</p>}
+    {view === 'save' && <div className="cloud-title"><PageTitle title="Partida" /></div>}
+    {!active && view === 'editor' && <>
+      <EditorHeader status={loading ? 'Comprobando conexión…' : unavailable ? 'Servicio no disponible' : 'Sin sesión'} />
+      {!loading && <div className="cloud-actions">
         <Link className="button primary" to="/partida">{unavailable ? 'Ir a Partida' : 'Conectar cuenta'}</Link>
-      </>}
-    </section>}
+      </div>}
+    </>}
     {!active && view === 'save' && <>
       {session?.reason === 'expired' && <Notice tone="warning">{FRIENDLY.native_session_expired}</Notice>}
       {loading ? <Loading>Comprobando el acceso…</Loading> : configOperation.problem || !available ? (
@@ -330,11 +326,11 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
       {view === 'save' && accountBar}
       {session.installation_ready ? <NativeEditor key={`${session.account?.label}-${session.session_expires_at}`}
         session={session} initialSave={session.save ?? null} view={view} platform={platform} accountLabel={accountLabel}
-        onExpired={expired} onDirtyChange={setEditorDirty} /> : view === 'home' ? <HomePage account={{ label: accountLabel, platform, saveStatus: 'Configuración de acceso pendiente' }} />
-          : view === 'editor' ? <section className="cloud-empty panel">
-            <h2>Configuración de acceso pendiente</h2>
+        distribution={distribution} version={version} onExpired={expired} /> : view === 'home' ? <HomePage account={{ label: accountLabel, platform, saveStatus: 'Configuración de acceso pendiente' }} />
+          : view === 'editor' ? <>
+            <EditorHeader accountLabel={accountLabel} platform={distribution} version={version} status="Configuración de acceso pendiente" />
             <Link className="button primary" to="/partida">Ir a Partida</Link>
-          </section> : <section className="cloud-empty panel">
+          </> : <section className="cloud-empty panel">
             <h2>Configuración de acceso pendiente</h2>
             <p>Contacta con el administrador para completar el acceso a la partida.</p>
             {session.auto_identity === false && <details className="cloud-details">
@@ -357,18 +353,18 @@ export function NativeAuthPage({ view }: { view: CloudView }) {
   </>
 }
 
-function NativeEditor({ session, initialSave, onExpired, view, platform, accountLabel, onDirtyChange }: {
+function NativeEditor({ session, initialSave, onExpired, view, platform, accountLabel, distribution, version }: {
   session: NativeSession
   initialSave: NativeSaveSummary | null
   onExpired: () => void
   view: CloudView
   platform: string
   accountLabel: string
-  onDirtyChange: (dirty: boolean) => void
+  distribution: string
+  version?: string
 }) {
-  const [save, setSave] = useState<(NativeSaveSummary & { downloaded_at?: string }) | null>(initialSave)
+  const [save, setSave] = useState<NativeSaveSummary | null>(initialSave)
   const [syncResult, setSyncResult] = useState<LabWriteResult | null>(null)
-  const [action, setAction] = useState<'download' | 'upload'>('download')
   const [history, setHistory] = useState<Array<LabBackup & { confirmed: boolean }>>([])
   const [backupResult, setBackupResult] = useState<(LabWriteResult | LabVerification) | null>(null)
   const operation = useOperation()
@@ -392,8 +388,8 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
 
   useEffect(() => { void historyOperation.run(refreshHistory) }, [])
 
-  const downloading = action === 'download' && operation.pending
-  const downloadProblem = action === 'download' ? operation.problem : null
+  const downloading = operation.pending
+  const downloadProblem = operation.problem
   const initialProblem = !save && !downloadProblem && !syncResult && !downloading ? session.save_error : null
   const noCloudSave = initialProblem === 'native_no_cloud_save' || downloadProblem?.code === 'native_no_cloud_save'
   const waiting = initialProblem === 'native_device_binding_throttled'
@@ -407,28 +403,27 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
   else if (noCloudSave) saveStatus = 'Sin partida en la nube'
   else if (waiting) saveStatus = 'En espera de ChillyRoom'
 
+  async function reload(signal: AbortSignal) {
+    const next = await nativeAuth.save(signal)
+    if (!signal.aborted) {
+      setSave(next)
+      operation.clearProblem()
+    }
+    return next
+  }
+
   function download() {
-    setAction('download')
     run(async (signal) => {
       setSyncResult(null)
       setSave(null)
-      setSave(await nativeAuth.save(signal))
+      await reload(signal)
     })
   }
 
-  async function reload() {
-    setAction('download')
-    await new Promise<void>((resolve, reject) => {
-      run(async (signal) => {
-        try {
-          setSave(await nativeAuth.save(signal))
-          resolve()
-        } catch (error) {
-          reject(error)
-        }
-      })
-    })
-  }
+  useEffect(() => {
+    // The login preview can have balances without the per-item unlock report.
+    if (view === 'editor' && save && !save.report && !save.downloaded_at) run(reload)
+  }, [view])
 
   const downloadButton = <button className={`button ${save ? 'quiet' : 'primary'}`} disabled={disabled} onClick={download}>
     <CloudDownload size={18} aria-hidden="true" />
@@ -514,20 +509,18 @@ function NativeEditor({ session, initialSave, onExpired, view, platform, account
     </section>
   </>
 
-  if (!save) return <section className="cloud-empty panel">
-    <h2>{noCloudSave ? 'Sin partida en la nube' : 'Descarga tu partida'}</h2>
-    {downloading && <Loading>Descargando partida…</Loading>}
-    {downloadFeedback}
-    {downloadButton}
-  </section>
+  if (!save) return <>
+    <EditorHeader accountLabel={accountLabel} platform={distribution} version={version}
+      status={downloadProblem && !noCloudSave && !waiting ? 'Error de descarga' : saveStatus} />
+    <section className="cloud-empty panel">
+      {downloadFeedback}
+      {downloadButton}
+    </section>
+  </>
 
   return <EditorWorkspace save={save} session={session}
-    accountLabel={accountLabel} platform={platform} onExpired={onExpired}
-    onDirtyChange={onDirtyChange}
-    onReload={() => { void reload() }}
-    onUploaded={async () => {
-      setSave(await nativeAuth.save(new AbortController().signal))
-    }} />
+    accountLabel={accountLabel} platform={distribution} version={version} onExpired={onExpired}
+    loadingSave={downloading} loadProblem={downloadProblem} onReload={reload} />
 }
 
 function backupFieldLabel(backup: LabBackup) {

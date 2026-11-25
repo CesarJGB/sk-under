@@ -30,7 +30,8 @@ export type Draft = {
   quick: Record<QuantityKey, QuickToggle>
   materialEdits: Record<string, string>
   seedEdits: Record<string, string>
-  petFoodEdits: Record<string, string>
+  materialMinimums: Record<string, number>
+  seedMinimums: Record<string, number>
   reborn: boolean
   battlePass: { enabled: boolean; seasonId: number | null; level: string; exp: string; buy: boolean | null }
 }
@@ -44,6 +45,37 @@ export type DraftCounts = {
 const quantityKeys: QuantityKey[] = [
   'gems', 'fishChip', 'fishProgress', 'seasonCoin', 'materialsMin', 'seedsMin', 'petFoodMin', 'batteryMin',
 ]
+
+export const MAX_QUANTITY = 2_147_483_647
+export const protectedMaterial = 'material_fish'
+export const batteryId = 'material_battery'
+
+export function originalQuantity(value: unknown): number | null {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 ? value : null
+}
+
+export function advancedSnapshot(save: NativeSaveSummary | null) {
+  return save?.advanced?.available === false ? null : save?.advanced
+}
+
+export function scalarQuantity(save: NativeSaveSummary, key: 'gems' | 'fishChip' | 'fishProgress' | 'seasonCoin') {
+  const coin = advancedSnapshot(save)?.season_coin
+  const stored = originalQuantity({
+    gems: save.gems, fishChip: save.fish_chip, fishProgress: save.cumulative_fish_count, seasonCoin: coin?.value,
+  }[key])
+  const fish = save.report?.fish_chips
+  const observed = key === 'fishChip' && fish?.balance_path === 'gameData.fishChip' && fish.balance_is_integer
+    ? originalQuantity(fish.balance) : null
+  return { original: stored ?? observed, editable: stored !== null && (key !== 'seasonCoin' || !!coin?.available) }
+}
+
+export function minimumRows(save: NativeSaveSummary, key: 'materialsMin' | 'seedsMin' | 'petFoodMin' | 'batteryMin') {
+  const advanced = advancedSnapshot(save)
+  if (key === 'materialsMin') return (advanced?.materials ?? []).filter((row) => row.id !== protectedMaterial)
+  if (key === 'seedsMin') return advanced?.seeds ?? []
+  const food = advanced?.pet_food ?? []
+  return key === 'batteryMin' ? food.filter((row) => row.id === batteryId) : food
+}
 
 function emptySet(): Record<string, true> {
   return {}
@@ -61,7 +93,8 @@ export function createEmptyDraft(): Draft {
     quick: Object.fromEntries(quantityKeys.map((key) => [key, { enabled: false, value: '' }])) as Record<QuantityKey, QuickToggle>,
     materialEdits: {},
     seedEdits: {},
-    petFoodEdits: {},
+    materialMinimums: {},
+    seedMinimums: {},
     reborn: false,
     battlePass: { enabled: false, seasonId: null, level: '', exp: '', buy: null },
   }
@@ -75,7 +108,14 @@ function parseQuantity(value: string): number | null {
   const trimmed = value.trim()
   if (!/^\d+$/.test(trimmed)) return null
   const number = Number(trimmed)
-  return Number.isSafeInteger(number) && number >= 0 ? number : null
+  return Number.isSafeInteger(number) && number <= MAX_QUANTITY ? number : null
+}
+
+export function minimumTarget(original: unknown, ...minimums: Array<number | null>): number | null {
+  const current = originalQuantity(original)
+  if (current === null) return null
+  const target = Math.max(current, ...minimums.map((minimum) => minimum ?? current))
+  return target > current ? target : null
 }
 
 function eligibleCharacters(characters: SaveCharacterReport | null | undefined): string[] {
@@ -92,20 +132,21 @@ function eligibleSkins(characters: SaveCharacterReport | null | undefined): stri
 
 function eligiblePets(advanced: LabAdvanced | null | undefined): string[] {
   if (!advanced || advanced.available === false) return []
-  return advanced.pets.filter((pet) => pet.editable && pet.present && !pet.unlocked).map((pet) => pet.id)
+  return advanced.pets.filter((pet) => pet.editable && pet.present && pet.unlocked === false).map((pet) => pet.id)
 }
 
 function eligiblePetSkins(advanced: LabAdvanced | null | undefined): string[] {
   if (!advanced || advanced.available === false) return []
   return advanced.pet_skins
-    .filter((skin) => skin.editable && skin.present && !skin.unlocked)
+    .filter((skin) => skin.editable && skin.present && skin.unlocked === false)
     .map((skin) => skin.id)
 }
 
 export type Eligibility = Record<BulkKey, string[]>
 
 export function eligibility(save: NativeSaveSummary | null): Eligibility {
-  const characters = save?.report?.characters
+  const report = save?.report?.characters
+  const characters = report?.catalog?.available === false ? null : report
   const advanced = save?.advanced
   return {
     characters: eligibleCharacters(characters),
@@ -142,7 +183,7 @@ export function isSelected(
   draft: Draft,
   eligible: Eligibility,
 ): boolean {
-  return Boolean(effective(key, draft, eligible)[item])
+  return !draft.excluded[key][item] && Boolean(draft.manual[key][item] || (draft.bulk[key] && eligible[key].includes(item)))
 }
 
 export function toggleItem(
@@ -181,7 +222,7 @@ export function setBulk(key: BulkKey, value: boolean, draft: Draft): Draft {
 }
 
 export function selectAll(key: BulkKey, draft: Draft): Draft {
-  return setBulk(key, true, { ...draft, manual: { ...draft.manual, [key]: {} } })
+  return setBulk(key, true, draft)
 }
 
 export function clearSelection(key: BulkKey, draft: Draft): Draft {
@@ -198,11 +239,29 @@ export function setEdit(
   value: string,
   draft: Draft,
 ): Draft {
-  const field = kind === 'materials' ? 'materialEdits' : kind === 'seeds' ? 'seedEdits' : 'petFoodEdits'
+  const field = kind === 'seeds' ? 'seedEdits' : 'materialEdits'
   const next = { ...draft[field] }
   if (value.trim() === '') delete next[id]
   else next[id] = value
   return { ...draft, [field]: next }
+}
+
+export function applyItemMinimum(
+  kind: 'materials' | 'seeds', rows: LabAdvanced['materials'], minimum: number, draft: Draft,
+): Draft {
+  const editKey = kind === 'materials' ? 'materialEdits' : 'seedEdits'
+  const minimumKey = kind === 'materials' ? 'materialMinimums' : 'seedMinimums'
+  const edits = { ...draft[editKey] }
+  const minimums = { ...draft[minimumKey] }
+  for (const row of rows) {
+    const current = originalQuantity(row.count)
+    if (!row.editable || !row.owned || current === null || (kind === 'materials' && row.id === protectedMaterial)) continue
+    const target = minimumTarget(current, minimum, minimums[row.id] ?? null)
+    if (target !== null) minimums[row.id] = target
+    const manual = parseQuantity(edits[row.id] ?? '')
+    if (manual !== null && manual < (target ?? current)) delete edits[row.id]
+  }
+  return { ...draft, [editKey]: edits, [minimumKey]: minimums }
 }
 
 function effectiveUnlockedSet(
@@ -242,20 +301,20 @@ export function effectivePetSkins(draft: Draft, save: NativeSaveSummary): string
 function materialPlan(
   rows: LabAdvanced['materials'] | LabAdvanced['seeds'] | LabAdvanced['pet_food'],
   edits: Record<string, string>,
-  minimum: QuickToggle | undefined,
-  forbidden?: Set<string>,
+  minimum: number | null,
+  itemMinimums: Record<string, number>,
 ): Array<{ id: string; value: number }> {
   const result: Array<{ id: string; value: number }> = []
-  const minimumValue = minimum?.enabled ? parseQuantity(minimum.value) : null
   for (const row of rows) {
-    if (forbidden?.has(row.id)) continue
+    if (!row.editable) continue
+    const original = originalQuantity(row.count)
     const manual = parseQuantity(edits[row.id] ?? '')
     if (manual !== null) {
-      if (row.count === null || manual !== row.count) result.push({ id: row.id, value: manual })
+      if ((original !== null || row.insertable) && manual !== original) result.push({ id: row.id, value: manual })
       continue
     }
-    if (minimumValue === null || !row.editable || !row.owned) continue
-    if (row.count !== null && minimumValue > row.count) result.push({ id: row.id, value: minimumValue })
+    const target = row.owned ? minimumTarget(original, minimum, itemMinimums[row.id] ?? null) : null
+    if (target !== null) result.push({ id: row.id, value: target })
   }
   return result
 }
@@ -267,7 +326,7 @@ export type BuiltPlan = {
 }
 
 export function buildDraftPlan(save: NativeSaveSummary, draft: Draft): BuiltPlan {
-  const advanced = save.advanced
+  const advanced = advancedSnapshot(save)
   const counts: DraftCounts = { changes: 0, operations: 0, byCategory: {} }
   const plan: LabUnifiedPlan = {}
   const bump = (category: string, amount: number) => {
@@ -276,21 +335,22 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft): BuiltPlan
     counts.changes += amount
     counts.operations += 1
   }
+  const requested = (key: QuantityKey) => draft.quick[key].enabled ? parseQuantity(draft.quick[key].value) : null
+  const scalarChange = (key: 'gems' | 'fishChip' | 'fishProgress' | 'seasonCoin') => {
+    const source = scalarQuantity(save, key)
+    const value = requested(key)
+    return source.editable && value !== source.original ? value : null
+  }
 
-  const gems = draft.quick.gems.enabled ? parseQuantity(draft.quick.gems.value) : null
-  if (gems !== null && gems !== save.gems) {
-    plan.gems = gems
-    bump('Gemas', 1)
-  }
-  const fishChip = draft.quick.fishChip.enabled ? parseQuantity(draft.quick.fishChip.value) : null
-  if (fishChip !== null && fishChip !== (save.fish_chip ?? null)) {
-    plan.fish_chip = fishChip
-    bump('Fichas de pesca', 1)
-  }
-  const fishProgress = draft.quick.fishProgress.enabled ? parseQuantity(draft.quick.fishProgress.value) : null
-  if (fishProgress !== null && fishProgress !== (save.cumulative_fish_count ?? null)) {
-    plan.fish_progress = fishProgress
-    bump('Recompensas de pesca', 1)
+  for (const [key, field, label] of [
+    ['gems', 'gems', 'Gemas'],
+    ['fishChip', 'fish_chip', 'Fichas de pesca'],
+    ['fishProgress', 'fish_progress', 'Recompensas de pesca'],
+  ] as const) {
+    const value = scalarChange(key)
+    if (value === null) continue
+    plan[field] = value
+    bump(label, 1)
   }
 
   const characters = effectiveCharacters(draft, save)
@@ -310,63 +370,30 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft): BuiltPlan
   }
 
   const advancedPlan: LabAdvancedPlan = { materials: [], seeds: [] }
-  const quickMaterials = draft.quick.materialsMin
-  const quickSeeds = draft.quick.seedsMin
-  const quickPetFood = draft.quick.petFoodMin
-  const quickBattery = draft.quick.batteryMin
-
-  const petFoodIds = new Set(['material_grain', 'material_battery'])
-  const materials = materialPlan(
-    advanced?.materials ?? [], draft.materialEdits, quickMaterials,
-    new Set(['material_fish']),
-  )
-  // El mínimo de alimento tiene prioridad sobre el mínimo general para sus dos materiales.
-  if (quickPetFood.enabled) {
-    const foodMinimum = parseQuantity(quickPetFood.value)
-    if (foodMinimum !== null) {
-      for (const row of advanced?.pet_food ?? []) {
-        if (!row.editable || !row.owned) continue
-        if (row.count !== null && foodMinimum <= row.count) continue
-        const index = materials.findIndex((entry) => entry.id === row.id)
-        if (index >= 0) materials.splice(index, 1)
-        materials.push({ id: row.id, value: foodMinimum })
-      }
-    }
-  }
-  for (const id of petFoodIds) {
-    const manual = parseQuantity(draft.petFoodEdits[id] ?? '')
-    if (manual !== null) {
-      const row = advanced?.pet_food.find((entry) => entry.id === id)
-      const index = materials.findIndex((entry) => entry.id === id)
-      if (row?.count === manual) {
-        if (index >= 0) materials.splice(index, 1)
-        continue
-      }
-      if (index >= 0) materials[index] = { id, value: manual }
-      else materials.push({ id, value: manual })
+  const materials = materialPlan(minimumRows(save, 'materialsMin'), draft.materialEdits, requested('materialsMin'), draft.materialMinimums)
+  const materialChanges = new Map(materials.map(({ id, value }) => [id, value]))
+  for (const row of advanced?.pet_food ?? []) {
+    if (!row.editable || row.id === protectedMaterial) continue
+    const current = originalQuantity(row.count)
+    const explicit = parseQuantity(draft.materialEdits[row.id] ?? '')
+    if (explicit !== null) {
+      if (explicit === current) materialChanges.delete(row.id)
+      else if (current !== null || row.insertable) materialChanges.set(row.id, explicit)
       continue
     }
-    if (id !== 'material_battery' || !quickBattery.enabled) continue
-    const batteryMinimum = parseQuantity(quickBattery.value)
-    const row = advanced?.pet_food.find((entry) => entry.id === id)
-    if (batteryMinimum === null || !row?.editable || !row.owned) continue
-    if (row.count !== null && batteryMinimum <= row.count) continue
-    const index = materials.findIndex((entry) => entry.id === id)
-    if (index < 0) materials.push({ id, value: batteryMinimum })
+    if (!row.owned) continue
+    const value = minimumTarget(current, materialChanges.get(row.id) ?? null, requested('petFoodMin'),
+      row.id === batteryId ? requested('batteryMin') : null)
+    if (value !== null) materialChanges.set(row.id, value)
   }
-  if (materials.length > 0) {
-    advancedPlan.materials = materials
-    bump('Materiales', materials.length)
-  }
+  advancedPlan.materials = Array.from(materialChanges, ([id, value]) => ({ id, value }))
+  bump('Materiales', advancedPlan.materials.length)
 
-  const seeds = materialPlan(advanced?.seeds ?? [], draft.seedEdits, quickSeeds)
-  if (seeds.length > 0) {
-    advancedPlan.seeds = seeds
-    bump('Semillas', seeds.length)
-  }
+  advancedPlan.seeds = materialPlan(minimumRows(save, 'seedsMin'), draft.seedEdits, requested('seedsMin'), draft.seedMinimums)
+  bump('Semillas', advancedPlan.seeds.length)
 
-  const seasonCoin = draft.quick.seasonCoin.enabled ? parseQuantity(draft.quick.seasonCoin.value) : null
-  if (seasonCoin !== null && advanced?.season_coin.available && seasonCoin !== advanced.season_coin.value) {
+  const seasonCoin = scalarChange('seasonCoin')
+  if (seasonCoin !== null) {
     advancedPlan.season_coin = seasonCoin
     bump('Monedas de temporada', 1)
   }
@@ -383,7 +410,7 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft): BuiltPlan
   }
 
   let battlePassRecord: BuiltPlan['battlePassRecord'] = null
-  if (draft.battlePass.enabled && advanced?.battle_pass.records?.length) {
+  if (draft.battlePass.enabled && advanced?.battle_pass?.records?.length) {
     const record = advanced.battle_pass.records.find((item) => item.season_id === draft.battlePass.seasonId)
       ?? advanced.battle_pass.records.find((item) => item.season_id === advanced.battle_pass.selected_season_id)
       ?? advanced.battle_pass.records[0]
@@ -429,13 +456,29 @@ export function quickChecked(
   draft: Draft,
   eligible: Eligibility,
 ): 'all' | 'some' | 'none' {
-  const selected = selectedCount(key, draft, eligible)
+  const selection = effective(key, draft, eligible)
+  const selected = eligible[key].filter((id) => selection[id]).length
   if (selected === 0) return 'none'
-  return selected >= eligible[key].length ? 'all' : 'some'
+  return selected === eligible[key].length ? 'all' : 'some'
 }
 
-export function bulkSummary(key: BulkKey, draft: Draft, eligible: Eligibility) {
-  return { selected: selectedCount(key, draft, eligible), total: eligible[key].length }
+export function unlockProgress(save: NativeSaveSummary, key: BulkKey, eligible: Eligibility) {
+  const report = save.report?.characters
+  const characters = report?.catalog?.available === false ? [] : report?.items ?? []
+  const advanced = advancedSnapshot(save)
+  const unlocked = {
+    characters: () => characters.filter((item) => item.unlocked === true).length,
+    skills: () => characters.reduce((total, item) => total + item.skill_options.filter(
+      ({ index }) => item.skills.some((skill) => skill.key === index && skill.unlocked === true),
+    ).length, 0),
+    skins: () => characters.reduce((total, item) => total + item.skin_options.filter(
+      (skin) => skin.compatible && skin.state === 'unlocked',
+    ).length, 0),
+    pets: () => (advanced?.pets ?? []).filter((pet) => pet.present && pet.unlocked === true).length,
+    petSkins: () => (advanced?.pet_skins ?? []).filter((skin) => skin.present && skin.unlocked === true).length,
+  }[key]()
+  const pending = eligible[key].length
+  return { unlocked, pending, total: unlocked + pending }
 }
 
 export { parseQuantity, skillKey, skinKey }
