@@ -21,7 +21,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or Settings()
     app = FastAPI(
         title="Soul Knight Editor API",
-        version="0.3.0",
+        version="0.3.1",
         description="Inspección y exportación de copias. Formatos disponibles según la configuración.",
     )
     app.state.settings = settings
@@ -46,7 +46,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_origins=settings.allowed_origins,
         allow_credentials=True,
         allow_methods=["GET", "POST"],
-        allow_headers=["Authorization", "Content-Type", "X-SK-Cloud-Admin"],
+        allow_headers=[
+            "Authorization",
+            "Content-Type",
+            "X-SK-Cloud-Admin",
+            "X-SK-Account",
+        ],
         expose_headers=["Content-Disposition"],
     )
     app.include_router(router)

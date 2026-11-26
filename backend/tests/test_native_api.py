@@ -185,6 +185,39 @@ def test_login_sets_an_isolated_cookie_and_never_echoes_secrets(tmp_path):
     assert env["store"].database.stat().st_mode & 0o777 == 0o600
 
 
+def test_cors_allows_the_account_selector_for_reads_and_writes(tmp_path):
+    env = make_native(tmp_path)
+    client = env["client"]
+    account_id = login(client).json()["account_id"]
+    checks = (
+        (API + "/session", "GET"),
+        (API + "/save", "GET"),
+        (API + "/backups", "GET"),
+        (API + "/prepare", "POST"),
+    )
+    for path, method in checks:
+        preflight = client.options(path, headers={
+            "Origin": ORIGIN,
+            "Access-Control-Request-Method": method,
+            "Access-Control-Request-Headers": "content-type,x-sk-account",
+        })
+        assert preflight.status_code == 200, (path, preflight.text)
+        assert preflight.headers["Access-Control-Allow-Origin"] == ORIGIN
+        assert preflight.headers["Access-Control-Allow-Credentials"] == "true"
+        assert "x-sk-account" in preflight.headers["Access-Control-Allow-Headers"].lower()
+    selected = client.get(API + "/session", headers={**HEADERS, "X-SK-Account": account_id})
+    assert selected.status_code == 200, selected.text
+    assert selected.json()["account_id"] == account_id
+    assert selected.headers["Access-Control-Allow-Origin"] == ORIGIN
+    denied = client.options(API + "/session", headers={
+        "Origin": "https://foreign.example",
+        "Access-Control-Request-Method": "GET",
+        "Access-Control-Request-Headers": "x-sk-account",
+    })
+    assert denied.status_code == 400
+    assert "Access-Control-Allow-Origin" not in denied.headers
+
+
 def test_wrong_credentials_are_rejected_and_attempts_are_limited(tmp_path):
     env = make_native(tmp_path, attempts=2)
     first = login(env["client"], password="wrong-1")
