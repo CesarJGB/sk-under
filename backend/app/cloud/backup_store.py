@@ -74,6 +74,7 @@ from .skin_editor import (
 from .unified_editor import (
     UNIFIED_CATEGORY_KEYS,
     UNIFIED_OPTIONAL_CATEGORY_KEYS,
+    UNIFIED_OPTIONAL_DEFAULTS,
     UNIFIED_RECORD_FIELD,
     UnifiedEdit,
     normalize_unified_plan,
@@ -310,7 +311,12 @@ def _require_unified_plan(value: object, *, historical: bool = False) -> dict[st
         # clave desconocida o valor no normalizado sigue rechazándose.
         missing = UNIFIED_OPTIONAL_CATEGORY_KEYS - set(value)
         if missing:
-            value = value | {key: None for key in missing}
+            value = value | {
+                key: list(UNIFIED_OPTIONAL_DEFAULTS[key])
+                if isinstance(UNIFIED_OPTIONAL_DEFAULTS[key], list)
+                else UNIFIED_OPTIONAL_DEFAULTS[key]
+                for key in missing
+            }
     try:
         plan = normalize_unified_plan(value)
     except CloudSaveError as exc:

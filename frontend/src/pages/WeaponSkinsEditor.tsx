@@ -1,0 +1,249 @@
+import { CircleCheck } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { AccordionGroup } from '../AccordionGroup'
+import type { LabKillEffectItem, LabWeaponSkinItem, NativeSaveSummary } from '../api'
+import {
+  clearSelection, eligibility, isSelected, selectAll, selectedCount, toggleItem,
+  type Draft,
+} from '../draft'
+import { Notice } from '../ui'
+import { amountFormat, UnlockStatus } from './EditorOverview'
+
+type EditorProps = { save: NativeSaveSummary; draft: Draft; update: (next: Draft) => void }
+type Filter = 'pending' | 'all' | 'done'
+
+function CheckAll({ checked, indeterminate, onChange, label }: {
+  checked: boolean
+  indeterminate?: boolean
+  onChange: (checked: boolean) => void
+  label: string
+}) {
+  const ref = useRef<HTMLInputElement>(null)
+  useEffect(() => { if (ref.current) ref.current.indeterminate = Boolean(indeterminate) }, [indeterminate])
+  return <label className="inline-check">
+    <input ref={ref} type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} />
+    <span>{label}</span>
+  </label>
+}
+
+function Toolbar({ save, group, draft, update }: EditorProps & { group: 'weaponSkins' | 'killEffects' }) {
+  const eligible = eligibility(save)
+  const selected = selectedCount(group, draft, eligible)
+  const total = eligible[group].length
+  return <div className="detail-toolbar">
+    <UnlockStatus save={save} group={group} eligible={eligible} selected={selected} />
+    {(total > 0 || selected > 0) && <div>
+      <button type="button" className="button quiet" disabled={!total || eligible[group].every((id) => isSelected(group, id, draft, eligible))}
+        onClick={() => update(selectAll(group, draft))}>Seleccionar pendientes</button>
+      <button type="button" className="button quiet" disabled={!selected}
+        onClick={() => update(clearSelection(group, draft))}>Quitar selección</button>
+    </div>}
+  </div>
+}
+
+function FilterControls({ query, setQuery, filter, setFilter, searchLabel, allLabel = 'Todas', doneLabel = 'Desbloqueadas' }: {
+  query: string
+  setQuery: (value: string) => void
+  filter: Filter
+  setFilter: (value: Filter) => void
+  searchLabel?: string
+  allLabel?: string
+  doneLabel?: string
+}) {
+  return <div className="detail-filters">
+    {searchLabel && <input type="search" aria-label={searchLabel} value={query} placeholder="Buscar skin o arma"
+      onChange={(event) => setQuery(event.target.value)} />}
+    <select aria-label="Filtrar estado" value={filter} onChange={(event) => setFilter(event.target.value as Filter)}>
+      <option value="pending">Pendientes</option>
+      <option value="all">{allLabel}</option>
+      <option value="done">{doneLabel}</option>
+    </select>
+  </div>
+}
+
+function skinName(item: LabWeaponSkinItem) {
+  return item.name_es || item.name_en || item.id
+}
+
+function weaponName(item: LabWeaponSkinItem) {
+  return item.weapon_name_es || item.weapon_name_en || item.weapon_id
+}
+
+export function WeaponSkinsEditor({ save, draft, update }: EditorProps) {
+  const [query, setQuery] = useState('')
+  const [filter, setFilter] = useState<Filter>('pending')
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set())
+  const snapshot = save.weapon_skins
+  const items = snapshot?.items ?? []
+  const eligible = eligibility(save)
+  const pending = new Set(eligible.weaponSkins)
+  const selected = new Set(eligible.weaponSkins.filter((id) => isSelected('weaponSkins', id, draft, eligible)))
+  const search = query.trim().toLowerCase()
+  const grouped = new Map<string, LabWeaponSkinItem[]>()
+  for (const item of items) {
+    const group = grouped.get(item.weapon_id)
+    if (group) group.push(item)
+    else grouped.set(item.weapon_id, [item])
+  }
+  const groups = Array.from(grouped, ([weaponId, options]) => {
+    const visible = options.filter((item) => {
+      const matches = !search || skinName(item).toLowerCase().includes(search)
+        || weaponName(item).toLowerCase().includes(search) || item.id.includes(search)
+      const state = filter === 'all' || (filter === 'pending' ? !item.unlocked : item.unlocked)
+      return matches && state
+    })
+    return { weaponId, options, visible }
+  }).filter(({ visible }) => visible.length)
+
+  const toggleGroup = (weaponId: string) => setExpanded((previous) => {
+    const next = new Set(previous)
+    if (next.has(weaponId)) next.delete(weaponId)
+    else next.add(weaponId)
+    return next
+  })
+
+  if (snapshot?.available === false) {
+    return <div className="detail-editor">
+      <Notice tone="warning">No se pudieron leer las skins de arma de esta copia: {snapshot.error || 'estructura no reconocida'}.</Notice>
+    </div>
+  }
+
+  return <div className="detail-editor" data-testid="weapon-skins-editor">
+    <Notice tone="warning">
+      <strong>Experimental (E2).</strong> Añade skins a <code>UnlockedSkins</code> de cada arma. No cambia la skin equipada
+      ni el nivel del arma. Crear el registro de un arma no la desbloquea: la skin puede requerir tener el arma y necesita
+      validación física en Android.
+    </Notice>
+    <Toolbar save={save} group="weaponSkins" draft={draft} update={update} />
+    {items.length ? <>
+      <FilterControls query={query} setQuery={setQuery} filter={filter} setFilter={setFilter} searchLabel="Buscar skins de arma" />
+      {groups.length > 0 && <div className="lock-groups">
+        {groups.map(({ weaponId, options, visible }) => {
+          const selectable = visible.filter(({ id }) => pending.has(id))
+          const checked = selectable.filter(({ id }) => selected.has(id)).length
+          const unlocked = options.filter((item) => item.unlocked).length
+          const chosen = options.filter((item) => selected.has(item.id)).length
+          const title = weaponName(options[0])
+          return <AccordionGroup key={weaponId} title={title}
+            testId={`weapon-skin-group-${weaponId}`}
+            meta={`${options.length} ${options.length === 1 ? 'skin' : 'skins'}`}
+            summary={`${unlocked}/${options.length} desbloqueadas${chosen ? ` · ${chosen} en borrador` : ''}`}
+            expanded={expanded.has(weaponId) || Boolean(search)} onToggle={() => toggleGroup(weaponId)}>
+            {selectable.length > 1 && <div className="accordion-tools">
+              <CheckAll checked={checked === selectable.length}
+                indeterminate={checked > 0 && checked < selectable.length}
+                label={`Seleccionar ${title}`}
+                onChange={(enabled) => {
+                  let next = draft
+                  for (const { id } of selectable) {
+                    if (enabled !== selected.has(id)) next = toggleItem('weaponSkins', id, next, eligible)
+                  }
+                  update(next)
+                }} />
+            </div>}
+            <div className="lock-options">
+              {visible.map((item) => {
+                const isChecked = selected.has(item.id)
+                return <label className={`lock-option ${isChecked ? 'selected' : ''}`} key={item.id}>
+                  <input type="checkbox" checked={isChecked} disabled={!pending.has(item.id)}
+                    aria-label={`${skinName(item)} de ${title}`}
+                    onChange={() => update(toggleItem('weaponSkins', item.id, draft, eligible))} />
+                  <span>{skinName(item)} <small className="skin-index">#{item.skin_index}</small></span>
+                  {item.equipped
+                    ? <small className="unlock-status complete"><CircleCheck size={14} aria-hidden="true" />En uso · solo lectura</small>
+                    : item.unlocked
+                      ? <small className="unlock-status complete"><CircleCheck size={14} aria-hidden="true" />Disponible</small>
+                      : <small className="unlock-status">Bloqueada</small>}
+                </label>
+              })}
+            </div>
+          </AccordionGroup>
+        })}
+      </div>}
+      {!groups.length && <p className="detail-note">Sin resultados con este filtro.</p>}
+      <details className="review-fields">
+        <summary>Detalles técnicos</summary>
+        <p className="detail-note">
+          {amountFormat.format(snapshot?.weapons_with_data ?? 0)} armas con registro · {' '}
+          {amountFormat.format(snapshot?.unknown_weapon_ids?.length ?? 0)} armas desconocidas · {' '}
+          {amountFormat.format(snapshot?.unknown_skin_ids?.length ?? 0)} skins desconocidas preservadas.
+          La selección equipada se muestra solo como referencia y no se modifica.
+        </p>
+      </details>
+    </> : <p className="detail-note">La copia no contiene un catálogo legible de skins de arma.</p>}
+  </div>
+}
+
+function effectName(item: LabKillEffectItem | undefined, effectId: number) {
+  return item ? item.name_es || item.name_en || `Efecto ${effectId}` : `Efecto ${effectId}`
+}
+
+export function KillEffectsEditor({ save, draft, update }: EditorProps) {
+  const [filter, setFilter] = useState<Filter>('pending')
+  const snapshot = save.kill_effects
+  const items = snapshot?.items ?? []
+  const eligible = eligibility(save)
+  const pending = new Set(eligible.killEffects)
+  const selected = new Set(eligible.killEffects.filter((id) => isSelected('killEffects', id, draft, eligible)))
+  const visible = items.filter((item) => {
+    const state = filter === 'all' || (filter === 'pending' ? !item.unlocked : item.unlocked)
+    return state
+  })
+  const byId = new Map(items.map((item) => [item.id, item]))
+  const equipped = snapshot?.equipped ?? []
+  const unknown = snapshot?.unknown_unlocked_ids ?? []
+
+  if (snapshot?.available === false) {
+    return <div className="detail-editor">
+      <Notice tone="warning">No se pudieron leer los efectos de eliminación de esta copia: {snapshot.error || 'estructura no reconocida'}.</Notice>
+    </div>
+  }
+
+  return <div className="detail-editor" data-testid="kill-effects-editor">
+    <Notice tone="warning">
+      <strong>Experimental (E2).</strong> Añade IDs evidenciados a <code>miscData.unlockedKillEffectIds</code>.
+      El efecto activo por escena es de solo lectura: su significado todavía no está confirmado.
+    </Notice>
+    <Toolbar save={save} group="killEffects" draft={draft} update={update} />
+    {(equipped.length > 0 || unknown.length > 0) && <div className="kill-effect-reference">
+      {equipped.length > 0 && <p className="detail-note">
+        Efecto activo guardado: {equipped.map(({ scene, effect_id }) =>
+          `escena ${scene} → ${effectName(byId.get(effect_id), effect_id)}`).join(' · ')}. Solo lectura.
+      </p>}
+      {unknown.length > 0 && <p className="detail-note">
+        IDs observados no catalogados (se conservan, no se ofrecen): {unknown.join(', ')}.
+      </p>}
+    </div>}
+    {items.length ? <>
+      <FilterControls query="" setQuery={() => undefined} filter={filter} setFilter={setFilter}
+        allLabel="Todos" doneLabel="Desbloqueados" />
+      <div className="lock-group lock-options kill-effect-list">
+        {visible.map((item) => {
+          const isChecked = selected.has(String(item.id))
+          return <label className={`lock-option ${isChecked ? 'selected' : ''}`} key={item.id}>
+            <input type="checkbox" checked={isChecked} disabled={!pending.has(String(item.id))}
+              aria-label={effectName(item, item.id)}
+              onChange={() => update(toggleItem('killEffects', String(item.id), draft, eligible))} />
+            <span>{effectName(item, item.id)} <small className="skin-index">ID {item.id}</small></span>
+            {item.unlocked
+              ? <small className="unlock-status complete"><CircleCheck size={14} aria-hidden="true" />Disponible</small>
+              : <small className="unlock-status">Bloqueado</small>}
+          </label>
+        })}
+      </div>
+      {!visible.length && <p className="detail-note">Sin resultados con este filtro.</p>}
+      <p className="detail-note">
+        {amountFormat.format(snapshot?.unlocked_count ?? 0)} de {amountFormat.format(snapshot?.total_effects ?? 0)} efectos evidenciados.
+        {filter === 'pending' && !eligible.killEffects.length ? ' No hay efectos pendientes.' : ''}
+      </p>
+      <details className="review-fields">
+        <summary>Alcance y evidencias</summary>
+        <p className="detail-note">
+          Catálogo limitado a IDs 0–8 con recursos o localización. Las escenas guardadas usan claves numéricas cuyo
+          significado (por ejemplo PvE/PvP) aún no está confirmado. No se modifican animaciones de ataque, impactos ni
+          partículas de habilidades.
+        </p>
+      </details>
+    </> : <p className="detail-note">La copia no contiene un catálogo legible de efectos de eliminación.</p>}
+  </div>
+}

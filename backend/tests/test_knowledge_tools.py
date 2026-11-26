@@ -69,10 +69,10 @@ def test_coverage_report_matches_the_generated_artifacts():
     report = generate_report.coverage(generate_report.load_all())
     assert report["fields"]["total"] == 616
     assert report["fields"]["by_level"] == {"E1": 194, "E2": 405, "E3": 11, "E4": 6}
-    assert report["catalog_items"] == 4339
-    assert len(report["catalogs"]) == 25
+    assert report["catalog_items"] == 4348
+    assert len(report["catalogs"]) == 26
     assert report["translations"] == 8562
-    assert report["dependencies"]["total"] == 46
+    assert report["dependencies"]["total"] == 49
     assert report["sources"] == 21
     assert report["versions_analyzed"] == ["8.6.0", "8.7.0", "8.8.0"]
     rendered = generate_report.render_coverage(report)
@@ -82,7 +82,7 @@ def test_coverage_report_matches_the_generated_artifacts():
 
 def test_dependency_and_source_headers_match_their_lists():
     dependencies = common.read_json(common.DEPENDENCIES_DIR / "dependencies.json")
-    assert dependencies["count"] == len(dependencies["dependencies"]) == 46
+    assert dependencies["count"] == len(dependencies["dependencies"]) == 49
     assert common.validate_schema(
         dependencies, common.load_schema("dependencies.schema.json")
     ) == []

@@ -1,0 +1,243 @@
+{
+  "schema": "sk-knowledge/catalog@1",
+  "family": "kill_effects",
+  "title": "Efectos de eliminación",
+  "description": "Efectos de eliminación evidenciados en la configuración 8.8.0. Los ID 9 y 10 aparecen en una muestra 8.6.0 pero no tienen nombre ni recurso localizado, por lo que no se incluyen.",
+  "game_version": "8.8.0",
+  "generated_by": "Curaduría manual de fase 9.3; proyección de backend generada por knowledge/tools/build_backend_customization.py",
+  "source_refs": [
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "item.json"
+    },
+    {
+      "commit": "57b9b86335c080caca55e178c8409cb67658ccf6",
+      "path": "I2language.csv"
+    }
+  ],
+  "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
+  "count": 9,
+  "items": [
+    {
+      "id": "kill_effect_0",
+      "name": {
+        "en": "Default",
+        "es": "Predeterminado",
+        "zh_cn": "默认"
+      },
+      "category": "kill_effect",
+      "subcategory": "default",
+      "attributes": {
+        "effect_id": 0,
+        "item_id": null
+      },
+      "relations": {},
+      "save_refs": [
+        "miscData.unlockedKillEffectIds",
+        "miscData.equippedKillEffectIdByScene"
+      ],
+      "notes": [
+        "Efecto inicial sin objeto de tienda asociado."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:I2language.csv"
+    },
+    {
+      "id": "kill_effect_1",
+      "name": {
+        "en": "Starlight Sparkle",
+        "es": "Destello estelar",
+        "zh_cn": "星光闪闪"
+      },
+      "category": "kill_effect",
+      "subcategory": "item",
+      "attributes": {
+        "effect_id": 1,
+        "item_id": "customization_kill_effect_1"
+      },
+      "relations": {},
+      "save_refs": [
+        "miscData.unlockedKillEffectIds",
+        "miscData.equippedKillEffectIdByScene"
+      ],
+      "notes": [
+        "Icono: Assets/RGTexture/kill_effect/effect_1/effect_1_icon.png."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "kill_effect_2",
+      "name": {
+        "en": "Zap!",
+        "es": "¡Zas!",
+        "zh_cn": "电你一下"
+      },
+      "category": "kill_effect",
+      "subcategory": "item",
+      "attributes": {
+        "effect_id": 2,
+        "item_id": "customization_kill_effect_2"
+      },
+      "relations": {},
+      "save_refs": [
+        "miscData.unlockedKillEffectIds",
+        "miscData.equippedKillEffectIdByScene"
+      ],
+      "notes": [
+        "Icono: Assets/RGTexture/kill_effect/effect_2/effect_2_icon.png."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "kill_effect_3",
+      "name": {
+        "en": "Bring It On",
+        "es": "¡Adelante!",
+        "zh_cn": "你过来啊"
+      },
+      "category": "kill_effect",
+      "subcategory": "item",
+      "attributes": {
+        "effect_id": 3,
+        "item_id": "customization_kill_effect_3"
+      },
+      "relations": {},
+      "save_refs": [
+        "miscData.unlockedKillEffectIds",
+        "miscData.equippedKillEffectIdByScene"
+      ],
+      "notes": [
+        "Icono: Assets/RGTexture/kill_effect/effect_3/effect_3_icon.png."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "kill_effect_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "kill_effect",
+      "subcategory": "item",
+      "attributes": {
+        "effect_id": 4,
+        "item_id": "customization_kill_effect_4"
+      },
+      "relations": {},
+      "save_refs": [
+        "miscData.unlockedKillEffectIds",
+        "miscData.equippedKillEffectIdByScene"
+      ],
+      "notes": [
+        "Nombre no presente en el volcado de localización 6.1.1 examinado.",
+        "Icono: Assets/RGTexture/kill_effect/effect_4/effect_4_icon.png."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "kill_effect_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "kill_effect",
+      "subcategory": "item",
+      "attributes": {
+        "effect_id": 5,
+        "item_id": "customization_kill_effect_5"
+      },
+      "relations": {},
+      "save_refs": [
+        "miscData.unlockedKillEffectIds",
+        "miscData.equippedKillEffectIdByScene"
+      ],
+      "notes": [
+        "Nombre no presente en el volcado de localización 6.1.1 examinado.",
+        "Icono: Assets/RGTexture/kill_effect/effect_5/effect_5_icon.png."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "kill_effect_6",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "kill_effect",
+      "subcategory": "item",
+      "attributes": {
+        "effect_id": 6,
+        "item_id": "customization_kill_effect_6"
+      },
+      "relations": {},
+      "save_refs": [
+        "miscData.unlockedKillEffectIds",
+        "miscData.equippedKillEffectIdByScene"
+      ],
+      "notes": [
+        "Nombre no presente en el volcado de localización 6.1.1 examinado.",
+        "Icono: Assets/RGTexture/kill_effect/effect_6/effect_6_icon.png."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "kill_effect_7",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "kill_effect",
+      "subcategory": "item",
+      "attributes": {
+        "effect_id": 7,
+        "item_id": "customization_kill_effect_7"
+      },
+      "relations": {},
+      "save_refs": [
+        "miscData.unlockedKillEffectIds",
+        "miscData.equippedKillEffectIdByScene"
+      ],
+      "notes": [
+        "Nombre no presente en el volcado de localización 6.1.1 examinado.",
+        "Icono: Assets/RGTexture/kill_effect/effect_7/effect_7_icon.png."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    },
+    {
+      "id": "kill_effect_8",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "kill_effect",
+      "subcategory": "item",
+      "attributes": {
+        "effect_id": 8,
+        "item_id": "customization_kill_effect_8"
+      },
+      "relations": {},
+      "save_refs": [
+        "miscData.unlockedKillEffectIds",
+        "miscData.equippedKillEffectIdByScene"
+      ],
+      "notes": [
+        "Nombre no presente en el volcado de localización 6.1.1 examinado.",
+        "Icono: Assets/RGTexture/kill_effect/effect_8/effect_8_icon.png."
+      ],
+      "evidence": "E1",
+      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:item.json"
+    }
+  ]
+}

@@ -10,8 +10,8 @@
     "skdfe_8.7.0": "8cfa5d5"
   },
   "counts": {
-    "catalogs": 25,
-    "catalog_items": 4339,
+    "catalogs": 26,
+    "catalog_items": 4348,
     "fields": 616,
     "legacy_fields": 66,
     "declared_fields": 550,
@@ -21,18 +21,18 @@
       "E3": 11,
       "E4": 6
     },
-    "dependencies": 46,
+    "dependencies": 49,
     "sources": 21,
     "translations": 8562,
     "versions_analyzed": 3,
-    "open_questions": 578
+    "open_questions": 583
   },
   "artifacts": [
     {
       "path": "knowledge/README.md",
       "kind": "knowledge",
-      "sha256": "95218b01dfcaf7f1d08d5b46aabeaaee5c570b02e3d1d0158420ed133b3ec05e",
-      "bytes": 9797,
+      "sha256": "43f7335b2a14f4e91011d0477647b3b430eef05ffb9f15b07175b3f14bab0e23",
+      "bytes": 10256,
       "count": null
     },
     {
@@ -104,6 +104,13 @@
       "sha256": "298e9b75719e8210bd9f8283ffc1c438c98932968961c774a72123a4f47003b5",
       "bytes": 9421,
       "count": 15
+    },
+    {
+      "path": "knowledge/catalogs/kill_effects.json",
+      "kind": "catalogs",
+      "sha256": "8eee7a87e449a820a854fe797912784b2d3c57053c1b4c7b0e03fb8d93f00f45",
+      "bytes": 7174,
+      "count": 9
     },
     {
       "path": "knowledge/catalogs/lobby.json",
@@ -213,9 +220,9 @@
     {
       "path": "knowledge/dependencies/dependencies.json",
       "kind": "dependencies",
-      "sha256": "170658f4992323c88caa6ee9344c5446e3675b960939da187c87677cc148a3b1",
-      "bytes": 44926,
-      "count": 46
+      "sha256": "238afe2396811cc31c29dd36162901f944157e8f1ca072b26be0e6bef475836b",
+      "bytes": 48044,
+      "count": 49
     },
     {
       "path": "knowledge/evidence/data-json-structure.json",
@@ -248,15 +255,15 @@
     {
       "path": "knowledge/fields/fields.json",
       "kind": "fields",
-      "sha256": "84e9ed9769dc75bba620a63553fe79a3012daa06dd2e384ad9ba8e92b4477e93",
-      "bytes": 1224939,
+      "sha256": "eee44617ba3c10fbd1ea75aecfc3e8c54b7872bc48c22fc9edf7e31d3c6358b8",
+      "bytes": 1229941,
       "count": 616
     },
     {
       "path": "knowledge/fields/overrides.json",
       "kind": "fields",
-      "sha256": "1947a31d3619ae11040f18aabfbe3795f50cd19c3cda8a93775a4c8787299f50",
-      "bytes": 58197,
+      "sha256": "fc357e1e1809cfca62de11f87847393104e8eb7a1dbf9db6c22397455616f719",
+      "bytes": 65211,
       "count": null
     },
     {
@@ -358,6 +365,13 @@
       "count": null
     },
     {
+      "path": "knowledge/sources/phase9-3-observations.md",
+      "kind": "sources",
+      "sha256": "b7a60d83bab807fec4565358967ad5026abc12ce234121546ed97b81e6357080",
+      "bytes": 2930,
+      "count": null
+    },
+    {
       "path": "knowledge/sources/repository-history.md",
       "kind": "sources",
       "sha256": "678ca341fbc97a3eadb52b8b21d8009c09631c458fc3377ae7e477429d81cf5d",
@@ -390,6 +404,13 @@
       "kind": "tools",
       "sha256": "141fb41086ccd19b41c84233b98166e9afd3e570818c702c875d9c56f9cd703f",
       "bytes": 4986,
+      "count": null
+    },
+    {
+      "path": "knowledge/tools/build_backend_customization.py",
+      "kind": "tools",
+      "sha256": "7759a5497f57bab688e581f354863395d3f6d09eb621352cb109b2805a4056d7",
+      "bytes": 7525,
       "count": null
     },
     {

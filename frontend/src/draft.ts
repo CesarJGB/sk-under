@@ -5,7 +5,8 @@ import type {
 import { pendingCharacterCodes, pendingSkillKeys, pendingSkinKeys, skillKey, skinKey } from './unlockSelections'
 
 export type BulkKey =
-  | 'characters' | 'skills' | 'skins' | 'pets' | 'petSkins'
+  | 'characters' | 'skills' | 'skins' | 'weaponSkins' | 'killEffects'
+  | 'pets' | 'petSkins'
   | 'heroLevels' | 'petAffinity' | 'blueprints' | 'blueprintObtain'
   | 'decorations' | 'decorationLevels'
 export type QuantityKey =
@@ -18,6 +19,8 @@ export type Draft = {
     characters: Record<string, true>
     skills: Record<string, true>
     skins: Record<string, true>
+    weaponSkins: Record<string, true>
+    killEffects: Record<string, true>
     pets: Record<string, true>
     petSkins: Record<string, true>
     heroLevels: Record<string, true>
@@ -31,6 +34,8 @@ export type Draft = {
     characters: Record<string, true>
     skills: Record<string, true>
     skins: Record<string, true>
+    weaponSkins: Record<string, true>
+    killEffects: Record<string, true>
     pets: Record<string, true>
     petSkins: Record<string, true>
     heroLevels: Record<string, true>
@@ -110,17 +115,20 @@ function emptySet(): Record<string, true> {
 export function createEmptyDraft(): Draft {
   return {
     bulk: {
-      characters: false, skills: false, skins: false, pets: false, petSkins: false,
+      characters: false, skills: false, skins: false, weaponSkins: false, killEffects: false,
+      pets: false, petSkins: false,
       heroLevels: false, petAffinity: false, blueprints: false, blueprintObtain: false,
       decorations: false, decorationLevels: false,
     },
     manual: {
-      characters: emptySet(), skills: emptySet(), skins: emptySet(), pets: emptySet(), petSkins: emptySet(),
+      characters: emptySet(), skills: emptySet(), skins: emptySet(), weaponSkins: emptySet(),
+      killEffects: emptySet(), pets: emptySet(), petSkins: emptySet(),
       heroLevels: emptySet(), petAffinity: emptySet(), blueprints: emptySet(),
       blueprintObtain: emptySet(), decorations: emptySet(), decorationLevels: emptySet(),
     },
     excluded: {
-      characters: emptySet(), skills: emptySet(), skins: emptySet(), pets: emptySet(), petSkins: emptySet(),
+      characters: emptySet(), skills: emptySet(), skins: emptySet(), weaponSkins: emptySet(),
+      killEffects: emptySet(), pets: emptySet(), petSkins: emptySet(),
       heroLevels: emptySet(), petAffinity: emptySet(), blueprints: emptySet(),
       blueprintObtain: emptySet(), decorations: emptySet(), decorationLevels: emptySet(),
     },
@@ -198,6 +206,16 @@ function eligibleSkins(characters: SaveCharacterReport | null | undefined): stri
   return characters ? pendingSkinKeys(characters) : []
 }
 
+function eligibleWeaponSkins(save: NativeSaveSummary | null | undefined): string[] {
+  return (save?.weapon_skins?.items ?? []).filter((item) => !item.unlocked).map((item) => item.id)
+}
+
+function eligibleKillEffects(save: NativeSaveSummary | null | undefined): string[] {
+  return (save?.kill_effects?.items ?? [])
+    .filter((item) => !item.unlocked && !item.is_default)
+    .map((item) => String(item.id))
+}
+
 function eligiblePets(advanced: LabAdvanced | null | undefined): string[] {
   if (!advanced || advanced.available === false) return []
   return advanced.pets.filter((pet) => pet.editable && pet.present && pet.unlocked === false).map((pet) => pet.id)
@@ -220,6 +238,8 @@ export function eligibility(save: NativeSaveSummary | null): Eligibility {
     characters: eligibleCharacters(characters),
     skills: eligibleSkills(characters),
     skins: eligibleSkins(characters),
+    weaponSkins: eligibleWeaponSkins(save),
+    killEffects: eligibleKillEffects(save),
     pets: eligiblePets(advanced),
     petSkins: eligiblePetSkins(advanced),
     heroLevels: (advanced?.hero_levels?.entries ?? [])
@@ -406,6 +426,14 @@ export function effectiveSkinRefs(draft: Draft, save: NativeSaveSummary): LabSki
   })
 }
 
+export function effectiveWeaponSkins(draft: Draft, save: NativeSaveSummary): string[] {
+  return effectiveUnlockedSet('weaponSkins', draft, eligibility(save))
+}
+
+export function effectiveKillEffects(draft: Draft, save: NativeSaveSummary): number[] {
+  return effectiveUnlockedSet('killEffects', draft, eligibility(save)).map((id) => Number(id))
+}
+
 export function effectivePets(draft: Draft, save: NativeSaveSummary): string[] {
   return effectiveUnlockedSet('pets', draft, eligibility(save))
 }
@@ -486,6 +514,16 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft, session: N
   if (skins.length > 0) {
     plan.skins = skins
     bump('Skins', skins.length)
+  }
+  const weaponSkins = effectiveWeaponSkins(draft, save)
+  if (weaponSkins.length > 0) {
+    plan.weapon_skins = weaponSkins
+    bump('Skins de arma', weaponSkins.length)
+  }
+  const killEffects = effectiveKillEffects(draft, save)
+  if (killEffects.length > 0) {
+    plan.kill_effects = killEffects
+    bump('Efectos de eliminación', killEffects.length)
   }
 
   const advancedPlan: LabAdvancedPlan = { materials: [], seeds: [] }
@@ -658,6 +696,10 @@ export function unlockProgress(save: NativeSaveSummary, key: BulkKey, eligible: 
     skins: () => characters.reduce((total, item) => total + item.skin_options.filter(
       (skin) => skin.compatible && skin.state === 'unlocked',
     ).length, 0),
+    weaponSkins: () => save.weapon_skins?.unlocked_count
+      ?? (save.weapon_skins?.items ?? []).filter((item) => item.unlocked).length,
+    killEffects: () => save.kill_effects?.unlocked_count
+      ?? (save.kill_effects?.items ?? []).filter((item) => item.unlocked).length,
     pets: () => (advanced?.pets ?? []).filter((pet) => pet.present && pet.unlocked === true).length,
     petSkins: () => (advanced?.pet_skins ?? []).filter((skin) => skin.present && skin.unlocked === true).length,
     heroLevels: () => (advanced?.hero_levels?.entries ?? [])

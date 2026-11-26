@@ -21,6 +21,7 @@ import {
   amountFormat, categories, CategoryGrid, CategoryIcon, formatOriginal, QuickEdit,
   resources, UnlockStatus,
 } from './EditorOverview'
+import { KillEffectsEditor, WeaponSkinsEditor } from './WeaponSkinsEditor'
 
 type SaveBundle = NativeSaveSummary
 type EditorInputs = { save: SaveBundle; draft: Draft; update: (next: Draft) => void }
@@ -1001,6 +1002,8 @@ export function EditorWorkspace({
         {activeCategory.id === 'decoraciones' && <DecorationEditor save={save} draft={draft} update={update} built={built} />}
         {activeCategory.id === 'habilidades' && <LockList key="skills" save={save} draft={draft} update={update} mode="skills" />}
         {activeCategory.id === 'skins' && <LockList key="skins" save={save} draft={draft} update={update} mode="skins" />}
+        {activeCategory.id === 'armas' && <WeaponSkinsEditor key={`weapon-skins:${save.sha256}`} save={save} draft={draft} update={update} />}
+        {activeCategory.id === 'efectos' && <KillEffectsEditor key={`kill-effects:${save.sha256}`} save={save} draft={draft} update={update} />}
         {activeCategory.id === 'mascotas' && <PetsEditor save={save} draft={draft} update={update} built={built} />}
         {activeCategory.id === 'materiales' && <NumberEdits key={`materials:${save.sha256}`} save={save} draft={draft} update={update} built={built} kind="materials" />}
         {activeCategory.id === 'semillas' && <NumberEdits key={`seeds:${save.sha256}`} save={save} draft={draft} update={update} built={built} kind="seeds" />}

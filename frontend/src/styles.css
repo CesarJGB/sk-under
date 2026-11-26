@@ -537,7 +537,9 @@ input[type="checkbox"]:focus-visible { outline: 2px solid var(--focus-ring); out
   font-size: .9375rem;
 }
 
-.notice svg { margin-top: .1rem; }
+.notice > * { min-width: 0; }
+.notice code { overflow-wrap: anywhere; }
+.notice svg { margin-top: .1rem; flex-shrink: 0; }
 .notice-warning { background: var(--warning-bg); color: var(--warning-text); border-color: var(--warning-border); }
 .notice-error { background: var(--error-bg); color: var(--error-ink); border-color: var(--error-border); }
 .privacy-note, .loading, .success {

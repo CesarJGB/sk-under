@@ -55,13 +55,23 @@ from .fish_progress_editor import (
 )
 from .gems_editor import GemsEdit, prepare_gems_edit
 from .lab import BinaryDiff, binary_diff
+from .kill_effect_editor import (
+    KillEffectEdit,
+    prepare_kill_effect_unlock_edit,
+)
 from .skill_editor import SkillEdit, prepare_skill_unlock_edit
 from .skin_editor import SkinEdit, prepare_skin_unlock_edit
+from .weapon_skin_editor import (
+    WeaponSkinEdit,
+    prepare_weapon_skin_unlock_edit,
+)
 
 UNIFIED_RECORD_FIELD = "unified"
 MAX_CHARACTERS = 42
 MAX_SKILLS = 105
 MAX_SKINS = 802
+MAX_WEAPON_SKINS = 192
+MAX_KILL_EFFECTS = 9
 
 # Fuente única de las categorías que puede producir el editor unificado. El
 # almacén de respaldos valida con este mismo conjunto las categorías de sus
@@ -74,6 +84,8 @@ UNIFIED_CATEGORY_KEYS = frozenset(
         "characters",
         "skills",
         "skins",
+        "weapon_skins",
+        "kill_effects",
         "advanced",
         "hero_levels",
         "pet_affinity",
@@ -84,9 +96,15 @@ UNIFIED_CATEGORY_KEYS = frozenset(
 
 # Categorías incorporadas después de la Fase 8.0. Los planes históricos pueden
 # no declararlas; el lector de respaldos solo las completa al leer un registro.
-UNIFIED_OPTIONAL_CATEGORY_KEYS = frozenset(
-    {"hero_levels", "pet_affinity", "blueprints", "decorations"}
-)
+UNIFIED_OPTIONAL_DEFAULTS: dict[str, object] = {
+    "hero_levels": None,
+    "pet_affinity": None,
+    "blueprints": None,
+    "decorations": None,
+    "weapon_skins": [],
+    "kill_effects": [],
+}
+UNIFIED_OPTIONAL_CATEGORY_KEYS = frozenset(UNIFIED_OPTIONAL_DEFAULTS)
 
 
 class UnifiedEditError(CloudSaveError):
@@ -149,6 +167,40 @@ def _characters(value: object) -> list[str]:
         if code in result:
             raise InvalidUnifiedPlan(f"characters repite el código {code}.")
         result.append(code)
+    return result
+
+
+def _weapon_skins(value: object) -> list[str]:
+    if value is None:
+        return []
+    if not isinstance(value, list) or len(value) > MAX_WEAPON_SKINS:
+        raise InvalidUnifiedPlan(
+            "weapon_skins debe ser una lista dentro del máximo admitido."
+        )
+    result: list[str] = []
+    for skin_id in value:
+        if not isinstance(skin_id, str) or not skin_id:
+            raise InvalidUnifiedPlan("weapon_skins contiene un identificador inválido.")
+        if skin_id in result:
+            raise InvalidUnifiedPlan(f"weapon_skins repite la skin {skin_id}.")
+        result.append(skin_id)
+    return result
+
+
+def _kill_effects(value: object) -> list[int]:
+    if value is None:
+        return []
+    if not isinstance(value, list) or len(value) > MAX_KILL_EFFECTS:
+        raise InvalidUnifiedPlan(
+            "kill_effects debe ser una lista dentro del máximo admitido."
+        )
+    result: list[int] = []
+    for effect_id in value:
+        if isinstance(effect_id, bool) or type(effect_id) is not int:
+            raise InvalidUnifiedPlan("kill_effects contiene un identificador inválido.")
+        if effect_id in result:
+            raise InvalidUnifiedPlan(f"kill_effects repite el efecto {effect_id}.")
+        result.append(effect_id)
     return result
 
 
@@ -240,6 +292,8 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
         "characters": _characters(raw.get("characters")),
         "skills": _refs(raw.get("skills"), "skills", MAX_SKILLS),
         "skins": _refs(raw.get("skins"), "skins", MAX_SKINS),
+        "weapon_skins": _weapon_skins(raw.get("weapon_skins")),
+        "kill_effects": _kill_effects(raw.get("kill_effects")),
         "advanced": _advanced(raw.get("advanced")),
         "hero_levels": _code_map(
             raw.get("hero_levels"), "hero_levels", "code", "level", normalize_hero_level_plan
@@ -258,6 +312,8 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
             plan["characters"],
             plan["skills"],
             plan["skins"],
+            plan["weapon_skins"],
+            plan["kill_effects"],
             plan["advanced"],
             plan["hero_levels"],
             plan["pet_affinity"],
@@ -338,6 +394,8 @@ def _category(
         | CharacterEdit
         | SkillEdit
         | SkinEdit
+        | WeaponSkinEdit
+        | KillEffectEdit
         | AdvancedEdit
         | HeroLevelEdit
         | PetAffinityEdit
@@ -385,6 +443,21 @@ def _category(
             "original": len(edit.original_unlocked),
             "new": len(edit.new_unlocked),
             "newly_unlocked": [ref.as_dict() for ref in edit.newly_unlocked],
+            "kind": "unlock",
+        }
+    elif isinstance(edit, WeaponSkinEdit):
+        detail = {
+            "original": len(edit.original_unlocked),
+            "new": len(edit.new_unlocked),
+            "newly_unlocked": list(edit.newly_unlocked),
+            "created_weapons": list(edit.created_weapons),
+            "kind": "unlock",
+        }
+    elif isinstance(edit, KillEffectEdit):
+        detail = {
+            "original": len(edit.original_unlocked),
+            "new": len(edit.new_unlocked),
+            "newly_unlocked": list(edit.newly_unlocked),
             "kind": "unlock",
         }
     else:
@@ -442,6 +515,18 @@ def prepare_unified_edit(source: bytes, raw_plan: Mapping[str, object]) -> Unifi
         apply("skills", "Habilidades", lambda value: prepare_skill_unlock_edit(value, plan["skills"]))
     if plan["skins"]:
         apply("skins", "Skins", lambda value: prepare_skin_unlock_edit(value, plan["skins"]))
+    if plan["weapon_skins"]:
+        apply(
+            "weapon_skins",
+            "Skins de arma",
+            lambda value: prepare_weapon_skin_unlock_edit(value, plan["weapon_skins"]),
+        )
+    if plan["kill_effects"]:
+        apply(
+            "kill_effects",
+            "Efectos de eliminación",
+            lambda value: prepare_kill_effect_unlock_edit(value, plan["kill_effects"]),
+        )
     if plan["advanced"] is not None:
         apply("advanced", "Materiales y progreso", lambda value: prepare_advanced_edit(value, plan["advanced"]))
     if plan["hero_levels"] is not None:

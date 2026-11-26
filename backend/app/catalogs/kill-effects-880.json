@@ -1,0 +1,119 @@
+{
+  "schema": "sk-under/backend-kill-effects@1",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_backend_customization.py",
+  "source_refs": {
+    "items": "knowledge/catalogs/special_items.json",
+    "localization": "SKDFE I2language.csv 6.1.1",
+    "assets": "APK 8.8.0 common.manifest"
+  },
+  "evidence": "E1",
+  "counts": {
+    "effects": 9
+  },
+  "observed_unknown_ids": [
+    9,
+    10
+  ],
+  "effects": [
+    {
+      "id": 0,
+      "item_id": null,
+      "name": {
+        "en": "Default",
+        "es": "Predeterminado"
+      },
+      "icon": null,
+      "acquisition": "default",
+      "evidence": "E1"
+    },
+    {
+      "id": 1,
+      "item_id": "customization_kill_effect_1",
+      "name": {
+        "en": "Starlight Sparkle",
+        "es": "Destello estelar"
+      },
+      "icon": "Assets/RGTexture/kill_effect/effect_1/effect_1_icon.png",
+      "acquisition": null,
+      "evidence": "E1"
+    },
+    {
+      "id": 2,
+      "item_id": "customization_kill_effect_2",
+      "name": {
+        "en": "Zap!",
+        "es": "¡Zas!"
+      },
+      "icon": "Assets/RGTexture/kill_effect/effect_2/effect_2_icon.png",
+      "acquisition": null,
+      "evidence": "E1"
+    },
+    {
+      "id": 3,
+      "item_id": "customization_kill_effect_3",
+      "name": {
+        "en": "Bring It On",
+        "es": "¡Adelante!"
+      },
+      "icon": "Assets/RGTexture/kill_effect/effect_3/effect_3_icon.png",
+      "acquisition": null,
+      "evidence": "E1"
+    },
+    {
+      "id": 4,
+      "item_id": "customization_kill_effect_4",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "icon": "Assets/RGTexture/kill_effect/effect_4/effect_4_icon.png",
+      "acquisition": null,
+      "evidence": "E1"
+    },
+    {
+      "id": 5,
+      "item_id": "customization_kill_effect_5",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "icon": "Assets/RGTexture/kill_effect/effect_5/effect_5_icon.png",
+      "acquisition": null,
+      "evidence": "E1"
+    },
+    {
+      "id": 6,
+      "item_id": "customization_kill_effect_6",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "icon": "Assets/RGTexture/kill_effect/effect_6/effect_6_icon.png",
+      "acquisition": null,
+      "evidence": "E1"
+    },
+    {
+      "id": 7,
+      "item_id": "customization_kill_effect_7",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "icon": "Assets/RGTexture/kill_effect/effect_7/effect_7_icon.png",
+      "acquisition": null,
+      "evidence": "E1"
+    },
+    {
+      "id": 8,
+      "item_id": "customization_kill_effect_8",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "icon": "Assets/RGTexture/kill_effect/effect_8/effect_8_icon.png",
+      "acquisition": null,
+      "evidence": "E1"
+    }
+  ]
+}

@@ -20,7 +20,7 @@ def load_catalog(name):
 def test_all_catalogs_match_the_documented_schema():
     schema = common.load_schema("catalog.schema.json")
     paths = sorted(CATALOGS.glob("*.json"))
-    assert len(paths) == 25
+    assert len(paths) == 26
     total = 0
     for path in paths:
         document = common.read_json(path)
@@ -31,7 +31,7 @@ def test_all_catalogs_match_the_documented_schema():
         assert document["count"] == len(document["items"])
         assert len({item["id"] for item in document["items"]}) == document["count"]
         total += document["count"]
-    assert total == 4339
+    assert total == 4348
 
 
 def test_catalog_relations_resolve_to_known_items():

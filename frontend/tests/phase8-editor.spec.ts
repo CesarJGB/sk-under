@@ -669,7 +669,7 @@ test('precarga los importes en ambos modos y solo conserva casillas para accione
   }
   await expect(quick.getByText(/^Actual /)).toHaveCount(0)
   await expect(quick.getByRole('region', { name: 'Desbloqueos' })).toContainText('1/4 desbloqueados')
-  await expect(quick.getByRole('region', { name: 'Desbloqueos' }).getByRole('checkbox')).toHaveCount(5)
+  await expect(quick.getByRole('region', { name: 'Desbloqueos' }).getByRole('checkbox')).toHaveCount(7)
   await expect(quick.getByRole('region', { name: 'Beneficios' }).getByRole('checkbox')).toHaveCount(2)
   await openCategory(page, 'Mascotas')
   await expect(page.getByRole('textbox', { name: 'Cantidad de Bocadillos' })).toHaveValue('10')
@@ -794,7 +794,7 @@ test('distingue colecciones completas de datos ausentes o incompatibles', async 
   await expect(unlocks).toContainText('142/142 desbloqueadas')
   await expect(unlocks.locator('.unlock-status.complete')).toHaveCount(5)
   await expect(unlocks.getByRole('button', { name: 'Seleccionar pendientes' })).toBeDisabled()
-  await expect(unlocks.getByLabel('Activar Todas las skins')).toBeDisabled()
+  await expect(unlocks.getByLabel('Activar Todas las skins', { exact: true })).toBeDisabled()
   await openCategory(page, 'Skins')
   await expect(page.getByTestId('category-skins')).toContainText('Completo')
   await expect(page.getByTestId('category-skins').getByRole('checkbox')).toHaveCount(0)
@@ -804,7 +804,7 @@ test('distingue colecciones completas de datos ausentes o incompatibles', async 
     advanced: { available: false, error: 'Estructura incompatible.' },
   }
   await open(page, { save: unknown, sessionSave: null })
-  await expect(unlocks.getByText('No disponible', { exact: true })).toHaveCount(5)
+  await expect(unlocks.getByText('No disponible', { exact: true })).toHaveCount(7)
   await expect(unlocks.locator('.unlock-status.complete')).toHaveCount(0)
   const quick = page.getByTestId('quick-edit')
   for (const name of ['Gemas', 'Fichas de pesca', 'Recompensas de pesca', 'Monedas de temporada', 'Materiales', 'Semillas', 'Alimento de mascotas', 'Baterías']) {
@@ -1063,7 +1063,7 @@ test('capturas móviles, tableta y escritorio sin desbordamiento', async ({ page
     expect(await gems.evaluate(fits), `cantidad de diez dígitos a ${size.width} px`).toBe(true)
     await screenshot(`rapida-${size.width}`)
     await page.getByRole('tab', { name: 'Categorías' }).click()
-    await expect(page.getByTestId('category-grid').getByRole('button')).toHaveCount(11)
+    await expect(page.getByTestId('category-grid').getByRole('button')).toHaveCount(13)
     if (size.width <= 430) {
       expect(await page.locator('.category-grid').evaluate((grid) => getComputedStyle(grid).gridTemplateColumns.split(' ').length)).toBe(3)
     }
@@ -1091,7 +1091,8 @@ test('capturas móviles, tableta y escritorio sin desbordamiento', async ({ page
   await page.setViewportSize({ width: 390, height: 844 })
   for (const [category, slug] of [
     ['Recursos', 'recursos'], ['Personajes', 'personajes'], ['Habilidades', 'habilidades'],
-    ['Skins', 'skins'], ['Mascotas', 'mascotas'], ['Semillas', 'semillas'], ['Temporada', 'temporada'], ['Pase de batalla', 'pase'],
+    ['Skins', 'skins'], ['Skins de arma', 'armas'], ['Efectos de eliminación', 'efectos'],
+    ['Mascotas', 'mascotas'], ['Semillas', 'semillas'], ['Temporada', 'temporada'], ['Pase de batalla', 'pase'],
   ]) {
     await openCategory(page, category)
     await expect(page.getByTestId(`category-${slug}`)).toBeVisible()
@@ -1319,4 +1320,108 @@ test('integra decoraciones en el borrador global sin controles ficticios', async
   expect(plans).toHaveLength(1)
   expect(plans[0].decorations).toEqual({ objects: ['ObjectSafe', 'PetFood'], levels: [{ id: 'Book', level: 5 }] })
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+const CUSTOMIZATION_SAVE = {
+  ...SESSION_SAVE,
+  weapon_skins: {
+    field: 'weaponEvolutionData.weapons',
+    unlocked: ['weapon_002_s_1'], unlocked_count: 1, locked_count: 2, total_skins: 3,
+    weapons_with_data: 2, unknown_weapon_ids: [], unknown_skin_ids: [],
+    equip_policy: 'read_only_unconfirmed', evidence: 'E2',
+    items: [
+      { id: 'weapon_002_s_1', name_en: 'Husky', name_es: 'Husky', weapon_id: 'weapon_002',
+        weapon_name_en: 'AK-47', weapon_name_es: 'AK-47', skin_index: 1, unlocked: true,
+        current_skin_index: 1, equipped: true, level: 0 },
+      { id: 'weapon_006_s_1', name_en: 'Emberwrath', name_es: 'Emberwrath', weapon_id: 'weapon_006',
+        weapon_name_en: 'Splitter Cannon', weapon_name_es: 'Cañón Fragmentario', skin_index: 1, unlocked: false,
+        current_skin_index: 0, equipped: false, level: 0 },
+      { id: 'weapon_006_s_2', name_en: 'Riftbringer', name_es: 'Riftbringer', weapon_id: 'weapon_006',
+        weapon_name_en: 'Splitter Cannon', weapon_name_es: 'Cañón Fragmentario', skin_index: 2, unlocked: false,
+        current_skin_index: 0, equipped: false, level: 0 },
+    ],
+  },
+  kill_effects: {
+    field: 'miscData.unlockedKillEffectIds',
+    unlocked: [0, 1], unlocked_count: 2, locked_count: 7, total_effects: 9,
+    equipped: [{ scene: 1, effect_id: 1 }, { scene: 0, effect_id: 3 }],
+    unknown_unlocked_ids: [], equip_policy: 'read_only_unconfirmed',
+    scene_semantics: 'unconfirmed', evidence: 'E2',
+    items: [
+      { id: 0, item_id: null, name_en: 'Default', name_es: 'Predeterminado', icon: null, acquisition: 'default', is_default: true, unlocked: true },
+      { id: 1, item_id: 'customization_kill_effect_1', name_en: 'Starlight Sparkle', name_es: 'Destello estelar', icon: null, acquisition: null, is_default: false, unlocked: true },
+      { id: 2, item_id: 'customization_kill_effect_2', name_en: 'Zap!', name_es: '¡Zas!', icon: null, acquisition: null, is_default: false, unlocked: false },
+      { id: 3, item_id: 'customization_kill_effect_3', name_en: 'Bring It On', name_es: '¡Adelante!', icon: null, acquisition: null, is_default: false, unlocked: false },
+      ...[4, 5, 6, 7, 8].map((id) => ({
+        id, item_id: `customization_kill_effect_${id}`, name_en: null, name_es: null, icon: null,
+        acquisition: null, is_default: false, unlocked: false,
+      })),
+    ],
+  },
+}
+
+test('integra skins de arma y efectos de eliminación en la edición rápida', async ({ page }) => {
+  const plans: Array<Record<string, unknown>> = []
+  await open(page, { save: CUSTOMIZATION_SAVE, width: 320 })
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => {
+    const plan = route.request().postDataJSON()
+    plans.push(plan)
+    return route.fulfill({ json: prepared(plan, [
+      ['weapon_skins', 'Skins de arma', 2],
+      ['kill_effects', 'Efectos de eliminación', 7],
+    ]) })
+  })
+  const quick = page.getByTestId('quick-edit')
+  await expect(quick).toContainText('1/3 desbloqueadas')
+  await expect(quick).toContainText('2/9 desbloqueados')
+  await page.getByLabel('Activar Todas las skins de arma').check()
+  await page.getByLabel('Activar Todos los efectos').check()
+  await expect(page.getByTestId('editor-bar')).toContainText('9 cambios')
+  await page.getByTestId('editor-bar').getByRole('button', { name: 'Guardar', exact: true }).click()
+  await expect(page.getByTestId('unified-preview')).toBeVisible()
+  expect(plans).toHaveLength(1)
+  expect(plans[0].weapon_skins).toEqual(['weapon_006_s_1', 'weapon_006_s_2'])
+  expect(plans[0].kill_effects).toEqual([2, 3, 4, 5, 6, 7, 8])
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('detalla skins por arma y efectos con estado activo de solo lectura', async ({ page }) => {
+  await open(page, { save: CUSTOMIZATION_SAVE, width: 320 })
+  await openCategory(page, 'Skins de arma')
+  const group = page.getByTestId('weapon-skin-group-weapon_006')
+  await expect(group).toContainText('0/2')
+  await group.getByRole('button').click()
+  await page.getByLabel('Emberwrath de Cañón Fragmentario').check()
+  await expect(page.getByTestId('editor-bar')).toContainText('1 cambio')
+  await page.getByLabel('Filtrar estado').selectOption('all')
+  await page.getByRole('searchbox', { name: 'Buscar skins de arma' }).fill('Husky')
+  await expect(page.getByTestId('weapon-skin-group-weapon_002')).toContainText('Husky')
+  await expect(page.getByLabel('Husky de AK-47')).toBeDisabled()
+  await expect(page.getByTestId('weapon-skins-editor')).toContainText('En uso · solo lectura')
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+
+  await openCategory(page, 'Efectos de eliminación')
+  await expect(page.getByTestId('kill-effects-editor')).toContainText('escena 1 → Destello estelar')
+  await expect(page.getByTestId('kill-effects-editor')).toContainText('escena 0 → ¡Adelante!')
+  await page.getByLabel('¡Zas!').check()
+  await expect(page.getByTestId('editor-bar')).toContainText('2 cambios')
+  await page.getByLabel('Filtrar estado').selectOption('all')
+  await expect(page.locator('input[aria-label="Predeterminado"]')).toBeDisabled()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('capturas de skins de arma y efectos en móvil, tableta y escritorio', async ({ page }) => {
+  await open(page, { save: CUSTOMIZATION_SAVE, width: 320 })
+  for (const width of [320, 390, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 })
+    await openCategory(page, 'Skins de arma')
+    await page.getByTestId('weapon-skin-group-weapon_006').getByRole('button').click()
+    await expect(page.getByLabel('Emberwrath de Cañón Fragmentario')).toBeEnabled()
+    await page.waitForTimeout(350)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `armas ${width}`).toBe(true)
+    await page.screenshot({ path: `test-results/customization/armas-${width}.png` })
+    await openCategory(page, 'Efectos de eliminación')
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `efectos ${width}`).toBe(true)
+    await page.screenshot({ path: `test-results/customization/efectos-${width}.png` })
+  }
 })

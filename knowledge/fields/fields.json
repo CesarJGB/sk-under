@@ -524,7 +524,7 @@
       "id": "weaponEvolutionData.weapons._.CurrentSkinIndex",
       "internal_name": "CurrentSkinIndex",
       "category": "Evolución de armas",
-      "description": null,
+      "description": "Selección de skin registrada para un arma. La correspondencia exacta entre el índice y el identificador weapon_XXX_s_N no está confirmada.",
       "locations": {
         "local": "weapon_evolution_data*.data:weapons.{id}.CurrentSkinIndex",
         "cloud_candidate": "weaponEvolutionData.weapons.{id}.CurrentSkinIndex"
@@ -540,16 +540,29 @@
         "type": "entero",
         "resolved": false
       },
-      "observed_values": null,
-      "known_value_semantics": [],
+      "observed_values": {
+        "observed_in_versions": [
+          "8.6.0",
+          "Android 8.8.0"
+        ],
+        "sanitized_observations": [
+          "0 y 1 aparecen en registros de armas de muestras propias.",
+          "La muestra iOS avanzada usa 1 en las 180 armas con registro."
+        ]
+      },
+      "known_value_semantics": [
+        "Selección de skin equipada o índice por defecto; no se ha demostrado qué valor representa cada caso."
+      ],
       "initial_values": null,
       "limits": {
         "type": "entero",
         "observed": "No cuantificado en este registro.",
         "functional": "No documentado."
       },
-      "related_ids": [],
-      "associated_catalog": null,
+      "related_ids": [
+        "knowledge.catalogs.weapon_skins"
+      ],
+      "associated_catalog": "weapon_skins",
       "sources": [
         "propia",
         "discord",
@@ -574,9 +587,14 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
-      "open_questions": [],
+      "edit_policy": "solo lectura: no se modifica hasta confirmar la correspondencia con weapon_XXX_s_N.",
+      "constraints": [
+        "No cambiar junto con UnlockedSkins sin una prueba controlada.",
+        "Conservar el valor original al desbloquear skins."
+      ],
+      "open_questions": [
+        "Confirmar si 0 significa sin skin o skin por defecto y si 1 es el primer índice o el valor equipado."
+      ],
       "experiments_required": [],
       "registry_tier": "legacy",
       "legacy_record": {
@@ -612,7 +630,7 @@
       "id": "weaponEvolutionData.weapons._.Level",
       "internal_name": "Level",
       "category": "Evolución de armas",
-      "description": null,
+      "description": "Nivel o progreso de evolución de un arma.",
       "locations": {
         "local": "weapon_evolution_data*.data:weapons.{id}.Level",
         "cloud_candidate": "weaponEvolutionData.weapons.{id}.Level"
@@ -636,8 +654,10 @@
         "observed": "No cuantificado en este registro.",
         "functional": "No documentado."
       },
-      "related_ids": [],
-      "associated_catalog": null,
+      "related_ids": [
+        "knowledge.catalogs.weapons"
+      ],
+      "associated_catalog": "weapons",
       "sources": [
         "propia",
         "discord",
@@ -656,7 +676,7 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "H",
+        "semantics": "E2",
         "version_compatibility": "E2",
         "relations": "E2",
         "persistence": "H"
@@ -788,7 +808,7 @@
       "id": "weaponEvolutionData.weapons._.UnlockedSkins",
       "internal_name": "UnlockedSkins",
       "category": "Evolución de armas",
-      "description": null,
+      "description": "Lista de identificadores de skin de arma registrados para un arma. El editor experimental añade identificadores evidenciados sin modificar los existentes.",
       "locations": {
         "local": "weapon_evolution_data*.data:weapons.{id}.UnlockedSkins",
         "cloud_candidate": "weaponEvolutionData.weapons.{id}.UnlockedSkins"
@@ -804,16 +824,32 @@
         "type": "lista de cadenas",
         "resolved": false
       },
-      "observed_values": null,
-      "known_value_semantics": [],
+      "observed_values": {
+        "observed_in_versions": [
+          "8.6.0",
+          "Android 8.8.0",
+          "iOS 8.8.1 vía editor externo"
+        ],
+        "sanitized_observations": [
+          "La muestra Android 8.6 propia contiene 177 identificadores únicos en 167 armas.",
+          "La muestra iOS avanzada contiene 192 identificadores, todos del catálogo, en 180 armas.",
+          "Las muestras Android Global 8.8.0 revisadas tienen weapons vacío o uno o dos registros."
+        ]
+      },
+      "known_value_semantics": [
+        "Cada cadena coincide con un identificador weapon_XXX_s_N del catálogo.",
+        "La presencia en la lista se interpreta como disponibilidad desbloqueada, pero la aceptación del cliente no se ha validado en Android físico."
+      ],
       "initial_values": null,
       "limits": {
         "type": "lista de cadenas",
         "observed": "No cuantificado en este registro.",
         "functional": "No documentado."
       },
-      "related_ids": [],
-      "associated_catalog": null,
+      "related_ids": [
+        "knowledge.catalogs.weapon_skins"
+      ],
+      "associated_catalog": "weapon_skins",
       "sources": [
         "propia",
         "discord",
@@ -838,10 +874,19 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
-      "open_questions": [],
-      "experiments_required": [],
+      "edit_policy": "experimental E2: añade solo identificadores del catálogo, conserva el orden y los identificadores desconocidos, y no modifica CurrentSkinIndex ni Level.",
+      "constraints": [
+        "No crear un registro de arma implica posesión del arma.",
+        "La creación de registros ausentes está observada en muestras, pero su efecto funcional no está confirmado."
+      ],
+      "open_questions": [
+        "Confirmar si el cliente muestra y permite equipar las skins añadidas.",
+        "Determinar si el arma debe existir previamente en itemData o en otro registro de obtención."
+      ],
+      "experiments_required": [
+        "Desbloquear una skin en una cuenta con el arma disponible, subir, reiniciar el cliente y comprobar disponibilidad y equipamiento.",
+        "Repetir con una skin de un arma sin registro weaponEvolutionData y comprobar si el juego crea o rechaza el registro."
+      ],
       "registry_tier": "legacy",
       "legacy_record": {
         "internal_name": "UnlockedSkins",
@@ -18783,7 +18828,7 @@
       "id": "miscData.equippedKillEffectIdByScene",
       "internal_name": "equippedKillEffectIdByScene",
       "category": "Datos varios",
-      "description": null,
+      "description": "Selección activa de efecto de eliminación por escena. La semántica de las claves de escena no está confirmada.",
       "locations": {
         "cloud": "miscData.equippedKillEffectIdByScene"
       },
@@ -18799,18 +18844,31 @@
       },
       "observed_values": {
         "observed_in_versions": [
-          "8.6.0"
+          "8.6.0",
+          "Android 8.8.0",
+          "iOS 8.8.1 vía editor externo"
+        ],
+        "sanitized_observations": [
+          "La estructura observada es una lista de pares {Key, Value} con enteros.",
+          "Las muestras revisadas usan las claves 0 y 1.",
+          "Android Global 8.8.0 suele tener ambos valores en 0; la muestra iOS usa 1 y 3."
         ]
       },
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "Key identifica una escena o modo; Value identifica el efecto activo.",
+        "No se ha confirmado qué modo representa cada clave."
+      ],
       "initial_values": null,
       "limits": {
         "type": "generic",
         "observed": "Clave observada; valores no cuantificados.",
         "functional": "No documentado."
       },
-      "related_ids": [],
-      "associated_catalog": null,
+      "related_ids": [
+        "knowledge.catalogs.kill_effects",
+        "miscData.unlockedKillEffectIds"
+      ],
+      "associated_catalog": "kill_effects",
       "sources": [
         "docs/research/phase5-5/metadata-880-inventory.json",
         "docs/research/phase5-5/schema-diff-860-880.json"
@@ -18826,19 +18884,22 @@
         "data_type": "E2",
         "semantics": "H",
         "version_compatibility": "E2",
-        "relations": "H",
+        "relations": "E2",
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
+      "edit_policy": "solo lectura: no se modifica hasta confirmar las claves de escena y la validación del cliente.",
       "constraints": [
-        "Campo declarado en metadata estática; no se ha habilitado escritura."
+        "Conservar la lista y sus pares al desbloquear efectos.",
+        "No asumir que Key 0 es PvE y Key 1 es PvP."
       ],
       "open_questions": [
-        "Confirmar estructura interna y significado funcional con una muestra propia."
+        "Confirmar la correspondencia de las claves 0 y 1 con modos de juego.",
+        "Confirmar si el cliente corrige un efecto activo que no esté en unlockedKillEffectIds."
       ],
       "experiments_required": [
-        "Comparar dos guardados propios de la misma versión y una edición controlada con respaldo."
+        "Cambiar un único par en una cuenta aislada y observar qué modo cambia en el cliente.",
+        "Probar una selección con un efecto no incluido en la lista de desbloqueados."
       ],
       "registry_tier": "declared",
       "legacy_record": null
@@ -19744,7 +19805,7 @@
       "id": "miscData.unlockedKillEffectIds",
       "internal_name": "unlockedKillEffectIds",
       "category": "Datos varios",
-      "description": null,
+      "description": "Identificadores numéricos de efectos de eliminación registrados como disponibles. El editor experimental solo añade ID evidenciados.",
       "locations": {
         "cloud": "miscData.unlockedKillEffectIds"
       },
@@ -19760,18 +19821,31 @@
       },
       "observed_values": {
         "observed_in_versions": [
-          "8.6.0"
+          "8.6.0",
+          "Android 8.8.0",
+          "iOS 8.8.1 vía editor externo"
+        ],
+        "sanitized_observations": [
+          "Las muestras Android Global 8.8.0 revisadas contienen los ID 0 y 1.",
+          "La muestra Android 8.6 propia contiene los ID 0 a 10.",
+          "La muestra iOS avanzada contiene los ID 0 a 6.",
+          "Solo los ID 0 a 8 tienen nombre o recurso localizado; 9 y 10 son desconocidos."
         ]
       },
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "Cada entero se resuelve contra el catálogo kill_effects.",
+        "La presencia se interpreta como efecto disponible, sin confirmar la aceptación del cliente."
+      ],
       "initial_values": null,
       "limits": {
         "type": "generic",
         "observed": "Clave observada; valores no cuantificados.",
         "functional": "No documentado."
       },
-      "related_ids": [],
-      "associated_catalog": null,
+      "related_ids": [
+        "knowledge.catalogs.kill_effects"
+      ],
+      "associated_catalog": "kill_effects",
       "sources": [
         "docs/research/phase5-5/metadata-880-inventory.json",
         "docs/research/phase5-5/schema-diff-860-880.json"
@@ -19787,19 +19861,23 @@
         "data_type": "E2",
         "semantics": "H",
         "version_compatibility": "E2",
-        "relations": "H",
+        "relations": "E2",
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
+      "edit_policy": "experimental E2: añade solo ID 0-8 del catálogo, conserva el orden y los ID desconocidos, y no modifica la selección activa.",
       "constraints": [
-        "Campo declarado en metadata estática; no se ha habilitado escritura."
+        "No eliminar ID desconocidos 9 o 10.",
+        "No modificar equippedKillEffectIdByScene en la misma operación.",
+        "La lista no distingue compras, recibos ni derechos de servidor."
       ],
       "open_questions": [
-        "Confirmar estructura interna y significado funcional con una muestra propia."
+        "Confirmar si el cliente muestra los efectos añadidos y si exige el objeto de tienda correspondiente.",
+        "Determinar el significado de los ID 9 y 10 observados en 8.6.0."
       ],
       "experiments_required": [
-        "Comparar dos guardados propios de la misma versión y una edición controlada con respaldo."
+        "Añadir un efecto evidenciado, subir, reiniciar el cliente y comprobar su aparición en el selector.",
+        "Repetir la prueba sin el objeto customization_kill_effect_N en itemData.commodities."
       ],
       "registry_tier": "declared",
       "legacy_record": null

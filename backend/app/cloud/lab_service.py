@@ -70,6 +70,7 @@ from .gems_editor import (
     read_gems,
     require_gems_write_compatibility,
 )
+from .kill_effect_editor import read_kill_effects
 from .provider import AcquiredCloudSave, CloudSaveMetadata
 from .skill_editor import (
     SKILL_PATH,
@@ -93,6 +94,7 @@ from .unified_editor import (
     prepare_unified_edit,
     require_unified_write_compatibility,
 )
+from .weapon_skin_editor import read_weapon_skins
 
 
 class LabServiceError(CloudSaveError):
@@ -161,6 +163,8 @@ class LabStatus:
             "character_write_policy": "confirmed_by_owner",
             "skill_write_policy": "confirmed_by_owner",
             "skin_write_policy": "confirmed_by_owner",
+            "weapon_skin_write_policy": "experimental",
+            "kill_effect_write_policy": "experimental",
             "message": self.message,
         }
 
@@ -177,6 +181,8 @@ class LoadedSave:
     material_fish: int | None = None
     cumulative_fish_count: int | None = None
     advanced: dict[str, object] = field(default_factory=dict)
+    weapon_skins: dict[str, object] = field(default_factory=dict)
+    kill_effects: dict[str, object] = field(default_factory=dict)
 
     def summary(self) -> dict[str, object]:
         return {
@@ -196,11 +202,15 @@ class LoadedSave:
             "character_write_policy": "confirmed_by_owner",
             "skill_write_policy": "confirmed_by_owner",
             "skin_write_policy": "confirmed_by_owner",
+            "weapon_skin_write_policy": "experimental",
+            "kill_effect_write_policy": "experimental",
             "size": self.size,
             "sha256": self.sha256,
             "serialzed_version": self.serialzed_version,
             "report": self.report,
             "advanced": self.advanced,
+            "weapon_skins": self.weapon_skins,
+            "kill_effects": self.kill_effects,
         }
 
 
@@ -826,6 +836,14 @@ class CloudLabService:
             advanced = read_advanced_source(save.payload)
         except CloudSaveError as exc:
             advanced = {"available": False, "error": str(exc)}
+        try:
+            weapon_skins = read_weapon_skins(save.payload).summary()
+        except CloudSaveError as exc:
+            weapon_skins = {"available": False, "error": str(exc)}
+        try:
+            kill_effects = read_kill_effects(save.payload).summary()
+        except CloudSaveError as exc:
+            kill_effects = {"available": False, "error": str(exc)}
         return LoadedSave(
             metadata=save.metadata,
             gems=snapshot.gems,
@@ -833,6 +851,8 @@ class CloudLabService:
             material_fish=material_fish,
             cumulative_fish_count=cumulative_fish_count,
             advanced=advanced,
+            weapon_skins=weapon_skins,
+            kill_effects=kill_effects,
             size=snapshot.size,
             sha256=snapshot.sha256,
             serialzed_version=snapshot.serialzed_version,

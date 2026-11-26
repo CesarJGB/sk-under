@@ -541,6 +541,69 @@ export type LabDecorations = {
   limitation: string
 }
 
+export type LabWeaponSkinItem = {
+  id: string
+  name_en: string | null
+  name_es: string | null
+  weapon_id: string
+  weapon_name_en: string | null
+  weapon_name_es: string | null
+  skin_index: number
+  unlocked: boolean
+  current_skin_index: number | null
+  equipped: boolean
+  level: number | null
+}
+
+export type LabWeaponSkins = {
+  available?: boolean
+  error?: string
+  field?: string
+  items?: LabWeaponSkinItem[]
+  unlocked?: string[]
+  unlocked_count?: number
+  locked_count?: number
+  total_skins?: number
+  weapons_with_data?: number
+  unknown_weapon_ids?: string[]
+  unknown_skin_ids?: string[]
+  size?: number
+  sha256?: string
+  serialzed_version?: number
+  equip_policy?: 'read_only_unconfirmed'
+  evidence?: 'E2'
+}
+
+export type LabKillEffectItem = {
+  id: number
+  item_id: string | null
+  name_en: string | null
+  name_es: string | null
+  icon: string | null
+  acquisition: string | null
+  is_default: boolean
+  unlocked: boolean
+}
+
+export type LabKillEffects = {
+  available?: boolean
+  error?: string
+  field?: string
+  items?: LabKillEffectItem[]
+  unlocked?: number[]
+  unlocked_count?: number
+  locked_count?: number
+  total_effects?: number
+  equipped?: Array<{ scene: number; effect_id: number }>
+  unknown_unlocked_ids?: number[]
+  size?: number
+  sha256?: string
+  serialzed_version?: number
+  equip_policy?: 'read_only_unconfirmed'
+  scene_semantics?: 'unconfirmed'
+  evidence?: 'E2'
+}
+
 export type LabUnifiedPlan = {
   gems?: number | null
   fish_chip?: number | null
@@ -548,6 +611,8 @@ export type LabUnifiedPlan = {
   characters?: string[]
   skills?: LabSkillRef[]
   skins?: LabSkinRef[]
+  weapon_skins?: string[]
+  kill_effects?: number[]
   advanced?: LabAdvancedPlan | null
   hero_levels?: Array<{ code: string; level: number }>
   pet_affinity?: Array<{ code: string; value: number }>
@@ -560,6 +625,7 @@ export type LabUnifiedPlan = {
 
 export type LabCategoryKey =
   | 'gems' | 'fish_chip' | 'fish_progress' | 'characters' | 'skills' | 'skins'
+  | 'weapon_skins' | 'kill_effects'
   | 'advanced' | 'hero_levels' | 'pet_affinity' | 'blueprints' | 'decorations'
 
 export type LabUnifiedCategory = {
@@ -1040,9 +1106,15 @@ export type NativeSaveSummary = {
   character_write_policy?: 'confirmed_by_owner'
   skill_write_policy?: 'confirmed_by_owner'
   skin_write_policy?: 'confirmed_by_owner'
+  weapon_skin_write_policy?: 'experimental'
+  kill_effect_write_policy?: 'experimental'
   downloaded_at?: string
   report?: SaveReport | null
   advanced?: LabAdvanced | null
+  weapon_skins?: LabWeaponSkins | null
+  kill_effects?: LabKillEffects | null
+  size?: number
+  serialzed_version?: number
 }
 
 export type NativeBackupKind = 'edit' | 'manual' | 'preventive'

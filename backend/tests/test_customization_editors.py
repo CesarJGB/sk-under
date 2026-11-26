@@ -1,0 +1,206 @@
+import json
+from hashlib import sha256
+from pathlib import Path
+
+import pytest
+
+from app.catalogs.kill_effects import load_kill_effect_catalog
+from app.catalogs.weapon_skins import load_weapon_skin_catalog
+from app.cloud.backup_store import LabBackupStore
+from app.cloud.kill_effect_editor import (
+    InvalidKillEffectSelection,
+    UnknownKillEffect,
+    prepare_kill_effect_unlock_edit,
+    read_kill_effects,
+    require_kill_effect_write_compatibility,
+)
+from app.cloud.unified_editor import prepare_unified_edit
+from app.cloud.weapon_skin_editor import (
+    InvalidWeaponSkinSelection,
+    UnknownWeaponSkin,
+    prepare_weapon_skin_unlock_edit,
+    read_weapon_skins,
+    require_weapon_skin_write_compatibility,
+)
+
+FIXTURE = Path(__file__).parent / "fixtures" / "cloud-save-gems.json"
+SKIN_CATALOG = load_weapon_skin_catalog()
+EFFECT_CATALOG = load_kill_effect_catalog()
+
+
+def canonical(document: dict) -> bytes:
+    return json.dumps(
+        document, ensure_ascii=False, sort_keys=True, separators=(", ", ": "), allow_nan=False
+    ).encode()
+
+
+def document() -> dict:
+    data = json.loads(FIXTURE.read_bytes())
+    data["gameData"]["gems"] = 1000
+    data["weaponEvolutionData"] = {
+        "blindBoxOpenCount0": 0,
+        "lastOpenMachineHistoryStr0": None,
+        "favorWeapons": [],
+        "weapons": {
+            "weapon_311": {
+                "Name": "weapon_311",
+                "Level": 0,
+                "CurrentSkinIndex": 1,
+                "UnlockedSkins": ["weapon_311_s_1", "unknown_skin_9"],
+            }
+        },
+    }
+    data["miscData"] = {
+        "unlockedKillEffectIds": [0, 1, 9],
+        "equippedKillEffectIdByScene": [
+            {"Key": 1, "Value": 1},
+            {"Key": 0, "Value": 3},
+        ],
+        "currentReturnCount": 0,
+    }
+    return data
+
+
+def payload() -> bytes:
+    return canonical(document())
+
+
+def test_catalogs_have_evidenced_counts():
+    assert SKIN_CATALOG["counts"] == {"skins": 192, "weapons": 180}
+    assert len(SKIN_CATALOG["ordered_skins"]) == 192
+    assert EFFECT_CATALOG["counts"] == {"effects": 9}
+    assert EFFECT_CATALOG["ordered_effects"] == list(range(9))
+    assert EFFECT_CATALOG["unknown_ids"] == frozenset({9, 10})
+
+
+def test_read_weapon_skins_preserves_unknown_ids_and_current_selection():
+    snapshot = read_weapon_skins(payload())
+    assert snapshot.total == 192
+    assert snapshot.unlocked == ("weapon_311_s_1",)
+    assert snapshot.unknown_skin_ids == ("unknown_skin_9",)
+    assert snapshot.weapons_with_data == 1
+    row = next(item for item in snapshot.items if item["id"] == "weapon_311_s_1")
+    assert row["unlocked"] is True
+    assert row["equipped"] is True
+    assert row["current_skin_index"] == 1
+
+
+def test_unlock_one_weapon_skin_and_create_missing_weapon_record():
+    source = payload()
+    edit = prepare_weapon_skin_unlock_edit(source, ["weapon_002_s_1"])
+    assert edit.newly_unlocked == ("weapon_002_s_1",)
+    assert edit.created_weapons == ("weapon_002",)
+    assert edit.changed_fields == (
+        "weaponEvolutionData.weapons.weapon_002.UnlockedSkins",
+    )
+    result = json.loads(edit.candidate)
+    record = result["weaponEvolutionData"]["weapons"]["weapon_002"]
+    assert record == {
+        "Name": "weapon_002",
+        "Level": 0,
+        "CurrentSkinIndex": 0,
+        "UnlockedSkins": ["weapon_002_s_1"],
+    }
+    assert result["weaponEvolutionData"]["weapons"]["weapon_311"] == {
+        "Name": "weapon_311",
+        "Level": 0,
+        "CurrentSkinIndex": 1,
+        "UnlockedSkins": ["weapon_311_s_1", "unknown_skin_9"],
+    }
+    require_weapon_skin_write_compatibility(source, ["weapon_002_s_1"], edit.candidate)
+
+
+def test_unlock_several_and_all_weapon_skins_is_idempotent():
+    source = payload()
+    selected = ["weapon_002_s_1", "weapon_006_s_2", "weapon_223_s_3"]
+    edit = prepare_weapon_skin_unlock_edit(source, selected)
+    assert set(edit.newly_unlocked) == set(selected)
+    assert len(read_weapon_skins(edit.candidate).unlocked) == 4
+    assert prepare_weapon_skin_unlock_edit(source, selected).candidate == edit.candidate
+    repeat = prepare_weapon_skin_unlock_edit(edit.candidate, selected)
+    assert repeat.changed is False
+    assert repeat.candidate == edit.candidate
+    all_ids = list(SKIN_CATALOG["ordered_skins"])
+    all_edit = prepare_weapon_skin_unlock_edit(source, all_ids)
+    assert len(read_weapon_skins(all_edit.candidate).unlocked) == 192
+    assert prepare_weapon_skin_unlock_edit(all_edit.candidate, all_ids).changed is False
+
+
+def test_weapon_skin_rejects_unknown_and_duplicate_ids():
+    with pytest.raises(UnknownWeaponSkin):
+        prepare_weapon_skin_unlock_edit(payload(), ["weapon_999_s_1"])
+    with pytest.raises(InvalidWeaponSkinSelection):
+        prepare_weapon_skin_unlock_edit(payload(), ["weapon_002_s_1", "weapon_002_s_1"])
+
+
+def test_read_kill_effects_keeps_unknown_ids_and_active_scenes():
+    snapshot = read_kill_effects(payload())
+    assert snapshot.unlocked == (0, 1)
+    assert snapshot.unknown_unlocked_ids == (9,)
+    assert snapshot.equipped == (
+        {"scene": 1, "effect_id": 1},
+        {"scene": 0, "effect_id": 3},
+    )
+    assert next(item for item in snapshot.items if item["id"] == 0)["is_default"] is True
+
+
+def test_unlock_kill_effects_preserves_unknown_and_equipped_scenes():
+    source = payload()
+    edit = prepare_kill_effect_unlock_edit(source, [2, 3, 8])
+    assert edit.newly_unlocked == (2, 3, 8)
+    result = json.loads(edit.candidate)
+    assert result["miscData"]["unlockedKillEffectIds"] == [0, 1, 9, 2, 3, 8]
+    assert result["miscData"]["equippedKillEffectIdByScene"] == [
+        {"Key": 1, "Value": 1},
+        {"Key": 0, "Value": 3},
+    ]
+    assert result["miscData"]["currentReturnCount"] == 0
+    require_kill_effect_write_compatibility(source, [2, 3, 8], edit.candidate)
+    assert prepare_kill_effect_unlock_edit(edit.candidate, [2, 3, 8]).changed is False
+
+
+def test_kill_effect_rejects_unevidenced_and_duplicate_ids():
+    with pytest.raises(UnknownKillEffect):
+        prepare_kill_effect_unlock_edit(payload(), [9])
+    with pytest.raises(UnknownKillEffect):
+        prepare_kill_effect_unlock_edit(payload(), [10])
+    with pytest.raises(InvalidKillEffectSelection):
+        prepare_kill_effect_unlock_edit(payload(), [2, 2])
+
+
+def test_unified_plan_composes_both_new_categories_and_backup_roundtrips(tmp_path):
+    source = payload()
+    plan = {
+        "gems": 2000,
+        "weapon_skins": ["weapon_002_s_1", "weapon_003_s_1"],
+        "kill_effects": [2, 3],
+    }
+    edit = prepare_unified_edit(source, plan)
+    assert edit.steps == ("gems", "weapon_skins", "kill_effects")
+    assert [category.key for category in edit.categories] == [
+        "gems",
+        "weapon_skins",
+        "kill_effects",
+    ]
+    assert edit.plan["weapon_skins"] == ["weapon_002_s_1", "weapon_003_s_1"]
+    assert edit.plan["kill_effects"] == [2, 3]
+    assert prepare_unified_edit(source, plan).candidate == edit.candidate
+    result = json.loads(edit.candidate)
+    assert result["gameData"]["gems"] == 2000
+    assert result["miscData"]["unlockedKillEffectIds"] == [0, 1, 9, 2, 3]
+
+    store = LabBackupStore(tmp_path / "backups")
+    bundle = store.save(
+        edit,
+        remote_source="fake-remote",
+        remote_size=len(source),
+        remote_sha256=sha256(source).hexdigest(),
+        field="unified",
+        original_value=0,
+        new_value=edit.change_count,
+        unified_plan=edit.plan,
+    )
+    loaded = store.load(bundle.record.id)
+    assert loaded.candidate == edit.candidate
+    assert loaded.record.unified_plan["weapon_skins"] == ["weapon_002_s_1", "weapon_003_s_1"]
+    assert loaded.record.unified_plan["kill_effects"] == [2, 3]

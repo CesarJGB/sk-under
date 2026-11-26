@@ -357,6 +357,8 @@ class CloudLabUnifiedPrepareInput(BaseModel):
     characters: list[StrictStr] = Field(default_factory=list, max_length=42)
     skills: list[CloudSkillSelection] = Field(default_factory=list, max_length=105)
     skins: list[CloudSkinSelection] = Field(default_factory=list, max_length=802)
+    weapon_skins: list[StrictStr] = Field(default_factory=list, max_length=192)
+    kill_effects: list[StrictInt] = Field(default_factory=list, max_length=9)
     advanced: CloudLabAdvancedPrepareInput | None = None
     hero_levels: list[CloudHeroLevelChange] = Field(default_factory=list, max_length=42)
     pet_affinity: list[CloudPetAffinityChange] = Field(default_factory=list, max_length=58)

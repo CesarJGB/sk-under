@@ -11,9 +11,10 @@
     "Las relaciones de la fase 7.1 distinguen la referencia funcional del propietario de la confirmación empírica en dispositivo; ninguna relación se eleva a E3/E4 sin esa prueba.",
     "La fase 7.2 eleva a E3 las relaciones confirmadas por el propietario en Android físico y mantiene como hipótesis u observación las relativas a mascotas y pase de batalla.",
     "La fase 9.0 documenta escritores experimentales de niveles, afinidad y planos sin elevar la evidencia de semántica ni declarar validación física.",
-    "La fase 9.2 mantiene E2 las relaciones del vestíbulo: la correlación entre roomDecorateDic, room_unlock_* y planos room_decorate_* es fuerte, pero no se ejecutó una modificación controlada en el juego. La muestra iOS procede de un editor externo y su sobre no se considera representativo del guardado nativo."
+    "La fase 9.2 mantiene E2 las relaciones del vestíbulo: la correlación entre roomDecorateDic, room_unlock_* y planos room_decorate_* es fuerte, pero no se ejecutó una modificación controlada en el juego. La muestra iOS procede de un editor externo y su sobre no se considera representativo del guardado nativo.",
+    "La fase 9.3 añade relaciones observadas E2 entre las listas de skins de arma, los efectos de eliminación y sus catálogos. No se elevan a E3 ni se declara persistencia hasta la validación física del propietario."
   ],
-  "count": 46,
+  "count": 49,
   "dependencies": [
     {
       "id": "gems-balance-composition",
@@ -246,6 +247,62 @@
       "edit_implication": "Mantener la coherencia entre UnlockedSkins y CurrentSkinIndex.",
       "experiments_required": [
         "Probar una skin no desbloqueada y observar la corrección del juego."
+      ]
+    },
+    {
+      "id": "weapon-skin-catalog-availability",
+      "from": "weaponEvolutionData.weapons._.UnlockedSkins",
+      "to": "catalog.weapon_skins",
+      "relation": "disponibilidad_por_catalogo",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, muestras Android e iOS autorizadas",
+      "description": "Cada cadena de UnlockedSkins coincide con weapon_XXX_s_N del catálogo. La muestra iOS avanzada contiene las 192 skins y la muestra Android 8.6 contiene 177 de 192. La presencia en el catálogo no demuestra disponibilidad en una cuenta.",
+      "sources": [
+        "knowledge/catalogs/weapon_skins.json",
+        "knowledge/sources/phase9-3-observations.md"
+      ],
+      "edit_implication": "Validar cada identificador contra el catálogo antes de añadirlo; conservar los identificadores desconocidos existentes.",
+      "experiments_required": [
+        "Comprobar en Android físico si una skin añadida aparece disponible y se puede equipar.",
+        "Comprobar si el arma debe estar poseída para que la skin sea utilizable."
+      ]
+    },
+    {
+      "id": "kill-effect-availability-selection",
+      "from": "miscData.unlockedKillEffectIds",
+      "to": "miscData.equippedKillEffectIdByScene",
+      "relation": "disponibilidad_y_seleccion",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, miscData",
+      "description": "unlockedKillEffectIds enumera efectos disponibles y equippedKillEffectIdByScene selecciona un efecto por escena. No se confirmó la correspondencia de las claves de escena ni si el cliente exige que el efecto activo esté en la lista.",
+      "sources": [
+        "knowledge/sources/phase9-3-observations.md",
+        "knowledge/catalogs/kill_effects.json"
+      ],
+      "edit_implication": "Desbloquear solo añade ID evidenciados y conserva la selección activa sin modificarla.",
+      "experiments_required": [
+        "Cambiar un único par de escena y observar el modo afectado.",
+        "Probar un efecto activo que no esté en la lista de desbloqueados."
+      ]
+    },
+    {
+      "id": "kill-effect-catalog-availability",
+      "from": "miscData.unlockedKillEffectIds",
+      "to": "catalog.kill_effects",
+      "relation": "disponibilidad_por_catalogo",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, miscData",
+      "description": "Los ID 0 a 8 se resuelven contra recursos de configuración localizados. Los ID 9 y 10 solo aparecen en una muestra 8.6.0 y no tienen nombre ni recurso localizado.",
+      "sources": [
+        "knowledge/catalogs/kill_effects.json",
+        "knowledge/sources/phase9-3-observations.md"
+      ],
+      "edit_implication": "No ofrecer ID 9 o 10; conservarlos si ya existen en la cuenta.",
+      "experiments_required": [
+        "Identificar los ID 9 y 10 con una muestra posterior o configuración del juego."
       ]
     },
     {

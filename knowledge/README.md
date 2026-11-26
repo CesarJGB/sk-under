@@ -14,14 +14,15 @@ aparezca en un catálogo no significa que una cuenta lo tenga desbloqueado.
 - Versión de referencia: **Soul Knight 8.8.0**.
 - Compatibilidad histórica analizada: **8.6.0 → 8.7.0 → 8.8.0**.
 - 616 campos técnicos (66 del registro histórico + 550 declarados en metadata).
-- 25 catálogos normalizados con 4.339 elementos (incluye 58 mascotas, 12 variantes de skin, 296 planos y 59 elementos de vestíbulo).
+- 26 catálogos normalizados con 4.348 elementos (incluye 58 mascotas, 12 variantes de skin, 296 planos, 192 skins de arma, 9 efectos de eliminación y 59 elementos de vestíbulo).
 - 8.562 entradas de nombres en inglés, español y chino simplificado.
-- 46 relaciones documentadas y 21 fuentes con procedencia.
+- 49 relaciones documentadas y 21 fuentes con procedencia.
 - Políticas `confirmed_by_owner` E3 para materiales, semillas, monedas de temporada, tarjeta de renacimiento y progreso acumulado de pesca, confirmadas por el propietario en Android físico.
 - La maximización de niveles de personaje está confirmada E3 por el propietario en Android físico (fase 9.1); no se generaliza a otras categorías.
 - La fase 9.1 añade observaciones propias E2 sobre afinidad inicial de mascotas, codificación textual/entera de planos y desbloqueo de objetos del vestíbulo.
 - La fase 9.2 confirma la escala entera de planos (1=Got, 2=Researched), documenta las banderas `room_unlock_*` como disponibilidad funcional del vestíbulo y actualiza los máximos observados (nivel de personaje 8, `Chest` 5, mascota 57 con 240).
-- Políticas experimentales E2 para pase de batalla, desbloqueo de mascotas, variantes de skin y alimento para mascotas.
+- La fase 9.3 añade catálogos independientes de skins de arma y efectos de eliminación, y editores experimentales E2 que solo añaden disponibilidad: no modifican la skin equipada ni la escena activa. La semántica de `CurrentSkinIndex` y de las claves de escena sigue siendo hipótesis.
+- Políticas experimentales E2 para pase de batalla, desbloqueo de mascotas, variantes de skin, alimento para mascotas, skins de arma y efectos de eliminación.
 - Herramientas CLI sin autenticación, sin red y sin acceso a guardados reales.
 
 Las cifras actualizadas se regeneran en [reports/coverage.md](reports/coverage.md).
@@ -92,6 +93,7 @@ nivel de evidencia y fuente con commit.
 | `pet_skills` | 57 | Habilidades y descripciones de mascota |
 | `weapons` | 1.081 | Armas visibles, anillos, transformaciones y variantes |
 | `weapon_skins` | 192 | Skins indexadas por arma |
+| `kill_effects` | 9 | Efectos de eliminación, ID numérico y objeto de tienda |
 | `materials` | 343 | Unión de `item.json` y `needed_data.json` |
 | `seeds` / `plants` | 47 / 47 | Jardín y relación semilla-planta |
 | `blueprints` | 296 | Planos, costes y objetivo (265 de la proyección 8.8 + 31 observados) |
