@@ -69,11 +69,11 @@ def test_coverage_report_matches_the_generated_artifacts():
     report = generate_report.coverage(generate_report.load_all())
     assert report["fields"]["total"] == 616
     assert report["fields"]["by_level"] == {"E1": 194, "E2": 405, "E3": 11, "E4": 6}
-    assert report["catalog_items"] == 4298
+    assert report["catalog_items"] == 4339
     assert len(report["catalogs"]) == 25
     assert report["translations"] == 8562
-    assert report["dependencies"]["total"] == 39
-    assert report["sources"] == 17
+    assert report["dependencies"]["total"] == 43
+    assert report["sources"] == 19
     assert report["versions_analyzed"] == ["8.6.0", "8.7.0", "8.8.0"]
     rendered = generate_report.render_coverage(report)
     assert "Cobertura del Save Knowledge Engine" in rendered
@@ -82,12 +82,12 @@ def test_coverage_report_matches_the_generated_artifacts():
 
 def test_dependency_and_source_headers_match_their_lists():
     dependencies = common.read_json(common.DEPENDENCIES_DIR / "dependencies.json")
-    assert dependencies["count"] == len(dependencies["dependencies"]) == 39
+    assert dependencies["count"] == len(dependencies["dependencies"]) == 43
     assert common.validate_schema(
         dependencies, common.load_schema("dependencies.schema.json")
     ) == []
     sources = common.read_json(common.SOURCES_DIR / "sources.json")
-    assert sources["count"] == len(sources["sources"]) == 17
+    assert sources["count"] == len(sources["sources"]) == 19
     assert common.validate_schema(sources, common.load_schema("sources.schema.json")) == []
     for source in sources["sources"]:
         location = source["location"]

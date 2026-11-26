@@ -350,16 +350,21 @@ export type LabHeroLevels = {
 export type LabBlueprintEntry = {
   id: string
   key: string | null
+  alias_key?: string | null
   name: { en?: string | null; es?: string | null }
   subcategory: string | null
   blueprint_type: number | null
   target: string | null
   research_materials: Array<{ item: string; num: number }>
+  observed_extra?: boolean
   status: 'Got' | 'Researched' | null
+  raw_value?: string | number | null
   value_type: string | null
   present: boolean
+  creatable: boolean
   editable: boolean
   bulk_eligible: boolean
+  reason?: string | null
   path: string | null
 }
 
@@ -367,6 +372,7 @@ export type LabBlueprints = {
   available: boolean
   path: string
   statuses: Array<'Got' | 'Researched'>
+  encoding?: 'text' | 'integer'
   entries: LabBlueprintEntry[]
   unmatched: string[]
   experimental: boolean
@@ -389,6 +395,7 @@ export type LabAdvanced = {
   pet_progression: LabPetProgression
   hero_levels?: LabHeroLevels
   blueprints?: LabBlueprints
+  decorations?: LabDecorations
   pet_policy: {
     field: 'pets'
     experimental: boolean
@@ -469,6 +476,57 @@ export type LabBackup = {
   unified_plan?: LabUnifiedPlan
 }
 
+export type LabDecorationObject = {
+  id: string
+  label: string
+  unlocked: boolean
+  value: unknown
+  editable: boolean
+  reason: string
+  path: string | null
+}
+
+export type LabDecorationLevel = {
+  id: string
+  level: number | null
+  max_observed: number
+  editable: boolean
+  reason: string
+  path: string | null
+}
+
+export type LabDecorationAppearance = {
+  id: string
+  key: string | null
+  name: { en?: string | null; es?: string | null }
+  subcategory: string | null
+  status: 'Got' | 'Researched' | null
+  obtained: boolean
+  researched: boolean
+  path: string | null
+}
+
+export type LabDecorations = {
+  available: boolean
+  objects: LabDecorationObject[]
+  levels: LabDecorationLevel[]
+  appearances: LabDecorationAppearance[]
+  unknown_objects: string[]
+  unknown_levels: string[]
+  room: {
+    current: unknown
+    current_type: string | null
+    room_level: number | null
+    unlock_list: string[] | null
+    selection_editable: boolean
+    selection_reason: string
+  }
+  experimental: boolean
+  evidence_level: 'E1' | 'E2' | 'E3' | 'E4'
+  note: string
+  limitation: string
+}
+
 export type LabUnifiedPlan = {
   gems?: number | null
   fish_chip?: number | null
@@ -480,6 +538,10 @@ export type LabUnifiedPlan = {
   hero_levels?: Array<{ code: string; level: number }>
   pet_affinity?: Array<{ code: string; value: number }>
   blueprints?: Array<{ id: string; status: 'Got' | 'Researched' }>
+  decorations?: {
+    objects?: string[]
+    levels?: Array<{ id: string; level: number }>
+  } | null
 }
 
 export type LabUnifiedCategory = {

@@ -20,6 +20,62 @@ EXPECTED_BLUEPRINTS = 265
 EXPECTED_SCHEMA = "sk-under/backend-blueprints@1"
 MAX_TEXT = 120
 
+# Identificadores observados en la muestra privada 8.6.0 que la proyección 8.8.0
+# todavía no contiene. Se conservan con la forma exacta usada por el guardado
+# (los decorados sin prefijo ``blueprint_``), sin inventar nombres ni materiales.
+OBSERVED_EXTRA_IDS: tuple[str, ...] = (
+    "blueprint_skin_werewolf_23",
+    "blueprint_weapon_388",
+    "blueprint_weapon_389",
+    "blueprint_weapon_400",
+    "blueprint_weapon_401",
+    "garden_skin_3",
+    "garden_skin_4",
+    "hall_skin_2",
+    "hall_skin_3",
+    "hall_skin_4",
+    "hall_skin_5",
+    "magic_area_skin_2",
+    "magic_area_skin_3",
+    "magic_area_skin_4",
+    "mboar2",
+    "mcristal",
+    "mspider",
+    "multi_room_skin_11",
+    "multi_room_skin_12",
+    "multi_room_skin_13",
+    "multi_room_skin_14",
+    "multi_room_skin_15",
+    "multi_room_skin_16",
+    "multi_room_skin_17",
+    "multi_room_skin_18",
+    "multi_room_skin_19",
+    "multi_room_skin_20",
+    "multi_room_skin_21",
+    "mvaken",
+    "work_shop_skin_3",
+    "work_shop_skin_4",
+)
+
+
+def _extra_subcategory(blueprint_id: str) -> str:
+    name = blueprint_id.removeprefix("blueprint_")
+    if name.startswith("multi_room_skin_"):
+        return "room_skin"
+    if name.startswith("garden_skin_"):
+        return "garden_skin"
+    if name.startswith("hall_skin_"):
+        return "hall_skin"
+    if name.startswith("magic_area_skin_"):
+        return "magic_area_skin"
+    if name.startswith("work_shop_skin_"):
+        return "work_shop_skin"
+    if name.startswith("weapon_"):
+        return "weapon"
+    if name.startswith("skin_"):
+        return "skin"
+    return "observed"
+
 logger = logging.getLogger(__name__)
 _last_failure: str | None = None
 
@@ -149,11 +205,24 @@ def _parse_catalog(document: Mapping[str, Any]) -> dict[str, object]:
             "research_materials": _parse_materials(row.get("research_materials")),
         }
         ordered.append(blueprint_id)
+    for extra_id in OBSERVED_EXTRA_IDS:
+        if extra_id in by_id:
+            continue
+        by_id[extra_id] = {
+            "id": extra_id,
+            "name": {"en": None, "es": None},
+            "subcategory": _extra_subcategory(extra_id),
+            "blueprint_type": None,
+            "target": None,
+            "research_materials": [],
+            "observed_extra": True,
+        }
+        ordered.append(extra_id)
     return {
         "available": True,
         "error": None,
         "version": EXPECTED_VERSION,
-        "counts": {"blueprints": len(by_id)},
+        "counts": {"blueprints": EXPECTED_BLUEPRINTS, "observed_extra": len(OBSERVED_EXTRA_IDS)},
         "blueprint_ids": frozenset(by_id),
         "blueprints": by_id,
         "ordered_blueprints": ordered,
@@ -195,7 +264,10 @@ def validate_blueprint_catalog(catalog: Mapping[str, object] | None = None) -> N
         raise BlueprintCatalogError(
             "blueprint_catalog_unexpected_version", "Versión inesperada del catálogo de planos."
         )
-    if current.get("counts") != {"blueprints": EXPECTED_BLUEPRINTS}:
+    if current.get("counts") != {
+        "blueprints": EXPECTED_BLUEPRINTS,
+        "observed_extra": len(OBSERVED_EXTRA_IDS),
+    }:
         raise BlueprintCatalogError(
             "blueprint_catalog_unexpected_size", "Recuento inesperado del catálogo de planos."
         )

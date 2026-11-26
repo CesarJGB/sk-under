@@ -12,7 +12,7 @@
     }
   ],
   "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
-  "count": 265,
+  "count": 296,
   "items": [
     {
       "id": "blueprint_evolution_weapon_006",
@@ -9748,6 +9748,29 @@
       "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:items.decrypted.csv"
     },
     {
+      "id": "blueprint_skin_werewolf_23",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "skin",
+      "attributes": {},
+      "relations": {
+        "target": "skin_werewolf_23"
+      },
+      "save_refs": [
+        "itemData.blueprints.blueprint_skin_werewolf_23",
+        "itemData.blueprints.skin_werewolf_23"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
       "id": "blueprint_skin_werewolf_9",
       "name": {
         "en": null,
@@ -11156,6 +11179,52 @@
       "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:items.decrypted.csv"
     },
     {
+      "id": "blueprint_weapon_388",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "weapon",
+      "attributes": {},
+      "relations": {
+        "target": "weapon_388"
+      },
+      "save_refs": [
+        "itemData.blueprints.blueprint_weapon_388",
+        "itemData.blueprints.weapon_388"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "blueprint_weapon_389",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "weapon",
+      "attributes": {},
+      "relations": {
+        "target": "weapon_389"
+      },
+      "save_refs": [
+        "itemData.blueprints.blueprint_weapon_389",
+        "itemData.blueprints.weapon_389"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
       "id": "blueprint_weapon_392",
       "name": {
         "en": null,
@@ -11420,6 +11489,52 @@
       ],
       "evidence": "E1",
       "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:items.decrypted.csv"
+    },
+    {
+      "id": "blueprint_weapon_400",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "weapon",
+      "attributes": {},
+      "relations": {
+        "target": "weapon_400"
+      },
+      "save_refs": [
+        "itemData.blueprints.blueprint_weapon_400",
+        "itemData.blueprints.weapon_400"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "blueprint_weapon_401",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "weapon",
+      "attributes": {},
+      "relations": {
+        "target": "weapon_401"
+      },
+      "save_refs": [
+        "itemData.blueprints.blueprint_weapon_401",
+        "itemData.blueprints.weapon_401"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
     },
     {
       "id": "blueprint_weapon_407",
@@ -12294,6 +12409,604 @@
       ],
       "evidence": "E1",
       "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:items.decrypted.csv"
+    },
+    {
+      "id": "garden_skin_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "n_3"
+      },
+      "save_refs": [
+        "itemData.blueprints.garden_skin_3",
+        "itemData.blueprints.n_3"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "garden_skin_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "n_4"
+      },
+      "save_refs": [
+        "itemData.blueprints.garden_skin_4",
+        "itemData.blueprints.n_4"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "hall_skin_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "2"
+      },
+      "save_refs": [
+        "itemData.blueprints.hall_skin_2",
+        "itemData.blueprints.2"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "hall_skin_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "3"
+      },
+      "save_refs": [
+        "itemData.blueprints.hall_skin_3",
+        "itemData.blueprints.3"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "hall_skin_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "4"
+      },
+      "save_refs": [
+        "itemData.blueprints.hall_skin_4",
+        "itemData.blueprints.4"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "hall_skin_5",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "5"
+      },
+      "save_refs": [
+        "itemData.blueprints.hall_skin_5",
+        "itemData.blueprints.5"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "magic_area_skin_2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "_skin_2"
+      },
+      "save_refs": [
+        "itemData.blueprints.magic_area_skin_2",
+        "itemData.blueprints._skin_2"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "magic_area_skin_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "_skin_3"
+      },
+      "save_refs": [
+        "itemData.blueprints.magic_area_skin_3",
+        "itemData.blueprints._skin_3"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "magic_area_skin_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "_skin_4"
+      },
+      "save_refs": [
+        "itemData.blueprints.magic_area_skin_4",
+        "itemData.blueprints._skin_4"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "mboar2",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": ""
+      },
+      "save_refs": [
+        "itemData.blueprints.mboar2",
+        "itemData.blueprints."
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "mcristal",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": ""
+      },
+      "save_refs": [
+        "itemData.blueprints.mcristal",
+        "itemData.blueprints."
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "mspider",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": ""
+      },
+      "save_refs": [
+        "itemData.blueprints.mspider",
+        "itemData.blueprints."
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "multi_room_skin_11",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "_skin_11"
+      },
+      "save_refs": [
+        "itemData.blueprints.multi_room_skin_11",
+        "itemData.blueprints._skin_11"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "multi_room_skin_12",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "_skin_12"
+      },
+      "save_refs": [
+        "itemData.blueprints.multi_room_skin_12",
+        "itemData.blueprints._skin_12"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "multi_room_skin_13",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "_skin_13"
+      },
+      "save_refs": [
+        "itemData.blueprints.multi_room_skin_13",
+        "itemData.blueprints._skin_13"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "multi_room_skin_14",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "_skin_14"
+      },
+      "save_refs": [
+        "itemData.blueprints.multi_room_skin_14",
+        "itemData.blueprints._skin_14"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "multi_room_skin_15",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "_skin_15"
+      },
+      "save_refs": [
+        "itemData.blueprints.multi_room_skin_15",
+        "itemData.blueprints._skin_15"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "multi_room_skin_16",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "_skin_16"
+      },
+      "save_refs": [
+        "itemData.blueprints.multi_room_skin_16",
+        "itemData.blueprints._skin_16"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "multi_room_skin_17",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "_skin_17"
+      },
+      "save_refs": [
+        "itemData.blueprints.multi_room_skin_17",
+        "itemData.blueprints._skin_17"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "multi_room_skin_18",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "_skin_18"
+      },
+      "save_refs": [
+        "itemData.blueprints.multi_room_skin_18",
+        "itemData.blueprints._skin_18"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "multi_room_skin_19",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "_skin_19"
+      },
+      "save_refs": [
+        "itemData.blueprints.multi_room_skin_19",
+        "itemData.blueprints._skin_19"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "multi_room_skin_20",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "_skin_20"
+      },
+      "save_refs": [
+        "itemData.blueprints.multi_room_skin_20",
+        "itemData.blueprints._skin_20"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "multi_room_skin_21",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": "_skin_21"
+      },
+      "save_refs": [
+        "itemData.blueprints.multi_room_skin_21",
+        "itemData.blueprints._skin_21"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "mvaken",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "observed",
+      "attributes": {},
+      "relations": {
+        "target": ""
+      },
+      "save_refs": [
+        "itemData.blueprints.mvaken",
+        "itemData.blueprints."
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "work_shop_skin_3",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "skin",
+      "attributes": {},
+      "relations": {
+        "target": "skin_3"
+      },
+      "save_refs": [
+        "itemData.blueprints.work_shop_skin_3",
+        "itemData.blueprints.skin_3"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "work_shop_skin_4",
+      "name": {
+        "en": null,
+        "es": null,
+        "zh_cn": null
+      },
+      "category": "blueprint",
+      "subcategory": "skin",
+      "attributes": {},
+      "relations": {
+        "target": "skin_4"
+      },
+      "save_refs": [
+        "itemData.blueprints.work_shop_skin_4",
+        "itemData.blueprints.skin_4"
+      ],
+      "notes": [
+        "Identificador observado en las cuentas A/B de la fase 9.1; no estaba en la proyección SKDFE 8.8.0."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
     }
   ]
 }

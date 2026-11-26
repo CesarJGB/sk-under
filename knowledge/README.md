@@ -14,10 +14,12 @@ aparezca en un catálogo no significa que una cuenta lo tenga desbloqueado.
 - Versión de referencia: **Soul Knight 8.8.0**.
 - Compatibilidad histórica analizada: **8.6.0 → 8.7.0 → 8.8.0**.
 - 616 campos técnicos (66 del registro histórico + 550 declarados en metadata).
-- 25 catálogos normalizados con 4.298 elementos (incluye 58 mascotas y 12 variantes de skin).
+- 25 catálogos normalizados con 4.339 elementos (incluye 58 mascotas, 12 variantes de skin, 296 planos y 59 elementos de vestíbulo).
 - 8.562 entradas de nombres en inglés, español y chino simplificado.
-- 35 relaciones documentadas y 17 fuentes con procedencia.
+- 43 relaciones documentadas y 19 fuentes con procedencia.
 - Políticas `confirmed_by_owner` E3 para materiales, semillas, monedas de temporada, tarjeta de renacimiento y progreso acumulado de pesca, confirmadas por el propietario en Android físico.
+- La maximización de niveles de personaje está confirmada E3 por el propietario en Android físico (fase 9.1); no se generaliza a otras categorías.
+- La fase 9.1 añade observaciones propias E2 sobre afinidad inicial de mascotas, codificación textual/entera de planos y desbloqueo de objetos del vestíbulo.
 - Políticas experimentales E2 para pase de batalla, desbloqueo de mascotas, variantes de skin y alimento para mascotas.
 - Herramientas CLI sin autenticación, sin red y sin acceso a guardados reales.
 
@@ -91,9 +93,9 @@ nivel de evidencia y fuente con commit.
 | `weapon_skins` | 192 | Skins indexadas por arma |
 | `materials` | 343 | Unión de `item.json` y `needed_data.json` |
 | `seeds` / `plants` | 47 / 47 | Jardín y relación semilla-planta |
-| `blueprints` | 265 | Planos, costes y objetivo |
+| `blueprints` | 296 | Planos, costes y objetivo (265 de la proyección 8.8 + 31 observados) |
 | `enemies` / `bosses` | 593 / 74 | Enemigos, jefes y drops |
-| `lobby` | 49 | Muebles, desbloqueos, skins de sala y jardín |
+| `lobby` | 59 | Muebles, desbloqueos, skins de sala y jardín, y 10 objetos observados |
 | `tokens`, `special_items`, `vouchers` | 19, 29, 136 | Tickets, objetos y vales |
 | `jewelry`, `chips`, `mounts`, `followers` | 15, 18, 4, 6 | Sistemas complementarios |
 | `trophies`, `season_content`, `collectibles` | 212, 10, 82 | Trofeos y contenido de modos |

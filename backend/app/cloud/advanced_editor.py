@@ -28,6 +28,7 @@ from ..cloud_save import (
 )
 from ..parsers.json_document import parse_json
 from .blueprint_editor import blueprints_snapshot
+from .decoration_editor import decorations_snapshot
 from .gems_editor import serialize_aggregate
 from .hero_level_editor import hero_levels_snapshot
 from .lab import BinaryDiff, binary_diff
@@ -776,6 +777,7 @@ def read_advanced_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
         "pet_progression": pet_progression,
         "hero_levels": hero_levels_snapshot(payload),
         "blueprints": blueprints_snapshot(payload),
+        "decorations": decorations_snapshot(payload),
         "pet_policy": {
             "field": "pets",
             "experimental": False,

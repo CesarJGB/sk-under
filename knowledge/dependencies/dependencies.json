@@ -12,7 +12,7 @@
     "La fase 7.2 eleva a E3 las relaciones confirmadas por el propietario en Android físico y mantiene como hipótesis u observación las relativas a mascotas y pase de batalla.",
     "La fase 9.0 documenta escritores experimentales de niveles, afinidad y planos sin elevar la evidencia de semántica ni declarar validación física."
   ],
-  "count": 39,
+  "count": 43,
   "dependencies": [
     {
       "id": "gems-balance-composition",
@@ -271,16 +271,19 @@
       "to": "catalog.blueprints",
       "relation": "estado_por_plano",
       "status": "observed",
-      "evidence": "E1",
-      "scope": "8.8.0, muestra externa con forma de guardado",
-      "description": "La muestra externa data.json contiene 119 claves de blueprint con estados Got/Researched; la muestra completa propia 8.6.0 contiene 275 claves (273 Researched y 2 Got). Varias claves antiguas omiten el prefijo blueprint_ del catálogo. No se usó para editar ni se considera evidencia de posesión de la cuenta.",
+      "evidence": "E2",
+      "scope": "8.6.0 y 8.8.0, cuentas A y B de la fase 9.1",
+      "description": "A usa texto Got/Researched con 344 claves (312 Researched, 32 Got); B usa enteros con 21 claves de valor 1, interpretado como Got. La ausencia de clave se interpreta como no obtenido. Hay alias con y sin prefijo blueprint_ y claves no catalogadas que se conservan intactas.",
       "sources": [
         "knowledge/evidence/data-json-structure.json",
-        "knowledge/catalogs/blueprints.json"
+        "knowledge/catalogs/blueprints.json",
+        "docs/research/phase9-0/README.md",
+        "docs/research/phase9-1/README.md"
       ],
-      "edit_implication": "Experimental: resolver primero el identificador exacto del catálogo y después el alias sin prefijo; cambiar solo Got/Researched en claves existentes; no insertar planos ausentes.",
+      "edit_implication": "Experimental: crear registros ausentes solo del catálogo o extras observados, respetar la codificación dominante, permitir No→Got, No→Researched y Got→Researched, y rechazar Researched→Got. No sobrescribir claves desconocidas.",
       "experiments_required": [
-        "Reproducir los estados Got y Researched en un guardado propio y comprobar su efecto en el cliente.",
+        "Confirmar el valor entero 2 para Researched.",
+        "Confirmar en Android la creación de un plano ausente.",
         "Confirmar si investigar consume materiales automáticamente."
       ]
     },
@@ -344,16 +347,16 @@
       "relation": "desbloqueo_y_nivel",
       "status": "observed",
       "evidence": "E2",
-      "scope": "8.8.0, 15 muebles observados en muestra externa",
-      "description": "unlockRoomDecorate y roomObjectLevel aparecen como estados distintos del vestíbulo. roomDecorateDic relaciona nombres de objeto con listas como [0]; no se demostró si la lista representa niveles, estados o skins. La muestra completa incluye diez objetos con [0].",
+      "scope": "8.8.0/8.11, cuentas A y B de la fase 9.1",
+      "description": "itemData.roomDecorateDic contiene diez objetos en A y solo ItemEggMachine en B; la presencia de la clave se interpreta como desbloqueo. gameData.unlockRoomDecorate está vacío en ambas y no sirve como indicador. roomObjectLevel tiene niveles independientes (A: Book/CatFood/Planet/Safe=5, Chest=1; B: todo 0). El valor [0] no es un nivel.",
       "sources": [
-        "docs/save-research/field-registry.json",
+        "docs/research/phase9-1/README.md",
         "knowledge/catalogs/lobby.json"
       ],
-      "edit_implication": "No asumir que desbloquear un mueble establece su nivel ni que [0] sea un nivel máximo. Estos campos permanecen en solo lectura.",
+      "edit_implication": "Experimental: desbloquear objetos observados creando la clave con [0]; subir niveles existentes hasta el máximo observado por clave. No usar unlockRoomDecorate ni interpretar [0] como máximo.",
       "experiments_required": [
-        "Probar desbloqueo, nivel y selección de un mueble en un guardado propio.",
-        "Aclarar el significado de roomDecorateDic y currentRoomDecorate."
+        "Validar en Android el desbloqueo por creación de clave y la mejora de nivel.",
+        "Aclarar la relación con planos de decoración y selección de skin."
       ]
     },
     {
@@ -624,15 +627,17 @@
       "relation": "intimidad actual y marca de máximo por mascota",
       "status": "observed",
       "evidence": "E2",
-      "scope": "8.8.0, muestra modificada statistic_111_.data",
-      "description": "Las claves pet_<ID>_intimacy, pet_<ID>_full_intimacy y pet_<ID>_action_unlock describen la progresión. Los máximos observados varían (180 para los índices 30 y 31, 300 para el 34 y 240 para el resto de índices 0..55 presentes); la configuración completa por mascota no está recuperada. Los índices 27, 56 y 57 no aparecieron y no tienen máximo justificado.",
+      "scope": "8.8.0/8.11, cuentas A y B de la fase 9.1",
+      "description": "Las claves pet_<ID>_intimacy, full_intimacy y action_unlock describen la progresión. A tiene todas las mascotas presentes en el máximo y B tiene 58 mascotas desbloqueadas sin ninguna clave de intimidad: la ausencia en una mascota desbloqueada es el estado inicial 0. Los máximos observados son 180 para 30/31, 300 para 34 y 240 para el resto de 0..55 presentes; 27, 56 y 57 no tienen máximo demostrado.",
       "sources": [
-        "docs/research/phase7-2/README.md"
+        "docs/research/phase9-0/README.md",
+        "docs/research/phase9-1/README.md"
       ],
-      "edit_implication": "Experimental: solo se sube la intimidad hasta el máximo empírico conocido, se activa full_intimacy al alcanzarlo y no se tocan action_unlock ni pet_full_intimacy. La eficacia del escritor no se validó en dispositivo.",
+      "edit_implication": "Experimental: crear pet_<ID>_intimacy=0 solo para mascotas desbloqueadas sin registro, subir hasta el máximo empírico y crear full_intimacy=1 al alcanzarlo. No tocar action_unlock ni pet_full_intimacy. Eficacia pendiente de Android físico.",
       "experiments_required": [
-        "Recuperar PetsLevelUpConfig/PetIntimacyConfig y validar una escritura de intimidad en Android físico.",
-        "Comprobar si el cliente actualiza la acción especial o el contador global al alcanzar el máximo."
+        "Recuperar PetsLevelUpConfig/PetIntimacyConfig.",
+        "Validar en Android la creación del registro, la subida parcial y el máximo.",
+        "Comprobar si el cliente actualiza la acción especial o el contador global."
       ]
     },
     {
@@ -640,19 +645,19 @@
       "from": "gameData.heroLevel",
       "to": "catalog.characters",
       "relation": "nivel_por_codigo_de_personaje",
-      "status": "observed",
-      "evidence": "E2",
-      "scope": "8.8.0, 42 personajes; confirmación del propietario para Knight 0→1",
-      "description": "heroLevel es un mapa código→entero alineado con el catálogo de personajes. Una mejora legítima de Knight cambió 0→1. La ruta pública documenta siete mejoras secuenciales (niveles 1..7); CharactersLevelUpData declara MaxLevel por personaje, pero sus valores no se recuperaron.",
+      "status": "confirmed",
+      "evidence": "E3",
+      "scope": "8.8.0, 42 personajes; maximización al 7 confirmada por el propietario en Android físico (fase 9.1)",
+      "description": "heroLevel es un mapa código→entero alineado con el catálogo de personajes. Una mejora legítima de Knight cambió 0→1 y la operación de maximización de personajes al nivel 7 funcionó dentro de Soul Knight en Android físico. La ruta pública documenta siete mejoras secuenciales (1..7); el nivel 8 pertenece a un sistema retirado.",
       "sources": [
-        "docs/research/phase6-12/personajes-skins-skills.md",
         "docs/research/phase9-0/README.md",
+        "docs/research/phase9-1/README.md",
+        "knowledge/sources/owner-confirmations-phase9-1.md",
         "knowledge/catalogs/characters.json"
       ],
-      "edit_implication": "Solo escribir códigos existentes del catálogo, sin bajar el nivel y sin superar 7. No se inventan máximos por personaje ni se usa el nivel 8 retirado.",
+      "edit_implication": "Escritor confirmado para maximización hasta 7: solo códigos existentes del catálogo, sin bajar niveles y sin superar 7. La confirmación no se generaliza a otras categorías.",
       "experiments_required": [
-        "Recuperar CharactersLevelUpData.MaxLevel.",
-        "Validar en Android físico una subida individual y una masiva, incluida la persistencia tras guardar desde el cliente."
+        "Recuperar CharactersLevelUpData.MaxLevel por personaje."
       ]
     },
     {
@@ -680,13 +685,13 @@
       "relation": "identificador_con_y_sin_prefijo",
       "status": "observed",
       "evidence": "E2",
-      "scope": "8.8.0, muestra completa 8.6.0 con 275 claves",
-      "description": "El catálogo usa el prefijo blueprint_. El guardado conserva alias sin prefijo para planos antiguos, por ejemplo multi_room_skin_20, garden_skin_* y hall_skin_*. No todas las claves del catálogo están presentes en la muestra.",
+      "scope": "8.6.0/8.8.0, 344 claves en A y 21 en B",
+      "description": "El catálogo usa el prefijo blueprint_. El guardado conserva alias sin prefijo para decorados y planos antiguos. A puede contener simultáneamente ambas formas. Se añadieron 31 identificadores observados al catálogo, hasta 296; las claves restantes no catalogadas se conservan sin sobrescribir.",
       "sources": [
         "knowledge/catalogs/blueprints.json",
         "docs/research/phase9-0/README.md"
       ],
-      "edit_implication": "Resolver el identificador exacto y después el alias sin prefijo; editar solo claves existentes y conservar las no reconocidas.",
+      "edit_implication": "Resolver primero la clave existente exacta y después el alias; para decorados nuevos usar la forma sin prefijo. No duplicar una misma clave lógica.",
       "experiments_required": [
         "Confirmar la lista de alias por versión y si el cliente acepta claves nuevas."
       ]
@@ -698,8 +703,8 @@
       "relation": "ranuras_transitorias_no_progreso_permanente",
       "status": "hypothesis",
       "evidence": "E2",
-      "scope": "8.8.0, dos muestras propias",
-      "description": "forgeWeapons contiene cuatro posiciones con nombres de arma o null. Las muestras tienen armas distintas y no se comporta como un contador de obtención. La disponibilidad permanente parece depender de ObtainWeaponTimes o IsWeaponForgeUnlockByObtainTimes.",
+      "scope": "8.8.0/8.11, cuentas A y B",
+      "description": "A contiene ring_1/ring_2/ring_3/null; B contiene weapon_034/weapon_057/weapon_062/null. Son colas o ranuras transitorias distintas, no el desbloqueo permanente. No se localizó un contador fiable de obtención permanente.",
       "sources": [
         "docs/research/phase9-0/README.md",
         "docs/research/phase7-0/oportunidades.md"
@@ -708,6 +713,77 @@
       "experiments_required": [
         "Determinar si las posiciones son cola, ranuras activas o pagos pendientes.",
         "Localizar el contador real de obtención y su umbral por arma."
+      ]
+    },
+    {
+      "id": "decoration-object-level-maxima",
+      "from": "gameData.roomObjectLevel",
+      "to": "itemData.roomDecorateDic",
+      "relation": "niveles_independientes_del_desbloqueo",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0/8.11, cuentas A y B",
+      "description": "La presencia en roomDecorateDic indica desbloqueo; roomObjectLevel contiene la mejora. A tiene Book/CatFood/Planet/Safe=5 y Chest=1; B tiene 0. [0] no es un máximo.",
+      "sources": [
+        "docs/research/phase9-1/README.md"
+      ],
+      "edit_implication": "Desbloquear creando la clave con [0] y mejorar solo claves de nivel existentes, sin superar el máximo observado por clave.",
+      "experiments_required": [
+        "Validar ambas transiciones en Android físico.",
+        "Recuperar los máximos reales de la configuración del juego."
+      ]
+    },
+    {
+      "id": "decoration-appearance-blueprint-ownership",
+      "from": "catalog.lobby.room_skin",
+      "to": "itemData.blueprints",
+      "relation": "posesion_por_plano_no_seleccion",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0/8.11, cuentas A y B",
+      "description": "Las apariencias multi_room_skin_*, garden_skin_*, hall_skin_*, magic_area_skin_* y work_shop_skin_* aparecen como planos con o sin prefijo. La posesión no demuestra cuál está activa; currentRoomDecorate difiere de tipo entre cuentas.",
+      "sources": [
+        "docs/research/phase9-1/README.md",
+        "knowledge/catalogs/lobby.json"
+      ],
+      "edit_implication": "Gestionar obtención/investigación desde Planos y mantener la selección en solo lectura hasta mapear currentRoomDecorate.",
+      "experiments_required": [
+        "Mapear los valores de currentRoomDecorate a las apariencias.",
+        "Comprobar si el cliente acepta texto y entero."
+      ]
+    },
+    {
+      "id": "pet-missing-intimacy-initial-zero",
+      "from": "gameData.petUnlock",
+      "to": "statisticData.event2Count.pet_<ID>_intimacy",
+      "relation": "desbloqueo_sin_registro_implica_inicial_cero",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, cuenta B con 58 mascotas y cero claves",
+      "description": "B tiene las 58 mascotas desbloqueadas y ninguna clave pet_<ID>_intimacy. La ausencia de registro en una mascota desbloqueada representa el estado inicial 0; no se crea action_unlock automáticamente.",
+      "sources": [
+        "docs/research/phase9-1/README.md"
+      ],
+      "edit_implication": "Permitir crear pet_<ID>_intimacy=0 solo si petUnlock[código] es true; no crear action_unlock ni recalcular pet_full_intimacy.",
+      "experiments_required": [
+        "Validar en Android que el registro creado persiste y que el juego lo acepta."
+      ]
+    },
+    {
+      "id": "blueprint-integer-encoding",
+      "from": "itemData.blueprints",
+      "to": "itemData.blueprints",
+      "relation": "codificacion_texto_o_entero_por_cuenta",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0/8.11, A texto y B entero",
+      "description": "A serializa Got/Researched como texto. B usa enteros: 1 coincide con Got; 2 se deduce como Researched pero no se observó. Mezclar tipos en una misma cuenta no está respaldado.",
+      "sources": [
+        "docs/research/phase9-1/README.md"
+      ],
+      "edit_implication": "Detectar la codificación dominante y escribir los registros nuevos con ese tipo; no mezclar texto y enteros.",
+      "experiments_required": [
+        "Confirmar el valor entero 2 en una cuenta que investigue un plano."
       ]
     }
   ]

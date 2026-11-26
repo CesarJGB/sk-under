@@ -6,7 +6,8 @@ import { pendingCharacterCodes, pendingSkillKeys, pendingSkinKeys, skillKey, ski
 
 export type BulkKey =
   | 'characters' | 'skills' | 'skins' | 'pets' | 'petSkins'
-  | 'heroLevels' | 'petAffinity' | 'blueprints'
+  | 'heroLevels' | 'petAffinity' | 'blueprints' | 'blueprintObtain'
+  | 'decorations' | 'decorationLevels'
 export type QuantityKey =
   | 'gems' | 'fishChip' | 'fishProgress' | 'seasonCoin'
   | 'materialsMin' | 'seedsMin' | 'petFoodMin' | 'batteryMin'
@@ -22,6 +23,9 @@ export type Draft = {
     heroLevels: Record<string, true>
     petAffinity: Record<string, true>
     blueprints: Record<string, true>
+    blueprintObtain: Record<string, true>
+    decorations: Record<string, true>
+    decorationLevels: Record<string, true>
   }
   excluded: {
     characters: Record<string, true>
@@ -32,6 +36,9 @@ export type Draft = {
     heroLevels: Record<string, true>
     petAffinity: Record<string, true>
     blueprints: Record<string, true>
+    blueprintObtain: Record<string, true>
+    decorations: Record<string, true>
+    decorationLevels: Record<string, true>
   }
   quick: Partial<Record<QuantityKey, string>>
   materialEdits: Record<string, string>
@@ -41,6 +48,8 @@ export type Draft = {
   heroLevels: Record<string, string>
   petAffinity: Record<string, string>
   blueprintStatus: Record<string, 'Got' | 'Researched'>
+  blueprintMode: 'Got' | 'Researched'
+  decorationLevels: Record<string, string>
   reborn: boolean
   battlePass: { seasonId: number | null; level?: string; exp?: string; buy: boolean | null }
 }
@@ -102,15 +111,18 @@ export function createEmptyDraft(): Draft {
   return {
     bulk: {
       characters: false, skills: false, skins: false, pets: false, petSkins: false,
-      heroLevels: false, petAffinity: false, blueprints: false,
+      heroLevels: false, petAffinity: false, blueprints: false, blueprintObtain: false,
+      decorations: false, decorationLevels: false,
     },
     manual: {
       characters: emptySet(), skills: emptySet(), skins: emptySet(), pets: emptySet(), petSkins: emptySet(),
       heroLevels: emptySet(), petAffinity: emptySet(), blueprints: emptySet(),
+      blueprintObtain: emptySet(), decorations: emptySet(), decorationLevels: emptySet(),
     },
     excluded: {
       characters: emptySet(), skills: emptySet(), skins: emptySet(), pets: emptySet(), petSkins: emptySet(),
       heroLevels: emptySet(), petAffinity: emptySet(), blueprints: emptySet(),
+      blueprintObtain: emptySet(), decorations: emptySet(), decorationLevels: emptySet(),
     },
     quick: {},
     materialEdits: {},
@@ -120,6 +132,8 @@ export function createEmptyDraft(): Draft {
     heroLevels: {},
     petAffinity: {},
     blueprintStatus: {},
+    blueprintMode: 'Researched',
+    decorationLevels: {},
     reborn: false,
     battlePass: { seasonId: null, buy: null },
   }
@@ -215,7 +229,16 @@ export function eligibility(save: NativeSaveSummary | null): Eligibility {
       .filter((row) => row.editable && row.intimacy !== null && row.max !== null && row.intimacy < row.max)
       .map((row) => row.id),
     blueprints: (advanced?.blueprints?.entries ?? [])
-      .filter((row) => row.editable && row.status === 'Got')
+      .filter((row) => row.status !== 'Researched' && (row.status === 'Got' || row.creatable))
+      .map((row) => row.id),
+    blueprintObtain: (advanced?.blueprints?.entries ?? [])
+      .filter((row) => row.creatable)
+      .map((row) => row.id),
+    decorations: (advanced?.decorations?.objects ?? [])
+      .filter((row) => row.editable)
+      .map((row) => row.id),
+    decorationLevels: (advanced?.decorations?.levels ?? [])
+      .filter((row) => row.editable && row.level !== null && row.level < row.max_observed)
       .map((row) => row.id),
   }
 }
@@ -312,6 +335,17 @@ export function setPetAffinity(id: string, value: string, draft: Draft): Draft {
 
 export function setBlueprintStatus(id: string, status: 'Got' | 'Researched', draft: Draft): Draft {
   return { ...draft, blueprintStatus: { ...draft.blueprintStatus, [id]: status } }
+}
+
+export function setBlueprintMode(mode: 'Got' | 'Researched', draft: Draft): Draft {
+  return { ...draft, blueprintMode: mode }
+}
+
+export function setDecorationLevel(id: string, value: string, draft: Draft): Draft {
+  const next = { ...draft.decorationLevels }
+  if (value === '') delete next[id]
+  else next[id] = value
+  return { ...draft, decorationLevels: next }
 }
 
 export function setEdit(
@@ -559,15 +593,43 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft, session: N
 
   const blueprintPlan = new Map<string, 'Got' | 'Researched'>()
   const selectedBlueprints = new Set(effectiveUnlockedSet('blueprints', draft, selected))
+  const selectedObtain = new Set(effectiveUnlockedSet('blueprintObtain', draft, selected))
   for (const row of advanced?.blueprints?.entries ?? []) {
-    if (!row.editable || !row.status) continue
+    if (row.status === 'Researched') continue
+    const canCreate = row.creatable
+    const canResearch = row.status === 'Got' || canCreate
+    if (!canResearch) continue
+    let target: 'Got' | 'Researched' | null = null
     const explicit = draft.blueprintStatus[row.id]
-    if (explicit && explicit !== row.status) blueprintPlan.set(row.id, explicit)
-    else if (selectedBlueprints.has(row.id) && row.status === 'Got') blueprintPlan.set(row.id, 'Researched')
+    if (explicit === 'Researched' && canResearch) target = 'Researched'
+    else if (explicit === 'Got' && canCreate) target = 'Got'
+    else if (selectedBlueprints.has(row.id)) target = draft.blueprintMode
+    else if (selectedObtain.has(row.id)) target = 'Got'
+    if (target && target !== row.status) blueprintPlan.set(row.id, target)
   }
   if (blueprintPlan.size > 0) {
     plan.blueprints = Array.from(blueprintPlan, ([id, status]) => ({ id, status }))
     bump('Planos', blueprintPlan.size)
+  }
+
+  const decorationPlan: NonNullable<LabUnifiedPlan['decorations']> = {}
+  const decorationObjects = effectiveUnlockedSet('decorations', draft, selected)
+  if (decorationObjects.length > 0) decorationPlan.objects = decorationObjects
+  const decorationLevels: Array<{ id: string; level: number }> = []
+  const selectedDecorationLevels = new Set(effectiveUnlockedSet('decorationLevels', draft, selected))
+  for (const row of advanced?.decorations?.levels ?? []) {
+    if (!row.editable || row.level === null) continue
+    const explicit = parseQuantity(draft.decorationLevels[row.id] ?? '')
+    if (explicit !== null && explicit > row.level && explicit <= row.max_observed) {
+      decorationLevels.push({ id: row.id, level: explicit })
+    } else if (selectedDecorationLevels.has(row.id) && row.level < row.max_observed) {
+      decorationLevels.push({ id: row.id, level: row.max_observed })
+    }
+  }
+  if (decorationLevels.length > 0) decorationPlan.levels = decorationLevels
+  if (decorationObjects.length > 0 || decorationLevels.length > 0) {
+    plan.decorations = decorationPlan
+    bump('Decoraciones', decorationObjects.length + decorationLevels.length)
   }
 
   return { plan, counts, quantities }
@@ -604,6 +666,12 @@ export function unlockProgress(save: NativeSaveSummary, key: BulkKey, eligible: 
       .filter((row) => row.intimacy !== null && row.max !== null && row.intimacy >= row.max).length,
     blueprints: () => (advanced?.blueprints?.entries ?? [])
       .filter((row) => row.status === 'Researched').length,
+    blueprintObtain: () => (advanced?.blueprints?.entries ?? [])
+      .filter((row) => row.status !== null).length,
+    decorations: () => (advanced?.decorations?.objects ?? [])
+      .filter((row) => row.unlocked).length,
+    decorationLevels: () => (advanced?.decorations?.levels ?? [])
+      .filter((row) => row.level !== null && row.level >= row.max_observed).length,
   }[key]()
   const pending = eligible[key].length
   return { unlocked, pending, total: unlocked + pending }

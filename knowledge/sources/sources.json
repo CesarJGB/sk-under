@@ -2,7 +2,7 @@
   "schema": "sk-knowledge/sources@1",
   "schema_version": 1,
   "generated_by": "knowledge/tools/build_sources.py (curaduría de fase 7.0)",
-  "count": 17,
+  "count": 19,
   "sources": [
     {
       "id": "skdfe-main",
@@ -286,6 +286,41 @@
         "No hay comprobación de persistencia posterior suficiente para elevar a E4.",
         "El pase de batalla no pudo probarse porque no había un pase disponible.",
         "No valida el editor de mascotas, sus variantes de skin ni el alimento."
+      ],
+      "redistributed": false
+    },
+    {
+      "id": "owner-confirmations-phase9-1",
+      "type": "owner_reference",
+      "title": "Confirmaciones del propietario — fase 9.1",
+      "location": "knowledge/sources/owner-confirmations-phase9-1.md",
+      "commit": null,
+      "version": "8.x",
+      "accessed": "2026-11-25",
+      "license": null,
+      "evidence": "E3",
+      "usage": "Confirmación en Android físico de la maximización de niveles de personaje; registro de las funciones que no pudieron probarse por controles deshabilitados.",
+      "limitations": [
+        "Solo confirma la operación de niveles de personaje.",
+        "No demuestra la eficacia de afinidad, planos, decoraciones ni selección de apariencias."
+      ],
+      "redistributed": false
+    },
+    {
+      "id": "own-phase9-1",
+      "type": "own_observation",
+      "title": "Observaciones propias — fase 9.1",
+      "location": "knowledge/sources/phase9-1-observations.md",
+      "commit": null,
+      "version": "8.x",
+      "accessed": "2026-11-25",
+      "license": null,
+      "evidence": "E2",
+      "usage": "Identificadores y estructuras observados en la comparación de solo lectura de dos cuentas autorizadas; complementa la proyección 8.8 del catálogo externo.",
+      "limitations": [
+        "No se publican guardados completos ni datos privados.",
+        "La presencia de una clave no demuestra causalidad ni la eficacia de un escritor.",
+        "Los nombres añadidos son etiquetas de interfaz, no traducciones oficiales."
       ],
       "redistributed": false
     }

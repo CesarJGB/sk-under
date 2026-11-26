@@ -418,6 +418,14 @@ def prepare_unified(payload: UnifiedPrepareInput, request: Request) -> dict[str,
         "hero_levels": [item.model_dump() for item in payload.hero_levels],
         "pet_affinity": [item.model_dump() for item in payload.pet_affinity],
         "blueprints": [item.model_dump() for item in payload.blueprints],
+        "decorations": (
+            {
+                "objects": list(payload.decorations.objects),
+                "levels": [item.model_dump() for item in payload.decorations.levels],
+            }
+            if payload.decorations is not None
+            else None
+        ),
     }
     return service.prepare_unified(current, plan, payload.source_sha256)
 

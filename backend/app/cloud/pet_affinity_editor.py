@@ -6,9 +6,12 @@ conocidos proceden de una muestra privada completa: 180 para los ids 30/31, 300
 para el 34 y 240 para el resto de ids observados 0..55 excepto el 27. Los ids
 27, 56 y 57 no tienen máximo demostrado y permanecen en solo lectura.
 
-El escritor únicamente sube la intimidad, exige que la clave exista y mantiene
-el indicador ``full_intimacy`` coherente cuando se alcanza el máximo conocido.
-No toca ``action_unlock``, el contador global ni ninguna otra clave.
+El escritor únicamente sube la intimidad. Si la mascota está desbloqueada en
+``gameData.petUnlock`` pero nunca recibió alimento, crea la clave de intimidad
+con valor 0 (ausencia = afinidad inicial). Al alcanzar el máximo conocido crea o
+activa ``full_intimacy = 1``, que es el único indicador observado en todas las
+mascotas maximizadas. No toca ``action_unlock``, el contador global ni ninguna
+otra clave.
 """
 
 from __future__ import annotations
@@ -47,11 +50,21 @@ AFFINITY_UNKNOWN_NUMERIC_IDS = frozenset({27, 56, 57})
 
 AFFINITY_LIMITATION = (
     "Máximos derivados de una muestra completa: 180 para Cat4/Dog2, 300 para Cat5 "
-    "y 240 para el resto de ids observados 0..55 salvo Serenade. La configuración "
+    "y 240 para el resto de ids observados 0..55 salvo Serenade. La ausencia de "
+    "claves de intimidad en una mascota desbloqueada se interpreta como 0: la cuenta "
+    "nueva tiene Cat desbloqueada y ningún registro de afinidad. La configuración "
     "PetsLevelUpConfig/PetIntimacyConfig no se pudo deserializar; Serenade, "
     "EscapeMonkey y FishChipKing quedan en solo lectura. La eficacia del escritor "
     "todavía no se validó dentro del juego."
 )
+
+_MISSING = object()
+
+
+def _unlocked_pets(payload: Mapping[str, Any]) -> Mapping[str, Any]:
+    game = payload.get("gameData")
+    unlock = game.get("petUnlock") if isinstance(game, dict) else None
+    return unlock if isinstance(unlock, dict) else {}
 
 
 class PetAffinityEditError(CloudSaveError):
@@ -231,6 +244,7 @@ def pet_progression_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
     counts = counts if isinstance(counts, dict) else {}
     rows_by_id = catalog["pets"]
     assert isinstance(rows_by_id, dict)
+    unlock = _unlocked_pets(payload)
     entries: list[dict[str, object]] = []
     for pet_id in catalog["ordered_pets"]:  # type: ignore[union-attr]
         row = rows_by_id[pet_id]
@@ -244,29 +258,40 @@ def pet_progression_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
         full_raw = counts.get(full_key)
         action = counts.get(action_key)
         maximum = affinity_max(numeric_id)
+        unlocked = unlock.get(pet_id) is True
+        intimacy_key_present = intimacy_key in counts
+        full_key_present = full_key in counts
+        present = intimacy_key_present or full_key_present
         intimacy_valid = type(intimacy) is int and AFFINITY_MIN <= intimacy <= MAX_VALUE
+        initial = not intimacy_key_present and unlocked
+        current = intimacy if intimacy_valid else (0 if initial else None)
         full_valid = type(full_raw) is int and full_raw in (0, 1)
         action_valid = type(action) is int and action in (0, 1)
-        present = intimacy_key in counts or full_key in counts
+        max_known = maximum is not None
+        coherent_full = not full_key_present or full_valid
+        not_premature_full = not (full_key_present and full_raw == 1 and current is not None and current < (maximum or 0))
         editable = (
             available
-            and present
-            and intimacy_valid
-            and maximum is not None
-            and intimacy < maximum
-            and (full_key not in counts or (full_valid and full_raw == 0))
+            and unlocked
+            and max_known
+            and current is not None
+            and current < (maximum or 0)
+            and coherent_full
+            and not_premature_full
         )
         if maximum is None:
             reason = "Máximo no demostrado para esta mascota; solo lectura."
-        elif not present:
-            reason = "No existe la clave de intimidad; no se crean claves."
+        elif not unlocked:
+            reason = "La mascota no está desbloqueada en gameData.petUnlock; desbloquéala primero."
+        elif initial:
+            reason = "Sin registro de afinidad; se creará con 0 y podrás subirla."
         elif not intimacy_valid:
             reason = "La intimidad no es un entero válido."
-        elif intimacy >= maximum:
+        elif current is not None and current >= maximum:
             reason = "La afinidad ya está en el máximo conocido."
-        elif full_key in counts and not full_valid:
+        elif full_key_present and not full_valid:
             reason = "El indicador full_intimacy no es 0/1."
-        elif full_key in counts and full_raw == 1 and intimacy < maximum:
+        elif not not_premature_full:
             reason = "Estado incoherente: full_intimacy está activo antes del máximo."
         else:
             reason = None
@@ -276,13 +301,15 @@ def pet_progression_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
                 "numeric_id": numeric_id,
                 "name": row["name"],
                 "present": present,
-                "intimacy": intimacy if intimacy_valid else None,
+                "unlocked": unlocked,
+                "intimacy": current,
                 "full": bool(full_raw) if full_valid else None,
                 "action_unlocked": bool(action) if action_valid else None,
                 "value_type": None if intimacy_valid else type(intimacy).__name__ if intimacy is not None else None,
                 "max": maximum,
                 "max_note": AFFINITY_LIMITATION,
                 "editable": editable,
+                "creatable": initial,
                 "reason": reason,
                 "path": f"{AFFINITY_PATH}.{intimacy_key}",
                 "full_path": f"{AFFINITY_PATH}.{full_key}",
@@ -297,8 +324,10 @@ def pet_progression_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
         "full_count_key": "pet_full_intimacy",
         "entries": entries,
         "note": (
-            "Afinidad individual y máxima para mascotas con límite observado. No se modifica "
-            "action_unlock ni el contador global pet_full_intimacy."
+            "Afinidad individual y máxima para mascotas desbloqueadas con límite observado. "
+            "Una mascota desbloqueada sin registros empieza en 0; al máximo se crea "
+            "full_intimacy = 1. No se modifica action_unlock ni el contador global "
+            "pet_full_intimacy."
         ),
         "limitation": AFFINITY_LIMITATION,
         "experimental": True,
@@ -317,6 +346,7 @@ def prepare_pet_affinity_edit(source: bytes, plan: object) -> PetAffinityEdit:
     candidate = deepcopy(root)
     counts = _counts(candidate)
     catalog = _catalog()
+    unlock = _unlocked_pets(candidate)
     changes: list[PetAffinityChange] = []
     originals: list[tuple[str, object]] = []
 
@@ -329,11 +359,13 @@ def prepare_pet_affinity_edit(source: bytes, plan: object) -> PetAffinityEdit:
         assert maximum is not None
         intimacy_key = f"pet_{numeric_id}_intimacy"
         full_key = f"pet_{numeric_id}_full_intimacy"
-        if intimacy_key not in counts:
+        if intimacy_key not in counts and unlock.get(code) is not True:
             raise PetAffinityFieldIncompatible(
-                f"No existe {AFFINITY_PATH}.{intimacy_key}; no se crean claves de progreso."
+                f"{code} no está desbloqueada en gameData.petUnlock; "
+                "desbloquéala en la misma edición o antes de subir su afinidad."
             )
-        before = counts[intimacy_key]
+        before = counts.get(intimacy_key, 0)
+        existed = intimacy_key in counts
         if type(before) is not int or before < AFFINITY_MIN or before > MAX_VALUE:
             raise PetAffinityFieldIncompatible(
                 f"{AFFINITY_PATH}.{intimacy_key} no es un entero válido."
@@ -352,30 +384,26 @@ def prepare_pet_affinity_edit(source: bytes, plan: object) -> PetAffinityEdit:
             raise PetAffinityFieldIncompatible(
                 f"{AFFINITY_PATH}.{full_key} no es un indicador 0/1."
             )
-        if not full_exists:
-            full_before = None
-            if requested == maximum:
-                raise PetAffinityFieldIncompatible(
-                    f"No existe {AFFINITY_PATH}.{full_key} como indicador 0/1; "
-                    "no se alcanza el máximo sin poder actualizarlo."
-                )
-        elif full_before == 1 and before < maximum:
+        if full_exists and full_before == 1 and before < maximum:
             raise PetAffinityFieldIncompatible(
                 f"{code} declara full_intimacy activo antes del máximo conocido."
             )
         if before == requested:
             continue
-        originals.append((intimacy_key, before))
+        originals.append((intimacy_key, before if existed else _MISSING))
         counts[intimacy_key] = requested
-        changes.append(PetAffinityChange(f"{AFFINITY_PATH}.{intimacy_key}", before, requested))
+        changes.append(
+            PetAffinityChange(
+                f"{AFFINITY_PATH}.{intimacy_key}", before if existed else None, requested
+            )
+        )
         if requested == maximum and full_before != 1:
-            assert type(full_before) is int
-            originals.append((full_key, full_before))
+            originals.append((full_key, full_before if full_exists else _MISSING))
             counts[full_key] = 1
-            changes.append(PetAffinityChange(f"{AFFINITY_PATH}.{full_key}", full_before, 1))
-        elif requested < maximum and full_before == 1:
-            raise PetAffinityFieldIncompatible(
-                f"{code} no puede bajar de afinidad mientras full_intimacy esté activo."
+            changes.append(
+                PetAffinityChange(
+                    f"{AFFINITY_PATH}.{full_key}", full_before if full_exists else None, 1
+                )
             )
 
     changed_fields = tuple(change.path for change in changes)
@@ -420,7 +448,10 @@ def prepare_pet_affinity_edit(source: bytes, plan: object) -> PetAffinityEdit:
             raise PetAffinityVerificationError(f"No se conservó {change.path}.")
 
     for key, before in originals:
-        reopened_counts[key] = before
+        if before is _MISSING:
+            reopened_counts.pop(key, None)
+        else:
+            reopened_counts[key] = before
     if serialize_aggregate(reopened) != source:
         raise PetAffinityVerificationError(
             "La reversión del plan no reproduce el guardado original; hay cambios colaterales."

@@ -337,6 +337,18 @@ class CloudBlueprintChange(BaseModel):
     status: Literal["Got", "Researched"]
 
 
+class CloudDecorationLevelChange(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    id: StrictStr = Field(min_length=1, max_length=80)
+    level: StrictInt = Field(ge=1, le=5)
+
+
+class CloudLabDecorationInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    objects: list[StrictStr] = Field(default_factory=list, max_length=10)
+    levels: list[CloudDecorationLevelChange] = Field(default_factory=list, max_length=5)
+
+
 class CloudLabUnifiedPrepareInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     gems: StrictInt | None = Field(default=None, ge=0, le=2_147_483_647)
@@ -348,7 +360,8 @@ class CloudLabUnifiedPrepareInput(BaseModel):
     advanced: CloudLabAdvancedPrepareInput | None = None
     hero_levels: list[CloudHeroLevelChange] = Field(default_factory=list, max_length=42)
     pet_affinity: list[CloudPetAffinityChange] = Field(default_factory=list, max_length=58)
-    blueprints: list[CloudBlueprintChange] = Field(default_factory=list, max_length=265)
+    blueprints: list[CloudBlueprintChange] = Field(default_factory=list, max_length=296)
+    decorations: CloudLabDecorationInput | None = None
 
 
 class CloudLabSkinPrepared(BaseModel):

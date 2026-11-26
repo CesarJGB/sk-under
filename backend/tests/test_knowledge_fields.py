@@ -55,7 +55,10 @@ def test_declared_fields_do_not_claim_semantics_without_evidence():
     document = common.read_json(common.FIELDS_DIR / "fields.json")
     for field in document["fields"]:
         if field["registry_tier"] == "declared":
-            assert field["evidence"]["semantics"] in {"H", "E1"}, field["id"]
+            if field["id"] in {"gameData.currentRoomDecorate", "gameData.roomLevel"}:
+                assert field["evidence"]["semantics"] == "E2", field["id"]
+            else:
+                assert field["evidence"]["semantics"] in {"H", "E1"}, field["id"]
             assert field["validation_level"] in {"E1", "E2"}, field["id"]
         assert field["validation_level"] in common.EVIDENCE_LEVELS
 

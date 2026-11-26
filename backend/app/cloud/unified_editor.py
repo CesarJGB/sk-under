@@ -26,6 +26,11 @@ from .blueprint_editor import (
     normalize_blueprint_plan,
     prepare_blueprint_edit,
 )
+from .decoration_editor import (
+    DecorationEdit,
+    normalize_decoration_plan,
+    prepare_decoration_edit,
+)
 from .character_editor import (
     CharacterEdit,
     prepare_character_unlock_edit,
@@ -171,6 +176,18 @@ def _code_map(
         raise InvalidUnifiedPlan(str(exc)) from exc
 
 
+def _decorations(value: object) -> dict[str, object] | None:
+    if value is None:
+        return None
+    if isinstance(value, Mapping):
+        if not value.get("objects") and not value.get("levels"):
+            return None
+    try:
+        return normalize_decoration_plan(value)
+    except CloudSaveError as exc:
+        raise InvalidUnifiedPlan(str(exc)) from exc
+
+
 def _blueprints(value: object) -> dict[str, str] | None:
     if value is None:
         return None
@@ -199,6 +216,7 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
         "hero_levels",
         "pet_affinity",
         "blueprints",
+        "decorations",
     }
     unknown = set(raw) - allowed
     if unknown:
@@ -218,6 +236,7 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
             raw.get("pet_affinity"), "pet_affinity", "code", "value", normalize_pet_affinity_plan
         ),
         "blueprints": _blueprints(raw.get("blueprints")),
+        "decorations": _decorations(raw.get("decorations")),
     }
     if not any(
         (
@@ -231,6 +250,7 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
             plan["hero_levels"],
             plan["pet_affinity"],
             plan["blueprints"],
+            plan["decorations"],
         )
     ):
         raise InvalidUnifiedPlan("El plan no contiene ninguna edición.")
@@ -310,6 +330,7 @@ def _category(
         | HeroLevelEdit
         | PetAffinityEdit
         | BlueprintEdit
+        | DecorationEdit
     ],
 ) -> UnifiedCategory:
     edit = edits[0]
@@ -428,6 +449,12 @@ def prepare_unified_edit(source: bytes, raw_plan: Mapping[str, object]) -> Unifi
             "blueprints",
             "Planos",
             lambda value: prepare_blueprint_edit(value, plan["blueprints"]),
+        )
+    if plan["decorations"] is not None:
+        apply(
+            "decorations",
+            "Decoraciones",
+            lambda value: prepare_decoration_edit(value, plan["decorations"]),
         )
 
     candidate = current

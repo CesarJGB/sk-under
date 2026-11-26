@@ -37,6 +37,7 @@ def document() -> dict:
     data = json.loads(FIXTURE.read_bytes())
     data["gameData"]["heroUnlock"] = {"Knight": True, "Ranger": False}
     data["gameData"]["heroLevel"] = {"Knight": 0, "Ranger": 3, "UnknownHero": 0}
+    data["gameData"]["petUnlock"] = {"Cat": True, "Pig": True, "Cat4": True}
     data["statisticData"]["event2Count"] = {
         "pet_0_intimacy": 200,
         "pet_0_full_intimacy": 0,
@@ -50,8 +51,9 @@ def document() -> dict:
         "unrelated_counter": 9,
     }
     data["itemData"]["blueprints"] = {
-        "blueprint_multi_room_skin_0": "Researched",
+        "blueprint_multi_room_skin_0": "Got",
         "multi_room_skin_1": "Got",
+        "blueprint_multi_room_skin_3": "Researched",
         "legacy_unknown": "Researched",
     }
     return data
@@ -138,15 +140,15 @@ def test_blueprints_resolve_exact_and_legacy_alias_without_touching_unknown_keys
     entries = {row["id"]: row for row in snapshot["entries"]}
     assert entries["blueprint_multi_room_skin_0"]["key"] == "blueprint_multi_room_skin_0"
     assert entries["blueprint_multi_room_skin_1"]["key"] == "multi_room_skin_1"
-    assert entries["blueprint_multi_room_skin_0"]["status"] == "Researched"
+    assert entries["blueprint_multi_room_skin_0"]["status"] == "Got"
     assert snapshot["unmatched"] == ["legacy_unknown"]
 
     edit = prepare_blueprint_edit(original, {
-        "blueprint_multi_room_skin_0": "Got",
+        "blueprint_multi_room_skin_0": "Researched",
         "blueprint_multi_room_skin_1": "Researched",
     })
     after = json.loads(edit.candidate)["itemData"]["blueprints"]
-    assert after["blueprint_multi_room_skin_0"] == "Got"
+    assert after["blueprint_multi_room_skin_0"] == "Researched"
     assert after["multi_room_skin_1"] == "Researched"
     assert after["legacy_unknown"] == "Researched"
     assert set(edit.changed_fields) == {
@@ -155,13 +157,24 @@ def test_blueprints_resolve_exact_and_legacy_alias_without_touching_unknown_keys
     }
 
 
-def test_blueprints_reject_absent_or_invalid_status():
+def test_blueprints_reject_unknown_invalid_and_downgrade():
     with pytest.raises(InvalidBlueprintPlan):
         normalize_blueprint_plan({"blueprint_not_a_real_id": "Got"})
     with pytest.raises(InvalidBlueprintPlan):
         normalize_blueprint_plan({"blueprint_multi_room_skin_0": "Unknown"})
     with pytest.raises(Exception):
-        prepare_blueprint_edit(source(), {"blueprint_multi_room_skin_2": "Researched"})
+        prepare_blueprint_edit(source(), {"blueprint_multi_room_skin_3": "Got"})
+    assert prepare_blueprint_edit(source(), {"blueprint_multi_room_skin_0": "Got"}).changed_fields == ()
+
+
+def test_blueprints_create_absent_catalog_records_and_restore_source():
+    original = source()
+    edit = prepare_blueprint_edit(original, {"blueprint_multi_room_skin_2": "Researched"})
+    after = json.loads(edit.candidate)["itemData"]["blueprints"]
+    assert after["multi_room_skin_2"] == "Researched"
+    assert edit.changes[0].created is True
+    assert set(edit.changed_fields) == {"itemData.blueprints.multi_room_skin_2"}
+    assert original == source()
 
 
 def test_unified_batch_combines_unlock_levels_affinity_and_blueprints():
@@ -170,7 +183,7 @@ def test_unified_batch_combines_unlock_levels_affinity_and_blueprints():
         "characters": ["Ranger"],
         "hero_levels": [{"code": "Knight", "level": 7}],
         "pet_affinity": [{"code": "Cat", "value": 240}],
-        "blueprints": [{"id": "blueprint_multi_room_skin_0", "status": "Got"}],
+        "blueprints": [{"id": "blueprint_multi_room_skin_0", "status": "Researched"}],
     }
     edit = prepare_unified_edit(original, plan)
     assert edit.steps == ("characters", "hero_levels", "pet_affinity", "blueprints")
@@ -180,7 +193,7 @@ def test_unified_batch_combines_unlock_levels_affinity_and_blueprints():
     assert after["gameData"]["heroUnlock"]["Ranger"] is True
     assert after["gameData"]["heroLevel"]["Knight"] == 7
     assert after["statisticData"]["event2Count"]["pet_0_intimacy"] == 240
-    assert after["itemData"]["blueprints"]["blueprint_multi_room_skin_0"] == "Got"
+    assert after["itemData"]["blueprints"]["blueprint_multi_room_skin_0"] == "Researched"
     assert edit.original == original
 
 
@@ -200,7 +213,7 @@ def test_unified_service_writes_one_backup_one_upload_and_restores(tmp_path):
     plan = {
         "hero_levels": [{"code": "Knight", "level": 7}],
         "pet_affinity": [{"code": "Cat", "value": 240}],
-        "blueprints": [{"id": "blueprint_multi_room_skin_0", "status": "Got"}],
+        "blueprints": [{"id": "blueprint_multi_room_skin_0", "status": "Researched"}],
     }
     prepared = service.prepare_unified(plan, expected_source=sha256(original).hexdigest())
     assert prepared.backup.field == "unified"
@@ -212,7 +225,7 @@ def test_unified_service_writes_one_backup_one_upload_and_restores(tmp_path):
     persisted = json.loads(provider.payload)
     assert persisted["gameData"]["heroLevel"]["Knight"] == 7
     assert persisted["statisticData"]["event2Count"]["pet_0_intimacy"] == 240
-    assert persisted["itemData"]["blueprints"]["blueprint_multi_room_skin_0"] == "Got"
+    assert persisted["itemData"]["blueprints"]["blueprint_multi_room_skin_0"] == "Researched"
     restored = service.restore(prepared.backup.id)
     assert restored.persisted is True
     assert provider.payload == original

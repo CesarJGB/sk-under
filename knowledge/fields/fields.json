@@ -122,7 +122,7 @@
       "id": "statisticData.event2Count",
       "internal_name": "event2Count",
       "category": "Estadísticas",
-      "description": "Contadores de estadísticas y progreso; incluye intimidad de mascotas en claves pet_<ID>_* con un editor experimental limitado a máximos observados.",
+      "description": "Contadores de estadísticas y progreso; incluye intimidad de mascotas en claves pet_<ID>_* con creación controlada del estado inicial y límites observados.",
       "locations": {
         "local": "statistic*.data:event2Count",
         "cloud": "statisticData.event2Count"
@@ -144,14 +144,15 @@
         "pet_<índice>_intimacy contiene la intimidad actual de la mascota con ese identificador numérico.",
         "pet_<índice>_full_intimacy vale 1 cuando la mascota alcanzó su máximo; es la única confirmación de máximo observada.",
         "pet_<índice>_action_unlock vale 1 cuando la acción especial está desbloqueada.",
-        "pet_full_intimacy es un contador global de mascotas con intimidad completa.",
-        "En la muestra completa 8.8.0 los máximos observados fueron 180 para los índices 30 y 31, 300 para el 34 y 240 para el resto de índices 0..55 presentes; los índices 27, 56 y 57 no tenían claves y quedan fuera del escritor.",
-        "El contador global pet_full_intimacy no coincidió con el número de mascotas completas; no se recalcula."
+        "pet_full_intimacy es un contador global; su valor observado 35 no coincide con el número de mascotas completas y no se recalcula.",
+        "En la muestra completa de la cuenta A los máximos observados fueron 180 para los índices 30 y 31, 300 para el 34 y 240 para el resto de índices 0..55 presentes; 27, 56 y 57 no tenían claves.",
+        "La cuenta B tiene las 58 mascotas desbloqueadas y ninguna clave pet_<ID>_*; la ausencia de intimidad en una mascota desbloqueada es el estado inicial 0, no una incompatibilidad.",
+        "Las mascotas de la cuenta A ya estaban en el máximo, por lo que el bloqueo de la fase 9.0 era del editor y no una prueba de rechazo del juego."
       ],
       "initial_values": null,
       "limits": {
         "type": "int32 por clave",
-        "observed": "Máximos de intimidad 180, 240 y 300 en la muestra completa; el contador global observado fue 35.",
+        "observed": "Máximos 180, 240 y 300 en la cuenta A; contador global 35; cuenta B con 58 mascotas desbloqueadas y cero claves de intimidad.",
         "functional": "Máximos por mascota no recuperados desde PetsLevelUpConfig/PetIntimacyConfig."
       },
       "related_ids": [
@@ -161,7 +162,8 @@
       "associated_catalog": "pets",
       "sources": [
         "docs/research/phase5-5/metadata-880-inventory.json",
-        "knowledge/sources/owner-confirmations-phase7-2.md",
+        "docs/research/phase9-0/README.md",
+        "docs/research/phase9-1/README.md",
         "propia"
       ],
       "observed_versions": [
@@ -172,11 +174,12 @@
       ],
       "known_dependencies": [
         "Catálogo de mascotas para resolver código e índice numérico.",
+        "gameData.petUnlock determina si se puede crear el registro inicial.",
         "pet_<ID>_full_intimacy se activa al alcanzar el máximo conocido."
       ],
       "pending_dependencies": [
         "PetsLevelUpConfig/PetIntimacyConfig sin deserializar",
-        "Validación física de la escritura de intimidad",
+        "Validación física de la creación y de la escritura de intimidad",
         "Correlación aislada con la acción especial"
       ],
       "preserve": [],
@@ -189,19 +192,20 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "experimental: solo sube pet_<ID>_intimacy hasta el máximo empírico conocido de esa mascota, activa full_intimacy al alcanzarlo y no toca la acción especial ni el contador global; eficacia del escritor no validada.",
+      "edit_policy": "experimental: crea pet_<ID>_intimacy=0 solo para mascotas desbloqueadas sin registro, sube hasta el máximo empírico conocido y crea full_intimacy=1 al alcanzarlo; no toca action_unlock ni el contador global. Eficacia pendiente de Android físico.",
       "constraints": [
         "No simular máximos con 999, 9999 ni Int32.MaxValue.",
-        "No crear claves pet_<ID>_* si no existen en event2Count.",
+        "Crear pet_<ID>_intimacy solo si gameData.petUnlock[código] es true y no existe la clave.",
         "Conservar todos los contadores ajenos a mascotas.",
-        "Editar solo índices con máximo empírico conocido; 27, 56 y 57 permanecen en solo lectura.",
+        "Editar solo índices con máximo empírico conocido; 27, 56 y 57 permanecen sin máximo demostrado.",
         "No reducir la intimidad.",
         "No modificar pet_<ID>_action_unlock ni pet_full_intimacy.",
-        "Rechazar una mascota cuyo full_intimacy ya sea 1 por debajo del máximo conocido."
+        "Rechazar una mascota cuyo full_intimacy ya sea 1 por debajo del máximo conocido.",
+        "Al revertir el candidato, eliminar las claves creadas que no existían en el original."
       ],
       "open_questions": [
         "Recuperar PetsLevelUpConfig/PetIntimacyConfig para conocer el máximo real de cada mascota.",
-        "Confirmar en Android físico que la intimidad y la marca de máximo persisten y habilitan la acción."
+        "Confirmar en Android físico que la intimidad, la marca de máximo y la creación del registro persisten y habilitan la acción."
       ],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -2627,7 +2631,7 @@
       "id": "itemData.blueprints",
       "internal_name": "blueprints",
       "category": "Inventario",
-      "description": "Estado por plano: Got (obtenido) o Researched (investigado); editor experimental limitado a claves existentes.",
+      "description": "Estado por plano: Got (obtenido) o Researched (investigado). El editor experimental crea registros ausentes del catálogo y no permite retrocesos.",
       "locations": {
         "local": "item_data*.data:blueprints",
         "cloud": "itemData.blueprints"
@@ -2647,15 +2651,17 @@
       },
       "observed_values": null,
       "known_value_semantics": [
-        "Las muestras usan los estados de texto Got y Researched.",
-        "La muestra completa 8.6.0 contiene 275 claves; 273 están en Researched y 2 en Got (multi_room_skin_20 y multi_room_skin_21).",
-        "El catálogo usa identificadores con prefijo blueprint_; el guardado conserva alias sin ese prefijo para varios planos antiguos.",
-        "La ausencia de una clave no se interpreta como estado cero ni como plano no poseído."
+        "La cuenta A usa texto: 344 claves, 312 Researched y 32 Got.",
+        "La cuenta B usa enteros: 21 claves con valor 1, interpretado como Got porque coinciden con estados Got de A. El valor 2 para Researched es una deducción del mismo enum y no está confirmado.",
+        "La ausencia de clave se interpreta como plano no obtenido para identificadores del catálogo; no se confunde con un registro desconocido.",
+        "El catálogo de la fase 9.0 contiene 265 identificadores; se añadieron 31 identificadores observados con evidencia E2 hasta 296.",
+        "El guardado conserva alias sin prefijo blueprint_ para decorados y algunos planos antiguos. A puede contener simultáneamente la forma con y sin prefijo.",
+        "Las claves no reconocidas se conservan intactas y no se sobrescriben."
       ],
       "initial_values": null,
       "limits": {
-        "type": "objeto ID → texto",
-        "observed": "Got y Researched; 275 claves en la muestra 8.6.0 y objeto vacío en la nube 8.8.0 inspeccionada.",
+        "type": "objeto ID → texto Got/Researched o entero 1/2 según la cuenta",
+        "observed": "A: 344 claves de texto; B: 21 claves enteras con valor 1; catálogo ampliado a 296.",
         "functional": "No se conoce el efecto completo de cada transición en el cliente."
       },
       "related_ids": [
@@ -2677,11 +2683,12 @@
       ],
       "known_dependencies": [
         "Catálogo de planos para resolver identificadores y alias.",
-        "ResearchMaterials describe materiales, pero no se demostró su descuento automático."
+        "La codificación dominante del mapa determina el tipo de los registros nuevos."
       ],
       "pending_dependencies": [
         "Transiciones por versión y requisitos de investigación",
-        "Relación con fabricación y disponibilidad del objeto"
+        "Relación con fabricación y disponibilidad del objeto",
+        "Confirmación del valor entero 2"
       ],
       "preserve": [],
       "evidence": {
@@ -2693,17 +2700,20 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "experimental: cambia Got/Researched solo en claves existentes y resueltas por el catálogo o su alias sin prefijo; no inserta planos ausentes ni toca materiales.",
+      "edit_policy": "experimental: crea claves ausentes solo para identificadores del catálogo o extras observados, respeta la codificación de texto o entera de la cuenta, permite No obtenido→Got/Researched y Got→Researched, y rechaza Researched→Got.",
       "constraints": [
-        "Aceptar únicamente Got o Researched.",
-        "No insertar claves ausentes ni inventar estados.",
-        "Resolver primero el identificador exacto del catálogo y después el alias sin prefijo blueprint_.",
-        "Conservar claves desconocidas y sus valores.",
-        "No modificar materiales, recibos ni recompensas reclamadas."
+        "No inventar identificadores ni crear valores 0.",
+        "No mezclar codificaciones de texto y enteros en la misma cuenta.",
+        "No sobrescribir claves desconocidas.",
+        "No rebajar Researched a Got.",
+        "Resolver el alias sin prefijo sin duplicar la misma clave.",
+        "Conservar el resto de itemData y no tocar compras, recibos ni derechos de servidor.",
+        "Al revertir el candidato, eliminar las claves creadas que no existían en el original."
       ],
       "open_questions": [
+        "Confirmar el valor entero de Researched (2) en una cuenta que ya lo use.",
         "Confirmar el efecto de Got y Researched en el cliente.",
-        "Aclarar si investigar consume materiales automáticamente y cómo tratar los planos ausentes."
+        "Aclarar si investigar consume materiales automáticamente."
       ],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -2948,7 +2958,8 @@
       "known_value_semantics": [
         "La lista contiene cuatro posiciones con nombres de arma o null.",
         "Las muestras propias muestran armas distintas en esas posiciones; no se interpreta como contador de obtención, nivel de evolución ni skin equipada.",
-        "La disponibilidad permanente para fabricar parece depender de contadores de obtención y de IsWeaponForgeUnlockByObtainTimes, no de esta lista."
+        "La disponibilidad permanente para fabricar parece depender de contadores de obtención y de IsWeaponForgeUnlockByObtainTimes, no de esta lista.",
+        "A contiene [ring_1, ring_2, ring_3, null]; B contiene [weapon_034, weapon_057, weapon_062, null]. Son estados transitorios distintos y no un desbloqueo permanente."
       ],
       "initial_values": null,
       "limits": {
@@ -3138,14 +3149,15 @@
       },
       "observed_values": null,
       "known_value_semantics": [
+        "A contiene 9 joyas; B ninguna.",
         "Cada entrada observada contiene item, durability, rune1 y rune2.",
-        "La muestra completa usa durability=5000000 y runas None; no se demostró que 5000000 sea el máximo universal.",
+        "Las joyas de A usan durability=5000000 y runas \"None\"; no se demostró que 5000000 sea el máximo universal.",
         "jewelryPlayerData y jewelryBlueprints son estructuras separadas."
       ],
       "initial_values": null,
       "limits": {
         "type": "objeto ID → objeto",
-        "observed": "durability=5000000 y runas None en 15 joyas de la muestra completa.",
+        "observed": "9 joyas en A con durability=5000000; 0 en B.",
         "functional": "Durabilidad máxima, recarga y runas válidas no documentadas."
       },
       "related_ids": [
@@ -3330,7 +3342,7 @@
       "id": "itemData.plants",
       "internal_name": "plants",
       "category": "Inventario",
-      "description": "Estado de las parcelas del jardín; estructura observada sin semántica de crecimiento suficiente para escribir.",
+      "description": "Estado de las parcelas del jardín. A tiene ocho plantas con estados 1, 2 y 4; B tiene tres plantas y cinco posiciones nulas. La semántica de crecimiento sigue sin demostrarse.",
       "locations": {
         "local": "item_data*.data:plants",
         "cloud": "itemData.plants"
@@ -3352,7 +3364,7 @@
       "known_value_semantics": [
         "La lista contiene ocho posiciones con objetos o null.",
         "Cada objeto observado tiene plantName, state, watered y fertilized.",
-        "La muestra completa usa state=1, watered=false y fertilized=false; no se demostró qué representa cada estado ni cómo avanza el crecimiento."
+        "A usa estados 1, 2 y 4; B usa state=1. No se demostró qué representa cada estado ni cómo avanza el crecimiento."
       ],
       "initial_values": null,
       "limits": {
@@ -3399,7 +3411,7 @@
         "No modificar seeds ni materiales desde este campo."
       ],
       "open_questions": [
-        "Mapear state, watered y fertilized a la UI y al ciclo de crecimiento.",
+        "Mapear state, watered y fertilized al ciclo de crecimiento.",
         "Determinar el número real de parcelas y sus mejoras."
       ],
       "experiments_required": [],
@@ -4640,7 +4652,7 @@
       "id": "gameData.heroLevel",
       "internal_name": "heroLevel",
       "category": "Progreso y acceso",
-      "description": "Nivel de mejora permanente de cada personaje; el editor experimental escribe solo subidas dentro del intervalo documentado 0..7.",
+      "description": "Nivel de mejora permanente de cada personaje. La maximización al nivel 7 fue validada por el propietario en Soul Knight para Android físico.",
       "locations": {
         "local": "files/game.data:heroLevel",
         "cloud": "gameData.heroLevel",
@@ -4665,13 +4677,14 @@
         "La ruta pública de mejoras documenta siete compras secuenciales con gemas (500, 1000, 1500, 2000, 2500, 5000 y 8000) para los niveles 1 a 7.",
         "El nivel 8 perteneció a un sistema retirado de personajes legendarios; no se incluye en el escritor.",
         "Cada personaje puede declarar un MaxLevel en CharactersLevelUpData, pero los valores de configuración no se recuperaron; no se inventan máximos por personaje.",
-        "El escritor solo modifica claves existentes del catálogo, no baja niveles y no cambia heroUnlock."
+        "El escritor solo modifica claves existentes del catálogo, no baja niveles y no cambia heroUnlock.",
+        "El propietario confirmó en Android físico que la operación de mejorar personajes al máximo funcionó dentro de Soul Knight (fase 9.1)."
       ],
       "initial_values": null,
       "limits": {
         "type": "int32",
-        "observed": "Todas las muestras locales están en 0; 1 confirmado en una mejora legítima de Knight.",
-        "functional": "Máximo documentado 7. MaxLevel por personaje no recuperado; nivel 8 excluido por precaución."
+        "observed": "Todas las muestras locales están en 0; 1 confirmado en una mejora legítima de Knight y maximización al 7 confirmada por el propietario en Android físico.",
+        "functional": "Máximo documentado 7. MaxLevel por personaje no recuperado; nivel 8 excluido."
       },
       "related_ids": [
         "gameData.heroUnlock",
@@ -4694,8 +4707,7 @@
         "Catálogo de personajes para resolver códigos."
       ],
       "pending_dependencies": [
-        "MaxLevel real por personaje en CharactersLevelUpData",
-        "Validación física de la escritura y de la persistencia después de guardar desde el cliente"
+        "MaxLevel real por personaje en CharactersLevelUpData"
       ],
       "preserve": [],
       "evidence": {
@@ -4704,10 +4716,10 @@
         "semantics": "E3",
         "version_compatibility": "E2",
         "relations": "E2",
-        "persistence": "E2"
+        "persistence": "E3"
       },
       "validation_level": "E3",
-      "edit_policy": "experimental: subida individual o masiva dentro de 0..7 sobre claves existentes del catálogo; la semántica del campo es E3, pero la eficacia y persistencia del escritor aún no se validaron en Android físico.",
+      "edit_policy": "confirmed_by_owner: subida individual o masiva hasta el nivel 7 sobre claves existentes del catálogo; la operación de maximización fue confirmada en Android físico. No se generaliza a otras categorías.",
       "constraints": [
         "Solo aceptar códigos presentes en el catálogo empaquetado de personajes.",
         "Solo modificar claves heroLevel existentes; no insertar personajes ausentes.",
@@ -4717,8 +4729,7 @@
         "Conservar códigos y valores desconocidos."
       ],
       "open_questions": [
-        "Recuperar CharactersLevelUpData.MaxLevel para cada personaje.",
-        "Confirmar en Android físico que la subida de nivel persiste y que el cliente no la revierte."
+        "Recuperar CharactersLevelUpData.MaxLevel para cada personaje."
       ],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -6033,7 +6044,7 @@
       "id": "itemData.roomDecorateDic",
       "internal_name": "roomDecorateDic",
       "category": "Vestíbulo",
-      "description": "Diccionario de decoraciones de sala; los valores observados son listas de enteros sin semántica de nivel confirmada.",
+      "description": "Objetos del vestíbulo desbloqueados. La presencia de la clave se interpreta como desbloqueo; el valor observado [0] no es un nivel.",
       "locations": {
         "local": "item_data*.data:roomDecorateDic",
         "cloud": "itemData.roomDecorateDic"
@@ -6052,14 +6063,15 @@
       },
       "observed_values": null,
       "known_value_semantics": [
-        "Las entradas observadas relacionan nombres de objeto con listas como [0].",
-        "No se demostró si la lista representa niveles, estados o variantes de skin.",
-        "unlockRoomDecorate, roomObjectLevel y currentRoomDecorate son campos distintos."
+        "La cuenta A contiene los diez objetos observados: ItemEggMachine, ItemTrashCan, ObjectBooks, ObjectDrinkSeller, ObjectFishBowl, ObjectMagicWell, ObjectMysteriouStatue, ObjectPlant, ObjectSafe y PetFood, todos con [0].",
+        "La cuenta B contiene solo ItemEggMachine con [0].",
+        "La presencia de la clave distingue el objeto desbloqueado; crear la clave con [0] es la transición compatible documentada.",
+        "El valor [0] no se interpreta como nivel máximo ni como selección."
       ],
       "initial_values": null,
       "limits": {
         "type": "objeto nombre → lista de enteros",
-        "observed": "Listas [0] para varios objetos en la muestra completa.",
+        "observed": "Diez objetos en A y uno en B; todos con [0].",
         "functional": "Niveles, estados y máximos no documentados."
       },
       "related_ids": [
@@ -6080,9 +6092,9 @@
         "itemUnlock"
       ],
       "pending_dependencies": [
-        "Compra de decoración",
-        "Nivel de objeto",
-        "Selección de skin de objeto"
+        "Selección de skin de objeto",
+        "Relación con planos de decoración",
+        "Validación física del desbloqueo"
       ],
       "preserve": [],
       "evidence": {
@@ -6094,14 +6106,17 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura: no se escribe el vestíbulo sin semántica de niveles y estados.",
+      "edit_policy": "experimental: desbloquea objetos observados creando la clave ausente con [0]; conserva los objetos existentes y no elimina claves.",
       "constraints": [
-        "No interpretar [0] como nivel máximo ni como desbloqueo.",
-        "No modificar unlockRoomDecorate, roomObjectLevel ni currentRoomDecorate desde este campo."
+        "No interpretar [0] como nivel máximo.",
+        "No eliminar objetos existentes.",
+        "No crear identificadores fuera de los diez observados.",
+        "Conservar objetos desconocidos.",
+        "No modificar unlockRoomDecorate, roomObjectLevel ni currentRoomDecorate desde este campo.",
+        "Al revertir, eliminar las claves creadas."
       ],
       "open_questions": [
-        "Determinar el significado de la lista y sus valores.",
-        "Comprobar la compra y selección de decoraciones en el cliente."
+        "Confirmar en Android que la presencia de la clave desbloquea el objeto y que [0] es el valor inicial."
       ],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -6139,7 +6154,7 @@
       "id": "gameData.roomObjectLevel",
       "internal_name": "roomObjectLevel",
       "category": "Vestíbulo",
-      "description": "Nivel de objetos del vestíbulo.",
+      "description": "Nivel de mejora de objetos del vestíbulo; el editor experimental solo sube claves existentes hasta el máximo observado por clave.",
       "locations": {
         "local": "files/game.data:roomObjectLevel",
         "cloud": "gameData.roomObjectLevel"
@@ -6157,7 +6172,12 @@
         "resolved": false
       },
       "observed_values": null,
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "La cuenta A tiene Book=5, CatFood=5, Planet=5, Safe=5 y Chest=1.",
+        "La cuenta B tiene Book, CatFood, Chest, Planet y Safe en 0.",
+        "El máximo observado es 5 para Book/CatFood/Planet/Safe y 1 para Chest; no se extrapola a claves nuevas.",
+        "roomObjectLevel es independiente de la presencia de roomDecorateDic."
+      ],
       "initial_values": null,
       "limits": {
         "type": "objeto nombre → entero",
@@ -6180,7 +6200,8 @@
         "roomDecorateDic"
       ],
       "pending_dependencies": [
-        "costes y desbloqueos del vestíbulo"
+        "Máximos reales por objeto en la configuración del juego",
+        "Validación física de la mejora"
       ],
       "preserve": [],
       "evidence": {
@@ -6192,8 +6213,14 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
+      "edit_policy": "experimental: sube niveles de claves existentes hasta el máximo observado por clave; no crea claves ni baja niveles.",
+      "constraints": [
+        "No crear claves ausentes.",
+        "No bajar niveles.",
+        "No superar el máximo observado por clave.",
+        "No asumir que el máximo de una clave aplica a otra.",
+        "Conservar claves desconocidas."
+      ],
       "open_questions": [],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -6228,7 +6255,7 @@
       "id": "gameData.unlockRoomDecorate",
       "internal_name": "unlockRoomDecorate",
       "category": "Vestíbulo",
-      "description": "Decoraciones del vestíbulo desbloqueadas.",
+      "description": "Lista de desbloqueos del vestíbulo. Está vacía en las dos cuentas reales aunque A tenga diez objetos en roomDecorateDic; no se usa como indicador de desbloqueo.",
       "locations": {
         "local": "files/game.data:unlockRoomDecorate",
         "cloud": "gameData.unlockRoomDecorate"
@@ -6246,7 +6273,10 @@
         "resolved": false
       },
       "observed_values": null,
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "Lista vacía en A y B.",
+        "La evidencia de desbloqueo de objetos está en itemData.roomDecorateDic, no en esta lista."
+      ],
       "initial_values": null,
       "limits": {
         "type": "lista",
@@ -6281,9 +6311,14 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
-      "open_questions": [],
+      "edit_policy": "solo lectura: no se conoce qué representan sus elementos ni por qué está vacía en cuentas con objetos desbloqueados.",
+      "constraints": [
+        "No usar esta lista para desbloquear objetos.",
+        "No inventar identificadores."
+      ],
+      "open_questions": [
+        "Determinar qué desbloqueos registra esta lista y cuándo se rellena."
+      ],
       "experiments_required": [],
       "registry_tier": "legacy",
       "legacy_record": {
@@ -9962,7 +9997,7 @@
       "id": "gameData.currentRoomDecorate",
       "internal_name": "currentRoomDecorate",
       "category": "Progreso y acceso",
-      "description": null,
+      "description": "Apariencia activa del vestíbulo. El tipo observado difiere entre cuentas: texto \"Common\" en A y entero 0 en B.",
       "locations": {
         "cloud": "gameData.currentRoomDecorate"
       },
@@ -9982,17 +10017,22 @@
           "8.8.0"
         ]
       },
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "La comparación A/B demuestra que el campo existe, pero no permite mapear valores a apariencias concretas."
+      ],
       "initial_values": null,
       "limits": {
         "type": "emRoomDecorate",
         "observed": "Clave observada; valores no cuantificados.",
         "functional": "No documentado."
       },
-      "related_ids": [],
-      "associated_catalog": null,
+      "related_ids": [
+        "knowledge.catalogs.lobby"
+      ],
+      "associated_catalog": "lobby",
       "sources": [
-        "docs/research/phase5-5/metadata-880-inventory.json"
+        "propia",
+        "docs/research/phase9-1/README.md"
       ],
       "observed_versions": [
         "8.8.0"
@@ -10003,18 +10043,20 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "H",
-        "version_compatibility": "H",
-        "relations": "H",
+        "semantics": "E2",
+        "version_compatibility": "E2",
+        "relations": "E2",
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
+      "edit_policy": "solo lectura: el mapa de selección no está determinado y no se inventa un valor.",
       "constraints": [
-        "Campo declarado en metadata estática; no se ha habilitado escritura."
+        "No escribir un valor de selección sin mapa demostrado.",
+        "No confundir posesión de plano con selección activa."
       ],
       "open_questions": [
-        "Confirmar estructura interna y significado funcional con una muestra propia."
+        "Mapear los valores de A y B a las apariencias del catálogo.",
+        "Comprobar si el cliente acepta texto y entero en la misma versión."
       ],
       "experiments_required": [
         "Comparar dos guardados propios de la misma versión y una edición controlada con respaldo."
@@ -10840,7 +10882,7 @@
       "id": "gameData.roomLevel",
       "internal_name": "roomLevel",
       "category": "Progreso y acceso",
-      "description": null,
+      "description": "Nivel global de la sala. Solo se observaron 0 en B y 1 en A.",
       "locations": {
         "cloud": "gameData.roomLevel"
       },
@@ -10859,17 +10901,22 @@
           "8.8.0"
         ]
       },
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "No se conoce el máximo ni su relación con roomObjectLevel."
+      ],
       "initial_values": null,
       "limits": {
         "type": "int",
         "observed": "Clave observada; valores no cuantificados.",
         "functional": "No documentado."
       },
-      "related_ids": [],
-      "associated_catalog": null,
+      "related_ids": [
+        "knowledge.catalogs.lobby"
+      ],
+      "associated_catalog": "lobby",
       "sources": [
-        "docs/research/phase5-5/metadata-880-inventory.json"
+        "propia",
+        "docs/research/phase9-1/README.md"
       ],
       "observed_versions": [
         "8.8.0"
@@ -10880,18 +10927,19 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "H",
-        "version_compatibility": "H",
-        "relations": "H",
+        "semantics": "E2",
+        "version_compatibility": "E2",
+        "relations": "E2",
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
+      "edit_policy": "solo lectura: no se demostró el máximo ni la dependencia con las mejoras.",
       "constraints": [
-        "Campo declarado en metadata estática; no se ha habilitado escritura."
+        "No asumir un máximo.",
+        "No modificar desde el editor de objetos."
       ],
       "open_questions": [
-        "Confirmar estructura interna y significado funcional con una muestra propia."
+        "Determinar el máximo y qué desbloquea cada nivel."
       ],
       "experiments_required": [
         "Comparar dos guardados propios de la misma versión y una edición controlada con respaldo."

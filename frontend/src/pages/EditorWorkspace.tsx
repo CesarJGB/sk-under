@@ -10,8 +10,8 @@ import {
 import {
   advancedSnapshot, applyItemMinimum, battlePassRecord, buildDraftPlan, clearSelection, createEmptyDraft,
   eligibility, isSelected, minimumSource, originalQuantity, parseQuantity, protectedMaterial, quantityInput,
-  quickChecked, selectAll, selectedCount, setBlueprintStatus, setBulk, setEdit, setHeroLevel, setPetAffinity, setQuick,
-  toggleItem,
+  quickChecked, selectAll, selectedCount, setBlueprintMode, setBlueprintStatus, setBulk, setDecorationLevel,
+  setEdit, setHeroLevel, setPetAffinity, setQuick, toggleItem,
   type BuiltPlan, type BulkKey, type Draft, type Eligibility,
 } from '../draft'
 import { skillKey, skinKey } from '../unlockSelections'
@@ -347,7 +347,8 @@ function PetAffinityEditor({ save, draft, update, built }: EditorInputs & { buil
         const parsed = parseQuantity(edit ?? '')
         const invalid = edit !== undefined && (parsed === null
           || (row.intimacy !== null && parsed < row.intimacy) || (row.max !== null && parsed > row.max))
-        const status = !row.present ? 'Sin registro'
+        const status = !row.present
+          ? row.editable ? `Sin registro · se creará en 0 y subirá a ${row.max}` : row.reason ?? 'Sin registro'
           : !row.editable ? row.reason ?? 'Solo lectura'
             : row.max === null ? 'Máximo no confirmado'
               : `Actual ${row.intimacy}/${row.max}`
@@ -405,7 +406,8 @@ function PetsEditor({ save, draft, update, built }: EditorInputs & { built: Buil
 
 function BlueprintEditor({ save, draft, update, built }: EditorInputs & { built: BuiltPlan }) {
   const [query, setQuery] = useState('')
-  const [filter, setFilter] = useState<'all' | 'Got' | 'Researched'>('all')
+  const [filter, setFilter] = useState<'all' | 'Got' | 'Researched' | 'missing'>('all')
+  const [type, setType] = useState('all')
   const catalog = advancedSnapshot(save)?.blueprints
   if (!catalog?.available) return <Notice tone="warning">Planos sin datos.</Notice>
   const eligible = eligibility(save)
@@ -413,60 +415,207 @@ function BlueprintEditor({ save, draft, update, built }: EditorInputs & { built:
   const checked = quickChecked('blueprints', draft, eligible)
   const planned = new Map((built.plan.blueprints ?? []).map(({ id, status }) => [id, status]))
   const search = query.trim().toLowerCase()
+  const types = [...new Set(catalog.entries.map((row) => row.subcategory).filter((value): value is string => Boolean(value)))].sort()
   const rows = catalog.entries.filter((row: LabBlueprintEntry) => {
     const name = row.name.es ?? row.name.en ?? row.target ?? row.id
     const matches = name.toLowerCase().includes(search) || row.id.toLowerCase().includes(search)
-    return matches && (filter === 'all' || row.status === filter)
+    const state = filter === 'missing' ? row.status === null : filter === 'all' || row.status === filter
+    return matches && state && (type === 'all' || row.subcategory === type)
   })
+  const obtainable = eligible.blueprintObtain.length
 
   return <section className="detail-editor progress-editor" aria-labelledby="blueprints-title">
     <div className="detail-subhead">
       <div>
         <h3 className="detail-subtitle" id="blueprints-title">Planos</h3>
-        <p className="detail-note">Experimental · solo planos con registro y estado conocido.</p>
+        <p className="detail-note">Experimental · crea planos ausentes del catálogo. No rebaja investigados.</p>
       </div>
       {selection.length > 0 && <CheckAll checked={checked === 'all'} indeterminate={checked === 'some'}
-        label={`Investigar ${selection.length} obtenidos`}
+        label={`Seleccionar ${selection.length} compatibles`}
         onChange={(value) => update(setBulk('blueprints', value, draft))} />}
+    </div>
+    <div className="detail-filters blueprint-actions">
+      <button type="button" className="button quiet" disabled={!obtainable}
+        onClick={() => update(setBulk('blueprints', true, setBlueprintMode('Got', draft)))}>
+        Obtener {obtainable} ausentes
+      </button>
+      <button type="button" className="button quiet" disabled={!selection.length}
+        onClick={() => update(setBulk('blueprints', true, setBlueprintMode('Researched', draft)))}>
+        Investigar {selection.length}
+      </button>
+      <button type="button" className="button quiet" disabled={!selectedCount('blueprints', draft, eligible)}
+        onClick={() => update(clearSelection('blueprints', draft))}>Quitar selección</button>
     </div>
     <div className="detail-filters">
       <input type="search" aria-label="Buscar planos" value={query} placeholder="Buscar"
         onChange={(event) => setQuery(event.target.value)} />
-      <select aria-label="Filtrar planos" value={filter} onChange={(event) => setFilter(event.target.value as typeof filter)}>
-        <option value="all">Todos</option>
+      <select aria-label="Filtrar por estado" value={filter} onChange={(event) => setFilter(event.target.value as typeof filter)}>
+        <option value="all">Todos los estados</option>
+        <option value="missing">No obtenidos</option>
         <option value="Got">Obtenidos</option>
         <option value="Researched">Investigados</option>
       </select>
-      <span className="detail-note">{planned.size} en borrador</span>
+      <select aria-label="Filtrar por tipo" value={type} onChange={(event) => setType(event.target.value)}>
+        <option value="all">Todos los tipos</option>
+        {types.map((value) => <option key={value} value={value}>{value}</option>)}
+      </select>
+      <span className="detail-note">{planned.size} en borrador · {catalog.encoding === 'integer' ? 'estados enteros' : 'estados de texto'}</span>
     </div>
     {rows.length ? <div className="level-list blueprint-list">
       {rows.map((row: LabBlueprintEntry) => {
         const name = row.name.es ?? row.name.en ?? row.target ?? row.id
-        const status = draft.blueprintStatus[row.id] ?? row.status ?? ''
+        const researched = row.status === 'Researched'
+        const override = draft.blueprintStatus[row.id]
+        const value = override ?? row.status ?? ''
         const pending = planned.get(row.id)
         return <div className={`level-row blueprint-row${pending ? ' changed' : ''}`} key={row.id}>
           <input type="checkbox" checked={isSelected('blueprints', row.id, draft, eligible)}
-            disabled={!row.editable || !row.bulk_eligible}
-            aria-label={`Investigar ${name} en la operación masiva`}
+            disabled={researched || (!row.creatable && row.status !== 'Got')}
+            aria-label={`Incluir ${name} en la operación masiva`}
             onChange={() => update(toggleItem('blueprints', row.id, draft, eligible))} />
           <span className="level-copy">
             <strong>{name}</strong>
-            <small>{row.present ? `${row.subcategory ?? 'Plano'} · ${row.target ?? 'Objetivo sin nombre'}` : 'Sin registro'}</small>
+            <small>{row.present
+              ? `${row.key} · ${row.subcategory ?? 'Plano'} · ${row.target ?? 'Sin objetivo'}`
+              : `Sin registro · ${row.subcategory ?? 'Plano'}${row.observed_extra ? ' · observado' : ''}`}</small>
+            {!row.present && <small>{row.reason}</small>}
           </span>
-          <select aria-label={`Estado de ${name}`} value={status} disabled={!row.editable}
-            onChange={(event) => update(setBlueprintStatus(row.id, event.target.value as 'Got' | 'Researched', draft))}>
-            {!row.status && <option value="">Sin registro</option>}
-            <option value="Got">Obtenido</option>
+          <select aria-label={`Estado de ${name}`} value={value} disabled={researched}
+            onChange={(event) => {
+              const next = event.target.value
+              if (next === 'Got' || next === 'Researched') update(setBlueprintStatus(row.id, next, draft))
+            }}>
+            {!row.status && <option value="">No obtenido</option>}
+            {row.status !== 'Researched' && <option value="Got">Obtenido</option>}
             <option value="Researched">Investigado</option>
           </select>
         </div>
       })}
     </div> : <p className="detail-note">Sin resultados</p>}
+    <p className="detail-note">
+      {catalog.entries.filter((row) => row.status === 'Researched').length} investigados ·
+      {' '}{catalog.entries.filter((row) => row.status === 'Got').length} obtenidos ·
+      {' '}{catalog.entries.filter((row) => row.status === null && row.creatable).length} ausentes compatibles.
+    </p>
     {catalog.unmatched.length > 0 && <p className="detail-note">
       {catalog.unmatched.length === 1 ? '1 clave del guardado no se pudo identificar y se conserva intacta.'
       : `${catalog.unmatched.length} claves del guardado no se pudieron identificar y se conservan intactas.`}
     </p>}
+    {catalog.limitation && <p className="detail-note">{catalog.limitation}</p>}
   </section>
+}
+
+function DecorationEditor({ save, draft, update, built }: EditorInputs & { built: BuiltPlan }) {
+  const [query, setQuery] = useState('')
+  const decorations = advancedSnapshot(save)?.decorations
+  if (!decorations?.available) return <Notice tone="warning">Decoraciones sin datos.</Notice>
+  const eligible = eligibility(save)
+  const objectChecked = quickChecked('decorations', draft, eligible)
+  const levelChecked = quickChecked('decorationLevels', draft, eligible)
+  const plannedObjects = new Set(built.plan.decorations?.objects ?? [])
+  const plannedLevels = new Map((built.plan.decorations?.levels ?? []).map(({ id, level }) => [id, level]))
+  const search = query.trim().toLowerCase()
+  const objectRows = decorations.objects.filter((row) =>
+    row.label.toLowerCase().includes(search) || row.id.toLowerCase().includes(search))
+  const levelRows = decorations.levels.filter((row) =>
+    row.id.toLowerCase().includes(search))
+  const appearanceGroups = decorations.appearances.reduce<Record<string, typeof decorations.appearances>>((groups, row) => {
+    const key = row.subcategory ?? 'otros'
+    groups[key] = [...(groups[key] ?? []), row]
+    return groups
+  }, {})
+  const groupLabels: Record<string, string> = {
+    room_skin: 'Vestíbulo', garden_skin: 'Jardín', hall_skin: 'Salón',
+    magic_area_skin: 'Área mágica', work_shop_skin: 'Taller',
+  }
+
+  return <div className="detail-editor decoration-editor">
+    <div className="detail-filters">
+      <input type="search" aria-label="Buscar decoraciones" value={query} placeholder="Buscar"
+        onChange={(event) => setQuery(event.target.value)} />
+      <span className="detail-note">
+        Vestíbulo actual: {String(decorations.room.current ?? 'sin dato')} · nivel {decorations.room.room_level ?? 'sin dato'}
+      </span>
+    </div>
+
+    <section aria-labelledby="decor-appearances-title">
+      <h3 className="detail-subtitle" id="decor-appearances-title">Apariencias del vestíbulo y jardín</h3>
+      <p className="detail-note">{decorations.room.selection_reason} La obtención se gestiona en Planos.</p>
+      {Object.entries(appearanceGroups).map(([group, rows]) => <details className="detail-group" key={group}>
+        <summary>{groupLabels[group] ?? group} · {rows.filter((row) => row.obtained).length}/{rows.length} obtenidas</summary>
+        <div className="level-list">
+          {rows.map((row) => {
+            const name = row.name.es ?? row.name.en ?? row.id
+            return <div className="level-row" key={row.id}>
+              <span className="level-copy">
+                <strong>{name}</strong>
+                <small>{row.key ?? row.id} · {row.researched ? 'Investigada' : row.obtained ? 'Obtenida' : 'No obtenida'}</small>
+              </span>
+            </div>
+          })}
+        </div>
+      </details>)}
+      {!decorations.appearances.length && <p className="detail-note">Sin apariencias identificadas.</p>}
+    </section>
+
+    <section aria-labelledby="decor-objects-title">
+      <div className="detail-subhead">
+        <div>
+          <h3 className="detail-subtitle" id="decor-objects-title">Muebles y objetos</h3>
+          <p className="detail-note">Experimental · desbloqueo por presencia en roomDecorateDic.</p>
+        </div>
+        <CheckAll checked={objectChecked === 'all'} indeterminate={objectChecked === 'some'}
+          label={`Desbloquear ${eligible.decorations.length} objetos`}
+          onChange={(value) => update(setBulk('decorations', value, draft))} />
+      </div>
+      <div className="level-list">
+        {objectRows.map((row) => {
+          const selected = isSelected('decorations', row.id, draft, eligible)
+          return <div className={`level-row${plannedObjects.has(row.id) ? ' changed' : ''}`} key={row.id}>
+            <input type="checkbox" checked={selected} disabled={!row.editable}
+              aria-label={`Desbloquear ${row.label}`}
+              onChange={() => update(toggleItem('decorations', row.id, draft, eligible))} />
+            <span className="level-copy"><strong>{row.label}</strong><small>{row.reason}</small></span>
+            <span className="unlock-status">{row.unlocked ? 'Disponible' : 'Bloqueado'}</span>
+          </div>
+        })}
+      </div>
+      {decorations.unknown_objects.length > 0 && <p className="detail-note">
+        {decorations.unknown_objects.length} objetos del guardado no están identificados y se conservan intactos.
+      </p>}
+    </section>
+
+    <section aria-labelledby="decor-levels-title">
+      <div className="detail-subhead">
+        <div>
+          <h3 className="detail-subtitle" id="decor-levels-title">Mejoras de objetos</h3>
+          <p className="detail-note">Solo subidas hasta el máximo observado por clave.</p>
+        </div>
+        <CheckAll checked={levelChecked === 'all'} indeterminate={levelChecked === 'some'}
+          label={`Mejorar ${eligible.decorationLevels.length} al máximo`}
+          onChange={(value) => update(setBulk('decorationLevels', value, draft))} />
+      </div>
+      {levelRows.length ? <div className="level-list">
+        {levelRows.map((row) => {
+          const edit = draft.decorationLevels[row.id]
+          const parsed = parseQuantity(edit ?? '')
+          const invalid = edit !== undefined && (parsed === null
+            || (row.level !== null && parsed < row.level) || parsed > row.max_observed)
+          return <ProgressRow key={row.id} label={row.id}
+            status={row.level === null ? row.reason : `Actual ${row.level}/${row.max_observed}`}
+            current={row.level} edit={edit} proposed={plannedLevels.get(row.id)}
+            checked={isSelected('decorationLevels', row.id, draft, eligible)}
+            disabled={!row.editable} invalid={invalid}
+            onToggle={() => update(toggleItem('decorationLevels', row.id, draft, eligible))}
+            onChange={(value) => update(setDecorationLevel(row.id, value, draft))} />
+        })}
+      </div> : <p className="detail-note">Sin resultados</p>}
+      {decorations.unknown_levels.length > 0 && <p className="detail-note">
+        {decorations.unknown_levels.length} niveles no identificados se conservan intactos.
+      </p>}
+    </section>
+    {decorations.limitation && <p className="detail-note">{decorations.limitation}</p>}
+  </div>
 }
 
 function ResourceList({ save, draft, update, built, season = false }: EditorInputs & {
@@ -841,6 +990,7 @@ export function EditorWorkspace({
           <HeroLevelsEditor save={save} draft={draft} update={update} built={built} />
         </>}
         {activeCategory.id === 'planos' && <BlueprintEditor save={save} draft={draft} update={update} built={built} />}
+        {activeCategory.id === 'decoraciones' && <DecorationEditor save={save} draft={draft} update={update} built={built} />}
         {activeCategory.id === 'habilidades' && <LockList key="skills" save={save} draft={draft} update={update} mode="skills" />}
         {activeCategory.id === 'skins' && <LockList key="skins" save={save} draft={draft} update={update} mode="skins" />}
         {activeCategory.id === 'mascotas' && <PetsEditor save={save} draft={draft} update={update} built={built} />}

@@ -46,7 +46,7 @@ def document() -> dict:
     data = json.loads(FIXTURE.read_bytes())
     data["gameData"]["rebornCard"] = False
     data["gameData"]["fishChip"] = 3
-    data["gameData"]["petUnlock"] = {"Cat": True, "Cat1": False, "Dog": True}
+    data["gameData"]["petUnlock"] = {"Cat": True, "Cat1": False, "Dog": True, "Pig": True}
     data["itemData"]["materials"] = {
         "material_ticket": 5,
         "material_fish": 3,

@@ -112,7 +112,7 @@ def validate_catalogs(report: Report) -> dict[str, dict[str, Any]]:
             if item.get("evidence") not in EVIDENCE_LEVELS:
                 report.error(f"{path.name}: evidencia inválida en {item_id!r}")
             source = str(item.get("source") or "")
-            if not re.match(r"^SKDFE@[0-9a-f]{40}:.+$", source):
+            if not re.match(r"^(SKDFE@[0-9a-f]{40}|OWN@[a-z0-9-]+):.+$", source):
                 report.error(f"{path.name}: fuente sin commit fijado en {item_id!r}: {source!r}")
         catalogs[family] = document
     return catalogs

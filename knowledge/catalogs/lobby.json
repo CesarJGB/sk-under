@@ -16,8 +16,60 @@
     }
   ],
   "license_note": "SKDFE no incluye archivo de licencia en el commit consultado. SK-Under conserva solo identificadores, nombres normalizados, recuentos y relaciones factuales con procedencia; no redistribuye CSV, texto de la wiki, sprites ni volcados completos.",
-  "count": 49,
+  "count": 59,
   "items": [
+    {
+      "id": "ItemEggMachine",
+      "name": {
+        "en": null,
+        "es": "Máquina de huevos",
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "observed_object",
+      "attributes": {
+        "kind": "room_decorate_object",
+        "observed_unlocked": true,
+        "observed_value": [
+          0
+        ]
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.roomDecorateDic"
+      ],
+      "notes": [
+        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "ItemTrashCan",
+      "name": {
+        "en": null,
+        "es": "Papelera",
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "observed_object",
+      "attributes": {
+        "kind": "room_decorate_object",
+        "observed_unlocked": true,
+        "observed_value": [
+          0
+        ]
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.roomDecorateDic"
+      ],
+      "notes": [
+        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
     {
       "id": "Motorcycle",
       "name": {
@@ -38,6 +90,214 @@
       "notes": [],
       "evidence": "E1",
       "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+    },
+    {
+      "id": "ObjectBooks",
+      "name": {
+        "en": null,
+        "es": "Estantería de libros",
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "observed_object",
+      "attributes": {
+        "kind": "room_decorate_object",
+        "observed_unlocked": true,
+        "observed_value": [
+          0
+        ]
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.roomDecorateDic"
+      ],
+      "notes": [
+        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "ObjectDrinkSeller",
+      "name": {
+        "en": null,
+        "es": "Máquina expendedora",
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "observed_object",
+      "attributes": {
+        "kind": "room_decorate_object",
+        "observed_unlocked": true,
+        "observed_value": [
+          0
+        ]
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.roomDecorateDic"
+      ],
+      "notes": [
+        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "ObjectFishBowl",
+      "name": {
+        "en": null,
+        "es": "Pecera",
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "observed_object",
+      "attributes": {
+        "kind": "room_decorate_object",
+        "observed_unlocked": true,
+        "observed_value": [
+          0
+        ]
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.roomDecorateDic"
+      ],
+      "notes": [
+        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "ObjectMagicWell",
+      "name": {
+        "en": null,
+        "es": "Pozo mágico",
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "observed_object",
+      "attributes": {
+        "kind": "room_decorate_object",
+        "observed_unlocked": true,
+        "observed_value": [
+          0
+        ]
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.roomDecorateDic"
+      ],
+      "notes": [
+        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "ObjectMysteriouStatue",
+      "name": {
+        "en": null,
+        "es": "Estatua misteriosa",
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "observed_object",
+      "attributes": {
+        "kind": "room_decorate_object",
+        "observed_unlocked": true,
+        "observed_value": [
+          0
+        ]
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.roomDecorateDic"
+      ],
+      "notes": [
+        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "ObjectPlant",
+      "name": {
+        "en": null,
+        "es": "Planta del vestíbulo",
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "observed_object",
+      "attributes": {
+        "kind": "room_decorate_object",
+        "observed_unlocked": true,
+        "observed_value": [
+          0
+        ]
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.roomDecorateDic"
+      ],
+      "notes": [
+        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "ObjectSafe",
+      "name": {
+        "en": null,
+        "es": "Caja fuerte",
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "observed_object",
+      "attributes": {
+        "kind": "room_decorate_object",
+        "observed_unlocked": true,
+        "observed_value": [
+          0
+        ]
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.roomDecorateDic"
+      ],
+      "notes": [
+        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+    },
+    {
+      "id": "PetFood",
+      "name": {
+        "en": null,
+        "es": "Zona de alimentación de mascotas",
+        "zh_cn": null
+      },
+      "category": "lobby",
+      "subcategory": "observed_object",
+      "attributes": {
+        "kind": "room_decorate_object",
+        "observed_unlocked": true,
+        "observed_value": [
+          0
+        ]
+      },
+      "relations": {},
+      "save_refs": [
+        "itemData.roomDecorateDic"
+      ],
+      "notes": [
+        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+      ],
+      "evidence": "E2",
+      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
     },
     {
       "id": "garden_skin_0",

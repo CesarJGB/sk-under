@@ -31,7 +31,7 @@ def test_all_catalogs_match_the_documented_schema():
         assert document["count"] == len(document["items"])
         assert len({item["id"] for item in document["items"]}) == document["count"]
         total += document["count"]
-    assert total == 4298
+    assert total == 4339
 
 
 def test_catalog_relations_resolve_to_known_items():
@@ -144,6 +144,6 @@ def test_every_catalog_item_has_provenance_and_an_evidence_level():
         for item in document["items"]:
             assert item["evidence"] in common.EVIDENCE_LEVELS
             assert item["evidence"] in {"E1", "E2"}
-            assert item["source"].startswith("SKDFE@")
+            assert item["source"].startswith(("SKDFE@", "OWN@"))
             for language in ("en", "es"):
                 assert language in item["name"]

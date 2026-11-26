@@ -1063,7 +1063,7 @@ test('capturas móviles, tableta y escritorio sin desbordamiento', async ({ page
     expect(await gems.evaluate(fits), `cantidad de diez dígitos a ${size.width} px`).toBe(true)
     await screenshot(`rapida-${size.width}`)
     await page.getByRole('tab', { name: 'Categorías' }).click()
-    await expect(page.getByTestId('category-grid').getByRole('button')).toHaveCount(10)
+    await expect(page.getByTestId('category-grid').getByRole('button')).toHaveCount(11)
     if (size.width <= 430) {
       expect(await page.locator('.category-grid').evaluate((grid) => getComputedStyle(grid).gridTemplateColumns.split(' ').length)).toBe(3)
     }
@@ -1228,6 +1228,23 @@ const PROGRESS_ADVANCED = {
       { id: 'blueprint_weapon_0', key: null, name: { es: 'Arma', en: 'Weapon' }, subcategory: 'weapon', blueprint_type: 7, target: 'weapon_0', research_materials: [], status: null, value_type: null, present: false, editable: false, bulk_eligible: false, path: null },
     ],
   },
+  decorations: {
+    available: true, experimental: true, evidence_level: 'E2', note: '', limitation: 'Selección no editable.',
+    objects: [
+      { id: 'ItemEggMachine', label: 'Máquina de huevos', unlocked: true, value: [0], editable: false, reason: 'Ya desbloqueado; no se elimina.', path: 'itemData.roomDecorateDic.ItemEggMachine' },
+      { id: 'ObjectSafe', label: 'Caja fuerte', unlocked: false, value: null, editable: true, reason: 'No desbloqueado; se puede crear la clave con [0].', path: null },
+      { id: 'PetFood', label: 'Zona de alimentación de mascotas', unlocked: false, value: null, editable: true, reason: 'No desbloqueado; se puede crear la clave con [0].', path: null },
+    ],
+    levels: [
+      { id: 'Book', level: 2, max_observed: 5, editable: true, reason: 'Se puede subir hasta el máximo observado (5).', path: 'gameData.roomObjectLevel.Book' },
+      { id: 'Safe', level: 5, max_observed: 5, editable: false, reason: 'Ya está en el máximo observado (5).', path: 'gameData.roomObjectLevel.Safe' },
+    ],
+    appearances: [
+      { id: 'blueprint_multi_room_skin_1', key: 'multi_room_skin_1', name: { es: 'Sala uno', en: 'Room one' }, subcategory: 'multi', status: 'Got', obtained: true, researched: false, path: 'itemData.blueprints.multi_room_skin_1' },
+    ],
+    unknown_objects: ['CustomObject'], unknown_levels: ['CustomLevel'],
+    room: { current: 'Common', current_type: 'str', room_level: 1, unlock_list: [], selection_editable: false, selection_reason: 'El mapa de selección no está determinado.' },
+  },
 }
 const PROGRESS_SAVE = { ...SESSION_SAVE, advanced: PROGRESS_ADVANCED }
 
@@ -1269,5 +1286,37 @@ test('integra niveles, afinidad y planos en un solo borrador móvil', async ({ p
   expect(plans[0].hero_levels).toEqual([{ code: 'Knight', level: 5 }])
   expect(plans[0].pet_affinity).toEqual([{ code: 'Cat', value: 220 }])
   expect(plans[0].blueprints).toEqual([{ id: 'blueprint_multi_room_skin_0', status: 'Researched' }])
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+
+test('integra decoraciones en el borrador global sin controles ficticios', async ({ page }) => {
+  const plans: Array<Record<string, unknown>> = []
+  await open(page, { save: PROGRESS_SAVE, width: 320 })
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => {
+    const plan = route.request().postDataJSON()
+    plans.push(plan)
+    return route.fulfill({ json: prepared(plan, [
+      ['decorations', 'Decoraciones', 3],
+    ]) })
+  })
+
+  await openCategory(page, 'Decoraciones')
+  await expect(page.getByText('Vestíbulo actual: Common')).toBeVisible()
+  await page.getByText('multi · 1/1 obtenidas').click()
+  await expect(page.getByText('Sala uno')).toBeVisible()
+  await expect(page.getByText('Obtenida', { exact: false }).first()).toBeVisible()
+  await page.getByLabel('Desbloquear Caja fuerte').check()
+  await page.getByLabel('Desbloquear Zona de alimentación de mascotas').check()
+  await expect(page.getByTestId('editor-bar')).toContainText('2 cambios')
+  await page.getByLabel('Nivel o progreso de Book').fill('5')
+  await expect(page.getByTestId('editor-bar')).toContainText('3 cambios')
+  await expect(page.locator('input[aria-label="Desbloquear Máquina de huevos"]')).toBeDisabled()
+  await page.screenshot({ path: 'test-results/edicion-numerica/decoraciones-320.png' })
+
+  await page.getByTestId('editor-bar').getByRole('button', { name: 'Guardar', exact: true }).click()
+  await expect(page.getByTestId('unified-preview')).toBeVisible()
+  expect(plans).toHaveLength(1)
+  expect(plans[0].decorations).toEqual({ objects: ['ObjectSafe', 'PetFood'], levels: [{ id: 'Book', level: 5 }] })
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
