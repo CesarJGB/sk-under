@@ -178,7 +178,9 @@ export function WeaponProgressionEditor({ save, draft, update }: EditorProps) {
                     {progressionName(item)} <small className="skin-index">{item.id}</small>
                     <small className="detail-note">
                       Actual: {item.discovered ? amountFormat.format(item.count ?? 0) : 'sin registrar'}
-                      {' → '}Propuesto: {amountFormat.format(isChecked ? item.proposed_count : item.count ?? item.proposed_count)}
+                      {' → '}Propuesto: {amountFormat.format(
+                        !item.discovered || isChecked ? item.proposed_count : item.count ?? item.proposed_count,
+                      )}
                     </small>
                   </span>
                   <small className={`unlock-status${item.forge_ready ? ' complete' : ''}`}>

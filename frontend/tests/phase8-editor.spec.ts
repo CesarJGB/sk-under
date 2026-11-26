@@ -1436,6 +1436,7 @@ test('detalla descubrimiento, forja y skins dentro de la categoría Armas', asyn
   await expect(progression).toContainText('Forja requiere descubrir')
   await progression.getByLabel('Filtrar estado').selectOption('all')
   await expect(page.getByLabel('Descubrir Espada de hierro')).toBeDisabled()
+  await expect(progression).toContainText('Actual: sin registrar → Propuesto: 1')
   await page.getByLabel('Descubrir Espada de acero').check()
   await expect(page.getByTestId('editor-bar')).toContainText('1 cambio')
   await expect(progression).toContainText('Actual: sin registrar → Propuesto: 1')
