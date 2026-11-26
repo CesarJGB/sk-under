@@ -86,9 +86,12 @@ export function AccountPage() {
     hideEmail,
   })
   const tags = tagsOf(session ?? contextAccount)
+  const distributionId = (session ?? contextAccount)?.account?.distribution
+  const gameVersion = config?.distributions.find((item) => item.id === distributionId)?.game_version
 
   const header = <AccountHeader accountLabel={display.label} accountTitle={display.title}
-    platform={tags.platform} distribution={tags.distribution} basePath={base} section={route.section} />
+    platform={tags.platform} distribution={tags.distribution} gameVersion={gameVersion}
+    basePath={base} section={route.section} />
 
   if (loading && !session) return <>
     {header}

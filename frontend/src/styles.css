@@ -2096,68 +2096,78 @@ html:has(.editor-bar) {
   z-index: 60;
   inset: 0;
   display: flex;
-  background: #06120c99;
-  animation: drawer-fade .18s ease-out;
+  isolation: isolate;
 }
+.drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  background: #06120c99;
+  opacity: 0;
+  transition: opacity .22s ease;
+}
+.drawer-layer.entered .drawer-backdrop { opacity: 1; }
 .account-drawer {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   width: min(88vw, 21.5rem);
   height: 100%;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: max(1rem, env(safe-area-inset-top)) max(1.4rem, env(safe-area-inset-right))
-    max(1.5rem, env(safe-area-inset-bottom)) max(1.4rem, env(safe-area-inset-left));
+  padding: max(1rem, env(safe-area-inset-top)) max(1.3rem, env(safe-area-inset-right))
+    max(1.5rem, env(safe-area-inset-bottom)) max(1.3rem, env(safe-area-inset-left));
   color: #f7fcf8;
   background: #112820;
   box-shadow: 12px 0 34px #04110a4d;
-  animation: drawer-slide .2s cubic-bezier(.22, 1, .36, 1);
+  transform: translate3d(-100%, 0, 0);
+  transition: transform .22s cubic-bezier(.22, 1, .36, 1);
+  touch-action: pan-y;
+  will-change: transform;
 }
-.drawer-layer.closing { animation: drawer-fade-out .18s ease-in forwards; pointer-events: none; }
-.drawer-layer.closing .account-drawer { animation: drawer-slide-out .18s ease-in forwards; }
-.account-drawer-top { display: flex; justify-content: flex-end; min-height: 44px; }
-.drawer-close {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  color: #cfe0d5;
-  background: transparent;
+.drawer-layer.entered .account-drawer { transform: translate3d(0, 0, 0); }
+.account-drawer:focus { outline: none; }
+.drawer-layer.closing { pointer-events: none; }
+.drawer-layer.dragging .account-drawer,
+.drawer-layer.dragging .drawer-backdrop { transition: none; }
+.drawer-layer.dragging .account-drawer { user-select: none; }
+.account-drawer-title {
+  margin: 0 0 .7rem;
+  color: #fff;
+  font-size: clamp(1.9rem, 8vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -.045em;
+  line-height: 1.08;
 }
-.drawer-close:hover { color: #fff; background: #ffffff0f; }
-.drawer-close:focus-visible { outline-color: var(--lime); }
 .account-drawer-account {
   display: flex;
   align-items: center;
-  gap: .9rem;
+  gap: .55rem;
   min-width: 0;
-  padding: .4rem 0 1.35rem;
+  padding: .6rem .55rem .6rem .8rem;
+  border-radius: 14px;
+  background: #ffffff0c;
 }
-.account-drawer-avatar {
-  display: grid;
-  flex: 0 0 auto;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  color: #d9efdf;
-  background: #ffffff14;
-}
-.account-drawer-identity { display: grid; flex: 1; gap: .18rem; min-width: 0; }
+.account-drawer-identity { display: grid; flex: 1; gap: .16rem; min-width: 0; }
 .account-drawer-identity strong {
   min-width: 0;
   overflow: hidden;
   color: #fff;
-  font-size: 1rem;
+  font-size: .9375rem;
   font-weight: 650;
   line-height: 1.3;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.account-drawer-identity span { color: #a7c0b1; font-size: .8125rem; line-height: 1.35; }
+.account-drawer-identity span {
+  min-width: 0;
+  overflow: hidden;
+  color: #a7c0b1;
+  font-size: .78rem;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .drawer-privacy {
   display: grid;
   flex: 0 0 auto;
@@ -2172,7 +2182,7 @@ html:has(.editor-bar) {
 }
 .drawer-privacy:hover { color: #fff; background: #ffffff0f; }
 .drawer-privacy:focus-visible { outline-color: var(--lime); }
-.account-drawer-nav { display: grid; gap: .2rem; margin-top: 1.1rem; padding-top: .5rem; }
+.account-drawer-nav { display: grid; gap: .1rem; margin-top: .55rem; }
 .account-drawer-link {
   display: flex;
   align-items: center;
@@ -2190,13 +2200,8 @@ html:has(.editor-bar) {
 .account-drawer-link:hover { background: #ffffff0a; }
 .account-drawer-link.active { color: var(--lime); }
 .account-drawer-link:focus-visible { outline: 2px solid var(--lime); outline-offset: -2px; }
-@keyframes drawer-fade { from { opacity: 0; } }
-@keyframes drawer-fade-out { to { opacity: 0; } }
-@keyframes drawer-slide { from { transform: translateX(-100%); } }
-@keyframes drawer-slide-out { to { transform: translateX(-100%); } }
 @media (prefers-reduced-motion: reduce) {
-  .drawer-layer, .account-drawer,
-  .drawer-layer.closing, .drawer-layer.closing .account-drawer { animation: none; }
+  .account-drawer, .drawer-backdrop { transition: none; }
 }
 
 @media (max-width: 430px) {

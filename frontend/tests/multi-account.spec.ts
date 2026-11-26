@@ -266,7 +266,7 @@ test('la privacidad del correo se mantiene en dashboard, cuenta y editor', async
   await expect(page.getByRole('article', { name: EMAIL_A })).toBeVisible()
 })
 
-test('el menú de cuenta cierra con Escape, fuera, botón y navega resaltando la sección', async ({ page }) => {
+test('el menú de cuenta cierra con Escape, fuera y navega resaltando la sección', async ({ page }) => {
   const state = newState()
   state.accounts = [state.sessions[ID_A], state.sessions[ID_B]]
   await mockApp(page, state)
@@ -274,7 +274,7 @@ test('el menú de cuenta cierra con Escape, fuera, botón y navega resaltando la
 
   await page.getByRole('button', { name: 'Abrir menú de cuenta' }).click()
   await expect(page.getByRole('dialog')).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Cerrar menú' })).toBeFocused()
+  await expect(page.getByRole('button', { name: 'Ocultar correo' })).toBeFocused()
   await expect.poll(() => page.evaluate(() => document.body.style.overflow)).toBe('hidden')
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).toHaveCount(0)
@@ -292,13 +292,55 @@ test('el menú de cuenta cierra con Escape, fuera, botón y navega resaltando la
   await page.getByRole('button', { name: 'Abrir menú de cuenta' }).click()
   await expect(page.getByRole('link', { name: 'Editor', exact: true })).toHaveAttribute('aria-current', 'page')
   await expect(page.getByRole('link', { name: 'Partida', exact: true })).not.toHaveAttribute('aria-current', 'page')
-  await page.getByRole('button', { name: 'Cerrar menú' }).click()
+  await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).toHaveCount(0)
 
   await page.getByRole('button', { name: 'Abrir menú de cuenta' }).click()
   await page.getByRole('link', { name: 'Volver al inicio' }).click()
   await expect(page).toHaveURL(/\/$/)
   await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
+})
+
+test('el menú sigue el arrastre horizontal y distingue cierre de retorno', async ({ page }) => {
+  const state = newState()
+  state.accounts = [state.sessions[ID_A], state.sessions[ID_B]]
+  await mockApp(page, state)
+  await page.goto(`/cuentas/${ID_A}/partida`)
+
+  await page.getByRole('button', { name: 'Abrir menú de cuenta' }).click()
+  const dialog = page.getByRole('dialog')
+  await expect.poll(async () => (await dialog.boundingBox())?.x).toBe(0)
+  const box = await dialog.boundingBox()
+  if (!box) throw new Error('No se pudo medir el menú.')
+  const y = box.y + 100
+  const startX = box.x + box.width - 40
+
+  await page.mouse.move(startX, y)
+  await page.mouse.down()
+  for (let step = 1; step <= 10; step++) {
+    await page.mouse.move(startX - step * 4, y)
+    await page.waitForTimeout(25)
+  }
+  const dragged = await dialog.boundingBox()
+  expect(dragged?.x ?? 0).toBeLessThan(box.x - 20)
+  const opacity = await page.locator('.drawer-backdrop').evaluate(
+    (element) => Number(getComputedStyle(element).opacity),
+  )
+  expect(opacity).toBeLessThan(1)
+  await page.mouse.up()
+
+  await expect(dialog).toBeVisible()
+  await expect.poll(async () => Math.abs(((await dialog.boundingBox())?.x ?? 0) - box.x))
+    .toBeLessThan(1)
+
+  await page.mouse.move(startX, y)
+  await page.mouse.down()
+  for (let step = 1; step <= 12; step++) {
+    await page.mouse.move(startX - step * 20, y)
+    await page.waitForTimeout(10)
+  }
+  await page.mouse.up()
+  await expect(dialog).toHaveCount(0)
 })
 
 for (const width of [375, 390]) {
@@ -315,6 +357,6 @@ for (const width of [375, 390]) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     const drawer = await page.getByRole('dialog').boundingBox()
     expect(drawer?.width ?? 0).toBeLessThanOrEqual(width)
-    await page.getByRole('button', { name: 'Cerrar menú' }).click()
+    await page.keyboard.press('Escape')
   })
 }
