@@ -93,7 +93,7 @@ export function AccountLoginForm({
             <ChevronDown size={16} aria-hidden="true" />
           </span>
         </label>}
-      <div className="cloud-actions">
+      <div className="cloud-actions login-actions">
         <button className="button primary" disabled={authOperation.pending || !available}>
           {authOperation.pending ? 'Iniciando sesión…' : reauth ? 'Renovar acceso' : 'Iniciar sesión'}
         </button>

@@ -87,8 +87,8 @@ export function AccountPage() {
   })
   const tags = tagsOf(session ?? contextAccount)
 
-  const header = <AccountHeader accountLabel={display.label} platform={tags.platform}
-    distribution={tags.distribution} basePath={base} section={route.section} />
+  const header = <AccountHeader accountLabel={display.label} accountTitle={display.title}
+    platform={tags.platform} distribution={tags.distribution} basePath={base} section={route.section} />
 
   if (loading && !session) return <>
     {header}
