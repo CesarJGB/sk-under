@@ -541,6 +541,46 @@ export type LabDecorations = {
   limitation: string
 }
 
+export type LabWeaponProgressionItem = {
+  id: string
+  name_en: string | null
+  name_es: string | null
+  subcategory: string | null
+  level: number | null
+  forgeable: boolean
+  drop_level: number | null
+  discovered: boolean
+  count: number | null
+  proposed_count: number
+  forge_status: 'ready' | 'requires_discovery' | 'not_forgeable'
+  forge_ready: boolean
+  in_forge_queue: boolean
+}
+
+export type LabWeaponProgression = {
+  available?: boolean
+  error?: string
+  field?: string
+  items?: LabWeaponProgressionItem[]
+  discovered?: string[]
+  discovered_count?: number
+  locked_count?: number
+  total_weapons?: number
+  forgeable_total?: number
+  forge_ready?: string[]
+  forge_ready_count?: number
+  forge_queue?: string[]
+  forge_queue_path?: string
+  unknown_weapon_ids?: string[]
+  unknown_counter_count?: number
+  size?: number
+  sha256?: string
+  serialzed_version?: number
+  discovery_value?: number
+  forge_policy?: 'derived_experimental'
+  evidence?: 'E2'
+}
+
 export type LabWeaponSkinItem = {
   id: string
   name_en: string | null
@@ -571,7 +611,7 @@ export type LabWeaponSkins = {
   sha256?: string
   serialzed_version?: number
   equip_policy?: 'read_only_unconfirmed'
-  evidence?: 'E2'
+  evidence?: 'E3'
 }
 
 export type LabKillEffectItem = {
@@ -611,6 +651,7 @@ export type LabUnifiedPlan = {
   characters?: string[]
   skills?: LabSkillRef[]
   skins?: LabSkinRef[]
+  weapon_progression?: string[]
   weapon_skins?: string[]
   kill_effects?: number[]
   advanced?: LabAdvancedPlan | null
@@ -625,7 +666,7 @@ export type LabUnifiedPlan = {
 
 export type LabCategoryKey =
   | 'gems' | 'fish_chip' | 'fish_progress' | 'characters' | 'skills' | 'skins'
-  | 'weapon_skins' | 'kill_effects'
+  | 'weapon_progression' | 'weapon_skins' | 'kill_effects'
   | 'advanced' | 'hero_levels' | 'pet_affinity' | 'blueprints' | 'decorations'
 
 export type LabUnifiedCategory = {
@@ -1106,11 +1147,13 @@ export type NativeSaveSummary = {
   character_write_policy?: 'confirmed_by_owner'
   skill_write_policy?: 'confirmed_by_owner'
   skin_write_policy?: 'confirmed_by_owner'
-  weapon_skin_write_policy?: 'experimental'
-  kill_effect_write_policy?: 'experimental'
+  weapon_progression_write_policy?: 'experimental'
+  weapon_skin_write_policy?: 'confirmed_by_owner'
+  kill_effect_write_policy?: 'confirmed_by_owner'
   downloaded_at?: string
   report?: SaveReport | null
   advanced?: LabAdvanced | null
+  weapon_progression?: LabWeaponProgression | null
   weapon_skins?: LabWeaponSkins | null
   kill_effects?: LabKillEffects | null
   size?: number

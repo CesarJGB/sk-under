@@ -1,7 +1,9 @@
 import { CircleCheck } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { AccordionGroup } from '../AccordionGroup'
-import type { LabKillEffectItem, LabWeaponSkinItem, NativeSaveSummary } from '../api'
+import type {
+  LabKillEffectItem, LabWeaponProgressionItem, LabWeaponSkinItem, NativeSaveSummary,
+} from '../api'
 import {
   clearSelection, eligibility, isSelected, selectAll, selectedCount, toggleItem,
   type Draft,
@@ -26,7 +28,9 @@ function CheckAll({ checked, indeterminate, onChange, label }: {
   </label>
 }
 
-function Toolbar({ save, group, draft, update }: EditorProps & { group: 'weaponSkins' | 'killEffects' }) {
+function Toolbar({ save, group, draft, update }: EditorProps & {
+  group: 'weaponProgression' | 'weaponSkins' | 'killEffects'
+}) {
   const eligible = eligibility(save)
   const selected = selectedCount(group, draft, eligible)
   const total = eligible[group].length
@@ -41,17 +45,21 @@ function Toolbar({ save, group, draft, update }: EditorProps & { group: 'weaponS
   </div>
 }
 
-function FilterControls({ query, setQuery, filter, setFilter, searchLabel, allLabel = 'Todas', doneLabel = 'Desbloqueadas' }: {
+function FilterControls({
+  query, setQuery, filter, setFilter, searchLabel, searchPlaceholder = 'Buscar skin o arma',
+  allLabel = 'Todas', doneLabel = 'Desbloqueadas',
+}: {
   query: string
   setQuery: (value: string) => void
   filter: Filter
   setFilter: (value: Filter) => void
   searchLabel?: string
+  searchPlaceholder?: string
   allLabel?: string
   doneLabel?: string
 }) {
   return <div className="detail-filters">
-    {searchLabel && <input type="search" aria-label={searchLabel} value={query} placeholder="Buscar skin o arma"
+    {searchLabel && <input type="search" aria-label={searchLabel} value={query} placeholder={searchPlaceholder}
       onChange={(event) => setQuery(event.target.value)} />}
     <select aria-label="Filtrar estado" value={filter} onChange={(event) => setFilter(event.target.value as Filter)}>
       <option value="pending">Pendientes</option>
@@ -59,6 +67,146 @@ function FilterControls({ query, setQuery, filter, setFilter, searchLabel, allLa
       <option value="done">{doneLabel}</option>
     </select>
   </div>
+}
+
+function progressionName(item: LabWeaponProgressionItem) {
+  return item.name_es || item.name_en || item.id
+}
+
+function forgeLabel(item: LabWeaponProgressionItem) {
+  if (!item.forgeable) return 'No forjable'
+  if (item.forge_ready) return 'Forja disponible'
+  return 'Forja requiere descubrir'
+}
+
+export function WeaponProgressionEditor({ save, draft, update }: EditorProps) {
+  const [query, setQuery] = useState('')
+  const [filter, setFilter] = useState<Filter>('pending')
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set())
+  const snapshot = save.weapon_progression
+  const items = snapshot?.items ?? []
+  const eligible = eligibility(save)
+  const pending = new Set(eligible.weaponProgression)
+  const selected = new Set(
+    eligible.weaponProgression.filter((id) => isSelected('weaponProgression', id, draft, eligible)),
+  )
+  const search = query.trim().toLowerCase()
+  const grouped = new Map<string, LabWeaponProgressionItem[]>()
+  for (const item of items) {
+    const group = item.subcategory || 'Otras'
+    const rows = grouped.get(group)
+    if (rows) rows.push(item)
+    else grouped.set(group, [item])
+  }
+  const groups = Array.from(grouped, ([category, options]) => {
+    const visible = options.filter((item) => {
+      const matches = !search || progressionName(item).toLowerCase().includes(search)
+        || item.id.toLowerCase().includes(search) || category.toLowerCase().includes(search)
+      const state = filter === 'all' || (filter === 'pending' ? !item.discovered : item.discovered)
+      return matches && state
+    })
+    return { category, options, visible }
+  }).filter(({ visible }) => visible.length)
+
+  const toggleGroup = (category: string) => setExpanded((previous) => {
+    const next = new Set(previous)
+    if (next.has(category)) next.delete(category)
+    else next.add(category)
+    return next
+  })
+
+  if (snapshot?.available === false) {
+    return <div className="detail-editor">
+      <Notice tone="warning">
+        No se pudo leer el progreso de armas de esta copia: {snapshot.error || 'estructura no reconocida'}.
+      </Notice>
+    </div>
+  }
+
+  return <section className="detail-editor progression-editor" data-testid="weapon-progression-editor"
+    aria-labelledby="weapon-progression-title">
+    <div className="detail-subhead">
+      <div>
+        <h3 className="detail-subtitle" id="weapon-progression-title">Descubrimiento y forja</h3>
+        <p className="detail-note">
+          {amountFormat.format(snapshot?.discovered_count ?? 0)} de {amountFormat.format(snapshot?.total_weapons ?? 0)} armas
+          descubiertas · {amountFormat.format(snapshot?.forge_ready_count ?? 0)} con forja habilitada.
+        </p>
+      </div>
+    </div>
+    <Notice tone="warning">
+      <strong>Experimental (E2).</strong> Eleva contadores en cero o ausentes de <code>statisticData.object2ObtainTime</code> a 1;
+      nunca reduce valores ni establece máximos. La cola <code>itemData.forgeWeapons</code> es de solo lectura y no se usa como
+      desbloqueo permanente. La relación entre el contador y la forja debe validarse en el dispositivo.
+    </Notice>
+    <Toolbar save={save} group="weaponProgression" draft={draft} update={update} />
+    {items.length ? <>
+      <FilterControls query={query} setQuery={setQuery} filter={filter} setFilter={setFilter}
+        searchLabel="Buscar armas" searchPlaceholder="Buscar arma o tipo"
+        allLabel="Todas las armas" doneLabel="Descubiertas" />
+      {groups.length > 0 && <div className="lock-groups">
+        {groups.map(({ category, options, visible }) => {
+          const selectable = visible.filter(({ id }) => pending.has(id))
+          const checked = selectable.filter(({ id }) => selected.has(id)).length
+          const discovered = options.filter((item) => item.discovered).length
+          const chosen = options.filter((item) => selected.has(item.id)).length
+          return <AccordionGroup key={category} title={category}
+            testId={`weapon-progression-group-${category}`}
+            meta={`${options.length} ${options.length === 1 ? 'arma' : 'armas'}`}
+            summary={`${discovered}/${options.length} descubiertas${chosen ? ` · ${chosen} en borrador` : ''}`}
+            expanded={expanded.has(category) || Boolean(search)} onToggle={() => toggleGroup(category)}>
+            {selectable.length > 1 && <div className="accordion-tools">
+              <CheckAll checked={checked === selectable.length}
+                indeterminate={checked > 0 && checked < selectable.length}
+                label={`Seleccionar ${category}`}
+                onChange={(enabled) => {
+                  let next = draft
+                  for (const { id } of selectable) {
+                    if (enabled !== selected.has(id)) next = toggleItem('weaponProgression', id, next, eligible)
+                  }
+                  update(next)
+                }} />
+            </div>}
+            <div className="lock-options">
+              {visible.map((item) => {
+                const isChecked = selected.has(item.id)
+                return <label className={`lock-option ${isChecked ? 'selected' : ''}`} key={item.id}>
+                  <input type="checkbox" checked={isChecked} disabled={!pending.has(item.id)}
+                    aria-label={`Descubrir ${progressionName(item)}`}
+                    onChange={() => update(toggleItem('weaponProgression', item.id, draft, eligible))} />
+                  <span>
+                    {progressionName(item)} <small className="skin-index">{item.id}</small>
+                    <small className="detail-note">
+                      Actual: {item.discovered ? amountFormat.format(item.count ?? 0) : 'sin registrar'}
+                      {' → '}Propuesto: {amountFormat.format(isChecked ? item.proposed_count : item.count ?? item.proposed_count)}
+                    </small>
+                  </span>
+                  <small className={`unlock-status${item.forge_ready ? ' complete' : ''}`}>
+                    {item.forge_ready && <CircleCheck size={14} aria-hidden="true" />}
+                    {forgeLabel(item)}{item.in_forge_queue ? ' · en cola' : ''}
+                  </small>
+                </label>
+              })}
+            </div>
+          </AccordionGroup>
+        })}
+      </div>}
+      {!groups.length && <p className="detail-note">Sin resultados con este filtro.</p>}
+      <details className="review-fields">
+        <summary>Detalles técnicos</summary>
+        <p className="detail-note">
+          {amountFormat.format(snapshot?.forgeable_total ?? 0)} armas forjables en el catálogo · {' '}
+          {amountFormat.format(snapshot?.unknown_counter_count ?? 0)} contadores ajenos o desconocidos preservados.
+          {snapshot?.unknown_weapon_ids?.length
+            ? ` Identificadores de arma no catalogados conservados: ${snapshot.unknown_weapon_ids.join(', ')}.`
+            : ''}
+        </p>
+        <p className="detail-note">
+          Cola de forja actual (solo lectura): {(snapshot?.forge_queue ?? []).join(', ') || 'vacía'}.
+        </p>
+      </details>
+    </> : <p className="detail-note">La copia no contiene un catálogo legible de armas.</p>}
+  </section>
 }
 
 function skinName(item: LabWeaponSkinItem) {
@@ -109,10 +257,10 @@ export function WeaponSkinsEditor({ save, draft, update }: EditorProps) {
   }
 
   return <div className="detail-editor" data-testid="weapon-skins-editor">
-    <Notice tone="warning">
-      <strong>Experimental (E2).</strong> Añade skins a <code>UnlockedSkins</code> de cada arma. No cambia la skin equipada
-      ni el nivel del arma. Crear el registro de un arma no la desbloquea: la skin puede requerir tener el arma y necesita
-      validación física en Android.
+    <Notice>
+      <strong>Validado en Android físico (E3).</strong> Añade skins a <code>UnlockedSkins</code> de cada arma. No cambia la
+      skin equipada ni el nivel del arma. Crear el registro de un arma no la desbloquea: el arma base puede seguir
+      bloqueada hasta desbloquear su descubrimiento.
     </Notice>
     <Toolbar save={save} group="weaponSkins" draft={draft} update={update} />
     {items.length ? <>
@@ -200,8 +348,8 @@ export function KillEffectsEditor({ save, draft, update }: EditorProps) {
   }
 
   return <div className="detail-editor" data-testid="kill-effects-editor">
-    <Notice tone="warning">
-      <strong>Experimental (E2).</strong> Añade IDs evidenciados a <code>miscData.unlockedKillEffectIds</code>.
+    <Notice>
+      <strong>Validado en Android físico (E3).</strong> Añade IDs evidenciados a <code>miscData.unlockedKillEffectIds</code>.
       El efecto activo por escena es de solo lectura: su significado todavía no está confirmado.
     </Notice>
     <Toolbar save={save} group="killEffects" draft={draft} update={update} />

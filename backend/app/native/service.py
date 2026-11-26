@@ -35,6 +35,7 @@ from ..cloud.provider import (
     CloudProviderUnavailable,
     CloudSaveMetadata,
 )
+from ..cloud.weapon_progression_editor import read_weapon_progression
 from ..cloud.weapon_skin_editor import read_weapon_skins
 from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError
 from ..save_report import read_save_report
@@ -93,6 +94,10 @@ def _older_than(created_at: str, now: float, seconds: int) -> bool:
 def _customization_summary(payload: bytes) -> dict[str, object]:
     """Resume los catálogos de personalización sin invalidar el resto de la partida."""
     try:
+        weapon_progression: dict[str, object] = read_weapon_progression(payload).summary()
+    except CloudSaveError as exc:
+        weapon_progression = {"available": False, "error": str(exc)}
+    try:
         weapon_skins: dict[str, object] = read_weapon_skins(payload).summary()
     except CloudSaveError as exc:
         weapon_skins = {"available": False, "error": str(exc)}
@@ -101,10 +106,12 @@ def _customization_summary(payload: bytes) -> dict[str, object]:
     except CloudSaveError as exc:
         kill_effects = {"available": False, "error": str(exc)}
     return {
+        "weapon_progression": weapon_progression,
         "weapon_skins": weapon_skins,
         "kill_effects": kill_effects,
-        "weapon_skin_write_policy": "experimental",
-        "kill_effect_write_policy": "experimental",
+        "weapon_progression_write_policy": "experimental",
+        "weapon_skin_write_policy": "confirmed_by_owner",
+        "kill_effect_write_policy": "confirmed_by_owner",
     }
 
 

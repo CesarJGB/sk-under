@@ -669,7 +669,7 @@ test('precarga los importes en ambos modos y solo conserva casillas para accione
   }
   await expect(quick.getByText(/^Actual /)).toHaveCount(0)
   await expect(quick.getByRole('region', { name: 'Desbloqueos' })).toContainText('1/4 desbloqueados')
-  await expect(quick.getByRole('region', { name: 'Desbloqueos' }).getByRole('checkbox')).toHaveCount(7)
+  await expect(quick.getByRole('region', { name: 'Desbloqueos' }).getByRole('checkbox')).toHaveCount(8)
   await expect(quick.getByRole('region', { name: 'Beneficios' }).getByRole('checkbox')).toHaveCount(2)
   await openCategory(page, 'Mascotas')
   await expect(page.getByRole('textbox', { name: 'Cantidad de Bocadillos' })).toHaveValue('10')
@@ -804,7 +804,7 @@ test('distingue colecciones completas de datos ausentes o incompatibles', async 
     advanced: { available: false, error: 'Estructura incompatible.' },
   }
   await open(page, { save: unknown, sessionSave: null })
-  await expect(unlocks.getByText('No disponible', { exact: true })).toHaveCount(7)
+  await expect(unlocks.getByText('No disponible', { exact: true })).toHaveCount(8)
   await expect(unlocks.locator('.unlock-status.complete')).toHaveCount(0)
   const quick = page.getByTestId('quick-edit')
   for (const name of ['Gemas', 'Fichas de pesca', 'Recompensas de pesca', 'Monedas de temporada', 'Materiales', 'Semillas', 'Alimento de mascotas', 'Baterías']) {
@@ -1091,7 +1091,7 @@ test('capturas móviles, tableta y escritorio sin desbordamiento', async ({ page
   await page.setViewportSize({ width: 390, height: 844 })
   for (const [category, slug] of [
     ['Recursos', 'recursos'], ['Personajes', 'personajes'], ['Habilidades', 'habilidades'],
-    ['Skins', 'skins'], ['Skins de arma', 'armas'], ['Efectos de eliminación', 'efectos'],
+    ['Skins', 'skins'], ['Armas', 'armas'], ['Efectos de eliminación', 'efectos'],
     ['Mascotas', 'mascotas'], ['Semillas', 'semillas'], ['Temporada', 'temporada'], ['Pase de batalla', 'pase'],
   ]) {
     await openCategory(page, category)
@@ -1324,6 +1324,25 @@ test('integra decoraciones en el borrador global sin controles ficticios', async
 
 const CUSTOMIZATION_SAVE = {
   ...SESSION_SAVE,
+  weapon_progression: {
+    field: 'statisticData.object2ObtainTime',
+    discovered: ['weapon_001'], discovered_count: 1, locked_count: 2, total_weapons: 3,
+    forgeable_total: 2, forge_ready: ['weapon_001'], forge_ready_count: 1,
+    forge_queue: ['weapon_001'], forge_queue_path: 'itemData.forgeWeapons',
+    unknown_weapon_ids: [], unknown_counter_count: 12, discovery_value: 1,
+    forge_policy: 'derived_experimental', evidence: 'E2',
+    items: [
+      { id: 'weapon_001', name_en: 'Iron Sword', name_es: 'Espada de hierro', subcategory: 'Sword',
+        level: 1, forgeable: true, drop_level: 1, discovered: true, count: 3, proposed_count: 3,
+        forge_status: 'ready', forge_ready: true, in_forge_queue: true },
+      { id: 'weapon_002', name_en: 'Steel Sword', name_es: 'Espada de acero', subcategory: 'Sword',
+        level: 2, forgeable: true, drop_level: 2, discovered: false, count: 0, proposed_count: 1,
+        forge_status: 'requires_discovery', forge_ready: false, in_forge_queue: false },
+      { id: 'weapon_003', name_en: 'Training Staff', name_es: 'Bastón de entrenamiento', subcategory: 'Staff',
+        level: 1, forgeable: false, drop_level: -1, discovered: false, count: null, proposed_count: 1,
+        forge_status: 'not_forgeable', forge_ready: false, in_forge_queue: false },
+    ],
+  },
   weapon_skins: {
     field: 'weaponEvolutionData.weapons',
     unlocked: ['weapon_002_s_1'], unlocked_count: 1, locked_count: 2, total_skins: 3,
@@ -1385,15 +1404,57 @@ test('integra skins de arma y efectos de eliminación en la edición rápida', a
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 
+test('integra el descubrimiento de armas en la edición rápida', async ({ page }) => {
+  const plans: Array<Record<string, unknown>> = []
+  await open(page, { save: CUSTOMIZATION_SAVE, width: 320 })
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => {
+    const plan = route.request().postDataJSON()
+    plans.push(plan)
+    return route.fulfill({ json: prepared(plan, [['weapon_progression', 'Descubrimiento de armas', 2]]) })
+  })
+  const quick = page.getByTestId('quick-edit')
+  await expect(quick).toContainText('1/3 desbloqueados')
+  await page.getByLabel('Activar Todas las armas pendientes').check()
+  await expect(page.getByTestId('editor-bar')).toContainText('2 cambios')
+  await page.getByTestId('editor-bar').getByRole('button', { name: 'Guardar', exact: true }).click()
+  await expect(page.getByTestId('unified-preview')).toBeVisible()
+  expect(plans).toHaveLength(1)
+  expect(plans[0].weapon_progression).toEqual(['weapon_002', 'weapon_003'])
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('detalla descubrimiento, forja y skins dentro de la categoría Armas', async ({ page }) => {
+  await open(page, { save: CUSTOMIZATION_SAVE, width: 320 })
+  await openCategory(page, 'Armas')
+  const progression = page.getByTestId('weapon-progression-editor')
+  await expect(progression).toContainText('1 de 3 armas descubiertas')
+  await expect(progression).toContainText('Experimental (E2)')
+  const group = page.getByTestId('weapon-progression-group-Sword')
+  await expect(group).toContainText('1/2 descubiertas')
+  await group.getByRole('button').click()
+  await expect(page.getByLabel('Descubrir Espada de acero')).toBeEnabled()
+  await expect(progression).toContainText('Forja requiere descubrir')
+  await progression.getByLabel('Filtrar estado').selectOption('all')
+  await expect(page.getByLabel('Descubrir Espada de hierro')).toBeDisabled()
+  await page.getByLabel('Descubrir Espada de acero').check()
+  await expect(page.getByTestId('editor-bar')).toContainText('1 cambio')
+  await expect(progression).toContainText('Actual: sin registrar → Propuesto: 1')
+  await page.getByRole('searchbox', { name: 'Buscar armas' }).fill('Bastón')
+  await expect(page.getByTestId('weapon-progression-group-Staff')).toContainText('No forjable')
+  await expect(page.getByTestId('weapon-skins-editor')).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
 test('detalla skins por arma y efectos con estado activo de solo lectura', async ({ page }) => {
   await open(page, { save: CUSTOMIZATION_SAVE, width: 320 })
-  await openCategory(page, 'Skins de arma')
+  await openCategory(page, 'Armas')
   const group = page.getByTestId('weapon-skin-group-weapon_006')
   await expect(group).toContainText('0/2')
   await group.getByRole('button').click()
   await page.getByLabel('Emberwrath de Cañón Fragmentario').check()
   await expect(page.getByTestId('editor-bar')).toContainText('1 cambio')
-  await page.getByLabel('Filtrar estado').selectOption('all')
+  const skins = page.getByTestId('weapon-skins-editor')
+  await skins.getByLabel('Filtrar estado').selectOption('all')
   await page.getByRole('searchbox', { name: 'Buscar skins de arma' }).fill('Husky')
   await expect(page.getByTestId('weapon-skin-group-weapon_002')).toContainText('Husky')
   await expect(page.getByLabel('Husky de AK-47')).toBeDisabled()
@@ -1414,7 +1475,7 @@ test('capturas de skins de arma y efectos en móvil, tableta y escritorio', asyn
   await open(page, { save: CUSTOMIZATION_SAVE, width: 320 })
   for (const width of [320, 390, 768, 1280]) {
     await page.setViewportSize({ width, height: 900 })
-    await openCategory(page, 'Skins de arma')
+    await openCategory(page, 'Armas')
     await page.getByTestId('weapon-skin-group-weapon_006').getByRole('button').click()
     await expect(page.getByLabel('Emberwrath de Cañón Fragmentario')).toBeEnabled()
     await page.waitForTimeout(350)

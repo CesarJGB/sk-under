@@ -20,7 +20,7 @@ export const categories = [
   { id: 'decoraciones', label: 'Decoraciones' },
   { id: 'habilidades', label: 'Habilidades' },
   { id: 'skins', label: 'Skins' },
-  { id: 'armas', label: 'Skins de arma' },
+  { id: 'armas', label: 'Armas' },
   { id: 'efectos', label: 'Efectos de eliminación' },
   { id: 'mascotas', label: 'Mascotas' },
   { id: 'materiales', label: 'Materiales' },
@@ -49,6 +49,7 @@ const unlocks: Array<{ key: BulkKey; label: string; control: string; icon: Lucid
   { key: 'characters', label: 'Personajes', control: 'Todos los personajes', icon: UserRound },
   { key: 'skills', label: 'Habilidades', control: 'Todas las habilidades', icon: Zap },
   { key: 'skins', label: 'Skins', control: 'Todas las skins', icon: Shirt },
+  { key: 'weaponProgression', label: 'Descubrimiento de armas', control: 'Todas las armas pendientes', icon: Swords },
   { key: 'weaponSkins', label: 'Skins de arma', control: 'Todas las skins de arma', icon: Swords },
   { key: 'killEffects', label: 'Efectos de eliminación', control: 'Todos los efectos', icon: Sparkles },
   { key: 'pets', label: 'Mascotas', control: 'Todas las mascotas', icon: PawPrint },
@@ -87,7 +88,7 @@ export function UnlockStatus({ save, group, eligible, selected = 0 }: {
   if (!total) return <span className="unlock-status">No disponible</span>
   return <span className={`unlock-status ${pending === 0 ? 'complete' : ''}`}>
     {pending === 0 && <CircleCheck size={13} aria-hidden="true" />}
-    <span>{amountFormat.format(unlocked)}/{amountFormat.format(total)} {group === 'characters' || group === 'killEffects' ? 'desbloqueados' : 'desbloqueadas'}</span>
+    <span>{amountFormat.format(unlocked)}/{amountFormat.format(total)} {group === 'characters' || group === 'killEffects' || group === 'weaponProgression' ? 'desbloqueados' : 'desbloqueadas'}</span>
     {pending === 0 ? <span>· Completo</span> : <span>· {amountFormat.format(pending)} {pending === 1 ? 'pendiente' : 'pendientes'}</span>}
     {selected > 0 && <span className="unlock-selected">· {amountFormat.format(selected)} en borrador</span>}
   </span>
@@ -243,7 +244,7 @@ export function CategoryGrid({ built, onOpen }: { built: BuiltPlan; onOpen: (id:
     decoraciones: counts.Decoraciones ?? 0,
     habilidades: counts.Habilidades ?? 0,
     skins: counts.Skins ?? 0,
-    armas: counts['Skins de arma'] ?? 0,
+    armas: (counts['Descubrimiento de armas'] ?? 0) + (counts['Skins de arma'] ?? 0),
     efectos: counts['Efectos de eliminación'] ?? 0,
     mascotas: (counts.Mascotas ?? 0) + (counts.Afinidad ?? 0) + food,
     materiales: counts.Materiales ?? 0,

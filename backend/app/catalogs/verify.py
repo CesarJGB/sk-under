@@ -19,6 +19,12 @@ from .kill_effects import (
     validate_kill_effect_catalog,
 )
 from .pets import PETS_PATH, PetCatalogError, load_pet_catalog, validate_pet_catalog
+from .weapons import (
+    WEAPONS_PATH,
+    WeaponCatalogError,
+    load_weapon_catalog,
+    validate_weapon_catalog,
+)
 from .weapon_skins import (
     WEAPON_SKINS_PATH,
     WeaponSkinCatalogError,
@@ -37,6 +43,8 @@ def main() -> int:
         validate_pet_catalog(pets)
         blueprints = load_blueprint_catalog()
         validate_blueprint_catalog(blueprints)
+        weapons = load_weapon_catalog()
+        validate_weapon_catalog(weapons)
         weapon_skins = load_weapon_skin_catalog()
         validate_weapon_skin_catalog(weapon_skins)
         kill_effects = load_kill_effect_catalog()
@@ -51,6 +59,9 @@ def main() -> int:
         print(f"ERROR [{exc.code}] {exc}", file=sys.stderr)
         return 1
     except BlueprintCatalogError as exc:
+        print(f"ERROR [{exc.code}] {exc}", file=sys.stderr)
+        return 1
+    except WeaponCatalogError as exc:
         print(f"ERROR [{exc.code}] {exc}", file=sys.stderr)
         return 1
     except WeaponSkinCatalogError as exc:
@@ -84,6 +95,12 @@ def main() -> int:
         "Catálogo de planos válido: "
         f"{len(blueprints['blueprint_ids'])} planos "
         f"({blueprints['version']}, {BLUEPRINTS_PATH})."
+    )
+    print(
+        "Catálogo de armas válido: "
+        f"{weapons['counts']['weapons']} armas y "
+        f"{weapons['counts']['forgeable']} forjables "
+        f"({weapons['version']}, {WEAPONS_PATH})."
     )
     print(
         "Catálogo de skins de arma válido: "

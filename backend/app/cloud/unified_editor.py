@@ -61,6 +61,10 @@ from .kill_effect_editor import (
 )
 from .skill_editor import SkillEdit, prepare_skill_unlock_edit
 from .skin_editor import SkinEdit, prepare_skin_unlock_edit
+from .weapon_progression_editor import (
+    WeaponProgressionEdit,
+    prepare_weapon_progression_edit,
+)
 from .weapon_skin_editor import (
     WeaponSkinEdit,
     prepare_weapon_skin_unlock_edit,
@@ -72,6 +76,7 @@ MAX_SKILLS = 105
 MAX_SKINS = 802
 MAX_WEAPON_SKINS = 192
 MAX_KILL_EFFECTS = 9
+MAX_WEAPONS = 995
 
 # Fuente única de las categorías que puede producir el editor unificado. El
 # almacén de respaldos valida con este mismo conjunto las categorías de sus
@@ -84,6 +89,7 @@ UNIFIED_CATEGORY_KEYS = frozenset(
         "characters",
         "skills",
         "skins",
+        "weapon_progression",
         "weapon_skins",
         "kill_effects",
         "advanced",
@@ -101,6 +107,7 @@ UNIFIED_OPTIONAL_DEFAULTS: dict[str, object] = {
     "pet_affinity": None,
     "blueprints": None,
     "decorations": None,
+    "weapon_progression": [],
     "weapon_skins": [],
     "kill_effects": [],
 }
@@ -167,6 +174,27 @@ def _characters(value: object) -> list[str]:
         if code in result:
             raise InvalidUnifiedPlan(f"characters repite el código {code}.")
         result.append(code)
+    return result
+
+
+def _weapons(value: object) -> list[str]:
+    if value is None:
+        return []
+    if not isinstance(value, list) or len(value) > MAX_WEAPONS:
+        raise InvalidUnifiedPlan(
+            "weapon_progression debe ser una lista dentro del máximo admitido."
+        )
+    result: list[str] = []
+    for weapon_id in value:
+        if not isinstance(weapon_id, str) or not weapon_id:
+            raise InvalidUnifiedPlan(
+                "weapon_progression contiene un identificador inválido."
+            )
+        if weapon_id in result:
+            raise InvalidUnifiedPlan(
+                f"weapon_progression repite el arma {weapon_id}."
+            )
+        result.append(weapon_id)
     return result
 
 
@@ -292,6 +320,7 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
         "characters": _characters(raw.get("characters")),
         "skills": _refs(raw.get("skills"), "skills", MAX_SKILLS),
         "skins": _refs(raw.get("skins"), "skins", MAX_SKINS),
+        "weapon_progression": _weapons(raw.get("weapon_progression")),
         "weapon_skins": _weapon_skins(raw.get("weapon_skins")),
         "kill_effects": _kill_effects(raw.get("kill_effects")),
         "advanced": _advanced(raw.get("advanced")),
@@ -312,6 +341,7 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
             plan["characters"],
             plan["skills"],
             plan["skins"],
+            plan["weapon_progression"],
             plan["weapon_skins"],
             plan["kill_effects"],
             plan["advanced"],
@@ -394,6 +424,7 @@ def _category(
         | CharacterEdit
         | SkillEdit
         | SkinEdit
+        | WeaponProgressionEdit
         | WeaponSkinEdit
         | KillEffectEdit
         | AdvancedEdit
@@ -443,6 +474,14 @@ def _category(
             "original": len(edit.original_unlocked),
             "new": len(edit.new_unlocked),
             "newly_unlocked": [ref.as_dict() for ref in edit.newly_unlocked],
+            "kind": "unlock",
+        }
+    elif isinstance(edit, WeaponProgressionEdit):
+        detail = {
+            "original": len(edit.original_discovered),
+            "new": len(edit.new_discovered),
+            "newly_unlocked": list(edit.newly_discovered),
+            "new_forge_ready": list(edit.new_forge_ready),
             "kind": "unlock",
         }
     elif isinstance(edit, WeaponSkinEdit):
@@ -515,6 +554,14 @@ def prepare_unified_edit(source: bytes, raw_plan: Mapping[str, object]) -> Unifi
         apply("skills", "Habilidades", lambda value: prepare_skill_unlock_edit(value, plan["skills"]))
     if plan["skins"]:
         apply("skins", "Skins", lambda value: prepare_skin_unlock_edit(value, plan["skins"]))
+    if plan["weapon_progression"]:
+        apply(
+            "weapon_progression",
+            "Descubrimiento de armas",
+            lambda value: prepare_weapon_progression_edit(
+                value, plan["weapon_progression"]
+            ),
+        )
     if plan["weapon_skins"]:
         apply(
             "weapon_skins",

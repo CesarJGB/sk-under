@@ -25,14 +25,14 @@
     "sources": 21,
     "translations": 8562,
     "versions_analyzed": 3,
-    "open_questions": 583
+    "open_questions": 585
   },
   "artifacts": [
     {
       "path": "knowledge/README.md",
       "kind": "knowledge",
-      "sha256": "43f7335b2a14f4e91011d0477647b3b430eef05ffb9f15b07175b3f14bab0e23",
-      "bytes": 10256,
+      "sha256": "7450e4435d53b28ff73682536bec80186f45fa53af57f4951a49d62008ca3da6",
+      "bytes": 10615,
       "count": null
     },
     {
@@ -255,15 +255,15 @@
     {
       "path": "knowledge/fields/fields.json",
       "kind": "fields",
-      "sha256": "eee44617ba3c10fbd1ea75aecfc3e8c54b7872bc48c22fc9edf7e31d3c6358b8",
-      "bytes": 1229941,
+      "sha256": "11992ed0d53c6f7efb3f0b4bfb7610d4199e5b0db62b6bf41472ba9415e5cc58",
+      "bytes": 1232462,
       "count": 616
     },
     {
       "path": "knowledge/fields/overrides.json",
       "kind": "fields",
-      "sha256": "fc357e1e1809cfca62de11f87847393104e8eb7a1dbf9db6c22397455616f719",
-      "bytes": 65211,
+      "sha256": "6327583b073444abf4233fb58ae1eff20f99209ff0062d0163f970c5163f9a71",
+      "bytes": 68360,
       "count": null
     },
     {
@@ -367,8 +367,8 @@
     {
       "path": "knowledge/sources/phase9-3-observations.md",
       "kind": "sources",
-      "sha256": "b7a60d83bab807fec4565358967ad5026abc12ce234121546ed97b81e6357080",
-      "bytes": 2930,
+      "sha256": "5c3c2f13893bd28cbc70bc75e9cea788729b2beb48dd5c92eb78e200482a510a",
+      "bytes": 3376,
       "count": null
     },
     {
@@ -425,6 +425,13 @@
       "kind": "tools",
       "sha256": "8c4464ead86d600ca7c9f8509c61b1fa8d0a0674636f5b4029775b95bb405105",
       "bytes": 5016,
+      "count": null
+    },
+    {
+      "path": "knowledge/tools/build_backend_weapons.py",
+      "kind": "tools",
+      "sha256": "b3ea1c12a327d08ed30a7e03e47e5244f4d77414715808012352b723821f2340",
+      "bytes": 4855,
       "count": null
     },
     {

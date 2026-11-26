@@ -10,11 +10,12 @@ el borrador global:
 - **Efectos de eliminación**: `miscData.unlockedKillEffectIds` y
   `miscData.equippedKillEffectIdByScene`.
 
-La implementación es **experimental E2**. Se apoya en estructuras observadas en
-muestras autorizadas y en catálogos con procedencia, pero no se ha validado en
-un dispositivo Android físico. No se declara E3 ni E4, no se modifica la skin
-equipada, no se cambia la escena activa y no se afirma que el cliente acepte las
-entradas añadidas.
+La implementación se promovió a **E3** el **2026-11-26** tras la validación del
+propietario en un dispositivo Android físico. Se mantiene sin cambios la lógica
+de mutación que ya funcionaba: solo se añaden skins e IDs evidenciados, no se
+modifica la skin equipada ni la escena activa. La semántica de
+`CurrentSkinIndex` y de las claves de escena sigue sin confirmarse (H), y la
+posesión del arma base es una dependencia independiente.
 
 ## CRDE como referencia técnica
 
@@ -28,6 +29,26 @@ La comparación se limitó a estructura y campos. CRDE no publica el catálogo
 interno de efectos ni la semántica de las escenas; esas mutaciones ocurren en su
 servidor. Por tanto, SK-Under no depende de CRDE para leer, generar catálogos ni
 editar.
+
+## Validación física del propietario
+
+El propietario probó la versión de producción en Android físico y confirmó:
+
+- todas las skins de arma seleccionadas quedaron desbloqueadas y el juego las
+  reconoce;
+- todos los efectos de eliminación seleccionados quedaron desbloqueados y el
+  juego los reconoce;
+- algunas armas base siguen bloqueadas aunque sus skins estén disponibles.
+
+El último punto no invalida la skin: demuestra que la creación del registro
+`weaponEvolutionData.weapons.<arma>` y su lista `UnlockedSkins` no concede la
+posesión del arma base. Esa dependencia se investiga en la fase 9.4 mediante
+`statisticData.object2ObtainTime` y la disponibilidad de forja.
+
+Por tanto, la mutación de skins y efectos asciende a E3 para existencia, tipo,
+semántica de disponibilidad y persistencia observada. `CurrentSkinIndex`, las
+claves de escena, los IDs 9–10 y la relación exacta entre contador de obtención
+y forja permanecen como incógnitas.
 
 ## Muestras comparadas
 
@@ -280,16 +301,19 @@ El propietario debe probar en Android Global con respaldo automático:
 8. **Reversión**: si el cliente rechaza o corrige algo, restaurar el respaldo
    exacto y confirmar que el guardado vuelve al SHA original.
 
-Registrar por prueba: plataforma, versión, si el arma estaba poseída, si la skin
-apareció, si se pudo equipar, si el efecto apareció, escena observada y cualquier
-corrección automática del cliente. Solo entonces se podrá elevar la evidencia.
+**Estado:** validado por el propietario en Android físico el 2026-11-26 para
+skins y efectos. La checklist se conserva como plantilla de regresión para
+futuras versiones. El caso de arma base bloqueada se traslada a la validación de
+progresión de armas de la fase 9.4.
 
 ## Limitaciones
 
 - No se ha demostrado la semántica de `CurrentSkinIndex`.
 - No se ha demostrado la correspondencia de las claves de escena.
-- No se ha comprobado que el cliente acepte skins o efectos añadidos.
-- La creación de un registro de arma no concede el arma.
+- La creación de un registro de arma no concede el arma base; algunas armas
+  siguen bloqueadas tras desbloquear todas sus skins.
+- La relación exacta entre `statisticData.object2ObtainTime`, la colección y la
+  forja se investiga en la fase 9.4 y aún requiere validación física.
 - Los nombres de los efectos 4–8 y la identidad de 9–10 siguen sin resolver.
 - La muestra iOS procede de un editor externo; no se usa para trasplantar
   identidad ni para afirmar compatibilidad de escritura iOS.

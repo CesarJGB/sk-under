@@ -254,7 +254,7 @@
       "id": "statisticData.object2ObtainTime",
       "internal_name": "object2ObtainTime",
       "category": "Estadísticas",
-      "description": "Tiempo de obtención por objeto.",
+      "description": "Mapa de contadores de obtención por objeto. Incluye armas, anillos, enemigos y jefes; no es una marca temporal Unix demostrada.",
       "locations": {
         "local": "statistic*.data:object2ObtainTime",
         "cloud": "statisticData.object2ObtainTime"
@@ -271,16 +271,37 @@
         "type": "objeto ID → entero (armas, enemigos y jefes)",
         "resolved": false
       },
-      "observed_values": null,
-      "known_value_semantics": [],
+      "observed_values": {
+        "observed_in_versions": [
+          "8.6.0",
+          "Android 8.8.0",
+          "iOS 8.8.1 vía editor externo"
+        ],
+        "sanitized_observations": [
+          "La cuenta Android nueva contiene 995 contadores de armas catalogadas; 993 valen 0, uno vale 1 y otro 2.",
+          "La cuenta Android avanzada antigua contiene 1029 claves de arma o anillo, todas con 9999.",
+          "La cuenta iOS avanzada contiene 995 contadores de arma no nulos, con valores variados.",
+          "La cuenta Android avanzada de la muestra A contiene solo 478 claves de arma catalogadas y valores dispares.",
+          "El mapa también contiene claves de enemigos y jefes no incluidas en el catálogo de armas."
+        ]
+      },
+      "known_value_semantics": [
+        "Un valor mayor que cero se interpreta como obtención o descubrimiento registrado del objeto.",
+        "El valor 1 es el mínimo positivo observado y suficiente para el editor experimental; no se interpreta como cantidad de objetos.",
+        "IsWeaponForgeUnlockByObtainTimes y ObtainWeaponTimes de la metadata apuntan a este mapa como dependencia de descubrimiento y forja, pero la regla exacta del cliente sigue sin confirmar."
+      ],
       "initial_values": null,
       "limits": {
-        "type": "objeto ID → entero (armas, enemigos y jefes)",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "type": "objeto JSON id -> entero no negativo",
+        "observed": "Claves de armas, anillos, enemigos y jefes; valores 0..9999 en muestras propias.",
+        "functional": "No se conoce el máximo lógico ni si todos los objetos comparten la misma semántica."
       },
-      "related_ids": [],
-      "associated_catalog": null,
+      "related_ids": [
+        "knowledge.catalogs.weapons",
+        "itemData.forgeWeapons",
+        "statisticData.handbookWeaponCollectionTrackedLevels"
+      ],
+      "associated_catalog": "weapons",
       "sources": [
         "discord",
         "docs/research/phase5-5/metadata-880-inventory.json",
@@ -294,22 +315,35 @@
       ],
       "known_dependencies": [],
       "pending_dependencies": [
-        "correlación aislada con acción del cliente"
+        "itemData.forgeWeapons (cola transitoria, solo lectura)",
+        "statisticData.handbookWeaponCollectionTrackedLevels (seguimiento de colección)",
+        "itemData.mythicWeapons (propiedad mítica independiente)",
+        "itemData.blueprints (propiedad e investigación de planos)"
       ],
       "preserve": [],
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "H",
+        "semantics": "E2",
         "version_compatibility": "E2",
-        "relations": "H",
+        "relations": "E2",
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
-      "open_questions": [],
-      "experiments_required": [],
+      "edit_policy": "experimental E2: solo eleva a 1 un contador ausente o en 0 para armas seleccionadas del catálogo; nunca reduce valores ni escribe máximos.",
+      "constraints": [
+        "Conservar todas las claves desconocidas, incluidas enemigos, jefes y anillos.",
+        "No escribir itemData.forgeWeapons como si fuera un desbloqueo permanente.",
+        "No asumir que un contador positivo concede por sí solo la posesión mítica, el plano o la evolución del arma."
+      ],
+      "open_questions": [
+        "Confirmar en dispositivo si un contador en 1 habilita el arma en la colección, la forja y el selector de equipamiento.",
+        "Determinar si el cliente exige un valor mínimo superior para armas concretas."
+      ],
+      "experiments_required": [
+        "Desbloquear una única arma con contador ausente, subir, reiniciar y comprobar colección, forja y equipamiento.",
+        "Repetir con varias armas y verificar que no cambian contadores ajenos."
+      ],
       "registry_tier": "legacy",
       "legacy_record": {
         "internal_name": "object2ObtainTime",
@@ -808,7 +842,7 @@
       "id": "weaponEvolutionData.weapons._.UnlockedSkins",
       "internal_name": "UnlockedSkins",
       "category": "Evolución de armas",
-      "description": "Lista de identificadores de skin de arma registrados para un arma. El editor experimental añade identificadores evidenciados sin modificar los existentes.",
+      "description": "Lista de identificadores de skin de arma registrados para un arma. El editor validado añade identificadores evidenciados sin modificar los existentes.",
       "locations": {
         "local": "weapon_evolution_data*.data:weapons.{id}.UnlockedSkins",
         "cloud_candidate": "weaponEvolutionData.weapons.{id}.UnlockedSkins"
@@ -838,7 +872,7 @@
       },
       "known_value_semantics": [
         "Cada cadena coincide con un identificador weapon_XXX_s_N del catálogo.",
-        "La presencia en la lista se interpreta como disponibilidad desbloqueada, pero la aceptación del cliente no se ha validado en Android físico."
+        "La presencia en la lista se interpreta como disponibilidad desbloqueada; el propietario confirmó en Android físico que las skins añadidas son reconocidas por el juego."
       ],
       "initial_values": null,
       "limits": {
@@ -866,26 +900,25 @@
       ],
       "preserve": [],
       "evidence": {
-        "existence": "E2",
-        "data_type": "E2",
-        "semantics": "H",
+        "existence": "E3",
+        "data_type": "E3",
+        "semantics": "E3",
         "version_compatibility": "E2",
-        "relations": "E2",
-        "persistence": "H"
+        "relations": "E3",
+        "persistence": "E3"
       },
       "validation_level": "E2",
-      "edit_policy": "experimental E2: añade solo identificadores del catálogo, conserva el orden y los identificadores desconocidos, y no modifica CurrentSkinIndex ni Level.",
+      "edit_policy": "confirmed_by_owner E3: añade solo identificadores del catálogo, conserva el orden y los identificadores desconocidos, y no modifica CurrentSkinIndex ni Level.",
       "constraints": [
         "No crear un registro de arma implica posesión del arma.",
         "La creación de registros ausentes está observada en muestras, pero su efecto funcional no está confirmado."
       ],
       "open_questions": [
-        "Confirmar si el cliente muestra y permite equipar las skins añadidas.",
-        "Determinar si el arma debe existir previamente en itemData o en otro registro de obtención."
+        "Determinar si el arma debe existir previamente en itemData u otro registro de obtención para poder equipar la skin.",
+        "Confirmar si la creación de un registro sin evolución previa se conserva en todas las versiones Android."
       ],
       "experiments_required": [
-        "Desbloquear una skin en una cuenta con el arma disponible, subir, reiniciar el cliente y comprobar disponibilidad y equipamiento.",
-        "Repetir con una skin de un arma sin registro weaponEvolutionData y comprobar si el juego crea o rechaza el registro."
+        "Repetir la validación física con un arma cuyo descubrimiento se haya desbloqueado en la misma operación."
       ],
       "registry_tier": "legacy",
       "legacy_record": {
@@ -19805,7 +19838,7 @@
       "id": "miscData.unlockedKillEffectIds",
       "internal_name": "unlockedKillEffectIds",
       "category": "Datos varios",
-      "description": "Identificadores numéricos de efectos de eliminación registrados como disponibles. El editor experimental solo añade ID evidenciados.",
+      "description": "Identificadores numéricos de efectos de eliminación registrados como disponibles. El editor validado solo añade ID evidenciados.",
       "locations": {
         "cloud": "miscData.unlockedKillEffectIds"
       },
@@ -19834,7 +19867,7 @@
       },
       "known_value_semantics": [
         "Cada entero se resuelve contra el catálogo kill_effects.",
-        "La presencia se interpreta como efecto disponible, sin confirmar la aceptación del cliente."
+        "La presencia se interpreta como efecto disponible; el propietario confirmó en Android físico que los efectos añadidos son reconocidos por el juego."
       ],
       "initial_values": null,
       "limits": {
@@ -19857,27 +19890,26 @@
       "pending_dependencies": [],
       "preserve": [],
       "evidence": {
-        "existence": "E2",
-        "data_type": "E2",
-        "semantics": "H",
+        "existence": "E3",
+        "data_type": "E3",
+        "semantics": "E3",
         "version_compatibility": "E2",
-        "relations": "E2",
-        "persistence": "H"
+        "relations": "E3",
+        "persistence": "E3"
       },
       "validation_level": "E2",
-      "edit_policy": "experimental E2: añade solo ID 0-8 del catálogo, conserva el orden y los ID desconocidos, y no modifica la selección activa.",
+      "edit_policy": "confirmed_by_owner E3: añade solo ID 0-8 del catálogo, conserva el orden y los ID desconocidos, y no modifica la selección activa.",
       "constraints": [
         "No eliminar ID desconocidos 9 o 10.",
         "No modificar equippedKillEffectIdByScene en la misma operación.",
         "La lista no distingue compras, recibos ni derechos de servidor."
       ],
       "open_questions": [
-        "Confirmar si el cliente muestra los efectos añadidos y si exige el objeto de tienda correspondiente.",
+        "Determinar si el cliente exige el objeto de tienda además del ID desbloqueado.",
         "Determinar el significado de los ID 9 y 10 observados en 8.6.0."
       ],
       "experiments_required": [
-        "Añadir un efecto evidenciado, subir, reiniciar el cliente y comprobar su aparición en el selector.",
-        "Repetir la prueba sin el objeto customization_kill_effect_N en itemData.commodities."
+        "Repetir la validación física sin el objeto customization_kill_effect_N en itemData.commodities."
       ],
       "registry_tier": "declared",
       "legacy_record": null

@@ -1,4 +1,4 @@
-"""Editor experimental de efectos de eliminación.
+"""Editor de efectos de eliminación.
 
 La partida guarda dos campos independientes dentro de ``miscData``:
 
@@ -12,8 +12,9 @@ La partida guarda dos campos independientes dentro de ``miscData``:
 Si ``miscData`` o ``unlockedKillEffectIds`` no existen, se tratan como un
 inventario vacío y la edición crea únicamente el campo mínimo evidenciado. El
 resto de claves de ``miscData``, incluidas las escenas equipadas, se conserva
-intacto. Es E2 experimental hasta que el propietario lo valide en un dispositivo
-físico.
+intacto. El propietario validó el 2026-11-26 en Android físico que los efectos
+añadidos son reconocidos por el juego; la mutación conserva la lógica E2 original
+y se documenta como E3. La semántica de las escenas sigue sin confirmarse.
 """
 
 from __future__ import annotations
@@ -277,7 +278,7 @@ class KillEffectSnapshot:
             "serialzed_version": self.serialzed_version,
             "equip_policy": "read_only_unconfirmed",
             "scene_semantics": "unconfirmed",
-            "evidence": "E2",
+            "evidence": "E3",
         }
 
 
@@ -321,7 +322,7 @@ class KillEffectEdit:
             "serialzed_version": self.serialzed_version,
             "binary": self.binary.as_dict(),
             "changed_fields": list(self.changed_fields),
-            "evidence": "E2",
+            "evidence": "E3",
         }
 
 

@@ -57,11 +57,17 @@ juego.
 
 ## Evidencia
 
-- Existencia y tipo de las rutas: **E2** en muestras propias.
-- Relación con los catálogos: **E2** observada.
-- Semántica de `CurrentSkinIndex`, de las claves de escena y aceptación del
-  cliente: **H**.
-- Persistencia tras subida y reinicio: **H** hasta la prueba física.
+- Existencia, tipo y relación con los catálogos: **E3** tras la validación
+  física del propietario.
+- Disponibilidad de skins y efectos añadidos: **E3**. El propietario confirmó en
+  Android físico el 2026-11-26 que el juego reconoce ambos catálogos.
+- Persistencia de las entradas añadidas tras subida y reinicio: **E3** dentro del
+  alcance probado.
+- Semántica de `CurrentSkinIndex` y de las claves de escena: **H**.
+- Posesión del arma base: **H**. Algunas armas siguen bloqueadas aunque sus
+  skins estén disponibles; se investiga en la fase 9.4.
+- Identidad de los efectos 9–10: **H**.
 
-No se elevan niveles por la presencia en catálogos ni por la comparación con
-iOS.
+La promoción no se basa solo en la presencia en catálogos: requiere la
+confirmación del cliente en dispositivo físico. La semántica de selección
+equipada no se eleva junto con la disponibilidad.

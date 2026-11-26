@@ -203,6 +203,11 @@ def test_login_save_includes_customization_catalogs_with_empty_inventory(tmp_pat
     response = login(env["client"])
     assert response.status_code == 200, response.text
     save = response.json()["save"]
+    assert save["weapon_progression"]["total_weapons"] == 995
+    assert len(save["weapon_progression"]["items"]) == 995
+    assert save["weapon_progression"]["discovered"] == []
+    assert save["weapon_progression"]["forge_ready_count"] == 0
+    assert save["weapon_progression"]["field"] == "statisticData.object2ObtainTime"
     assert save["weapon_skins"]["total_skins"] == 192
     assert len(save["weapon_skins"]["items"]) == 192
     assert save["weapon_skins"]["unlocked"] == []
@@ -212,8 +217,9 @@ def test_login_save_includes_customization_catalogs_with_empty_inventory(tmp_pat
     assert len(save["kill_effects"]["items"]) == 9
     assert save["kill_effects"]["unlocked"] == []
     assert save["kill_effects"]["field"] == "miscData.unlockedKillEffectIds"
-    assert save["weapon_skin_write_policy"] == "experimental"
-    assert save["kill_effect_write_policy"] == "experimental"
+    assert save["weapon_progression_write_policy"] == "experimental"
+    assert save["weapon_skin_write_policy"] == "confirmed_by_owner"
+    assert save["kill_effect_write_policy"] == "confirmed_by_owner"
     assert save["report"]["characters"]["counts"]["characters"] == 42
 
 
@@ -225,6 +231,8 @@ def test_completed_installation_returns_customization_catalogs(tmp_path):
     )
     assert completed.status_code == 200, completed.text
     save = completed.json()["save"]
+    assert len(save["weapon_progression"]["items"]) == 995
+    assert save["weapon_progression"]["discovered"] == []
     assert len(save["weapon_skins"]["items"]) == 192
     assert len(save["kill_effects"]["items"]) == 9
     assert save["kill_effects"]["unlocked"] == []
@@ -1266,6 +1274,7 @@ def test_native_unified_prepare_confirm_uses_one_backup_and_one_upload(tmp_path)
         json={
             "gems": 1200,
             "characters": ["Ranger"],
+            "weapon_progression": ["weapon_002"],
             "source_sha256": source["sha256"],
         },
     )
@@ -1273,10 +1282,13 @@ def test_native_unified_prepare_confirm_uses_one_backup_and_one_upload(tmp_path)
     draft = response.json()
     assert draft["field"] == "unified"
     assert draft["change_count"] > 0
-    assert [category["key"] for category in draft["categories"]] == ["gems", "characters"]
+    assert [category["key"] for category in draft["categories"]] == [
+        "gems", "characters", "weapon_progression",
+    ]
     assert draft["backup"]["field"] == "unified"
     assert draft["backup"]["unified_plan"]["gems"] == 1200
     assert draft["backup"]["unified_plan"]["characters"] == ["Ranger"]
+    assert draft["backup"]["unified_plan"]["weapon_progression"] == ["weapon_002"]
     assert len(client.get(API + "/backups", headers=HEADERS).json()["backups"]) == 1
 
     confirmed = client.post(API + "/confirm", headers=HEADERS, json=confirmation(draft))
@@ -1291,6 +1303,7 @@ def test_native_unified_prepare_confirm_uses_one_backup_and_one_upload(tmp_path)
     assert uploaded["gameData"]["heroUnlock"]["Ranger"] is True
     assert uploaded["gameData"]["heroUnlock"]["Mage"] is False
     assert uploaded["gameData"]["heroLevel"]["Knight"] == 2
+    assert uploaded["statisticData"]["object2ObtainTime"]["weapon_002"] == 1
 
     duplicate = client.post(API + "/confirm", headers=HEADERS, json=confirmation(draft))
     assert_error(duplicate, 409, "cloud_already_confirmed")

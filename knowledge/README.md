@@ -21,8 +21,9 @@ aparezca en un catálogo no significa que una cuenta lo tenga desbloqueado.
 - La maximización de niveles de personaje está confirmada E3 por el propietario en Android físico (fase 9.1); no se generaliza a otras categorías.
 - La fase 9.1 añade observaciones propias E2 sobre afinidad inicial de mascotas, codificación textual/entera de planos y desbloqueo de objetos del vestíbulo.
 - La fase 9.2 confirma la escala entera de planos (1=Got, 2=Researched), documenta las banderas `room_unlock_*` como disponibilidad funcional del vestíbulo y actualiza los máximos observados (nivel de personaje 8, `Chest` 5, mascota 57 con 240).
-- La fase 9.3 añade catálogos independientes de skins de arma y efectos de eliminación, y editores experimentales E2 que solo añaden disponibilidad: no modifican la skin equipada ni la escena activa. La semántica de `CurrentSkinIndex` y de las claves de escena sigue siendo hipótesis.
-- Políticas experimentales E2 para pase de batalla, desbloqueo de mascotas, variantes de skin, alimento para mascotas, skins de arma y efectos de eliminación.
+- La fase 9.3 añade catálogos independientes de skins de arma y efectos de eliminación. Sus editores solo añaden disponibilidad y no modifican la skin equipada ni la escena activa. El propietario validó ambos en Android físico el 2026-11-26: **E3** para disponibilidad y persistencia en el alcance probado; la semántica de `CurrentSkinIndex` y de las claves de escena sigue siendo hipótesis.
+- La fase 9.4 añade un editor experimental E2 de descubrimiento y forja de armas basado en `statisticData.object2ObtainTime`; solo eleva contadores ausentes o en cero a 1 y no escribe la cola de forja como desbloqueo. Está pendiente de validación física.
+- Políticas experimentales E2 para pase de batalla, desbloqueo de mascotas, variantes de skin, alimento para mascotas y descubrimiento/forja de armas.
 - Herramientas CLI sin autenticación, sin red y sin acceso a guardados reales.
 
 Las cifras actualizadas se regeneran en [reports/coverage.md](reports/coverage.md).

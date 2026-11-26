@@ -1,4 +1,4 @@
-"""Editor experimental de skins cosméticas de arma.
+"""Editor de skins cosméticas de arma.
 
 La evidencia real sitúa el estado cosmético en
 ``weaponEvolutionData.weapons.<arma>`` con cuatro campos observados:
@@ -15,7 +15,10 @@ caso el editor crea el mapa y el registro mínimo observado (``Level`` 0,
 también puede omitir ``UnlockedSkins``; se trata como lista vacía y se crea al
 añadir la primera skin. Crear el registro **no acredita poseer el arma**; la
 disponibilidad final depende de ``itemData.forgeWeapons`` y debe validarse en el
-cliente. Toda la función es E2 experimental.
+cliente. El propietario validó el 2026-11-26 en Android físico que las skins
+añadidas aparecen y son reconocidas por el juego; la mutación conserva la lógica
+E2 original y se documenta como E3. La correspondencia de ``CurrentSkinIndex`` y
+la posesión del arma base siguen sin confirmarse.
 """
 
 from __future__ import annotations
@@ -266,7 +269,7 @@ class WeaponSkinSnapshot:
             "sha256": self.sha256,
             "serialzed_version": self.serialzed_version,
             "equip_policy": "read_only_unconfirmed",
-            "evidence": "E2",
+            "evidence": "E3",
         }
 
 
@@ -314,7 +317,7 @@ class WeaponSkinEdit:
             "serialzed_version": self.serialzed_version,
             "binary": self.binary.as_dict(),
             "changed_fields": list(self.changed_fields),
-            "evidence": "E2",
+            "evidence": "E3",
         }
 
 

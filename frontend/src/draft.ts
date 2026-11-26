@@ -5,7 +5,7 @@ import type {
 import { pendingCharacterCodes, pendingSkillKeys, pendingSkinKeys, skillKey, skinKey } from './unlockSelections'
 
 export type BulkKey =
-  | 'characters' | 'skills' | 'skins' | 'weaponSkins' | 'killEffects'
+  | 'characters' | 'skills' | 'skins' | 'weaponProgression' | 'weaponSkins' | 'killEffects'
   | 'pets' | 'petSkins'
   | 'heroLevels' | 'petAffinity' | 'blueprints' | 'blueprintObtain'
   | 'decorations' | 'decorationLevels'
@@ -19,6 +19,7 @@ export type Draft = {
     characters: Record<string, true>
     skills: Record<string, true>
     skins: Record<string, true>
+    weaponProgression: Record<string, true>
     weaponSkins: Record<string, true>
     killEffects: Record<string, true>
     pets: Record<string, true>
@@ -34,6 +35,7 @@ export type Draft = {
     characters: Record<string, true>
     skills: Record<string, true>
     skins: Record<string, true>
+    weaponProgression: Record<string, true>
     weaponSkins: Record<string, true>
     killEffects: Record<string, true>
     pets: Record<string, true>
@@ -115,19 +117,19 @@ function emptySet(): Record<string, true> {
 export function createEmptyDraft(): Draft {
   return {
     bulk: {
-      characters: false, skills: false, skins: false, weaponSkins: false, killEffects: false,
+      characters: false, skills: false, skins: false, weaponProgression: false, weaponSkins: false, killEffects: false,
       pets: false, petSkins: false,
       heroLevels: false, petAffinity: false, blueprints: false, blueprintObtain: false,
       decorations: false, decorationLevels: false,
     },
     manual: {
-      characters: emptySet(), skills: emptySet(), skins: emptySet(), weaponSkins: emptySet(),
+      characters: emptySet(), skills: emptySet(), skins: emptySet(), weaponProgression: emptySet(), weaponSkins: emptySet(),
       killEffects: emptySet(), pets: emptySet(), petSkins: emptySet(),
       heroLevels: emptySet(), petAffinity: emptySet(), blueprints: emptySet(),
       blueprintObtain: emptySet(), decorations: emptySet(), decorationLevels: emptySet(),
     },
     excluded: {
-      characters: emptySet(), skills: emptySet(), skins: emptySet(), weaponSkins: emptySet(),
+      characters: emptySet(), skills: emptySet(), skins: emptySet(), weaponProgression: emptySet(), weaponSkins: emptySet(),
       killEffects: emptySet(), pets: emptySet(), petSkins: emptySet(),
       heroLevels: emptySet(), petAffinity: emptySet(), blueprints: emptySet(),
       blueprintObtain: emptySet(), decorations: emptySet(), decorationLevels: emptySet(),
@@ -206,6 +208,12 @@ function eligibleSkins(characters: SaveCharacterReport | null | undefined): stri
   return characters ? pendingSkinKeys(characters) : []
 }
 
+function eligibleWeaponProgression(save: NativeSaveSummary | null | undefined): string[] {
+  return (save?.weapon_progression?.items ?? [])
+    .filter((item) => !item.discovered)
+    .map((item) => item.id)
+}
+
 function eligibleWeaponSkins(save: NativeSaveSummary | null | undefined): string[] {
   return (save?.weapon_skins?.items ?? []).filter((item) => !item.unlocked).map((item) => item.id)
 }
@@ -238,6 +246,7 @@ export function eligibility(save: NativeSaveSummary | null): Eligibility {
     characters: eligibleCharacters(characters),
     skills: eligibleSkills(characters),
     skins: eligibleSkins(characters),
+    weaponProgression: eligibleWeaponProgression(save),
     weaponSkins: eligibleWeaponSkins(save),
     killEffects: eligibleKillEffects(save),
     pets: eligiblePets(advanced),
@@ -426,6 +435,10 @@ export function effectiveSkinRefs(draft: Draft, save: NativeSaveSummary): LabSki
   })
 }
 
+export function effectiveWeaponProgression(draft: Draft, save: NativeSaveSummary): string[] {
+  return effectiveUnlockedSet('weaponProgression', draft, eligibility(save))
+}
+
 export function effectiveWeaponSkins(draft: Draft, save: NativeSaveSummary): string[] {
   return effectiveUnlockedSet('weaponSkins', draft, eligibility(save))
 }
@@ -514,6 +527,11 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft, session: N
   if (skins.length > 0) {
     plan.skins = skins
     bump('Skins', skins.length)
+  }
+  const weaponProgression = effectiveWeaponProgression(draft, save)
+  if (weaponProgression.length > 0) {
+    plan.weapon_progression = weaponProgression
+    bump('Descubrimiento de armas', weaponProgression.length)
   }
   const weaponSkins = effectiveWeaponSkins(draft, save)
   if (weaponSkins.length > 0) {
@@ -696,6 +714,8 @@ export function unlockProgress(save: NativeSaveSummary, key: BulkKey, eligible: 
     skins: () => characters.reduce((total, item) => total + item.skin_options.filter(
       (skin) => skin.compatible && skin.state === 'unlocked',
     ).length, 0),
+    weaponProgression: () => save.weapon_progression?.discovered_count
+      ?? (save.weapon_progression?.items ?? []).filter((item) => item.discovered).length,
     weaponSkins: () => save.weapon_skins?.unlocked_count
       ?? (save.weapon_skins?.items ?? []).filter((item) => item.unlocked).length,
     killEffects: () => save.kill_effects?.unlocked_count

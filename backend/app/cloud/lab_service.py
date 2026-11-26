@@ -94,6 +94,7 @@ from .unified_editor import (
     prepare_unified_edit,
     require_unified_write_compatibility,
 )
+from .weapon_progression_editor import read_weapon_progression
 from .weapon_skin_editor import read_weapon_skins
 
 
@@ -163,8 +164,9 @@ class LabStatus:
             "character_write_policy": "confirmed_by_owner",
             "skill_write_policy": "confirmed_by_owner",
             "skin_write_policy": "confirmed_by_owner",
-            "weapon_skin_write_policy": "experimental",
-            "kill_effect_write_policy": "experimental",
+            "weapon_progression_write_policy": "experimental",
+            "weapon_skin_write_policy": "confirmed_by_owner",
+            "kill_effect_write_policy": "confirmed_by_owner",
             "message": self.message,
         }
 
@@ -181,6 +183,7 @@ class LoadedSave:
     material_fish: int | None = None
     cumulative_fish_count: int | None = None
     advanced: dict[str, object] = field(default_factory=dict)
+    weapon_progression: dict[str, object] = field(default_factory=dict)
     weapon_skins: dict[str, object] = field(default_factory=dict)
     kill_effects: dict[str, object] = field(default_factory=dict)
 
@@ -202,13 +205,15 @@ class LoadedSave:
             "character_write_policy": "confirmed_by_owner",
             "skill_write_policy": "confirmed_by_owner",
             "skin_write_policy": "confirmed_by_owner",
-            "weapon_skin_write_policy": "experimental",
-            "kill_effect_write_policy": "experimental",
+            "weapon_progression_write_policy": "experimental",
+            "weapon_skin_write_policy": "confirmed_by_owner",
+            "kill_effect_write_policy": "confirmed_by_owner",
             "size": self.size,
             "sha256": self.sha256,
             "serialzed_version": self.serialzed_version,
             "report": self.report,
             "advanced": self.advanced,
+            "weapon_progression": self.weapon_progression,
             "weapon_skins": self.weapon_skins,
             "kill_effects": self.kill_effects,
         }
@@ -837,6 +842,10 @@ class CloudLabService:
         except CloudSaveError as exc:
             advanced = {"available": False, "error": str(exc)}
         try:
+            weapon_progression = read_weapon_progression(save.payload).summary()
+        except CloudSaveError as exc:
+            weapon_progression = {"available": False, "error": str(exc)}
+        try:
             weapon_skins = read_weapon_skins(save.payload).summary()
         except CloudSaveError as exc:
             weapon_skins = {"available": False, "error": str(exc)}
@@ -851,6 +860,7 @@ class CloudLabService:
             material_fish=material_fish,
             cumulative_fish_count=cumulative_fish_count,
             advanced=advanced,
+            weapon_progression=weapon_progression,
             weapon_skins=weapon_skins,
             kill_effects=kill_effects,
             size=snapshot.size,
