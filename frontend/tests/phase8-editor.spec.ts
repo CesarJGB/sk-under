@@ -154,8 +154,18 @@ async function goToPartida(page: Page) {
 }
 
 async function openCategory(page: Page, name: string) {
+  const back = page.getByRole('button', { name: '← Categorías' })
+  if (await back.count()) await back.click()
   await page.getByRole('tab', { name: 'Categorías' }).click()
   await page.getByRole('button', { name: new RegExp(`^${name}($| Cambios pendientes)`) }).click()
+}
+
+async function goToQuick(page: Page) {
+  const reviewBack = page.getByTestId('unified-preview').getByRole('button', { name: 'Volver' })
+  if (await reviewBack.count()) await reviewBack.click()
+  const back = page.getByRole('button', { name: '← Categorías' })
+  if (await back.count()) await back.click()
+  await page.getByRole('tab', { name: 'Rápida' }).click()
 }
 
 function prepared(plan: Record<string, unknown>, categories: Array<[string, string, number]>) {
@@ -501,11 +511,36 @@ test('la edición rápida es la pantalla inicial y comparte el borrador con cate
   await expect(page.getByTestId('editor-bar')).toContainText('3 cambios')
   await page.getByRole('tab', { name: 'Categorías' }).click()
   await page.getByRole('button', { name: /Personajes/ }).click()
+  await expect(page.getByRole('tab', { name: 'Rápida' })).toHaveCount(0)
+  await expect(page.getByRole('tab', { name: 'Categorías' })).toHaveCount(0)
   await page.getByRole('checkbox', { name: 'Mage' }).uncheck()
   await expect(page.getByTestId('editor-bar')).toContainText('2 cambios')
-  await page.getByRole('tab', { name: 'Rápida' }).click()
+  await goToQuick(page)
   await expect(page.getByTestId('editor-bar')).toContainText('2 cambios')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('los acordeones de skins conservan selección y búsqueda sin expandir todo', async ({ page }) => {
+  await open(page)
+  await openCategory(page, 'Skins')
+  const ranger = page.getByTestId('unlock-group-Ranger')
+  const header = ranger.getByRole('button', { name: /Ranger/ })
+  await expect(header).toHaveAttribute('aria-expanded', 'false')
+  await expect(ranger.getByRole('checkbox')).toHaveCount(0)
+  await header.click()
+  await expect(header).toHaveAttribute('aria-expanded', 'true')
+  await ranger.getByRole('checkbox', { name: 'Ranger Alt' }).check()
+  await expect(page.getByTestId('editor-bar')).toContainText('1 cambio')
+  await header.click()
+  await expect(header).toHaveAttribute('aria-expanded', 'false')
+  await expect(page.getByTestId('editor-bar')).toContainText('1 cambio')
+  const search = page.getByRole('searchbox', { name: 'Buscar desbloqueos' })
+  await search.fill('Alt')
+  await expect(ranger.getByRole('checkbox', { name: 'Ranger Alt' })).toBeVisible()
+  await expect(page.getByTestId('unlock-group-Knight')).toHaveCount(0)
+  await search.clear()
+  await expect(header).toHaveAttribute('aria-expanded', 'false')
+  await expect(page.getByTestId('editor-bar')).toContainText('1 cambio')
 })
 
 test('compone gemas y desbloqueos en un candidato y una sola subida', async ({ page }) => {
@@ -734,7 +769,7 @@ test('solo envía el cero explícito y omite valores restaurados, intactos y vac
   })
   await expect(page.getByTestId('editor-bar')).toContainText('Verificado')
   expect(uploads).toBe(1)
-  await page.getByRole('tab', { name: 'Rápida' }).click()
+  await goToQuick(page)
   const quick = page.getByTestId('quick-edit')
   await expect(quick.getByRole('textbox', { name: 'Gemas', exact: true })).toHaveValue('1001')
   await expect(quick.getByRole('textbox', { name: 'Recompensas de pesca', exact: true })).toHaveValue('0')
@@ -928,7 +963,7 @@ test('reinicializa el borrador y las cantidades al descargar otra partida tras u
   await expect(wood).toHaveValue('7')
   await expect(page.getByLabel('Cantidad mínima', { exact: true })).toHaveValue('7')
   await expect(bar).toContainText('0 cambios')
-  await page.getByRole('tab', { name: 'Rápida' }).click()
+  await goToQuick(page)
   await expect(page.getByRole('textbox', { name: 'Gemas', exact: true })).toHaveValue('90256')
   await expect(page.getByRole('textbox', { name: 'Fichas de pesca', exact: true })).toHaveValue('0')
   await expect(page.getByRole('textbox', { name: 'Materiales', exact: true })).toHaveValue('7')
@@ -1042,7 +1077,7 @@ test('capturas móviles, tableta y escritorio sin desbordamiento', async ({ page
     await minimum.clear()
     await minimum.blur()
     await screenshot(`materiales-${size.width}`)
-    await page.getByRole('tab', { name: 'Rápida' }).click()
+    await goToQuick(page)
     const lastRow = page.getByLabel('Activar Pase de batalla al nivel máximo')
     await expect(lastRow).toBeVisible()
     await expect.poll(async () => {

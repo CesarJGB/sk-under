@@ -154,6 +154,8 @@ function AccountWorkspace({
   onSession: (session: NativeSession) => void
   onExpired: () => void
 }) {
+  const { pathname } = useLocation()
+  const inCategoryDetail = section === 'editor' && pathname.startsWith(`${basePath}/editor/categoria/`)
   const [save, setSave] = useState<NativeSaveSummary | null>(session.save ?? cachedSave(accountId))
   const [saveOutdated, setSaveOutdated] = useState(false)
   const [history, setHistory] = useState<NativeBackupHistory | null>(null)
@@ -399,7 +401,7 @@ function AccountWorkspace({
   </>
 
   return <>
-    <PageTitle title="Editor" />
+    {!inCategoryDetail && <PageTitle title="Editor" />}
     {!save ? <>
       {installationPanel || <section className="cloud-empty panel">
         {downloadFeedback}

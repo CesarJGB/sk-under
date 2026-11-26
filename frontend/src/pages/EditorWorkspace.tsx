@@ -1,6 +1,7 @@
 import { ArrowLeft, CircleAlert, CircleCheck, CloudUpload, LoaderCircle } from 'lucide-react'
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import { useBlocker, useLocation, useNavigate } from 'react-router'
+import { AccordionGroup } from '../AccordionGroup'
 import {
   ApiProblem, nativeAuth,
   type LabAdvanced, type LabUnifiedPrepared, type LabWriteResult, type NativeSaveSummary, type NativeSession,
@@ -60,6 +61,8 @@ function SelectionToolbar({ save, group, eligible, draft, update }: EditorInputs
 function LockList({ save, draft, update, mode }: EditorInputs & { mode: 'characters' | 'skills' | 'skins' }) {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState<'pending' | 'all' | 'done'>('pending')
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set())
+  const expansionSnapshot = useRef<Set<string> | null>(null)
   const characters = save.report?.characters
   const eligible = eligibility(save)
   const pending = new Set(eligible[mode])
@@ -80,8 +83,34 @@ function LockList({ save, draft, update, mode }: EditorInputs & { mode: 'charact
     const visible = options.filter(({ id, name, unlocked }) =>
       (name.toLowerCase().includes(search) || character.name.toLowerCase().includes(search))
       && (filter === 'all' || (filter === 'done' ? unlocked : pending.has(id))))
-    return { character, visible }
+    return { character, options, visible }
   }).filter(({ visible }) => visible.length)
+
+  // Al buscar, los grupos con coincidencias se abren solos. Al limpiar la búsqueda
+  // se recupera la expansión que el usuario tenía antes de empezar a buscar.
+  useEffect(() => {
+    if (search) {
+      if (expansionSnapshot.current === null) expansionSnapshot.current = new Set(expanded)
+      const matches = groups.map(({ character }) => character.code)
+      setExpanded((previous) => {
+        if (matches.every((code) => previous.has(code))) return previous
+        return new Set([...previous, ...matches])
+      })
+    } else if (expansionSnapshot.current !== null) {
+      const restore = expansionSnapshot.current
+      expansionSnapshot.current = null
+      setExpanded(restore)
+    }
+    // `groups` se recalcula con cada consulta; la expansión manual no debe reiniciarse.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, filter])
+
+  const toggleGroup = (code: string) => setExpanded((previous) => {
+    const next = new Set(previous)
+    if (next.has(code)) next.delete(code)
+    else next.add(code)
+    return next
+  })
 
   const optionRow = ({ id, name, unlocked }: { id: string; name: string; unlocked: boolean }) => {
     const checked = selected.has(id)
@@ -109,13 +138,18 @@ function LockList({ save, draft, update, mode }: EditorInputs & { mode: 'charact
       {groups.length > 0 && <div className="lock-groups">
         {mode === 'characters' ? <div className="lock-group lock-options">
           {groups.flatMap(({ visible }) => visible.map(optionRow))}
-        </div> : groups.map(({ character, visible }) => {
+        </div> : groups.map(({ character, options, visible }) => {
           const selectable = visible.filter(({ id }) => pending.has(id))
           const checked = selectable.filter(({ id }) => selected.has(id)).length
-          return <section className="lock-group" key={character.code}>
-            <header>
-              <strong>{character.name}</strong>
-              {selectable.length > 1 && <CheckAll checked={checked === selectable.length}
+          const unlocked = options.filter((option) => option.unlocked).length
+          const chosen = options.filter((option) => selected.has(option.id)).length
+          return <AccordionGroup key={character.code} title={character.name}
+            testId={`unlock-group-${character.code}`}
+            meta={`${options.length} ${mode === 'skins' ? 'skins' : 'habilidades'}`}
+            summary={`${unlocked}/${options.length} desbloqueadas${chosen ? ` · ${chosen} en borrador` : ''}`}
+            expanded={expanded.has(character.code)} onToggle={() => toggleGroup(character.code)}>
+            {selectable.length > 1 && <div className="accordion-tools">
+              <CheckAll checked={checked === selectable.length}
                 indeterminate={checked > 0 && checked < selectable.length}
                 label={`Seleccionar ${character.name}`}
                 onChange={(enabled) => {
@@ -124,10 +158,10 @@ function LockList({ save, draft, update, mode }: EditorInputs & { mode: 'charact
                     if (enabled !== selected.has(id)) next = toggleItem(mode, id, next, eligible)
                   }
                   update(next)
-                }} />}
-            </header>
+                }} />
+            </div>}
             <div className="lock-options">{visible.map(optionRow)}</div>
-          </section>
+          </AccordionGroup>
         })}
       </div>}
       {!groups.length && (query || filter !== 'pending') && <p className="detail-note">Sin resultados</p>}
@@ -421,9 +455,21 @@ export function EditorWorkspace({
     if (!viewport) return
     const root = document.documentElement
     let frame = 0
+    function activeEditable() {
+      const active = document.activeElement
+      return active instanceof HTMLElement
+        && Boolean(active.closest('input:not([type="checkbox"]):not([type="radio"]), textarea, select, [contenteditable="true"]'))
+    }
     function positionBar() {
-      if (!viewport) return
-      const offset = viewport.scale === 1 ? Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop) : 0
+      if (!viewport) return 0
+      // Solo se compensa el teclado virtual. El rebote o el desplazamiento normal
+      // de iOS no debe alterar `bottom` ni despegar la barra del borde inferior.
+      if (viewport.scale !== 1 || !activeEditable()) {
+        root.style.setProperty('--editor-keyboard-offset', '0px')
+        return 0
+      }
+      const covered = window.innerHeight - viewport.height - viewport.offsetTop
+      const offset = covered > 120 ? Math.max(0, covered) : 0
       root.style.setProperty('--editor-keyboard-offset', `${offset}px`)
       return offset
     }
@@ -439,11 +485,15 @@ export function EditorWorkspace({
     }
     positionBar()
     viewport.addEventListener('resize', afterResize)
-    viewport.addEventListener('scroll', positionBar)
+    window.addEventListener('orientationchange', afterResize)
+    document.addEventListener('focusin', afterResize)
+    document.addEventListener('focusout', afterResize)
     return () => {
       cancelAnimationFrame(frame)
       viewport.removeEventListener('resize', afterResize)
-      viewport.removeEventListener('scroll', positionBar)
+      window.removeEventListener('orientationchange', afterResize)
+      document.removeEventListener('focusin', afterResize)
+      document.removeEventListener('focusout', afterResize)
       root.style.removeProperty('--editor-keyboard-offset')
     }
   }, [])
@@ -606,12 +656,12 @@ export function EditorWorkspace({
   }
 
   return <div className="editor-shell">
-    <div className="editor-mode" role="tablist" aria-label="Modo de edición" onKeyDown={tabKeys}>
+    {!activeCategory && <div className="editor-mode" role="tablist" aria-label="Modo de edición" onKeyDown={tabKeys}>
       <button id="editor-quick-tab" type="button" role="tab" aria-controls="editor-panel" aria-selected={showQuick}
         tabIndex={showQuick ? 0 : -1} disabled={busy} onClick={() => go(editorBase)}>Rápida</button>
       <button id="editor-categories-tab" type="button" role="tab" aria-controls="editor-panel" aria-selected={!showQuick}
         tabIndex={showQuick ? -1 : 0} disabled={busy} onClick={() => go(`${editorBase}/categorias`)}>Categorías</button>
-    </div>
+    </div>}
     {!canWrite && <Notice tone="warning">Partida de solo lectura.</Notice>}
     {expiredConflict && <div className="conflict-banner" role="alert">
       La partida cambió en la nube. <button type="button" className="button quiet" disabled={busy} onClick={reload}>Descargar de nuevo</button>
@@ -632,7 +682,8 @@ export function EditorWorkspace({
     {needsRefresh && !busy && <button type="button" className="button quiet editor-reload" onClick={reload}>
       {refreshFailed ? 'Reintentar descarga' : 'Actualizar partida'}
     </button>}
-    <div id="editor-panel" role="tabpanel" aria-labelledby={showQuick ? 'editor-quick-tab' : 'editor-categories-tab'}>
+    <div id="editor-panel" role="tabpanel" aria-label={activeCategory?.label}
+      aria-labelledby={activeCategory ? undefined : showQuick ? 'editor-quick-tab' : 'editor-categories-tab'}>
       {content}
     </div>
     <footer className="editor-bar" ref={bar} data-testid="editor-bar" aria-busy={busy}>
