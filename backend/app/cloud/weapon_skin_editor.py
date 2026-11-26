@@ -9,11 +9,13 @@ La evidencia real sitúa el estado cosmético en
   (incluido el valor 0) todavía no está confirmada, así que es de solo lectura.
 * ``UnlockedSkins``: lista de identificadores ``weapon_XXX_s_N`` poseídos.
 
-Una partida Android 8.8.0 nueva puede tener ``weapons`` vacío. En ese caso el
-editor crea el registro mínimo observado (``Level`` 0, ``CurrentSkinIndex`` 0)
-para poder guardar el desbloqueo. Crear el registro **no acredita poseer el
-arma**; la disponibilidad final depende de ``itemData.forgeWeapons`` y debe
-validarse en el cliente. Toda la función es E2 experimental.
+Una partida Android 8.8.0 nueva puede tener ``weapons`` vacío o ausente. En ese
+caso el editor crea el mapa y el registro mínimo observado (``Level`` 0,
+``CurrentSkinIndex`` 0) para poder guardar el desbloqueo. Un registro existente
+también puede omitir ``UnlockedSkins``; se trata como lista vacía y se crea al
+añadir la primera skin. Crear el registro **no acredita poseer el arma**; la
+disponibilidad final depende de ``itemData.forgeWeapons`` y debe validarse en el
+cliente. Toda la función es E2 experimental.
 """
 
 from __future__ import annotations
@@ -174,8 +176,10 @@ def _evolution(root: JsonObject) -> JsonObject:
     return evolution
 
 
-def _weapons(root: JsonObject) -> dict[str, Any]:
+def _weapons(root: JsonObject, *, allow_missing: bool = False) -> dict[str, Any]:
     evolution = _evolution(root)
+    if allow_missing and "weapons" not in evolution:
+        return {}
     weapons = evolution.get("weapons")
     if not isinstance(weapons, dict):
         raise WeaponSkinStructureMissing(
@@ -189,16 +193,17 @@ def _validated_record(weapon_id: str, record: object) -> dict[str, Any]:
         raise UnsupportedWeaponSkinStructure(
             f"weaponEvolutionData.weapons.{weapon_id} no es un objeto."
         )
-    skins = record.get("UnlockedSkins")
-    if not isinstance(skins, list):
-        raise UnsupportedWeaponSkinStructure(
-            f"weaponEvolutionData.weapons.{weapon_id}.UnlockedSkins no es una lista."
-        )
-    for skin_id in skins:
-        if not isinstance(skin_id, str) or not skin_id or len(skin_id) > MAX_TEXT:
+    if "UnlockedSkins" in record:
+        skins = record["UnlockedSkins"]
+        if not isinstance(skins, list):
             raise UnsupportedWeaponSkinStructure(
-                f"weaponEvolutionData.weapons.{weapon_id}.UnlockedSkins contiene un identificador inválido."
+                f"weaponEvolutionData.weapons.{weapon_id}.UnlockedSkins no es una lista."
             )
+        for skin_id in skins:
+            if not isinstance(skin_id, str) or not skin_id or len(skin_id) > MAX_TEXT:
+                raise UnsupportedWeaponSkinStructure(
+                    f"weaponEvolutionData.weapons.{weapon_id}.UnlockedSkins contiene un identificador inválido."
+                )
     level = record.get("Level")
     if level is not None and (isinstance(level, bool) or not isinstance(level, int)):
         raise UnsupportedWeaponSkinStructure(
@@ -212,8 +217,8 @@ def _validated_record(weapon_id: str, record: object) -> dict[str, Any]:
     return record
 
 
-def _validated_weapons(root: JsonObject) -> dict[str, Any]:
-    weapons = _weapons(root)
+def _validated_weapons(root: JsonObject, *, allow_missing: bool = False) -> dict[str, Any]:
+    weapons = _weapons(root, allow_missing=allow_missing)
     for weapon_id, record in weapons.items():
         if not isinstance(weapon_id, str) or not weapon_id or len(weapon_id) > MAX_TEXT:
             raise UnsupportedWeaponSkinStructure(
@@ -227,7 +232,7 @@ def _unknown_unlocked(weapons: Mapping[str, Any], catalog: WeaponSkinCatalog) ->
     unknown: list[str] = []
     seen: set[str] = set()
     for record in weapons.values():
-        for skin_id in record["UnlockedSkins"]:
+        for skin_id in record.get("UnlockedSkins", ()):
             if skin_id not in catalog.entries and skin_id not in seen:
                 seen.add(skin_id)
                 unknown.append(skin_id)
@@ -316,7 +321,7 @@ class WeaponSkinEdit:
 def read_weapon_skins(source: bytes) -> WeaponSkinSnapshot:
     root, version = _validated_document(source)
     catalog = weapon_skin_catalog()
-    weapons = _validated_weapons(root)
+    weapons = _validated_weapons(root, allow_missing=True)
     unlocked: list[str] = []
     unlocked_set: set[str] = set()
     for skin_id in catalog.ordered:
@@ -324,7 +329,7 @@ def read_weapon_skins(source: bytes) -> WeaponSkinSnapshot:
         record = weapons.get(weapon_id)
         if record is None:
             continue
-        if skin_id in record["UnlockedSkins"]:
+        if skin_id in record.get("UnlockedSkins", ()):
             unlocked.append(skin_id)
             unlocked_set.add(skin_id)
     items: list[dict[str, object]] = []
@@ -377,7 +382,9 @@ def prepare_weapon_skin_unlock_edit(source: bytes, selections: object) -> Weapon
     catalog = weapon_skin_catalog()
     selected = _normalize_selection(catalog, selections)
     root, version = _validated_document(source)
-    weapons = _validated_weapons(root)
+    evolution = _evolution(root)
+    had_weapons = "weapons" in evolution
+    weapons = _validated_weapons(root, allow_missing=True)
     original_sha = sha256(source).hexdigest()
     original_snapshot = read_weapon_skins(source)
     original_unlocked = original_snapshot.unlocked
@@ -413,6 +420,9 @@ def prepare_weapon_skin_unlock_edit(source: bytes, selections: object) -> Weapon
         )
 
     modified = deepcopy(root)
+    modified_evolution = _evolution(modified)
+    if "weapons" not in modified_evolution:
+        modified_evolution["weapons"] = {}
     modified_weapons = _validated_weapons(modified)
     for skin_id in newly_unlocked:
         weapon_id = str(catalog.entries[skin_id]["weapon_id"])
@@ -425,6 +435,8 @@ def prepare_weapon_skin_unlock_edit(source: bytes, selections: object) -> Weapon
                 "UnlockedSkins": [],
             }
             modified_weapons[weapon_id] = record
+        if "UnlockedSkins" not in record:
+            record["UnlockedSkins"] = []
         if skin_id not in record["UnlockedSkins"]:
             record["UnlockedSkins"].append(skin_id)
 
@@ -447,7 +459,11 @@ def prepare_weapon_skin_unlock_edit(source: bytes, selections: object) -> Weapon
         )
     # Restaurar el mapa original completo debe reproducir la copia byte a byte:
     # así se demuestra que no cambió ningún dato ajeno a las skins de arma.
-    reopened["weaponEvolutionData"]["weapons"] = weapons
+    reopened_evolution = _evolution(reopened)
+    if had_weapons:
+        reopened_evolution["weapons"] = evolution["weapons"]
+    else:
+        reopened_evolution.pop("weapons", None)
     if serialize_aggregate(reopened) != source:
         raise WeaponSkinVerificationError(
             "La edición afectó a datos fuera de weaponEvolutionData.weapons."

@@ -26,6 +26,7 @@ from ..cloud.backup_store import BackupIntegrityError, BackupStorageUnavailable,
 from ..cloud.fish_chip_editor import MAX_FISH_CHIP, MIN_FISH_CHIP, read_fish_chip
 from ..cloud.fish_progress_editor import read_fish_progress
 from ..cloud.gems_editor import MAX_GEMS, MIN_GEMS, read_gems
+from ..cloud.kill_effect_editor import read_kill_effects
 from ..cloud.lab_service import CloudLabService
 from ..cloud.provider import (
     AcquiredCloudSave,
@@ -34,6 +35,7 @@ from ..cloud.provider import (
     CloudProviderUnavailable,
     CloudSaveMetadata,
 )
+from ..cloud.weapon_skin_editor import read_weapon_skins
 from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError
 from ..save_report import read_save_report
 from ..settings import Settings
@@ -86,6 +88,24 @@ def _older_than(created_at: str, now: float, seconds: int) -> bool:
     if moment.utcoffset() is None:
         return False
     return now - moment.timestamp() >= seconds
+
+
+def _customization_summary(payload: bytes) -> dict[str, object]:
+    """Resume los catálogos de personalización sin invalidar el resto de la partida."""
+    try:
+        weapon_skins: dict[str, object] = read_weapon_skins(payload).summary()
+    except CloudSaveError as exc:
+        weapon_skins = {"available": False, "error": str(exc)}
+    try:
+        kill_effects: dict[str, object] = read_kill_effects(payload).summary()
+    except CloudSaveError as exc:
+        kill_effects = {"available": False, "error": str(exc)}
+    return {
+        "weapon_skins": weapon_skins,
+        "kill_effects": kill_effects,
+        "weapon_skin_write_policy": "experimental",
+        "kill_effect_write_policy": "experimental",
+    }
 
 
 @dataclass(frozen=True)
@@ -1148,6 +1168,7 @@ class NativeAuthService:
             "advanced": advanced,
             "report": report,
             "remote_source": save.metadata.source,
+            **_customization_summary(save.payload),
         }
 
     def _create_auto_profile(
@@ -1312,6 +1333,7 @@ class NativeAuthService:
             "advanced": advanced,
             "report": report,
             "remote_source": save.metadata.source,
+            **_customization_summary(save.payload),
         }
 
     def _backup_store(self, session: NativeSessionRecord) -> LabBackupStore:

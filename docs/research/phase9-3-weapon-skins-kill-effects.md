@@ -152,9 +152,57 @@ Frontend:
   escenas activas en solo lectura.
 - Advertencia E2 y nota de que crear un registro de arma no concede el arma.
 
+## Corrección 9.3.1
+
+La primera publicación de la fase mostraba ambas categorías como «No
+disponible» en producción. El flujo de `POST /api/v1/cloud/native/login` y de
+`POST /api/v1/cloud/native/installation` construía el resumen de la partida en
+`backend/app/native/service.py` sin `weapon_skins` ni `kill_effects`. El editor
+recibía ese resumen de la sesión, no descargaba otra copia porque ya contenía
+`report`, y ambos componentes caían en el texto de catálogo ilegible. La ruta
+`GET /api/v1/cloud/native/save` sí incluía los catálogos, lo que explicaba que el
+fallo apareciera solo tras iniciar sesión.
+
+La corrección añade un resumen compartido de ambas categorías a las dos rutas de
+sesión (`_candidate_save` y `_verify_save`), con la política experimental
+correspondiente. Si un catálogo falla, solo esa categoría devuelve
+`available: false`; el resto de la partida sigue disponible.
+
+También se ajustó la lectura y preparación para las formas reales observadas:
+
+- `weaponEvolutionData.weapons` puede faltar. Se lee como inventario vacío y la
+  edición crea el mapa solo si se desbloquea una skin.
+- Un registro de arma puede omitir `UnlockedSkins`. Se lee como lista vacía y la
+  edición crea la lista sin modificar `Name`, `Level`, `CurrentSkinIndex` ni
+  campos desconocidos.
+- `miscData` puede faltar por completo (muestra A). Se lee como inventario vacío
+  y la edición crea únicamente `{ "unlockedKillEffectIds": [...] }`.
+- `miscData` puede existir sin `unlockedKillEffectIds`; se conservan el resto de
+  claves y las escenas equipadas.
+
+La verificación de la edición restaura exactamente el estado original de la
+sección afectada y compara la serialización completa. Así se demuestra que no
+cambió ningún campo ajeno, incluso cuando la sección se creó durante la edición.
+No se añadió ninguna escritura remota ni se elevó la evidencia E2.
+
+Archivos corregidos:
+
+- `backend/app/native/service.py`
+- `backend/app/cloud/weapon_skin_editor.py`
+- `backend/app/cloud/kill_effect_editor.py`
+- `backend/tests/test_customization_editors.py`
+- `backend/tests/test_native_api.py`
+
+Las pruebas nuevas reproducen el fallo anterior: con el commit `467027f`
+fallan la lectura sin mapa `weapons`, la lectura sin `miscData` y la respuesta de
+login sin catálogos. Con la corrección pasan. Las muestras privadas A y B
+también se procesaron localmente: A devuelve 192 skins/1 desbloqueada y 9
+efectos/0 desbloqueados; B devuelve 192/2 y 9/2, conservando sus escenas. Un plan
+combinado sobre ambas reabrió correctamente el candidato.
+
 ## Pruebas automatizadas
 
-- Backend: `uv run pytest -q` → **727 pasaron, 16 omitidas**.
+- Backend: `uv run pytest -q` → **735 pasaron, 16 omitidas**.
 - Catálogos: `uv run python -m app.catalogs.verify` → 192 skins/180 armas y 9
   efectos.
 - Frontend: `npm run build` → sin errores de TypeScript.

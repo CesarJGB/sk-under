@@ -9,8 +9,11 @@ La partida guarda dos campos independientes dentro de ``miscData``:
   significado de las escenas y la selección activa no están confirmados, por lo
   que este editor nunca los modifica.
 
-Solo se añaden identificadores ausentes del catálogo evidenciado. Es E2
-experimental hasta que el propietario lo valide en un dispositivo físico.
+Si ``miscData`` o ``unlockedKillEffectIds`` no existen, se tratan como un
+inventario vacío y la edición crea únicamente el campo mínimo evidenciado. El
+resto de claves de ``miscData``, incluidas las escenas equipadas, se conserva
+intacto. Es E2 experimental hasta que el propietario lo valide en un dispositivo
+físico.
 """
 
 from __future__ import annotations
@@ -174,12 +177,23 @@ def _misc(root: JsonObject) -> dict[str, Any]:
     return misc
 
 
-def _unlocked(root: JsonObject) -> list[int]:
-    misc = _misc(root)
-    if "unlockedKillEffectIds" not in misc:
-        raise KillEffectStructureMissing(
-            "La copia no contiene miscData.unlockedKillEffectIds."
-        )
+def _misc_or_none(root: JsonObject) -> dict[str, Any] | None:
+    if MISC_PATH not in root:
+        return None
+    return _misc(root)
+
+
+def _unlocked(root: JsonObject, *, allow_missing: bool = False) -> list[int]:
+    if allow_missing:
+        misc = _misc_or_none(root)
+        if misc is None or "unlockedKillEffectIds" not in misc:
+            return []
+    else:
+        misc = _misc(root)
+        if "unlockedKillEffectIds" not in misc:
+            raise KillEffectStructureMissing(
+                "La copia no contiene miscData.unlockedKillEffectIds."
+            )
     value = misc["unlockedKillEffectIds"]
     if not isinstance(value, list):
         raise UnsupportedKillEffectStructure(
@@ -200,7 +214,9 @@ def _unlocked(root: JsonObject) -> list[int]:
 
 
 def _equipped(root: JsonObject) -> tuple[dict[str, int], ...]:
-    misc = _misc(root)
+    misc = _misc_or_none(root)
+    if misc is None:
+        return ()
     value = misc.get("equippedKillEffectIdByScene")
     if value is None:
         return ()
@@ -312,7 +328,7 @@ class KillEffectEdit:
 def read_kill_effects(source: bytes) -> KillEffectSnapshot:
     root, version = _validated_document(source)
     catalog = kill_effect_catalog()
-    unlocked = _unlocked(root)
+    unlocked = _unlocked(root, allow_missing=True)
     equipped = _equipped(root)
     unlocked_set = set(unlocked)
     items: list[dict[str, object]] = []
@@ -347,7 +363,10 @@ def prepare_kill_effect_unlock_edit(source: bytes, selections: object) -> KillEf
     catalog = kill_effect_catalog()
     selected = _normalize_selection(catalog, selections)
     root, version = _validated_document(source)
-    original = _unlocked(root)
+    misc = _misc_or_none(root)
+    had_misc = misc is not None
+    had_unlocked = had_misc and "unlockedKillEffectIds" in misc
+    original = _unlocked(root, allow_missing=True)
     original_sha = sha256(source).hexdigest()
     original_set = set(original)
     newly_unlocked = tuple(effect_id for effect_id in selected if effect_id not in original_set)
@@ -371,6 +390,11 @@ def prepare_kill_effect_unlock_edit(source: bytes, selections: object) -> KillEf
         )
 
     modified = deepcopy(root)
+    if not had_misc:
+        modified[MISC_PATH] = {}
+    modified_misc = _misc(modified)
+    if "unlockedKillEffectIds" not in modified_misc:
+        modified_misc["unlockedKillEffectIds"] = []
     modified_unlocked = _unlocked(modified)
     for effect_id in newly_unlocked:
         if effect_id not in modified_unlocked:
@@ -400,7 +424,12 @@ def prepare_kill_effect_unlock_edit(source: bytes, selections: object) -> KillEf
         raise KillEffectVerificationError(
             "La edición alteró miscData.equippedKillEffectIdByScene."
         )
-    reopened["miscData"]["unlockedKillEffectIds"] = original
+    if had_misc and had_unlocked:
+        reopened["miscData"]["unlockedKillEffectIds"] = original
+    elif had_misc:
+        reopened["miscData"].pop("unlockedKillEffectIds", None)
+    else:
+        reopened.pop("miscData", None)
     if serialize_aggregate(reopened) != source:
         raise KillEffectVerificationError(
             "La edición afectó a datos fuera de miscData.unlockedKillEffectIds."

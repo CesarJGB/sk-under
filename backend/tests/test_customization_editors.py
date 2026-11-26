@@ -65,6 +65,56 @@ def payload() -> bytes:
     return canonical(document())
 
 
+def advanced_account_document() -> dict:
+    """Forma observada en la cuenta avanzada A: una arma y sin miscData."""
+    data = json.loads(FIXTURE.read_bytes())
+    data["weaponEvolutionData"] = {
+        "blindBoxOpenCount0": 0,
+        "lastOpenMachineHistoryStr0": None,
+        "weapons": {
+            "weapon_311": {
+                "Name": "weapon_311",
+                "Level": 0,
+                "CurrentSkinIndex": 0,
+                "UnlockedSkins": ["weapon_311_s_1"],
+            }
+        },
+    }
+    data.pop("miscData", None)
+    return data
+
+
+def new_account_document() -> dict:
+    """Forma observada en la cuenta nueva B: dos armas y dos efectos."""
+    data = json.loads(FIXTURE.read_bytes())
+    data["weaponEvolutionData"] = {
+        "blindBoxOpenCount0": 0,
+        "favorWeapons": [],
+        "weapons": {
+            "weapon_363": {
+                "Name": "weapon_363",
+                "Level": 0,
+                "CurrentSkinIndex": 0,
+                "UnlockedSkins": ["weapon_363_s_1"],
+            },
+            "weapon_407": {
+                "Name": "weapon_407",
+                "Level": 0,
+                "CurrentSkinIndex": 1,
+                "UnlockedSkins": ["weapon_407_s_1"],
+            },
+        },
+    }
+    data["miscData"] = {
+        "unlockedKillEffectIds": [0, 1],
+        "equippedKillEffectIdByScene": [
+            {"Key": 1, "Value": 1},
+            {"Key": 0, "Value": 1},
+        ],
+    }
+    return data
+
+
 def test_catalogs_have_evidenced_counts():
     assert SKIN_CATALOG["counts"] == {"skins": 192, "weapons": 180}
     assert len(SKIN_CATALOG["ordered_skins"]) == 192
@@ -204,3 +254,133 @@ def test_unified_plan_composes_both_new_categories_and_backup_roundtrips(tmp_pat
     assert loaded.candidate == edit.candidate
     assert loaded.record.unified_plan["weapon_skins"] == ["weapon_002_s_1", "weapon_003_s_1"]
     assert loaded.record.unified_plan["kill_effects"] == [2, 3]
+
+
+def test_weapon_skin_catalog_is_visible_with_empty_inventory():
+    data = json.loads(FIXTURE.read_bytes())
+    data["weaponEvolutionData"] = {
+        "blindBoxOpenCount0": 3,
+        "lastOpenMachineHistoryStr0": None,
+        "weapons": {},
+    }
+    source = canonical(data)
+    snapshot = read_weapon_skins(source)
+    assert snapshot.total == 192
+    assert len(snapshot.items) == 192
+    assert snapshot.unlocked == ()
+    assert snapshot.weapons_with_data == 0
+    assert all(item["unlocked"] is False for item in snapshot.items)
+
+    edit = prepare_weapon_skin_unlock_edit(source, ["weapon_002_s_1"])
+    result = json.loads(edit.candidate)
+    assert result["weaponEvolutionData"]["blindBoxOpenCount0"] == 3
+    assert result["weaponEvolutionData"]["lastOpenMachineHistoryStr0"] is None
+    assert result["weaponEvolutionData"]["weapons"]["weapon_002"] == {
+        "Name": "weapon_002",
+        "Level": 0,
+        "CurrentSkinIndex": 0,
+        "UnlockedSkins": ["weapon_002_s_1"],
+    }
+
+
+def test_weapon_skin_catalog_survives_a_missing_weapons_map():
+    data = json.loads(FIXTURE.read_bytes())
+    data["weaponEvolutionData"] = {"blindBoxOpenCount0": 7, "favorWeapons": ["weapon_311"]}
+    source = canonical(data)
+    snapshot = read_weapon_skins(source)
+    assert snapshot.total == 192 and snapshot.unlocked == ()
+    assert snapshot.weapons_with_data == 0
+
+    edit = prepare_weapon_skin_unlock_edit(source, ["weapon_311_s_1"])
+    result = json.loads(edit.candidate)
+    assert result["weaponEvolutionData"]["blindBoxOpenCount0"] == 7
+    assert result["weaponEvolutionData"]["favorWeapons"] == ["weapon_311"]
+    assert result["weaponEvolutionData"]["weapons"]["weapon_311"]["UnlockedSkins"] == [
+        "weapon_311_s_1"
+    ]
+    require_weapon_skin_write_compatibility(source, ["weapon_311_s_1"], edit.candidate)
+
+
+def test_weapon_skin_existing_record_without_unlocked_list_preserves_metadata():
+    data = json.loads(FIXTURE.read_bytes())
+    data["weaponEvolutionData"] = {
+        "weapons": {
+            "weapon_311": {
+                "Name": "weapon_311",
+                "Level": 5,
+                "CurrentSkinIndex": 0,
+                "Unknown": {"keep": [1, 2]},
+            }
+        }
+    }
+    source = canonical(data)
+    snapshot = read_weapon_skins(source)
+    assert snapshot.total == 192 and snapshot.unlocked == ()
+    assert snapshot.weapons_with_data == 1
+
+    edit = prepare_weapon_skin_unlock_edit(source, ["weapon_311_s_1"])
+    record = json.loads(edit.candidate)["weaponEvolutionData"]["weapons"]["weapon_311"]
+    assert record["Name"] == "weapon_311"
+    assert record["Level"] == 5
+    assert record["CurrentSkinIndex"] == 0
+    assert record["Unknown"] == {"keep": [1, 2]}
+    assert record["UnlockedSkins"] == ["weapon_311_s_1"]
+
+
+def test_kill_effect_catalog_is_visible_without_misc_data():
+    source = canonical(advanced_account_document())
+    snapshot = read_kill_effects(source)
+    assert snapshot.total == 9
+    assert len(snapshot.items) == 9
+    assert snapshot.unlocked == ()
+    assert snapshot.equipped == ()
+    assert all(item["unlocked"] is False for item in snapshot.items)
+
+    edit = prepare_kill_effect_unlock_edit(source, [2, 3])
+    result = json.loads(edit.candidate)
+    assert result["miscData"] == {"unlockedKillEffectIds": [2, 3]}
+    assert result["weaponEvolutionData"]["weapons"]["weapon_311"]["UnlockedSkins"] == [
+        "weapon_311_s_1"
+    ]
+    require_kill_effect_write_compatibility(source, [2, 3], edit.candidate)
+    assert prepare_kill_effect_unlock_edit(edit.candidate, [2, 3]).changed is False
+
+
+def test_kill_effect_missing_list_preserves_equipped_scenes_and_misc_fields():
+    data = json.loads(FIXTURE.read_bytes())
+    data["miscData"] = {
+        "currentReturnCount": 4,
+        "equippedKillEffectIdByScene": [{"Key": 1, "Value": 1}],
+    }
+    source = canonical(data)
+    snapshot = read_kill_effects(source)
+    assert snapshot.total == 9 and snapshot.unlocked == ()
+    assert snapshot.equipped == ({"scene": 1, "effect_id": 1},)
+
+    edit = prepare_kill_effect_unlock_edit(source, [4])
+    misc = json.loads(edit.candidate)["miscData"]
+    assert misc == {
+        "currentReturnCount": 4,
+        "equippedKillEffectIdByScene": [{"Key": 1, "Value": 1}],
+        "unlockedKillEffectIds": [4],
+    }
+
+
+def test_unified_plan_works_on_real_advanced_and_new_account_shapes():
+    advanced = canonical(advanced_account_document())
+    plan = {"weapon_skins": ["weapon_002_s_1"], "kill_effects": [2]}
+    advanced_edit = prepare_unified_edit(advanced, plan)
+    assert advanced_edit.steps == ("weapon_skins", "kill_effects")
+    advanced_result = json.loads(advanced_edit.candidate)
+    assert advanced_result["miscData"] == {"unlockedKillEffectIds": [2]}
+    assert "weapon_002" in advanced_result["weaponEvolutionData"]["weapons"]
+
+    new_account = canonical(new_account_document())
+    new_snapshot = read_weapon_skins(new_account)
+    assert len(new_snapshot.unlocked) == 2
+    assert read_kill_effects(new_account).unlocked == (0, 1)
+    new_edit = prepare_unified_edit(new_account, plan)
+    new_result = json.loads(new_edit.candidate)
+    assert new_result["miscData"]["unlockedKillEffectIds"] == [0, 1, 2]
+    assert new_result["weaponEvolutionData"]["weapons"]["weapon_407"]["CurrentSkinIndex"] == 1
+    assert len(read_weapon_skins(new_edit.candidate).unlocked) == 3

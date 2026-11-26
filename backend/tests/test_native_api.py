@@ -18,6 +18,16 @@ ORIGIN = "http://127.0.0.1:5173"
 FIXTURE = Path(__file__).parent / "fixtures" / "cloud-save-gems.json"
 PAYLOAD_A = FIXTURE.read_bytes()
 PAYLOAD_B = canonical(json.loads(PAYLOAD_A) | {"cloudSaveId": "sintetico-cuenta-beta"})
+
+
+def customization_payload() -> bytes:
+    data = json.loads(PAYLOAD_A)
+    data["weaponEvolutionData"] = {"weapons": {}}
+    data["miscData"] = {"unlockedKillEffectIds": []}
+    return canonical(data)
+
+
+PHASE93_PAYLOAD = customization_payload()
 HEADERS = {"Origin": ORIGIN}
 COOKIE = "sk_native_dev"
 
@@ -56,7 +66,10 @@ class FakeAuth:
         )
 
 
-def make_native(tmp_path, *, write=False, allow_write=True, unique_a="unique-a", attempts=20):
+def make_native(
+    tmp_path, *, write=False, allow_write=True, unique_a="unique-a", attempts=20,
+    payload_a=PAYLOAD_A,
+):
     settings = Settings(
         _env_file=None,
         env="development",
@@ -78,7 +91,7 @@ def make_native(tmp_path, *, write=False, allow_write=True, unique_a="unique-a",
     service = app.state.native_service
     assert service is not None
     auth = FakeAuth()
-    providers = {"unique-a": FakeProvider(PAYLOAD_A), "unique-b": FakeProvider(PAYLOAD_B)}
+    providers = {"unique-a": FakeProvider(payload_a), "unique-b": FakeProvider(PAYLOAD_B)}
     uploaders = {key: FakeUploader(provider) for key, provider in providers.items()}
     service.client = auth
     service.provider_factory = lambda token, unique, distro: providers[unique]
@@ -183,6 +196,38 @@ def test_login_sets_an_isolated_cookie_and_never_echoes_secrets(tmp_path):
     for secret in (b"a@example.test", b"distro-a", b"unique-a", b"token-"):
         assert secret not in raw
     assert env["store"].database.stat().st_mode & 0o777 == 0o600
+
+
+def test_login_save_includes_customization_catalogs_with_empty_inventory(tmp_path):
+    env = make_native(tmp_path, payload_a=PHASE93_PAYLOAD)
+    response = login(env["client"])
+    assert response.status_code == 200, response.text
+    save = response.json()["save"]
+    assert save["weapon_skins"]["total_skins"] == 192
+    assert len(save["weapon_skins"]["items"]) == 192
+    assert save["weapon_skins"]["unlocked"] == []
+    assert save["weapon_skins"]["weapons_with_data"] == 0
+    assert save["weapon_skins"]["field"] == "weaponEvolutionData.weapons"
+    assert save["kill_effects"]["total_effects"] == 9
+    assert len(save["kill_effects"]["items"]) == 9
+    assert save["kill_effects"]["unlocked"] == []
+    assert save["kill_effects"]["field"] == "miscData.unlockedKillEffectIds"
+    assert save["weapon_skin_write_policy"] == "experimental"
+    assert save["kill_effect_write_policy"] == "experimental"
+    assert save["report"]["characters"]["counts"]["characters"] == 42
+
+
+def test_completed_installation_returns_customization_catalogs(tmp_path):
+    env = make_native(tmp_path, unique_a=None, payload_a=PHASE93_PAYLOAD)
+    assert login(env["client"]).status_code == 200
+    completed = env["client"].post(
+        API + "/installation", headers=HEADERS, json={"unique_id": "unique-a"}
+    )
+    assert completed.status_code == 200, completed.text
+    save = completed.json()["save"]
+    assert len(save["weapon_skins"]["items"]) == 192
+    assert len(save["kill_effects"]["items"]) == 9
+    assert save["kill_effects"]["unlocked"] == []
 
 
 def test_cors_allows_the_account_selector_for_reads_and_writes(tmp_path):
