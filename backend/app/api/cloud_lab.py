@@ -8,6 +8,7 @@ navegador: el servidor solo la habilita con variables de entorno.
 
 from __future__ import annotations
 
+import logging
 from hmac import compare_digest
 from typing import Annotated
 
@@ -17,10 +18,16 @@ from fastapi.security import APIKeyHeader
 
 from ..cloud.backup_store import (
     BackupAlreadyConfirmed,
+    BackupCandidateMismatch,
+    BackupCategoryUnsupported,
+    BackupHashMismatch,
+    BackupIncompatible,
     BackupIntegrityError,
     BackupNotFound,
+    BackupPlanIncompatible,
     BackupStorageUnavailable,
     BackupStoreError,
+    BackupUnreadable,
     InvalidBackupId,
 )
 from ..cloud.gems_editor import (
@@ -74,6 +81,8 @@ router = APIRouter(
     dependencies=[Security(editor_bearer)],
 )
 
+logger = logging.getLogger(__name__)
+
 cloud_admin_header = APIKeyHeader(
     name="X-SK-Cloud-Admin",
     scheme_name="CloudAdminToken",
@@ -126,8 +135,40 @@ async def require_cloud_admin(
         )
 
 
+def _backup_diagnostic(exc: CloudSaveError) -> tuple[str, str]:
+    """Clasifica un fallo del almacén sin exponer contenido privado."""
+    if isinstance(exc, BackupCategoryUnsupported):
+        return "warning", "unsupported_category"
+    if isinstance(exc, BackupPlanIncompatible):
+        return "warning", "incompatible_plan"
+    if isinstance(exc, BackupUnreadable):
+        return "error", "decryption_failed"
+    if isinstance(exc, BackupHashMismatch):
+        return "error", "hash_mismatch"
+    if isinstance(exc, BackupCandidateMismatch):
+        return "error", "candidate_not_reproducible"
+    if isinstance(exc, BackupStorageUnavailable):
+        return "error", "storage_unavailable"
+    if isinstance(exc, BackupIncompatible):
+        return "warning", "incompatible_record"
+    if isinstance(exc, BackupNotFound):
+        return "warning", "not_found"
+    if isinstance(exc, BackupIntegrityError):
+        return "error", "integrity_error"
+    if isinstance(exc, (BackupStoreError, OSError)):
+        return "error", "storage_error"
+    return "error", "integrity_error"
+
+
+def _log_backup_failure(exc: CloudSaveError) -> None:
+    level, reason = _backup_diagnostic(exc)
+    # Solo clase y categoría del fallo: nunca credenciales, correo ni la partida.
+    getattr(logger, level)("Backup verification failed: %s (%s)", reason, type(exc).__name__)
+
+
 def _http_error(exc: CloudSaveError) -> EditorError:
     if isinstance(exc, BackupStorageUnavailable):
+        _log_backup_failure(exc)
         return EditorError(503, exc.code, str(exc))
     if isinstance(exc, LabWriteDisabled):
         return EditorError(503, exc.code, "La escritura remota está deshabilitada en el servidor.")
@@ -148,6 +189,7 @@ def _http_error(exc: CloudSaveError) -> EditorError:
     if isinstance(exc, (CloudProviderProtocolError, CloudUploadRejected)):
         return EditorError(502, exc.code, "No se pudo completar la operación con el servicio de nube.")
     if isinstance(exc, (BackupStoreError, BackupIntegrityError)):
+        _log_backup_failure(exc)
         return EditorError(500, exc.code, "El respaldo privado no superó la verificación.")
     if isinstance(exc, (AggregateFormatError, GemsFieldMissing, GemsVerificationError,
                         UnsupportedAggregateSerialization, InvalidGemsValue)):

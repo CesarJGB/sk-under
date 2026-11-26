@@ -63,6 +63,31 @@ MAX_CHARACTERS = 42
 MAX_SKILLS = 105
 MAX_SKINS = 802
 
+# Fuente única de las categorías que puede producir el editor unificado. El
+# almacén de respaldos valida con este mismo conjunto las categorías de sus
+# registros para que ambos lados no vuelvan a desincronizarse.
+UNIFIED_CATEGORY_KEYS = frozenset(
+    {
+        "gems",
+        "fish_chip",
+        "fish_progress",
+        "characters",
+        "skills",
+        "skins",
+        "advanced",
+        "hero_levels",
+        "pet_affinity",
+        "blueprints",
+        "decorations",
+    }
+)
+
+# Categorías incorporadas después de la Fase 8.0. Los planes históricos pueden
+# no declararlas; el lector de respaldos solo las completa al leer un registro.
+UNIFIED_OPTIONAL_CATEGORY_KEYS = frozenset(
+    {"hero_levels", "pet_affinity", "blueprints", "decorations"}
+)
+
 
 class UnifiedEditError(CloudSaveError):
     code = "unified_edit"
@@ -205,20 +230,7 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
     """Valida y ordena el plan compuesto que se guarda con el respaldo."""
     if not isinstance(raw, Mapping):
         raise InvalidUnifiedPlan("El plan debe ser un objeto JSON.")
-    allowed = {
-        "gems",
-        "fish_chip",
-        "fish_progress",
-        "characters",
-        "skills",
-        "skins",
-        "advanced",
-        "hero_levels",
-        "pet_affinity",
-        "blueprints",
-        "decorations",
-    }
-    unknown = set(raw) - allowed
+    unknown = set(raw) - UNIFIED_CATEGORY_KEYS
     if unknown:
         raise InvalidUnifiedPlan(f"El plan contiene claves no autorizadas: {sorted(unknown)}.")
     plan = {

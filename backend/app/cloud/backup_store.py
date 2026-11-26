@@ -72,6 +72,8 @@ from .skin_editor import (
     read_skins,
 )
 from .unified_editor import (
+    UNIFIED_CATEGORY_KEYS,
+    UNIFIED_OPTIONAL_CATEGORY_KEYS,
     UNIFIED_RECORD_FIELD,
     UnifiedEdit,
     normalize_unified_plan,
@@ -91,7 +93,7 @@ _FIELDS = frozenset(
         UNIFIED_RECORD_FIELD,
     }
 )
-_CATEGORY_KEYS = _FIELDS | {"hero_levels", "pet_affinity", "blueprints"}
+_CATEGORY_KEYS = _FIELDS | UNIFIED_CATEGORY_KEYS
 _RECORD_LIMIT = 64 * 1024
 _JOURNAL_LIMIT = 1024 * 1024
 _SEAL_MAGIC = b"SKB1"
@@ -141,6 +143,22 @@ class BackupUnreadable(BackupIntegrityError):
 
 class BackupIncompatible(BackupIntegrityError):
     """Metadatos de un formato o plan que el lector actual no reconoce."""
+
+
+class BackupPlanIncompatible(BackupIncompatible):
+    """El plan guardado no pertenece al formato normalizado admitido."""
+
+
+class BackupCategoryUnsupported(BackupIncompatible):
+    """El registro declara una categoría que el almacén no admite."""
+
+
+class BackupHashMismatch(BackupIntegrityError):
+    """Los bytes del respaldo no coinciden con las huellas de su registro."""
+
+
+class BackupCandidateMismatch(BackupIntegrityError):
+    """El candidato no se reproduce desde el original y el plan guardados."""
 
 
 class BackupAlreadyConfirmed(BackupStoreError):
@@ -270,28 +288,35 @@ def _require_text(value: object, name: str) -> str:
 
 def _require_advanced_plan(value: object, *, historical: bool = False) -> dict[str, object]:
     if not isinstance(value, dict):
-        raise BackupIncompatible("El registro de respaldo no contiene un plan avanzado válido.")
+        raise BackupPlanIncompatible("El registro de respaldo no contiene un plan avanzado válido.")
     if historical and set(value) == {"materials", "seeds", "season_coin", "reborn_card", "battle_pass"}:
         # Fase 7.1: ambos campos se añadieron como operaciones opcionales en 7.2.
         value = value | {"pets": [], "pet_food": {}}
     try:
         plan = normalize_advanced_plan(value)
     except CloudSaveError as exc:
-        raise BackupIncompatible("El plan avanzado del respaldo no es válido.") from exc
+        raise BackupPlanIncompatible("El plan avanzado del respaldo no es válido.") from exc
     if plan != value:
-        raise BackupIncompatible("El plan avanzado del respaldo no está normalizado.")
+        raise BackupPlanIncompatible("El plan avanzado del respaldo no está normalizado.")
     return plan
 
 
-def _require_unified_plan(value: object) -> dict[str, object]:
+def _require_unified_plan(value: object, *, historical: bool = False) -> dict[str, object]:
     if not isinstance(value, dict):
-        raise BackupIncompatible("El registro de respaldo no contiene un plan unificado válido.")
+        raise BackupPlanIncompatible("El registro de respaldo no contiene un plan unificado válido.")
+    if historical:
+        # Los respaldos anteriores a la Fase 9.0/9.1 no declaraban las categorías
+        # posteriores. Solo se completan las claves opcionales ausentes; cualquier
+        # clave desconocida o valor no normalizado sigue rechazándose.
+        missing = UNIFIED_OPTIONAL_CATEGORY_KEYS - set(value)
+        if missing:
+            value = value | {key: None for key in missing}
     try:
         plan = normalize_unified_plan(value)
     except CloudSaveError as exc:
-        raise BackupIncompatible("El plan unificado del respaldo no es válido.") from exc
+        raise BackupPlanIncompatible("El plan unificado del respaldo no es válido.") from exc
     if plan != value:
-        raise BackupIncompatible("El plan unificado del respaldo no está normalizado.")
+        raise BackupPlanIncompatible("El plan unificado del respaldo no está normalizado.")
     return plan
 
 
@@ -377,8 +402,10 @@ def _require_categories(value: object) -> tuple[str, ...]:
         raise BackupIntegrityError("El registro de respaldo contiene categorías inválidas.")
     categories: list[str] = []
     for category in value:
-        if not isinstance(category, str) or category not in _CATEGORY_KEYS or category in categories:
+        if not isinstance(category, str) or category in categories:
             raise BackupIntegrityError("El registro de respaldo contiene categorías inválidas.")
+        if category not in _CATEGORY_KEYS:
+            raise BackupCategoryUnsupported("El registro de respaldo contiene categorías inválidas.")
         categories.append(category)
     return tuple(categories)
 
@@ -675,7 +702,7 @@ class LabBackupStore:
             skins = ()
             plan = {}
         if remote_sha256 != edit.original_sha256 or remote_size != len(edit.original):
-            raise BackupIntegrityError("La copia remota no coincide con el original preparado.")
+            raise BackupHashMismatch("La copia remota no coincide con el original preparado.")
         if original_value is None:
             original_value = getattr(
                 edit,
@@ -799,7 +826,7 @@ class LabBackupStore:
         if not isinstance(payload, bytes) or not payload or len(payload) > self.limit:
             raise BackupIntegrityError("La copia de la partida no es válida.")
         if len(payload) != remote_size or sha256(payload).hexdigest() != remote_sha256:
-            raise BackupIntegrityError("La copia descargada no coincide con sus metadatos.")
+            raise BackupHashMismatch("La copia descargada no coincide con sus metadatos.")
         reconstruct_cloud_save(payload)
         summary = _require_snapshot(snapshot)
         source = _require_text(remote_source, "remote_source")
@@ -964,7 +991,7 @@ class LabBackupStore:
         elif field != _SNAPSHOT_FIELD:
             raise BackupIncompatible("El registro de respaldo contiene una copia de partida inválida.")
         plan = _require_advanced_plan(data.get("advanced_plan"), historical=True) if field == ADVANCED_RECORD_FIELD else {}
-        unified = _require_unified_plan(data.get("unified_plan")) if field == UNIFIED_RECORD_FIELD else {}
+        unified = _require_unified_plan(data.get("unified_plan"), historical=True) if field == UNIFIED_RECORD_FIELD else {}
         record = BackupRecord(
             id=_require_text(data.get("id"), "id"),
             created_at=_require_text(data.get("created_at"), "created_at"),
@@ -1011,16 +1038,16 @@ class LabBackupStore:
         original = self._read_private(directory / "original.json", self.limit)
         if record.is_snapshot:
             if len(original) != record.original_size or sha256(original).hexdigest() != record.original_sha256:
-                raise BackupIntegrityError("La copia de la partida no coincide con su registro.")
+                raise BackupHashMismatch("La copia de la partida no coincide con su registro.")
             if record.original_sha256 != record.candidate_sha256 or record.original_size != record.candidate_size:
                 raise BackupIntegrityError("La copia de la partida contiene un estado inválido.")
             reconstruct_cloud_save(original)
             return BackupBundle(record, original, original)
         candidate = self._read_private(directory / "candidate.json", self.limit)
         if len(original) != record.original_size or sha256(original).hexdigest() != record.original_sha256:
-            raise BackupIntegrityError("El original del respaldo no coincide con su registro.")
+            raise BackupHashMismatch("El original del respaldo no coincide con su registro.")
         if len(candidate) != record.candidate_size or sha256(candidate).hexdigest() != record.candidate_sha256:
-            raise BackupIntegrityError("El candidato del respaldo no coincide con su registro.")
+            raise BackupHashMismatch("El candidato del respaldo no coincide con su registro.")
         reconstruct_cloud_save(original)
         if record.changed != (original != candidate):
             raise BackupIntegrityError("El indicador de cambio del respaldo no coincide.")
@@ -1032,11 +1059,11 @@ class LabBackupStore:
             try:
                 current = prepare_unified_edit(original, record.unified_plan)
             except CloudSaveError:
-                raise BackupIntegrityError(
+                raise BackupCandidateMismatch(
                     "El candidato del respaldo no es reproducible desde el original."
                 ) from None
             if current.candidate != candidate or current.change_count != record.candidate_gems:
-                raise BackupIntegrityError(
+                raise BackupCandidateMismatch(
                     "El candidato del respaldo no es reproducible desde el original."
                 )
             return BackupBundle(record, original, candidate, tuple(item.key for item in current.categories if item.changes))
@@ -1054,11 +1081,11 @@ class LabBackupStore:
             try:
                 current = prepare_character_unlock_edit(original, record.character_codes)
             except CloudSaveError:
-                raise BackupIntegrityError(
+                raise BackupCandidateMismatch(
                     "El candidato del respaldo no es reproducible desde el original."
                 ) from None
             if current.candidate != candidate or len(current.new_unlocked) != record.candidate_gems:
-                raise BackupIntegrityError(
+                raise BackupCandidateMismatch(
                     "El candidato del respaldo no es reproducible desde el original."
                 )
             return BackupBundle(record, original, candidate)
@@ -1082,11 +1109,11 @@ class LabBackupStore:
                     ],
                 )
             except CloudSaveError:
-                raise BackupIntegrityError(
+                raise BackupCandidateMismatch(
                     "El candidato del respaldo no es reproducible desde el original."
                 ) from None
             if current.candidate != candidate or len(current.new_unlocked) != record.candidate_gems:
-                raise BackupIntegrityError(
+                raise BackupCandidateMismatch(
                     "El candidato del respaldo no es reproducible desde el original."
                 )
             return BackupBundle(record, original, candidate)
@@ -1110,11 +1137,11 @@ class LabBackupStore:
                     ],
                 )
             except CloudSaveError:
-                raise BackupIntegrityError(
+                raise BackupCandidateMismatch(
                     "El candidato del respaldo no es reproducible desde el original."
                 ) from None
             if current.candidate != candidate or len(current.new_unlocked) != record.candidate_gems:
-                raise BackupIntegrityError(
+                raise BackupCandidateMismatch(
                     "El candidato del respaldo no es reproducible desde el original."
                 )
             return BackupBundle(record, original, candidate)
@@ -1126,11 +1153,11 @@ class LabBackupStore:
             try:
                 current = prepare_advanced_edit(original, record.advanced_plan)
             except CloudSaveError:
-                raise BackupIntegrityError(
+                raise BackupCandidateMismatch(
                     "El candidato del respaldo no es reproducible desde el original."
                 ) from None
             if current.candidate != candidate or len(current.changes) != record.candidate_gems:
-                raise BackupIntegrityError(
+                raise BackupCandidateMismatch(
                     "El candidato del respaldo no es reproducible desde el original."
                 )
             return BackupBundle(record, original, candidate)
@@ -1144,13 +1171,13 @@ class LabBackupStore:
             try:
                 current = prepare_fish_chip_edit(original, record.candidate_gems)
             except CloudSaveError:
-                raise BackupIntegrityError(
+                raise BackupCandidateMismatch(
                     "El candidato del respaldo no es reproducible desde el original."
                 ) from None
             if current.candidate != candidate and not legacy_fish_chip_candidate_matches(
                 original, record.candidate_gems, candidate
             ):
-                raise BackupIntegrityError(
+                raise BackupCandidateMismatch(
                     "El candidato del respaldo no es reproducible desde el original."
                 )
             return BackupBundle(record, original, candidate)
@@ -1168,11 +1195,11 @@ class LabBackupStore:
             try:
                 current = prepare_fish_progress_edit(original, record.candidate_gems)
             except CloudSaveError:
-                raise BackupIntegrityError(
+                raise BackupCandidateMismatch(
                     "El candidato del respaldo no es reproducible desde el original."
                 ) from None
             if current.candidate != candidate:
-                raise BackupIntegrityError(
+                raise BackupCandidateMismatch(
                     "El candidato del respaldo no es reproducible desde el original."
                 )
             return BackupBundle(record, original, candidate)
@@ -1183,9 +1210,9 @@ class LabBackupStore:
             try:
                 current = prepare_gems_edit(original, record.candidate_gems)
             except GemsEditError:
-                raise BackupIntegrityError("El candidato del respaldo no es reproducible desde el original.") from None
+                raise BackupCandidateMismatch("El candidato del respaldo no es reproducible desde el original.") from None
             if current.candidate != candidate:
-                raise BackupIntegrityError("El candidato del respaldo no es reproducible desde el original.")
+                raise BackupCandidateMismatch("El candidato del respaldo no es reproducible desde el original.")
         return BackupBundle(record, original, candidate)
 
     def index(self, *, require_parent: bool = False) -> list[BackupIndexEntry]:

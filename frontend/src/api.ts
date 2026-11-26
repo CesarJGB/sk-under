@@ -544,8 +544,12 @@ export type LabUnifiedPlan = {
   } | null
 }
 
+export type LabCategoryKey =
+  | 'gems' | 'fish_chip' | 'fish_progress' | 'characters' | 'skills' | 'skins'
+  | 'advanced' | 'hero_levels' | 'pet_affinity' | 'blueprints' | 'decorations'
+
 export type LabUnifiedCategory = {
-  key: string
+  key: LabCategoryKey
   label: string
   changes: number
   detail: Record<string, unknown>
@@ -1058,7 +1062,7 @@ export type NativeBackup = {
   original_value?: number
   candidate_value?: number
   changes?: number
-  categories?: Array<NonNullable<LabBackup['field']>>
+  categories?: LabCategoryKey[]
   summary?: NativeBackupSummary | null
 }
 

@@ -60,6 +60,14 @@ const fieldLabels: Record<NonNullable<NativeBackup['field']>, string> = {
   advanced: 'Materiales y progreso', unified: 'Edición unificada', snapshot: 'Copia completa',
 }
 
+const backupCategoryLabels: Record<string, string> = {
+  ...fieldLabels,
+  hero_levels: 'Niveles de personaje',
+  pet_affinity: 'Afinidad de mascotas',
+  blueprints: 'Planos',
+  decorations: 'Decoraciones',
+}
+
 const backupStatuses: Record<NativeBackup['status'], string> = {
   prepared: 'Edición preparada', verified: 'Subida verificada',
   unverified: 'Subida no verificada', available: 'Respaldo disponible',
@@ -138,7 +146,7 @@ function BackupSummary({ backup }: { backup: NativeBackup }) {
     <div className="partida-backup-details">
       {backup.changes != null ? <p>
         <strong>{amount(backup.changes)} {backup.changes === 1 ? 'cambio registrado' : 'cambios registrados'}</strong>
-        {backup.categories?.length ? <small>{backup.categories.map((category) => fieldLabels[category]).join(' · ')}</small> : null}
+        {backup.categories?.length ? <small>{backup.categories.map((category) => backupCategoryLabels[category] ?? category).join(' · ')}</small> : null}
       </p> : backup.original_value != null || backup.candidate_value != null
         ? <p><strong>{amount(backup.original_value)} → {amount(backup.candidate_value)}</strong></p> : null}
       {backup.original_size != null && <small>{formatSize(backup.original_size)}</small>}
