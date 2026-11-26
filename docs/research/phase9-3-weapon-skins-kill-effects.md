@@ -210,6 +210,49 @@ combinado sobre ambas reabrió correctamente el candidato.
   nuevas cubren edición rápida, selección individual, filtros, estados de solo
   lectura y capturas sin desbordamiento a 320, 390, 768 y 1280 px.
 
+## Verificación en producción
+
+La corrección se publicó en `main` con el commit `b10604b` y se verificó contra
+las cuentas reales de laboratorio, sin subir ningún candidato.
+
+- **Backend.** Coolify recreó el contenedor con la imagen del commit
+  `b10604b5deaa9dcf33ce0269e7f1155d7deab0c9`. `GET /api/v1/version` devuelve ese
+  commit y mantiene las capacidades de respaldo. El contenedor quedó saludable.
+- **CI.** Backend, frontend, Playwright y la comprobación de higiene y secretos
+  terminaron en `success`. Cloudflare Pages registró el despliegue
+  `80889b43-5d64-4969-ad49-f34b678601d7` también como `success`.
+- **Frontend.** No fue necesario cambiar código: el bundle servido
+  (`assets/index-YYRUz-u4.js`) ya contenía los editores de la Fase 9.3. El fallo
+  estaba en la respuesta de login del backend.
+- **Login real.** `POST /api/v1/cloud/native/login` devolvió ambos catálogos. La
+  cuenta avanzada mostró 192 skins y 9 efectos, con 1 skin desbloqueada y 0
+  efectos; la cuenta nueva mostró 192 skins y 9 efectos, con 2 skins y 2 efectos
+  desbloqueados. Las políticas de escritura siguen siendo `experimental`.
+- **Interfaz.** En móvil, el editor rápido mostró «Skins de arma 1/192» y
+  «Efectos de eliminación 0/8» en la cuenta avanzada, y «2/192» y «2/9» en la
+  nueva. Las categorías listaron 192 skins agrupadas por arma y 9 efectos, con
+  buscador, filtros y estados. Ya no apareció «No disponible» ni el texto de
+  catálogo ilegible.
+- **Selección.** «Seleccionar pendientes» marcó 190 skins y 7 efectos en la
+  cuenta nueva; «Quitar selección» volvió a 0 cambios. En la cuenta avanzada se
+  seleccionaron individualmente una skin y un efecto.
+- **Preparación combinada.** La cuenta avanzada preparó un candidato con 1 skin y
+  1 efecto. La vista previa mostró ambas categorías, el aviso de respaldo
+  restaurable y el botón «Guardar en la nube» deshabilitado hasta confirmar. No
+  se marcó la confirmación ni se pulsó el botón.
+- **Sin escritura remota.** El SHA-256 de la partida avanzada en producción
+  coincide exactamente con la muestra privada previa
+  (`ccb659f127b779569e0f0c70bd93dac1c65e33c7e53e28f0c015dd634c72a7d9`), de modo
+  que la preparación no modificó la partida remota.
+
+Limitación observada: cuando `unlockedKillEffectIds` no existe, el efecto
+predeterminado (ID 0) aparece como «Bloqueado» aunque su casilla está
+deshabilitada y los IDs 1–8 siguen siendo seleccionables. No impide usar la
+categoría; se deja anotado para no ampliar el alcance de esta corrección.
+
+Las capturas de producción se conservan fuera del repositorio, en el
+almacenamiento privado del propietario, porque muestran datos de cuentas.
+
 ## Validación física pendiente
 
 El propietario debe probar en Android Global con respaldo automático:
