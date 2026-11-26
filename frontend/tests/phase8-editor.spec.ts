@@ -1063,12 +1063,12 @@ test('capturas móviles, tableta y escritorio sin desbordamiento', async ({ page
     expect(await gems.evaluate(fits), `cantidad de diez dígitos a ${size.width} px`).toBe(true)
     await screenshot(`rapida-${size.width}`)
     await page.getByRole('tab', { name: 'Categorías' }).click()
-    await expect(page.getByTestId('category-grid').getByRole('button')).toHaveCount(9)
+    await expect(page.getByTestId('category-grid').getByRole('button')).toHaveCount(10)
     if (size.width <= 430) {
       expect(await page.locator('.category-grid').evaluate((grid) => getComputedStyle(grid).gridTemplateColumns.split(' ').length)).toBe(3)
     }
     expect(await page.locator('.category-icon').evaluateAll((icons) =>
-      Promise.all(icons.map((icon) => (icon as HTMLImageElement).decode())).then(() => true))).toBe(true)
+      Promise.all(icons.map((icon) => icon instanceof HTMLImageElement ? icon.decode() : true)).then(() => true))).toBe(true)
     await screenshot(`categorias-${size.width}`)
     await page.getByRole('button', { name: 'Materiales' }).click()
     const minimum = page.getByRole('textbox', { name: 'Cantidad mínima', exact: true })
@@ -1196,4 +1196,78 @@ test('distingue un backend sin historial de un historial vacío', async ({ page 
   const list = page.getByRole('region', { name: 'Respaldos' })
   await expect(list.getByRole('alert').first()).toContainText('no incluye el historial de respaldos')
   await expect(list.getByText('Esta cuenta todavía no tiene respaldos.')).toHaveCount(0)
+})
+
+const PROGRESS_ADVANCED = {
+  ...ADVANCED,
+  hero_levels: {
+    available: true, path: 'gameData.heroLevel', min: 0, max: 7,
+    max_note: 'Máximo clásico documentado; el máximo por personaje no se recuperó.',
+    experimental: true, evidence_level: 'E3',
+    note: 'Solo subidas dentro del intervalo documentado.', entries: [
+      { id: 'Knight', name: 'Knight', level: 2, value_type: 'int', present: true, editable: true, unlocked: true, path: 'gameData.heroLevel.Knight', reason: null },
+      { id: 'Ranger', name: 'Ranger', level: 0, value_type: 'int', present: true, editable: true, unlocked: false, path: 'gameData.heroLevel.Ranger', reason: null },
+      { id: 'Mage', name: 'Mage', level: 7, value_type: 'int', present: true, editable: false, unlocked: true, path: 'gameData.heroLevel.Mage', reason: 'Nivel máximo documentado' },
+    ],
+  },
+  pet_progression: {
+    available: true, path: 'statisticData.event2Count', read_only: false, global_full_count: 1,
+    full_count_key: 'pet_full_intimacy', note: '', limitation: 'Máximos observados por mascota.', experimental: true, evidence_level: 'E2',
+    entries: [
+      { id: 'Cat', numeric_id: 0, name: { es: 'Gato', en: 'Cat' }, present: true, intimacy: 200, full: false, action_unlocked: false, value_type: 'int', max: 240, max_note: '', path: 'statisticData.event2Count.pet_0_intimacy', editable: true, reason: null, full_path: 'statisticData.event2Count.pet_0_full_intimacy' },
+      { id: 'Pig', numeric_id: 2, name: { es: 'Cerdo', en: 'Pig' }, present: true, intimacy: 240, full: true, action_unlocked: true, value_type: 'int', max: 240, max_note: '', path: 'statisticData.event2Count.pet_2_intimacy', editable: false, reason: 'Afinidad máxima', full_path: 'statisticData.event2Count.pet_2_full_intimacy' },
+      { id: 'Serenade', numeric_id: 27, name: { es: 'Serenata', en: 'Serenade' }, present: true, intimacy: 240, full: false, action_unlocked: false, value_type: 'int', max: null, max_note: '', path: 'statisticData.event2Count.pet_27_intimacy', editable: false, reason: 'Máximo no confirmado', full_path: 'statisticData.event2Count.pet_27_full_intimacy' },
+    ],
+  },
+  blueprints: {
+    available: true, path: 'itemData.blueprints', statuses: ['Got', 'Researched'],
+    experimental: true, evidence_level: 'E2', note: '', limitation: 'Solo claves existentes.', unmatched: ['legacy_unknown'],
+    entries: [
+      { id: 'blueprint_multi_room_skin_0', key: 'blueprint_multi_room_skin_0', name: { es: 'Sala múltiple', en: 'Multi room' }, subcategory: 'multi', blueprint_type: 1, target: 'multi_room_skin_0', research_materials: [], status: 'Got', value_type: 'enum', present: true, editable: true, bulk_eligible: true, path: 'itemData.blueprints.blueprint_multi_room_skin_0' },
+      { id: 'blueprint_garden_skin_0', key: 'garden_skin_0', name: { es: 'Jardín', en: 'Garden' }, subcategory: 'others', blueprint_type: 2, target: 'garden_skin_0', research_materials: [], status: 'Researched', value_type: 'enum', present: true, editable: true, bulk_eligible: false, path: 'itemData.blueprints.garden_skin_0' },
+      { id: 'blueprint_weapon_0', key: null, name: { es: 'Arma', en: 'Weapon' }, subcategory: 'weapon', blueprint_type: 7, target: 'weapon_0', research_materials: [], status: null, value_type: null, present: false, editable: false, bulk_eligible: false, path: null },
+    ],
+  },
+}
+const PROGRESS_SAVE = { ...SESSION_SAVE, advanced: PROGRESS_ADVANCED }
+
+test('integra niveles, afinidad y planos en un solo borrador móvil', async ({ page }) => {
+  const plans: Array<Record<string, unknown>> = []
+  await open(page, { save: PROGRESS_SAVE, width: 320 })
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => {
+    const plan = route.request().postDataJSON()
+    plans.push(plan)
+    return route.fulfill({ json: prepared(plan, [
+      ['hero_levels', 'Niveles de personaje', 1],
+      ['pet_affinity', 'Afinidad de mascotas', 1],
+      ['blueprints', 'Planos', 1],
+    ]) })
+  })
+
+  await expect(page.getByRole('region', { name: 'Progreso' })).toContainText('Niveles de personaje')
+  await expect(page.getByRole('region', { name: 'Progreso' })).toContainText('Afinidad de mascotas')
+
+  await openCategory(page, 'Personajes')
+  await page.getByLabel('Mejorar 2 elegibles al máximo').check()
+  await page.getByLabel('Incluir Ranger en la mejora masiva').uncheck()
+  await page.getByLabel('Nivel o progreso de Knight').fill('5')
+  await expect(page.getByTestId('editor-bar')).toContainText('1 cambio')
+  await page.screenshot({ path: 'test-results/edicion-numerica/niveles-320.png' })
+
+  await openCategory(page, 'Mascotas')
+  await page.getByLabel('Nivel o progreso de Gato').fill('220')
+  await page.screenshot({ path: 'test-results/edicion-numerica/afinidad-320.png' })
+
+  await openCategory(page, 'Planos')
+  await page.getByLabel('Estado de Sala múltiple').selectOption('Researched')
+  await expect(page.getByTestId('editor-bar')).toContainText('3 cambios')
+  await page.screenshot({ path: 'test-results/edicion-numerica/planos-320.png' })
+
+  await page.getByTestId('editor-bar').getByRole('button', { name: 'Guardar', exact: true }).click()
+  await expect(page.getByTestId('unified-preview')).toBeVisible()
+  expect(plans).toHaveLength(1)
+  expect(plans[0].hero_levels).toEqual([{ code: 'Knight', level: 5 }])
+  expect(plans[0].pet_affinity).toEqual([{ code: 'Cat', value: 220 }])
+  expect(plans[0].blueprints).toEqual([{ id: 'blueprint_multi_room_skin_0', status: 'Researched' }])
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })

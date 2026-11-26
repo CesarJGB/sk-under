@@ -5,6 +5,12 @@ from __future__ import annotations
 import sys
 
 from . import CATALOG_PATH, CharacterCatalogError, load_character_catalog, validate_character_catalog
+from .blueprints import (
+    BLUEPRINTS_PATH,
+    BlueprintCatalogError,
+    load_blueprint_catalog,
+    validate_blueprint_catalog,
+)
 from .items import ITEMS_PATH, ItemCatalogError, load_item_catalog, validate_item_catalog
 from .pets import PETS_PATH, PetCatalogError, load_pet_catalog, validate_pet_catalog
 
@@ -17,6 +23,8 @@ def main() -> int:
         validate_item_catalog(items)
         pets = load_pet_catalog()
         validate_pet_catalog(pets)
+        blueprints = load_blueprint_catalog()
+        validate_blueprint_catalog(blueprints)
     except CharacterCatalogError as exc:
         print(f"ERROR [{exc.code}] {exc}", file=sys.stderr)
         return 1
@@ -24,6 +32,9 @@ def main() -> int:
         print(f"ERROR [{exc.code}] {exc}", file=sys.stderr)
         return 1
     except PetCatalogError as exc:
+        print(f"ERROR [{exc.code}] {exc}", file=sys.stderr)
+        return 1
+    except BlueprintCatalogError as exc:
         print(f"ERROR [{exc.code}] {exc}", file=sys.stderr)
         return 1
     except OSError as exc:
@@ -46,6 +57,11 @@ def main() -> int:
         "Catálogo de mascotas válido: "
         f"{len(pets['pet_ids'])} mascotas y {len(pets['skin_ids'])} variantes "
         f"({pets['version']}, {PETS_PATH})."
+    )
+    print(
+        "Catálogo de planos válido: "
+        f"{len(blueprints['blueprint_ids'])} planos "
+        f"({blueprints['version']}, {BLUEPRINTS_PATH})."
     )
     return 0
 

@@ -4,7 +4,9 @@ import type {
 } from './api'
 import { pendingCharacterCodes, pendingSkillKeys, pendingSkinKeys, skillKey, skinKey } from './unlockSelections'
 
-export type BulkKey = 'characters' | 'skills' | 'skins' | 'pets' | 'petSkins'
+export type BulkKey =
+  | 'characters' | 'skills' | 'skins' | 'pets' | 'petSkins'
+  | 'heroLevels' | 'petAffinity' | 'blueprints'
 export type QuantityKey =
   | 'gems' | 'fishChip' | 'fishProgress' | 'seasonCoin'
   | 'materialsMin' | 'seedsMin' | 'petFoodMin' | 'batteryMin'
@@ -17,6 +19,9 @@ export type Draft = {
     skins: Record<string, true>
     pets: Record<string, true>
     petSkins: Record<string, true>
+    heroLevels: Record<string, true>
+    petAffinity: Record<string, true>
+    blueprints: Record<string, true>
   }
   excluded: {
     characters: Record<string, true>
@@ -24,12 +29,18 @@ export type Draft = {
     skins: Record<string, true>
     pets: Record<string, true>
     petSkins: Record<string, true>
+    heroLevels: Record<string, true>
+    petAffinity: Record<string, true>
+    blueprints: Record<string, true>
   }
   quick: Partial<Record<QuantityKey, string>>
   materialEdits: Record<string, string>
   seedEdits: Record<string, string>
   materialMinimums: Record<string, number>
   seedMinimums: Record<string, number>
+  heroLevels: Record<string, string>
+  petAffinity: Record<string, string>
+  blueprintStatus: Record<string, 'Got' | 'Researched'>
   reborn: boolean
   battlePass: { seasonId: number | null; level?: string; exp?: string; buy: boolean | null }
 }
@@ -89,18 +100,26 @@ function emptySet(): Record<string, true> {
 
 export function createEmptyDraft(): Draft {
   return {
-    bulk: { characters: false, skills: false, skins: false, pets: false, petSkins: false },
+    bulk: {
+      characters: false, skills: false, skins: false, pets: false, petSkins: false,
+      heroLevels: false, petAffinity: false, blueprints: false,
+    },
     manual: {
       characters: emptySet(), skills: emptySet(), skins: emptySet(), pets: emptySet(), petSkins: emptySet(),
+      heroLevels: emptySet(), petAffinity: emptySet(), blueprints: emptySet(),
     },
     excluded: {
       characters: emptySet(), skills: emptySet(), skins: emptySet(), pets: emptySet(), petSkins: emptySet(),
+      heroLevels: emptySet(), petAffinity: emptySet(), blueprints: emptySet(),
     },
     quick: {},
     materialEdits: {},
     seedEdits: {},
     materialMinimums: {},
     seedMinimums: {},
+    heroLevels: {},
+    petAffinity: {},
+    blueprintStatus: {},
     reborn: false,
     battlePass: { seasonId: null, buy: null },
   }
@@ -189,6 +208,15 @@ export function eligibility(save: NativeSaveSummary | null): Eligibility {
     skins: eligibleSkins(characters),
     pets: eligiblePets(advanced),
     petSkins: eligiblePetSkins(advanced),
+    heroLevels: (advanced?.hero_levels?.entries ?? [])
+      .filter((row) => row.editable && row.level !== null && row.level < (advanced?.hero_levels?.max ?? 0))
+      .map((row) => row.id),
+    petAffinity: (advanced?.pet_progression?.entries ?? [])
+      .filter((row) => row.editable && row.intimacy !== null && row.max !== null && row.intimacy < row.max)
+      .map((row) => row.id),
+    blueprints: (advanced?.blueprints?.entries ?? [])
+      .filter((row) => row.editable && row.status === 'Got')
+      .map((row) => row.id),
   }
 }
 
@@ -266,6 +294,24 @@ export function clearSelection(key: BulkKey, draft: Draft): Draft {
 
 export function setQuick(key: QuantityKey, value: string, draft: Draft): Draft {
   return { ...draft, quick: { ...draft.quick, [key]: value } }
+}
+
+export function setHeroLevel(id: string, value: string, draft: Draft): Draft {
+  const next = { ...draft.heroLevels }
+  if (value === '') delete next[id]
+  else next[id] = value
+  return { ...draft, heroLevels: next }
+}
+
+export function setPetAffinity(id: string, value: string, draft: Draft): Draft {
+  const next = { ...draft.petAffinity }
+  if (value === '') delete next[id]
+  else next[id] = value
+  return { ...draft, petAffinity: next }
+}
+
+export function setBlueprintStatus(id: string, status: 'Got' | 'Researched', draft: Draft): Draft {
+  return { ...draft, blueprintStatus: { ...draft.blueprintStatus, [id]: status } }
 }
 
 export function setEdit(
@@ -476,6 +522,54 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft, session: N
     || advancedPlan.battle_pass || advancedPlan.pets?.length || advancedPlan.pet_food?.length) {
     plan.advanced = advancedPlan
   }
+
+  const selected = eligibility(save)
+  const heroMax = advanced?.hero_levels?.max ?? 0
+  const heroPlan = new Map<string, number>()
+  const selectedHeroes = new Set(effectiveUnlockedSet('heroLevels', draft, selected))
+  for (const row of advanced?.hero_levels?.entries ?? []) {
+    if (!row.editable || row.level === null) continue
+    const explicit = parseQuantity(draft.heroLevels[row.id] ?? '')
+    if (explicit !== null && explicit !== row.level && explicit >= row.level && explicit <= heroMax) {
+      heroPlan.set(row.id, explicit)
+    } else if (selectedHeroes.has(row.id) && row.level < heroMax) {
+      heroPlan.set(row.id, heroMax)
+    }
+  }
+  if (heroPlan.size > 0) {
+    plan.hero_levels = Array.from(heroPlan, ([code, level]) => ({ code, level }))
+    bump('Niveles', heroPlan.size)
+  }
+
+  const petPlan = new Map<string, number>()
+  const selectedPets = new Set(effectiveUnlockedSet('petAffinity', draft, selected))
+  for (const row of advanced?.pet_progression?.entries ?? []) {
+    if (!row.editable || row.intimacy === null || row.max === null) continue
+    const explicit = parseQuantity(draft.petAffinity[row.id] ?? '')
+    if (explicit !== null && explicit !== row.intimacy && explicit >= row.intimacy && explicit <= row.max) {
+      petPlan.set(row.id, explicit)
+    } else if (selectedPets.has(row.id) && row.intimacy < row.max) {
+      petPlan.set(row.id, row.max)
+    }
+  }
+  if (petPlan.size > 0) {
+    plan.pet_affinity = Array.from(petPlan, ([code, value]) => ({ code, value }))
+    bump('Afinidad', petPlan.size)
+  }
+
+  const blueprintPlan = new Map<string, 'Got' | 'Researched'>()
+  const selectedBlueprints = new Set(effectiveUnlockedSet('blueprints', draft, selected))
+  for (const row of advanced?.blueprints?.entries ?? []) {
+    if (!row.editable || !row.status) continue
+    const explicit = draft.blueprintStatus[row.id]
+    if (explicit && explicit !== row.status) blueprintPlan.set(row.id, explicit)
+    else if (selectedBlueprints.has(row.id) && row.status === 'Got') blueprintPlan.set(row.id, 'Researched')
+  }
+  if (blueprintPlan.size > 0) {
+    plan.blueprints = Array.from(blueprintPlan, ([id, status]) => ({ id, status }))
+    bump('Planos', blueprintPlan.size)
+  }
+
   return { plan, counts, quantities }
 }
 
@@ -504,6 +598,12 @@ export function unlockProgress(save: NativeSaveSummary, key: BulkKey, eligible: 
     ).length, 0),
     pets: () => (advanced?.pets ?? []).filter((pet) => pet.present && pet.unlocked === true).length,
     petSkins: () => (advanced?.pet_skins ?? []).filter((skin) => skin.present && skin.unlocked === true).length,
+    heroLevels: () => (advanced?.hero_levels?.entries ?? [])
+      .filter((row) => row.level !== null && row.level >= (advanced?.hero_levels?.max ?? 0)).length,
+    petAffinity: () => (advanced?.pet_progression?.entries ?? [])
+      .filter((row) => row.intimacy !== null && row.max !== null && row.intimacy >= row.max).length,
+    blueprints: () => (advanced?.blueprints?.entries ?? [])
+      .filter((row) => row.status === 'Researched').length,
   }[key]()
   const pending = eligible[key].length
   return { unlocked, pending, total: unlocked + pending }

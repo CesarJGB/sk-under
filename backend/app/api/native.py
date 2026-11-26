@@ -415,6 +415,9 @@ def prepare_unified(payload: UnifiedPrepareInput, request: Request) -> dict[str,
         "skills": [skill.model_dump() for skill in payload.skills],
         "skins": [skin.model_dump() for skin in payload.skins],
         "advanced": advanced,
+        "hero_levels": [item.model_dump() for item in payload.hero_levels],
+        "pet_affinity": [item.model_dump() for item in payload.pet_affinity],
+        "blueprints": [item.model_dump() for item in payload.blueprints],
     }
     return service.prepare_unified(current, plan, payload.source_sha256)
 

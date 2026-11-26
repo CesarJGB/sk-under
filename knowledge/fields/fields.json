@@ -122,7 +122,7 @@
       "id": "statisticData.event2Count",
       "internal_name": "event2Count",
       "category": "Estadísticas",
-      "description": "Contadores de estadísticas y progreso; incluye intimidad de mascotas en claves pet_<ID>_*.",
+      "description": "Contadores de estadísticas y progreso; incluye intimidad de mascotas en claves pet_<ID>_* con un editor experimental limitado a máximos observados.",
       "locations": {
         "local": "statistic*.data:event2Count",
         "cloud": "statisticData.event2Count"
@@ -144,13 +144,15 @@
         "pet_<índice>_intimacy contiene la intimidad actual de la mascota con ese identificador numérico.",
         "pet_<índice>_full_intimacy vale 1 cuando la mascota alcanzó su máximo; es la única confirmación de máximo observada.",
         "pet_<índice>_action_unlock vale 1 cuando la acción especial está desbloqueada.",
-        "pet_full_intimacy es un contador global de mascotas con intimidad completa."
+        "pet_full_intimacy es un contador global de mascotas con intimidad completa.",
+        "En la muestra completa 8.8.0 los máximos observados fueron 180 para los índices 30 y 31, 300 para el 34 y 240 para el resto de índices 0..55 presentes; los índices 27, 56 y 57 no tenían claves y quedan fuera del escritor.",
+        "El contador global pet_full_intimacy no coincidió con el número de mascotas completas; no se recalcula."
       ],
       "initial_values": null,
       "limits": {
-        "type": "objeto ID → entero",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "type": "int32 por clave",
+        "observed": "Máximos de intimidad 180, 240 y 300 en la muestra completa; el contador global observado fue 35.",
+        "functional": "Máximos por mascota no recuperados desde PetsLevelUpConfig/PetIntimacyConfig."
       },
       "related_ids": [
         "knowledge.catalogs.pets",
@@ -168,9 +170,14 @@
         "Android Global 8.8.0 agregado",
         "Android Global 8.8.0 local"
       ],
-      "known_dependencies": [],
+      "known_dependencies": [
+        "Catálogo de mascotas para resolver código e índice numérico.",
+        "pet_<ID>_full_intimacy se activa al alcanzar el máximo conocido."
+      ],
       "pending_dependencies": [
-        "correlación aislada con acción del cliente"
+        "PetsLevelUpConfig/PetIntimacyConfig sin deserializar",
+        "Validación física de la escritura de intimidad",
+        "Correlación aislada con la acción especial"
       ],
       "preserve": [],
       "evidence": {
@@ -182,15 +189,19 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura: la intimidad se muestra pero no se escribe porque los máximos por mascota no están recuperados.",
+      "edit_policy": "experimental: solo sube pet_<ID>_intimacy hasta el máximo empírico conocido de esa mascota, activa full_intimacy al alcanzarlo y no toca la acción especial ni el contador global; eficacia del escritor no validada.",
       "constraints": [
         "No simular máximos con 999, 9999 ni Int32.MaxValue.",
         "No crear claves pet_<ID>_* si no existen en event2Count.",
-        "Conservar todos los contadores ajenos a mascotas."
+        "Conservar todos los contadores ajenos a mascotas.",
+        "Editar solo índices con máximo empírico conocido; 27, 56 y 57 permanecen en solo lectura.",
+        "No reducir la intimidad.",
+        "No modificar pet_<ID>_action_unlock ni pet_full_intimacy.",
+        "Rechazar una mascota cuyo full_intimacy ya sea 1 por debajo del máximo conocido."
       ],
       "open_questions": [
         "Recuperar PetsLevelUpConfig/PetIntimacyConfig para conocer el máximo real de cada mascota.",
-        "Confirmar si la intimidad se puede escribir de forma segura y cómo la valida el cliente."
+        "Confirmar en Android físico que la intimidad y la marca de máximo persisten y habilitan la acción."
       ],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -2616,7 +2627,7 @@
       "id": "itemData.blueprints",
       "internal_name": "blueprints",
       "category": "Inventario",
-      "description": "Estado de planos investigados o disponibles.",
+      "description": "Estado por plano: Got (obtenido) o Researched (investigado); editor experimental limitado a claves existentes.",
       "locations": {
         "local": "item_data*.data:blueprints",
         "cloud": "itemData.blueprints"
@@ -2636,16 +2647,20 @@
       },
       "observed_values": null,
       "known_value_semantics": [
-        "Las muestras usan estados Got/Researched; la semántica completa no está confirmada."
+        "Las muestras usan los estados de texto Got y Researched.",
+        "La muestra completa 8.6.0 contiene 275 claves; 273 están en Researched y 2 en Got (multi_room_skin_20 y multi_room_skin_21).",
+        "El catálogo usa identificadores con prefijo blueprint_; el guardado conserva alias sin ese prefijo para varios planos antiguos.",
+        "La ausencia de una clave no se interpreta como estado cero ni como plano no poseído."
       ],
       "initial_values": null,
       "limits": {
-        "type": "objeto ID → texto (8.6.0), objeto vacío (muestras 8.8.0)",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "type": "objeto ID → texto",
+        "observed": "Got y Researched; 275 claves en la muestra 8.6.0 y objeto vacío en la nube 8.8.0 inspeccionada.",
+        "functional": "No se conoce el efecto completo de cada transición en el cliente."
       },
       "related_ids": [
-        "knowledge.catalogs.blueprints"
+        "knowledge.catalogs.blueprints",
+        "itemData.materials"
       ],
       "associated_catalog": "blueprints",
       "sources": [
@@ -2660,9 +2675,13 @@
         "Android Global 8.8.0 agregado",
         "Android Global 8.8.0 local"
       ],
-      "known_dependencies": [],
+      "known_dependencies": [
+        "Catálogo de planos para resolver identificadores y alias.",
+        "ResearchMaterials describe materiales, pero no se demostró su descuento automático."
+      ],
       "pending_dependencies": [
-        "transiciones por versión y requisitos de investigación"
+        "Transiciones por versión y requisitos de investigación",
+        "Relación con fabricación y disponibilidad del objeto"
       ],
       "preserve": [],
       "evidence": {
@@ -2674,10 +2693,17 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
+      "edit_policy": "experimental: cambia Got/Researched solo en claves existentes y resueltas por el catálogo o su alias sin prefijo; no inserta planos ausentes ni toca materiales.",
+      "constraints": [
+        "Aceptar únicamente Got o Researched.",
+        "No insertar claves ausentes ni inventar estados.",
+        "Resolver primero el identificador exacto del catálogo y después el alias sin prefijo blueprint_.",
+        "Conservar claves desconocidas y sus valores.",
+        "No modificar materiales, recibos ni recompensas reclamadas."
+      ],
       "open_questions": [
-        "Confirmar los estados válidos y su efecto en el cliente."
+        "Confirmar el efecto de Got y Researched en el cliente.",
+        "Aclarar si investigar consume materiales automáticamente y cómo tratar los planos ausentes."
       ],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -2901,7 +2927,7 @@
       "id": "itemData.forgeWeapons",
       "internal_name": "forgeWeapons",
       "category": "Inventario",
-      "description": "Progreso de forja por arma.",
+      "description": "Ranuras o cola de fabricación de la forja; no es el progreso permanente de desbloqueo por arma.",
       "locations": {
         "local": "item_data*.data:forgeWeapons",
         "cloud": "itemData.forgeWeapons"
@@ -2919,12 +2945,16 @@
         "resolved": false
       },
       "observed_values": null,
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "La lista contiene cuatro posiciones con nombres de arma o null.",
+        "Las muestras propias muestran armas distintas en esas posiciones; no se interpreta como contador de obtención, nivel de evolución ni skin equipada.",
+        "La disponibilidad permanente para fabricar parece depender de contadores de obtención y de IsWeaponForgeUnlockByObtainTimes, no de esta lista."
+      ],
       "initial_values": null,
       "limits": {
         "type": "lista de nombres o null",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "observed": "Siempre cuatro posiciones en las muestras.",
+        "functional": "No se conoce si representa cola, ranuras activas o pagos pendientes."
       },
       "related_ids": [
         "knowledge.catalogs.weapons"
@@ -2942,8 +2972,9 @@
         "materials"
       ],
       "pending_dependencies": [
-        "pagos de forja",
-        "armas evolucionadas"
+        "Pagos de forja (forgeWeaponMaterialPayments)",
+        "Contadores ObtainWeaponTimes / WeaponGameStatisticData",
+        "Evolución y skins de armas"
       ],
       "preserve": [],
       "evidence": {
@@ -2955,9 +2986,14 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
-      "open_questions": [],
+      "edit_policy": "solo lectura: la lista no es progreso permanente y su semántica transitoria no permite un escritor seguro.",
+      "constraints": [
+        "No tratarla como progreso de forja por arma ni como desbloqueo permanente.",
+        "No modificar pagos, materiales ni evolución desde este campo."
+      ],
+      "open_questions": [
+        "Determinar si las posiciones son cola, ranuras o pagos y cómo se sincronizan con el servidor/cliente."
+      ],
       "experiments_required": [],
       "registry_tier": "legacy",
       "legacy_record": {
@@ -3083,7 +3119,7 @@
       "id": "itemData.jewelryData",
       "internal_name": "jewelryData",
       "category": "Inventario",
-      "description": "Joyería poseída, con durabilidad y runas.",
+      "description": "Joyería poseída, con durabilidad y runas; estructura observada sin máximos funcionales confirmados.",
       "locations": {
         "local": "item_data*.data:jewelryData",
         "cloud": "itemData.jewelryData"
@@ -3101,12 +3137,16 @@
         "resolved": false
       },
       "observed_values": null,
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "Cada entrada observada contiene item, durability, rune1 y rune2.",
+        "La muestra completa usa durability=5000000 y runas None; no se demostró que 5000000 sea el máximo universal.",
+        "jewelryPlayerData y jewelryBlueprints son estructuras separadas."
+      ],
       "initial_values": null,
       "limits": {
-        "type": "objeto",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "type": "objeto ID → objeto",
+        "observed": "durability=5000000 y runas None en 15 joyas de la muestra completa.",
+        "functional": "Durabilidad máxima, recarga y runas válidas no documentadas."
       },
       "related_ids": [
         "knowledge.catalogs.jewelry"
@@ -3125,7 +3165,9 @@
         "jewelryBlueprints"
       ],
       "pending_dependencies": [
-        "fabricación de joyas"
+        "Fabricación de joyas",
+        "Durabilidad máxima y reparación",
+        "Runas válidas y su efecto"
       ],
       "preserve": [],
       "evidence": {
@@ -3137,9 +3179,15 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
-      "open_questions": [],
+      "edit_policy": "solo lectura: no se escribe durabilidad ni runas sin límites y dependencias demostradas.",
+      "constraints": [
+        "No asumir que 5000000 es el máximo universal.",
+        "No modificar jewelryBlueprints ni jewelryPlayerData desde este campo."
+      ],
+      "open_questions": [
+        "Recuperar la configuración de durabilidad y runas.",
+        "Confirmar la relación entre joyería, fabricación y ranuras equipadas."
+      ],
       "experiments_required": [],
       "registry_tier": "legacy",
       "legacy_record": {
@@ -3282,7 +3330,7 @@
       "id": "itemData.plants",
       "internal_name": "plants",
       "category": "Inventario",
-      "description": "Estado de plantas del jardín.",
+      "description": "Estado de las parcelas del jardín; estructura observada sin semántica de crecimiento suficiente para escribir.",
       "locations": {
         "local": "item_data*.data:plants",
         "cloud": "itemData.plants"
@@ -3301,12 +3349,16 @@
         "resolved": false
       },
       "observed_values": null,
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "La lista contiene ocho posiciones con objetos o null.",
+        "Cada objeto observado tiene plantName, state, watered y fertilized.",
+        "La muestra completa usa state=1, watered=false y fertilized=false; no se demostró qué representa cada estado ni cómo avanza el crecimiento."
+      ],
       "initial_values": null,
       "limits": {
-        "type": "lista de objetos o null, objeto {fertilized, plantName, state, watered}",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "type": "lista de objetos o null",
+        "observed": "Ocho posiciones; state=1 y booleanos false en la muestra completa.",
+        "functional": "Estados de crecimiento y parcelas disponibles no documentados."
       },
       "related_ids": [
         "knowledge.catalogs.plants",
@@ -3327,8 +3379,9 @@
         "materials.material_fertilize"
       ],
       "pending_dependencies": [
-        "estado de crecimiento",
-        "riego y fertilización"
+        "Estados de crecimiento",
+        "Riego y fertilización",
+        "Parcelas disponibles y mejoras permanentes"
       ],
       "preserve": [],
       "evidence": {
@@ -3340,9 +3393,15 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
-      "open_questions": [],
+      "edit_policy": "solo lectura: no se escribe un estado de crecimiento sin catálogo o prueba que lo defina.",
+      "constraints": [
+        "No inventar estados de crecimiento ni marcar cosechas.",
+        "No modificar seeds ni materiales desde este campo."
+      ],
+      "open_questions": [
+        "Mapear state, watered y fertilized a la UI y al ciclo de crecimiento.",
+        "Determinar el número real de parcelas y sus mejoras."
+      ],
       "experiments_required": [],
       "registry_tier": "legacy",
       "legacy_record": {
@@ -4581,7 +4640,7 @@
       "id": "gameData.heroLevel",
       "internal_name": "heroLevel",
       "category": "Progreso y acceso",
-      "description": "Nivel de mejora de cada personaje.",
+      "description": "Nivel de mejora permanente de cada personaje; el editor experimental escribe solo subidas dentro del intervalo documentado 0..7.",
       "locations": {
         "local": "files/game.data:heroLevel",
         "cloud": "gameData.heroLevel",
@@ -4601,16 +4660,22 @@
       },
       "observed_values": null,
       "known_value_semantics": [
-        "Proyección del nivel de héroe observada en XML y JSON."
+        "Proyección del nivel de héroe observada en XML y JSON.",
+        "Una mejora legítima del Caballero cambió Knight de 0 a 1 y persistió tras reiniciar (confirmación del propietario, E3 de semántica).",
+        "La ruta pública de mejoras documenta siete compras secuenciales con gemas (500, 1000, 1500, 2000, 2500, 5000 y 8000) para los niveles 1 a 7.",
+        "El nivel 8 perteneció a un sistema retirado de personajes legendarios; no se incluye en el escritor.",
+        "Cada personaje puede declarar un MaxLevel en CharactersLevelUpData, pero los valores de configuración no se recuperaron; no se inventan máximos por personaje.",
+        "El escritor solo modifica claves existentes del catálogo, no baja niveles y no cambia heroUnlock."
       ],
       "initial_values": null,
       "limits": {
-        "type": "objeto código → entero, XML int",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "type": "int32",
+        "observed": "Todas las muestras locales están en 0; 1 confirmado en una mejora legítima de Knight.",
+        "functional": "Máximo documentado 7. MaxLevel por personaje no recuperado; nivel 8 excluido por precaución."
       },
       "related_ids": [
-        "gameData.heroUnlock"
+        "gameData.heroUnlock",
+        "knowledge.catalogs.characters"
       ],
       "associated_catalog": null,
       "sources": [
@@ -4625,9 +4690,12 @@
         "Android Global 8.8.0 local",
         "Android Global 8.8.0.11"
       ],
-      "known_dependencies": [],
+      "known_dependencies": [
+        "Catálogo de personajes para resolver códigos."
+      ],
       "pending_dependencies": [
-        "otras clases y mejoras"
+        "MaxLevel real por personaje en CharactersLevelUpData",
+        "Validación física de la escritura y de la persistencia después de guardar desde el cliente"
       ],
       "preserve": [],
       "evidence": {
@@ -4639,10 +4707,18 @@
         "persistence": "E2"
       },
       "validation_level": "E3",
-      "edit_policy": "solo lectura",
-      "constraints": [],
+      "edit_policy": "experimental: subida individual o masiva dentro de 0..7 sobre claves existentes del catálogo; la semántica del campo es E3, pero la eficacia y persistencia del escritor aún no se validaron en Android físico.",
+      "constraints": [
+        "Solo aceptar códigos presentes en el catálogo empaquetado de personajes.",
+        "Solo modificar claves heroLevel existentes; no insertar personajes ausentes.",
+        "No reducir el nivel actual.",
+        "No superar 7; no usar 8 ni valores arbitrarios.",
+        "No desbloquear el personaje ni modificar heroUnlock, heroSkill, skins o recibos.",
+        "Conservar códigos y valores desconocidos."
+      ],
       "open_questions": [
-        "Confirmar el límite funcional por personaje."
+        "Recuperar CharactersLevelUpData.MaxLevel para cada personaje.",
+        "Confirmar en Android físico que la subida de nivel persiste y que el cliente no la revierte."
       ],
       "experiments_required": [],
       "registry_tier": "legacy",
@@ -5957,7 +6033,7 @@
       "id": "itemData.roomDecorateDic",
       "internal_name": "roomDecorateDic",
       "category": "Vestíbulo",
-      "description": "Diccionario de decoraciones de sala.",
+      "description": "Diccionario de decoraciones de sala; los valores observados son listas de enteros sin semántica de nivel confirmada.",
       "locations": {
         "local": "item_data*.data:roomDecorateDic",
         "cloud": "itemData.roomDecorateDic"
@@ -5975,12 +6051,16 @@
         "resolved": false
       },
       "observed_values": null,
-      "known_value_semantics": [],
+      "known_value_semantics": [
+        "Las entradas observadas relacionan nombres de objeto con listas como [0].",
+        "No se demostró si la lista representa niveles, estados o variantes de skin.",
+        "unlockRoomDecorate, roomObjectLevel y currentRoomDecorate son campos distintos."
+      ],
       "initial_values": null,
       "limits": {
         "type": "objeto nombre → lista de enteros",
-        "observed": "No cuantificado en este registro.",
-        "functional": "No documentado."
+        "observed": "Listas [0] para varios objetos en la muestra completa.",
+        "functional": "Niveles, estados y máximos no documentados."
       },
       "related_ids": [
         "knowledge.catalogs.lobby"
@@ -6000,8 +6080,9 @@
         "itemUnlock"
       ],
       "pending_dependencies": [
-        "compra de decoración",
-        "selección de skin de objeto"
+        "Compra de decoración",
+        "Nivel de objeto",
+        "Selección de skin de objeto"
       ],
       "preserve": [],
       "evidence": {
@@ -6013,9 +6094,15 @@
         "persistence": "H"
       },
       "validation_level": "E2",
-      "edit_policy": "solo lectura",
-      "constraints": [],
-      "open_questions": [],
+      "edit_policy": "solo lectura: no se escribe el vestíbulo sin semántica de niveles y estados.",
+      "constraints": [
+        "No interpretar [0] como nivel máximo ni como desbloqueo.",
+        "No modificar unlockRoomDecorate, roomObjectLevel ni currentRoomDecorate desde este campo."
+      ],
+      "open_questions": [
+        "Determinar el significado de la lista y sus valores.",
+        "Comprobar la compra y selección de decoraciones en el cliente."
+      ],
       "experiments_required": [],
       "registry_tier": "legacy",
       "legacy_record": {

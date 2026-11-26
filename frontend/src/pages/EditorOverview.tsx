@@ -1,6 +1,6 @@
 import {
   BatteryCharging, Check, CircleCheck, Coins, Fish, Gem, Medal,
-  PawPrint, Shirt, Sprout, Swords, Ticket, UserRound, Zap, Package, type LucideIcon,
+  PawPrint, ScrollText, Shirt, Sprout, Swords, Ticket, UserRound, Zap, Package, type LucideIcon,
 } from 'lucide-react'
 import { useId, type ReactNode } from 'react'
 import type { NativeSaveSummary } from '../api'
@@ -15,6 +15,7 @@ export const amountFormat = new Intl.NumberFormat('es-MX')
 export const categories = [
   { id: 'recursos', label: 'Recursos' },
   { id: 'personajes', label: 'Personajes' },
+  { id: 'planos', label: 'Planos' },
   { id: 'habilidades', label: 'Habilidades' },
   { id: 'skins', label: 'Skins' },
   { id: 'mascotas', label: 'Mascotas' },
@@ -49,6 +50,9 @@ const unlocks: Array<{ key: BulkKey; label: string; control: string; icon: Lucid
 ]
 
 export function CategoryIcon({ id }: { id: CategoryId }) {
+  if (id === 'planos') return <span className="category-icon category-icon-symbol" aria-hidden="true">
+    <ScrollText size={30} strokeWidth={1.7} />
+  </span>
   return <img className="category-icon" src={`${import.meta.env.BASE_URL}editor-icons/${id}.png`}
     width="40" height="40" alt="" />
 }
@@ -167,6 +171,21 @@ export function QuickEdit({ save, draft, built, update }: {
             : draft.bulk[key] ? setBulk(key, false, draft) : clearSelection(key, draft))} />
       })}
     </section>
+    <section className="quick-group" aria-label="Progreso">
+      <h2>Progreso</h2>
+      {([
+        ['heroLevels', 'Niveles de personaje', 'Mejorar niveles elegibles', UserRound, built.plan.hero_levels?.length ?? 0],
+        ['petAffinity', 'Afinidad de mascotas', 'Maximizar afinidades', PawPrint, built.plan.pet_affinity?.length ?? 0],
+        ['blueprints', 'Planos obtenidos', 'Investigar planos', ScrollText, built.plan.blueprints?.length ?? 0],
+      ] as Array<[BulkKey, string, string, LucideIcon, number]>).map(([key, label, control, Icon, changes]) => {
+        const state = quickChecked(key, draft, eligible)
+        return <QuickRow key={key} label={label} control={control} icon={Icon}
+          checked={state === 'all'} mixed={state === 'some'} editable={eligible[key].length > 0} changed={changes > 0}
+          description={<small>{eligible[key].length} elegibles · {changes} en borrador</small>}
+          onChange={(checked) => update(checked ? selectAll(key, draft)
+            : draft.bulk[key] ? setBulk(key, false, draft) : clearSelection(key, draft))} />
+      })}
+    </section>
     <section className="quick-group" aria-label="Beneficios">
       <h2>Beneficios</h2>
       <QuickRow label="Tarjeta de renacimiento permanente" icon={Swords} checked={draft.reborn}
@@ -201,10 +220,11 @@ export function CategoryGrid({ built, onOpen }: { built: BuiltPlan; onOpen: (id:
   const food = built.plan.advanced?.materials?.filter(({ id }) => id === batteryId || id === 'material_grain').length ?? 0
   const pending: Record<CategoryId, number> = {
     recursos: resources + season,
-    personajes: counts.Personajes ?? 0,
+    personajes: (counts.Personajes ?? 0) + (counts.Niveles ?? 0),
+    planos: counts.Planos ?? 0,
     habilidades: counts.Habilidades ?? 0,
     skins: counts.Skins ?? 0,
-    mascotas: (counts.Mascotas ?? 0) + food,
+    mascotas: (counts.Mascotas ?? 0) + (counts.Afinidad ?? 0) + food,
     materiales: counts.Materiales ?? 0,
     semillas: counts.Semillas ?? 0,
     temporada: season + (counts['Tarjeta de renacimiento'] ?? 0),

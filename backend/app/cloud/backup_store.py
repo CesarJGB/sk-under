@@ -91,6 +91,7 @@ _FIELDS = frozenset(
         UNIFIED_RECORD_FIELD,
     }
 )
+_CATEGORY_KEYS = _FIELDS | {"hero_levels", "pet_affinity", "blueprints"}
 _RECORD_LIMIT = 64 * 1024
 _JOURNAL_LIMIT = 1024 * 1024
 _SEAL_MAGIC = b"SKB1"
@@ -372,11 +373,11 @@ def _require_codes(value: object) -> tuple[str, ...]:
 def _require_categories(value: object) -> tuple[str, ...]:
     if value is None:
         return ()
-    if not isinstance(value, list) or len(value) > len(_FIELDS):
+    if not isinstance(value, list) or len(value) > len(_CATEGORY_KEYS):
         raise BackupIntegrityError("El registro de respaldo contiene categorías inválidas.")
     categories: list[str] = []
     for category in value:
-        if not isinstance(category, str) or category not in _FIELDS or category in categories:
+        if not isinstance(category, str) or category not in _CATEGORY_KEYS or category in categories:
             raise BackupIntegrityError("El registro de respaldo contiene categorías inválidas.")
         categories.append(category)
     return tuple(categories)

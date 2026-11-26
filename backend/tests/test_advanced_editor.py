@@ -380,7 +380,7 @@ def test_pet_food_rejects_out_of_range_values():
             prepare_advanced_edit(original, {"pet_food": [{"id": "material_grain", "value": value}]})
 
 
-def test_pet_progression_is_read_only_and_uses_observed_event2count_keys():
+def test_pet_progression_uses_observed_event2count_keys_and_known_limits():
     data = document()
     data["statisticData"]["event2Count"] = {
         "pet_0_intimacy": 240,
@@ -400,12 +400,14 @@ def test_pet_progression_is_read_only_and_uses_observed_event2count_keys():
     assert entries["Cat"]["full"] is True
     assert entries["Pig"]["intimacy"] == 180
     assert entries["Pig"]["full"] is False
-    assert entries["Cat"]["max"] is None
+    assert entries["Cat"]["max"] == 240
+    assert entries["Cat"]["editable"] is False
+    assert entries["Pig"]["editable"] is True
+    assert progression["read_only"] is False
     assert snapshot["pets"] and snapshot["pet_skins"] and snapshot["pet_food"]
     assert {row["id"] for row in snapshot["pet_food"]} == {"material_grain", "material_battery"}
     assert len(snapshot["pets"]) == 58
     assert len(snapshot["pet_skins"]) == 12
-    # El snapshot no expone ninguna operación de escritura de intimidad.
     assert snapshot["pet_policy"]["field"] == "pets"
 
 

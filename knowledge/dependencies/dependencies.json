@@ -9,9 +9,10 @@
     "Las relaciones observed describen coaparición estructural en muestras propias, sin demostrar causalidad.",
     "Las relaciones hypothesis y negative existen para evitar que futuras fases confundan campos parecidos.",
     "Las relaciones de la fase 7.1 distinguen la referencia funcional del propietario de la confirmación empírica en dispositivo; ninguna relación se eleva a E3/E4 sin esa prueba.",
-    "La fase 7.2 eleva a E3 las relaciones confirmadas por el propietario en Android físico y mantiene como hipótesis u observación las relativas a mascotas y pase de batalla."
+    "La fase 7.2 eleva a E3 las relaciones confirmadas por el propietario en Android físico y mantiene como hipótesis u observación las relativas a mascotas y pase de batalla.",
+    "La fase 9.0 documenta escritores experimentales de niveles, afinidad y planos sin elevar la evidencia de semántica ni declarar validación física."
   ],
-  "count": 35,
+  "count": 39,
   "dependencies": [
     {
       "id": "gems-balance-composition",
@@ -129,7 +130,7 @@
       "status": "observed",
       "evidence": "E2",
       "scope": "8.8.0, estructura de personajes",
-      "description": "heroUnlock declara personajes desbloqueados y skinLock contiene una lista de 802 posiciones alineadas con el catálogo de skins. La alineación es estructural; no se demostró que desbloquear un personaje desbloquee sus skins.",
+      "description": "heroUnlock declara personajes desbloqueados y skinLock contiene una lista de 802 posiciones alineadas con el catálogo de skins. La alineación es estructural; no se demostró que desbloquear un personaje desbloquee sus skins. El escritor de niveles no modifica heroUnlock.",
       "sources": [
         "docs/research/phase6-12/personajes-skins-skills.md",
         "docs/save-research/save-file-mapping.md"
@@ -272,14 +273,15 @@
       "status": "observed",
       "evidence": "E1",
       "scope": "8.8.0, muestra externa con forma de guardado",
-      "description": "La muestra externa data.json contiene 119 claves de blueprint con estados Got/Researched. No se usó para editar ni se considera evidencia de posesión de la cuenta.",
+      "description": "La muestra externa data.json contiene 119 claves de blueprint con estados Got/Researched; la muestra completa propia 8.6.0 contiene 275 claves (273 Researched y 2 Got). Varias claves antiguas omiten el prefijo blueprint_ del catálogo. No se usó para editar ni se considera evidencia de posesión de la cuenta.",
       "sources": [
         "knowledge/evidence/data-json-structure.json",
         "knowledge/catalogs/blueprints.json"
       ],
-      "edit_implication": "No interpretar Got como desbloqueo universal sin una prueba propia.",
+      "edit_implication": "Experimental: resolver primero el identificador exacto del catálogo y después el alias sin prefijo; cambiar solo Got/Researched en claves existentes; no insertar planos ausentes.",
       "experiments_required": [
-        "Reproducir los estados Got y Researched en un guardado propio."
+        "Reproducir los estados Got y Researched en un guardado propio y comprobar su efecto en el cliente.",
+        "Confirmar si investigar consume materiales automáticamente."
       ]
     },
     {
@@ -324,14 +326,15 @@
       "status": "observed",
       "evidence": "E1",
       "scope": "8.8.0, item.json",
-      "description": "Las 47 semillas del catálogo se relacionan con 47 plantas mediante el prefijo plant_ y el sufijo _seed. La relación de catálogo no confirma el estado de crecimiento ni la posesión.",
+      "description": "Las 47 semillas del catálogo se relacionan con 47 plantas mediante el prefijo plant_ y el sufijo _seed. La muestra completa tiene ocho parcelas con objetos {plantName, state, watered, fertilized} o null; state=1 y los booleanos false no bastan para definir el ciclo de crecimiento.",
       "sources": [
         "knowledge/catalogs/seeds.json",
         "knowledge/catalogs/plants.json"
       ],
-      "edit_implication": "Mantener inventario y jardín como estados separados.",
+      "edit_implication": "Mantener inventario y jardín como estados separados; itemData.plants permanece en solo lectura.",
       "experiments_required": [
-        "Mapear las claves reales de itemData.plants y su estado de crecimiento."
+        "Mapear cada valor de state, watered y fertilized con la UI y el ciclo de crecimiento.",
+        "Determinar parcelas disponibles y mejoras permanentes."
       ]
     },
     {
@@ -342,14 +345,15 @@
       "status": "observed",
       "evidence": "E2",
       "scope": "8.8.0, 15 muebles observados en muestra externa",
-      "description": "unlockRoomDecorate y roomObjectLevel aparecen como estados distintos del vestíbulo. La muestra externa data.json permite enumerar 15 muebles, pero no se comprobó su semántica.",
+      "description": "unlockRoomDecorate y roomObjectLevel aparecen como estados distintos del vestíbulo. roomDecorateDic relaciona nombres de objeto con listas como [0]; no se demostró si la lista representa niveles, estados o skins. La muestra completa incluye diez objetos con [0].",
       "sources": [
         "docs/save-research/field-registry.json",
         "knowledge/catalogs/lobby.json"
       ],
-      "edit_implication": "No asumir que desbloquear un mueble establece su nivel.",
+      "edit_implication": "No asumir que desbloquear un mueble establece su nivel ni que [0] sea un nivel máximo. Estos campos permanecen en solo lectura.",
       "experiments_required": [
-        "Probar desbloqueo y nivel de un mueble en un guardado propio."
+        "Probar desbloqueo, nivel y selección de un mueble en un guardado propio.",
+        "Aclarar el significado de roomDecorateDic y currentRoomDecorate."
       ]
     },
     {
@@ -621,13 +625,89 @@
       "status": "observed",
       "evidence": "E2",
       "scope": "8.8.0, muestra modificada statistic_111_.data",
-      "description": "Las claves pet_<ID>_intimacy, pet_<ID>_full_intimacy y pet_<ID>_action_unlock describen la progresión. Los máximos observados varían (180, 240 y 300) y la configuración completa por mascota no está recuperada; solo full_intimacy = 1 confirma el máximo.",
+      "description": "Las claves pet_<ID>_intimacy, pet_<ID>_full_intimacy y pet_<ID>_action_unlock describen la progresión. Los máximos observados varían (180 para los índices 30 y 31, 300 para el 34 y 240 para el resto de índices 0..55 presentes); la configuración completa por mascota no está recuperada. Los índices 27, 56 y 57 no aparecieron y no tienen máximo justificado.",
       "sources": [
         "docs/research/phase7-2/README.md"
       ],
-      "edit_implication": "La progresión es de solo lectura; no se escriben máximos inventados.",
+      "edit_implication": "Experimental: solo se sube la intimidad hasta el máximo empírico conocido, se activa full_intimacy al alcanzarlo y no se tocan action_unlock ni pet_full_intimacy. La eficacia del escritor no se validó en dispositivo.",
       "experiments_required": [
-        "Recuperar PetsLevelUpConfig/PetIntimacyConfig y validar una escritura de intimidad en Android físico."
+        "Recuperar PetsLevelUpConfig/PetIntimacyConfig y validar una escritura de intimidad en Android físico.",
+        "Comprobar si el cliente actualiza la acción especial o el contador global al alcanzar el máximo."
+      ]
+    },
+    {
+      "id": "hero-level-catalog",
+      "from": "gameData.heroLevel",
+      "to": "catalog.characters",
+      "relation": "nivel_por_codigo_de_personaje",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, 42 personajes; confirmación del propietario para Knight 0→1",
+      "description": "heroLevel es un mapa código→entero alineado con el catálogo de personajes. Una mejora legítima de Knight cambió 0→1. La ruta pública documenta siete mejoras secuenciales (niveles 1..7); CharactersLevelUpData declara MaxLevel por personaje, pero sus valores no se recuperaron.",
+      "sources": [
+        "docs/research/phase6-12/personajes-skins-skills.md",
+        "docs/research/phase9-0/README.md",
+        "knowledge/catalogs/characters.json"
+      ],
+      "edit_implication": "Solo escribir códigos existentes del catálogo, sin bajar el nivel y sin superar 7. No se inventan máximos por personaje ni se usa el nivel 8 retirado.",
+      "experiments_required": [
+        "Recuperar CharactersLevelUpData.MaxLevel.",
+        "Validar en Android físico una subida individual y una masiva, incluida la persistencia tras guardar desde el cliente."
+      ]
+    },
+    {
+      "id": "hero-level-unlock-separation",
+      "from": "gameData.heroLevel",
+      "to": "gameData.heroUnlock",
+      "relation": "campos_separados_de_progreso_y_acceso",
+      "status": "negative",
+      "evidence": "E2",
+      "scope": "8.8.0, estructura de personajes",
+      "description": "heroLevel expresa el nivel de mejora y heroUnlock la disponibilidad. No se demostró que escribir el nivel desbloquee al personaje ni que desbloquearlo suba su nivel.",
+      "sources": [
+        "docs/research/phase6-12/personajes-skins-skills.md",
+        "knowledge/fields/fields.json"
+      ],
+      "edit_implication": "Mantener escritores separados; un mismo lote unificado puede incluir ambos, pero ninguno modifica el otro.",
+      "experiments_required": [
+        "Comprobar en el cliente si un personaje bloqueado con nivel alto aparece utilizable o si el nivel se conserva al desbloquearlo."
+      ]
+    },
+    {
+      "id": "blueprint-catalog-alias",
+      "from": "itemData.blueprints",
+      "to": "catalog.blueprints",
+      "relation": "identificador_con_y_sin_prefijo",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0, muestra completa 8.6.0 con 275 claves",
+      "description": "El catálogo usa el prefijo blueprint_. El guardado conserva alias sin prefijo para planos antiguos, por ejemplo multi_room_skin_20, garden_skin_* y hall_skin_*. No todas las claves del catálogo están presentes en la muestra.",
+      "sources": [
+        "knowledge/catalogs/blueprints.json",
+        "docs/research/phase9-0/README.md"
+      ],
+      "edit_implication": "Resolver el identificador exacto y después el alias sin prefijo; editar solo claves existentes y conservar las no reconocidas.",
+      "experiments_required": [
+        "Confirmar la lista de alias por versión y si el cliente acepta claves nuevas."
+      ]
+    },
+    {
+      "id": "forge-weapons-queue-not-progress",
+      "from": "itemData.forgeWeapons",
+      "to": "catalog.weapons",
+      "relation": "ranuras_transitorias_no_progreso_permanente",
+      "status": "hypothesis",
+      "evidence": "E2",
+      "scope": "8.8.0, dos muestras propias",
+      "description": "forgeWeapons contiene cuatro posiciones con nombres de arma o null. Las muestras tienen armas distintas y no se comporta como un contador de obtención. La disponibilidad permanente parece depender de ObtainWeaponTimes o IsWeaponForgeUnlockByObtainTimes.",
+      "sources": [
+        "docs/research/phase9-0/README.md",
+        "docs/research/phase7-0/oportunidades.md"
+      ],
+      "edit_implication": "No tratar forgeWeapons como progreso de forja ni como desbloqueo. El editor lo deja en solo lectura.",
+      "experiments_required": [
+        "Determinar si las posiciones son cola, ranuras activas o pagos pendientes.",
+        "Localizar el contador real de obtención y su umbral por arma."
       ]
     }
   ]

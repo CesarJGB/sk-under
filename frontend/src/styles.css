@@ -2129,6 +2129,15 @@ body:has(.editor-bar) {
   image-rendering: pixelated;
 }
 
+.category-icon-symbol {
+  display: grid;
+  place-items: center;
+  color: var(--accent-dark);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--subtle);
+}
+
 .category-card strong {
   position: absolute;
   top: 5px;
@@ -2279,6 +2288,65 @@ body:has(.editor-bar) {
   display: grid;
   padding: 4px 6px;
 }
+
+.detail-subhead { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 4px 10px; }
+.detail-subhead > div { display: grid; flex: 1 1 190px; gap: 2px; min-width: 0; }
+.progress-editor { display: grid; gap: 7px; margin-top: 6px; }
+
+.level-list {
+  display: grid;
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.level-row {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) 88px;
+  align-items: center;
+  gap: 7px;
+  min-height: 48px;
+  padding: 3px 4px;
+  border-radius: 5px;
+}
+
+.level-row + .level-row { border-top: 1px solid var(--row-border); }
+.level-row.changed { background: var(--surface-selected); }
+.level-row > input[type="checkbox"] { width: 20px; height: 20px; margin: 0; }
+.level-copy { display: grid; gap: 1px; min-width: 0; }
+.level-copy strong { font-size: .84rem; font-weight: 600; line-height: 1.2; overflow-wrap: anywhere; }
+.level-copy small { color: var(--muted); font-size: .69rem; line-height: 1.25; overflow-wrap: anywhere; }
+.level-input {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 8px;
+  border: 1px solid var(--field-border-soft);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--field-bg);
+  font: inherit;
+  font-size: .85rem;
+  text-align: right;
+}
+.level-input:disabled { border-color: var(--field-disabled-border); background: var(--field-disabled-bg); }
+.level-input[aria-invalid="true"] { border-color: var(--invalid-deep); }
+
+.blueprint-row { grid-template-columns: 20px minmax(0, 1fr) 106px; }
+.blueprint-row select {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 5px;
+  border: 1px solid var(--field-border-soft);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--field-bg);
+  font: inherit;
+  font-size: .78rem;
+}
+.blueprint-row select:disabled { border-color: var(--field-disabled-border); background: var(--field-disabled-bg); }
 
 .number-row {
   display: grid;

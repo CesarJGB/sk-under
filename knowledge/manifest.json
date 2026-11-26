@@ -17,15 +17,15 @@
     "declared_fields": 550,
     "fields_by_evidence": {
       "E1": 194,
-      "E2": 406,
-      "E3": 10,
+      "E2": 405,
+      "E3": 11,
       "E4": 6
     },
-    "dependencies": 35,
+    "dependencies": 39,
     "sources": 17,
     "translations": 8562,
     "versions_analyzed": 3,
-    "open_questions": 565
+    "open_questions": 573
   },
   "artifacts": [
     {
@@ -213,9 +213,9 @@
     {
       "path": "knowledge/dependencies/dependencies.json",
       "kind": "dependencies",
-      "sha256": "19784d00dde2d919c84333b193c8ad785927f8635bb5d805958a740b3eefb427",
-      "bytes": 30528,
-      "count": 35
+      "sha256": "37e20f22e5b14385e4e14addcd2e2504d5be965db90ff008a3df8e52ab166d8b",
+      "bytes": 36028,
+      "count": 39
     },
     {
       "path": "knowledge/evidence/data-json-structure.json",
@@ -248,15 +248,15 @@
     {
       "path": "knowledge/fields/fields.json",
       "kind": "fields",
-      "sha256": "110996986a7e095fe6ade015f38701690338378ec57048534aa85ec3f3f54fd8",
-      "bytes": 1208461,
+      "sha256": "02d7c5a5bd57b102cbd564329093e870fa94209703f1a62c96e902c9179ebe74",
+      "bytes": 1216417,
       "count": 616
     },
     {
       "path": "knowledge/fields/overrides.json",
       "kind": "fields",
-      "sha256": "d5b501ee07378d0c6d4a84a38d0ae86db81303d9605e6b09ed970f83d33c3240",
-      "bytes": 30834,
+      "sha256": "503216116b83a017cbba00b30d3092950b873ea4fa56df7425b96a34ebaae52f",
+      "bytes": 40163,
       "count": null
     },
     {
@@ -318,8 +318,8 @@
     {
       "path": "knowledge/sources/owner-confirmations-phase7-2.md",
       "kind": "sources",
-      "sha256": "707ed560b7b12377a5ad1ed098ed7b9c350a25a3bbdd8883a0b910b2acead515",
-      "bytes": 1600,
+      "sha256": "79d511c9615b1bbee849d5fccd422c5cf87e46456df3512f6b945a87494d3a0c",
+      "bytes": 2298,
       "count": null
     },
     {
@@ -355,6 +355,13 @@
       "kind": "tools",
       "sha256": "f8c465e0a7b4b91cbee571e4859809272fe4c11b376000cb13a5f11158350166",
       "bytes": 3663,
+      "count": null
+    },
+    {
+      "path": "knowledge/tools/build_backend_blueprints.py",
+      "kind": "tools",
+      "sha256": "141fb41086ccd19b41c84233b98166e9afd3e570818c702c875d9c56f9cd703f",
+      "bytes": 4986,
       "count": null
     },
     {

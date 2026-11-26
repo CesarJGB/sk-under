@@ -1,0 +1,6472 @@
+{
+  "schema": "sk-under/backend-blueprints@1",
+  "game_version": "8.8.0",
+  "generated_by": "knowledge/tools/build_backend_blueprints.py",
+  "source_refs": {
+    "blueprints": "knowledge/catalogs/blueprints.json"
+  },
+  "counts": {
+    "blueprints": 265
+  },
+  "blueprints": [
+    {
+      "id": "blueprint_evolution_weapon_006",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_006",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_iron",
+          "num": 3
+        },
+        {
+          "item": "material_gear",
+          "num": 3
+        },
+        {
+          "item": "material_magic_green",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_007",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_007",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        },
+        {
+          "item": "material_cell",
+          "num": 5
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 5
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_008",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_008",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_iron",
+          "num": 3
+        },
+        {
+          "item": "material_magic_green",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_009",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_009",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_010",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_010",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_magic_black",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 5
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_015",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_015",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_magic_black",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 5
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_018",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_018",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_magic_black",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_028",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_028",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_gear",
+          "num": 10
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 6
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_033",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_033",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_gear",
+          "num": 10
+        },
+        {
+          "item": "material_magic_black",
+          "num": 3
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_034",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_034",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_wood",
+          "num": 5
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_038",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_038",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_red",
+          "num": 2
+        },
+        {
+          "item": "material_magic_purple",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_041",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_376",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_wood",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_purple",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_043",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_043",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_gear",
+          "num": 10
+        },
+        {
+          "item": "material_battery",
+          "num": 5
+        },
+        {
+          "item": "material_magic_red",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_044",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_044",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_gear",
+          "num": 10
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_magic_red",
+          "num": 6
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_050",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_050",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_iron",
+          "num": 6
+        },
+        {
+          "item": "material_magic_green",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_061",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_061",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_magic_black",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 5
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_064",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_064",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_wood",
+          "num": 5
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_072",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_094",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_magic_black",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 5
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_076",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_405",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 2
+        },
+        {
+          "item": "material_magic_black",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_078",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_078",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_wood",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_red",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_079",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_079",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_wood",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_cyan",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_089",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_089",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_gear",
+          "num": 10
+        },
+        {
+          "item": "material_wood",
+          "num": 10
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 4
+        },
+        {
+          "item": "material_magic_purple",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_093",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_093",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 6
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_094",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_094",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_cell",
+          "num": 10
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 6
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_095",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_095",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 25
+        },
+        {
+          "item": "material_wood",
+          "num": 5
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 4
+        },
+        {
+          "item": "material_magic_black",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_097",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_097",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        },
+        {
+          "item": "material_cell",
+          "num": 5
+        },
+        {
+          "item": "material_magic_cyan",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 5
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_108",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_108",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 2
+        },
+        {
+          "item": "material_magic_purple",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_111",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_111",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_iron",
+          "num": 2
+        },
+        {
+          "item": "material_gear",
+          "num": 2
+        },
+        {
+          "item": "material_wood",
+          "num": 2
+        },
+        {
+          "item": "material_magic_green",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_115",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_115",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_iron",
+          "num": 2
+        },
+        {
+          "item": "material_magic_green",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 5
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_120",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_120",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 15
+        },
+        {
+          "item": "material_battery",
+          "num": 15
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 8
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_121",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_121",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_magic_cyan",
+          "num": 2
+        },
+        {
+          "item": "material_magic_green",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_122",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_122",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_gear",
+          "num": 10
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_magic_cyan",
+          "num": 4
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_127",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_127",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 20
+        },
+        {
+          "item": "material_wood",
+          "num": 10
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 8
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_128",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_128",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_gear",
+          "num": 20
+        },
+        {
+          "item": "material_magic_red",
+          "num": 2
+        },
+        {
+          "item": "material_magic_black",
+          "num": 6
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_129",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_129",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_magic_black",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 5
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_131",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_131",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_132",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_243",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_134",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_134",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_cell",
+          "num": 15
+        },
+        {
+          "item": "material_gear",
+          "num": 15
+        },
+        {
+          "item": "material_magic_red",
+          "num": 4
+        },
+        {
+          "item": "material_magic_green",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_135",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_243",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_cell",
+          "num": 15
+        },
+        {
+          "item": "material_wood",
+          "num": 15
+        },
+        {
+          "item": "material_magic_red",
+          "num": 8
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_139",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_139",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_magic_red",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 5
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_140",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_140",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_cell",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_purple",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_141",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_141",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_gear",
+          "num": 10
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_magic_black",
+          "num": 4
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_145",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_145",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 15
+        },
+        {
+          "item": "material_wood",
+          "num": 15
+        },
+        {
+          "item": "material_magic_red",
+          "num": 5
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_146",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_376",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_cell",
+          "num": 5
+        },
+        {
+          "item": "material_wood",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_156",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_156",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_battery",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_159",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_159",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_160",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_160",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_161",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_161",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_iron",
+          "num": 3
+        },
+        {
+          "item": "material_magic_cyan",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_167",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_167",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_battery",
+          "num": 15
+        },
+        {
+          "item": "material_wood",
+          "num": 15
+        },
+        {
+          "item": "material_magic_purple",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_169",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_169",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        },
+        {
+          "item": "material_iron",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 2
+        },
+        {
+          "item": "material_magic_black",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 5
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_170",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_170",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_wood",
+          "num": 5
+        },
+        {
+          "item": "material_magic_red",
+          "num": 2
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_175",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_175",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_gear",
+          "num": 10
+        },
+        {
+          "item": "material_cell",
+          "num": 20
+        },
+        {
+          "item": "material_magic_red",
+          "num": 4
+        },
+        {
+          "item": "material_magic_green",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_181",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_181",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_gear",
+          "num": 15
+        },
+        {
+          "item": "material_magic_black",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_183",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_183",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_iron",
+          "num": 3
+        },
+        {
+          "item": "material_gear",
+          "num": 3
+        },
+        {
+          "item": "material_magic_black",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_192",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_192",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_magic_red",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 5
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_200",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_200",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_magic_red",
+          "num": 2
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_203",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_203",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_wood",
+          "num": 6
+        },
+        {
+          "item": "material_magic_green",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_207",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_207",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_210",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_210",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        },
+        {
+          "item": "material_wood",
+          "num": 5
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 5
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_215",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_215",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_220",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_141",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_gear",
+          "num": 10
+        },
+        {
+          "item": "material_wood",
+          "num": 10
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_223",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_243",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_green",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_224",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_224",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_gear",
+          "num": 10
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_magic_cyan",
+          "num": 6
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_231",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_231",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 20
+        },
+        {
+          "item": "material_wood",
+          "num": 20
+        },
+        {
+          "item": "material_magic_black",
+          "num": 8
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_233",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_233",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_cell",
+          "num": 20
+        },
+        {
+          "item": "material_magic_red",
+          "num": 2
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 2
+        },
+        {
+          "item": "material_magic_green",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_239",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_239",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_iron",
+          "num": 2
+        },
+        {
+          "item": "material_wood",
+          "num": 2
+        },
+        {
+          "item": "material_gear",
+          "num": 2
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_243",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_243",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_246",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_246",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 15
+        },
+        {
+          "item": "material_battery",
+          "num": 15
+        },
+        {
+          "item": "material_magic_black",
+          "num": 4
+        },
+        {
+          "item": "material_magic_red",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_247",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_247",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_iron",
+          "num": 20
+        },
+        {
+          "item": "material_cell",
+          "num": 10
+        },
+        {
+          "item": "material_magic_red",
+          "num": 2
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 2
+        },
+        {
+          "item": "material_magic_green",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_250",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_250",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_cell",
+          "num": 17
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 6
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_253",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_253",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_255",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_255",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_260",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_260",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_gear",
+          "num": 3
+        },
+        {
+          "item": "material_battery",
+          "num": 7
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_270",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_094",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_wood",
+          "num": 10
+        },
+        {
+          "item": "material_magic_red",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_274",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_274",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_cell",
+          "num": 10
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 3
+        },
+        {
+          "item": "material_magic_cyan",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_275",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_275",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_cyan",
+          "num": 2
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 2
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_277",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_277",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_battery",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 10
+        },
+        {
+          "item": "material_magic_purple",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_278",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_278",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_cell",
+          "num": 10
+        },
+        {
+          "item": "material_magic_black",
+          "num": 3
+        },
+        {
+          "item": "material_magic_green",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_298",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_298",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_iron",
+          "num": 23
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_299",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_299",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_302",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_302",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_gear",
+          "num": 10
+        },
+        {
+          "item": "material_iron",
+          "num": 8
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_306",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_306",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 20
+        },
+        {
+          "item": "material_cell",
+          "num": 10
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 5
+        },
+        {
+          "item": "material_magic_black",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_307",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_307",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 25
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_magic_black",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_309",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_309",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 6
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_310",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_310",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_iron",
+          "num": 15
+        },
+        {
+          "item": "material_magic_purple",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_311",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_311",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_magic_cyan",
+          "num": 6
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_315",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_315",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_wood",
+          "num": 5
+        },
+        {
+          "item": "material_magic_green",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_316",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_316",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_wood",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_green",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_317",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_317",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 15
+        },
+        {
+          "item": "material_cell",
+          "num": 15
+        },
+        {
+          "item": "material_magic_black",
+          "num": 4
+        },
+        {
+          "item": "material_magic_purple",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_320",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_320",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_cell",
+          "num": 15
+        },
+        {
+          "item": "material_gear",
+          "num": 15
+        },
+        {
+          "item": "material_magic_cyan",
+          "num": 8
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_323",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_323",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_iron",
+          "num": 12
+        },
+        {
+          "item": "material_cell",
+          "num": 8
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_magic_black",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_325",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_325",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_iron",
+          "num": 15
+        },
+        {
+          "item": "material_magic_purple",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_326",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_326",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_327",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_327",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_iron",
+          "num": 3
+        },
+        {
+          "item": "material_magic_green",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_329",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_329",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_wood",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_red",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_330",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_330",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_battery",
+          "num": 4
+        },
+        {
+          "item": "material_gear",
+          "num": 6
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_343",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_343",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_345",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_345",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_gear",
+          "num": 20
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_346",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_346",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_357",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_357",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_366",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_366",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_367",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_367",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_370",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_370",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_wood",
+          "num": 10
+        },
+        {
+          "item": "material_magic_black",
+          "num": 6
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_371",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_371",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_cell",
+          "num": 10
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_magic_black",
+          "num": 6
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_372",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_372",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_wood",
+          "num": 10
+        },
+        {
+          "item": "material_magic_purple",
+          "num": 3
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_374",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_243",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_wood",
+          "num": 15
+        },
+        {
+          "item": "material_magic_red",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_376",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_376",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_wood",
+          "num": 5
+        },
+        {
+          "item": "material_magic_black",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_377",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_376",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_cell",
+          "num": 5
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_378",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_378",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_cell",
+          "num": 3
+        },
+        {
+          "item": "material_wood",
+          "num": 3
+        },
+        {
+          "item": "material_magic_red",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_388",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_388",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 15
+        },
+        {
+          "item": "material_gear",
+          "num": 15
+        },
+        {
+          "item": "material_magic_purple",
+          "num": 5
+        },
+        {
+          "item": "material_magic_black",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_399",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_399",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_wood",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_green",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_400",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_400",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_magic_purple",
+          "num": 3
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_401",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_376",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_battery",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_green",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_402",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_376",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_cell",
+          "num": 10
+        },
+        {
+          "item": "material_magic_red",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_403",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_094",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 30
+        },
+        {
+          "item": "material_magic_red",
+          "num": 4
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_404",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_404",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_iron",
+          "num": 5
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_magic_cyan",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_405",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_405",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_iron",
+          "num": 10
+        },
+        {
+          "item": "material_wood",
+          "num": 10
+        },
+        {
+          "item": "material_magic_black",
+          "num": 3
+        },
+        {
+          "item": "material_magic_green",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_406",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_406",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_battery",
+          "num": 5
+        },
+        {
+          "item": "material_gear",
+          "num": 10
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_411",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_411",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_cell",
+          "num": 15
+        },
+        {
+          "item": "material_magic_green",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_412",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_412",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_iron",
+          "num": 2
+        },
+        {
+          "item": "material_wood",
+          "num": 8
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 4
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_413",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_413",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_414",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_414",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_battery",
+          "num": 15
+        },
+        {
+          "item": "material_magic_red",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_415",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_415",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_iron",
+          "num": 25
+        },
+        {
+          "item": "material_gear",
+          "num": 5
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 5
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 12
+        }
+      ]
+    },
+    {
+      "id": "blueprint_evolution_weapon_cg_2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "evolution",
+      "blueprint_type": 8,
+      "target": "weapon_cg_2",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2500
+        },
+        {
+          "item": "material_gear",
+          "num": 10
+        },
+        {
+          "item": "material_battery",
+          "num": 10
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 3
+        },
+        {
+          "item": "material_magic_cyan",
+          "num": 3
+        },
+        {
+          "item": "material_ancient_weapon_fragment",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_garden_skin_0",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 0,
+      "target": "garden_skin_0",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_garden_skin_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 0,
+      "target": "garden_skin_1",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_garden_skin_2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 0,
+      "target": "garden_skin_2",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_hall_skin_0",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 0,
+      "target": "hall_skin_0",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_hall_skin_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 0,
+      "target": "hall_skin_1",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_m_mech_2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "m",
+      "blueprint_type": 2,
+      "target": "m_mech_2",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_m_mech_3",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "m",
+      "blueprint_type": 2,
+      "target": "m_mech_3",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_m_mech_4",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "m",
+      "blueprint_type": 2,
+      "target": "m_mech_4",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_m_mech_5",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "m",
+      "blueprint_type": 2,
+      "target": "m_mech_5",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_m_mech_6",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "m",
+      "blueprint_type": 2,
+      "target": "m_mech_6",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_m_mech_7",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "m",
+      "blueprint_type": 2,
+      "target": "m_mech_7",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_m_mech_8",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "m",
+      "blueprint_type": 2,
+      "target": "m_mech_8",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_m_mech_9",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "m",
+      "blueprint_type": 2,
+      "target": "m_mech_9",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_m_mech_coin",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "m",
+      "blueprint_type": 2,
+      "target": "m_mech_coin",
+      "research_materials": []
+    },
+    {
+      "id": "blueprint_m_mecha_normal_2s",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "m",
+      "blueprint_type": 2,
+      "target": "m_mecha_normal_2s",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 5000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_m_mecha_normal_b",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "m",
+      "blueprint_type": 2,
+      "target": "m_mecha_normal_b",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_m_mecha_normal_d",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "m",
+      "blueprint_type": 2,
+      "target": "m_mecha_normal_d",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_m_mecha_normal_e",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "m",
+      "blueprint_type": 2,
+      "target": "m_mecha_normal_e",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_magic_area_skin_0",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 0,
+      "target": "magic_area_skin_0",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_magic_area_skin_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 0,
+      "target": "magic_area_skin_1",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_multi_room_skin_0",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "multi",
+      "blueprint_type": 1,
+      "target": "multi_room_skin_0",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_multi_room_skin_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "multi",
+      "blueprint_type": 1,
+      "target": "multi_room_skin_1",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_multi_room_skin_10",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "multi",
+      "blueprint_type": 1,
+      "target": "multi_room_skin_10",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_multi_room_skin_2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "multi",
+      "blueprint_type": 1,
+      "target": "multi_room_skin_2",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_multi_room_skin_3",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "multi",
+      "blueprint_type": 1,
+      "target": "multi_room_skin_3",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_multi_room_skin_4",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "multi",
+      "blueprint_type": 1,
+      "target": "multi_room_skin_4",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_multi_room_skin_5",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "multi",
+      "blueprint_type": 1,
+      "target": "multi_room_skin_5",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_multi_room_skin_6",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "multi",
+      "blueprint_type": 1,
+      "target": "multi_room_skin_6",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_multi_room_skin_7",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "multi",
+      "blueprint_type": 1,
+      "target": "multi_room_skin_7",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_multi_room_skin_8",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "multi",
+      "blueprint_type": 1,
+      "target": "multi_room_skin_8",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_multi_room_skin_9",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "multi",
+      "blueprint_type": 1,
+      "target": "multi_room_skin_9",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_room_decorate_drink_seller",
+      "name": {
+        "en": "Beverage Vending Machine",
+        "es": "Máquina expendedora de bebidas"
+      },
+      "subcategory": "others",
+      "blueprint_type": 3,
+      "target": "room_decorate_drink_seller",
+      "research_materials": [
+        {
+          "item": "material_battery",
+          "num": 20
+        },
+        {
+          "item": "material_gear",
+          "num": 20
+        },
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 20
+        }
+      ]
+    },
+    {
+      "id": "blueprint_room_decorate_fishbowl",
+      "name": {
+        "en": "Fish Tank",
+        "es": "Pecera"
+      },
+      "subcategory": "others",
+      "blueprint_type": 3,
+      "target": "room_decorate_fishbowl",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_iron",
+          "num": 15
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 2
+        },
+        {
+          "item": "material_wood",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_room_decorate_magic_well",
+      "name": {
+        "en": "Magic Well",
+        "es": "Pozo mágico"
+      },
+      "subcategory": "others",
+      "blueprint_type": 3,
+      "target": "room_decorate_magic_well",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 15
+        },
+        {
+          "item": "material_magic_black",
+          "num": 5
+        },
+        {
+          "item": "material_magic_blue",
+          "num": 5
+        },
+        {
+          "item": "material_wood",
+          "num": 15
+        }
+      ]
+    },
+    {
+      "id": "blueprint_room_decorate_mysteriou_statue",
+      "name": {
+        "en": "Holy Statue",
+        "es": "Estatua sagrada"
+      },
+      "subcategory": "others",
+      "blueprint_type": 3,
+      "target": "room_decorate_mysteriou_statue",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 3000
+        },
+        {
+          "item": "material_iron",
+          "num": 20
+        },
+        {
+          "item": "material_magic_green",
+          "num": 5
+        },
+        {
+          "item": "material_magic_orange",
+          "num": 5
+        },
+        {
+          "item": "material_magic_purple",
+          "num": 5
+        },
+        {
+          "item": "material_magic_red",
+          "num": 5
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skill_Druid_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skill",
+      "blueprint_type": 4,
+      "target": "Character11_skill_1_name",
+      "research_materials": [
+        {
+          "item": "material_skill_Druid_1",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skill_Officer_2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skill",
+      "blueprint_type": 4,
+      "target": "Character15_skill_2_name",
+      "research_materials": [
+        {
+          "item": "material_skill_Officer_2",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skill_Paladin_2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skill",
+      "blueprint_type": 4,
+      "target": "Character7_skill_2_name",
+      "research_materials": [
+        {
+          "item": "material_skill_Paladin_2",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skill_Priest_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skill",
+      "blueprint_type": 4,
+      "target": "Character10_skill_1_name",
+      "research_materials": [
+        {
+          "item": "material_skill_Priest_1",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skill_Viking_2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skill",
+      "blueprint_type": 4,
+      "target": "Character13_skill_2_name",
+      "research_materials": [
+        {
+          "item": "material_skill_Viking_2",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skill_Warlock_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skill",
+      "blueprint_type": 4,
+      "target": "Character23_skill_1_name",
+      "research_materials": [
+        {
+          "item": "material_skill_Warlock_1",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_alchemist_14",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character4_name_skin14",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c4_s14",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_alchemist_8",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character4_name_skin8",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_law",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_assassin_23",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character3_name_skin23",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c3_s23",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_costumeprince_7",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character26_name_skin7",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c26_s7",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_elves_6",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character8_name_skin6",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_boss07",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_elves_9",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character8_name_skin9",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_flag",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_engineer_26",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character5_name_skin26",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c5_s26",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_engineer_8",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character5_name_skin8",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_skin_fragment_c5_s8",
+          "num": 4
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_knight_20",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character0_name_skin20",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c0_s20",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_lancer_4",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character29_name_skin4",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c29_s4",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_mage_7",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character2_name_skin7",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_boss02",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_necromancer_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character14_name_skin1",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_boss19",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_necromancer_13",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character14_name_skin13",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c14_s13",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_necromancer_6",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character14_name_skin6",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_c14_s6",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_officer_5",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character15_name_skin5",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_boss23",
+          "num": 6
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_paladin_12",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character7_name_skin12",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_c7_s12",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_paladin_22",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character7_name_skin22",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c7_s22",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_paladin_7",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character7_name_skin7",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_boss01",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_priest_5",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character10_name_skin5",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_boss18",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_ranger_12",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character2_name_skin12",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        },
+        {
+          "item": "material_magic_green",
+          "num": 2
+        },
+        {
+          "item": "material_skin_fragment_boss30",
+          "num": 1
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_ranger_18",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character1_name_skin18",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c1_s18",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_ranger_25",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character1_name_skin25",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c1_s25",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_ranger_6",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character11_skill_1_name",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_shop",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_robot_12",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character12_name_skin12",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c12_s12",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_robot_6",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character12_name_skin6",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        },
+        {
+          "item": "material_skin_fragment_c12_s06",
+          "num": 4
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_taoist_14",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character16_name_skin14",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c16_s14",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_taoist_5",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character16_name_skin5",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_boss08",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_taoist_6",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character16_name_skin6",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_c16_s6",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_trapmaster_4",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character25_name_skin4",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c25_s4",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_vampire_7",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character6_name_skin7",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_boss15",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_viking_19",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character13_name_skin19",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c13_s19",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_viking_4",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character13_name_skin4",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_boss16",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_viking_6",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character13_name_skin6",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_c12_s6",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_werewolf_22",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character9_name_skin22",
+      "research_materials": [
+        {
+          "item": "material_skin_fragment_c9_s22",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_skin_werewolf_9",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "skin",
+      "blueprint_type": 5,
+      "target": "Character9_name_skin9",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        },
+        {
+          "item": "material_skin_fragment_boss10",
+          "num": 8
+        }
+      ]
+    },
+    {
+      "id": "blueprint_transform_weapon_beheaded",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 6,
+      "target": "transform_weapon_beheaded",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_dead_cell",
+          "num": 999
+        }
+      ]
+    },
+    {
+      "id": "blueprint_transform_weapon_envoy",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 6,
+      "target": "transform_weapon_envoy",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_c18_book_1",
+          "num": 1
+        },
+        {
+          "item": "material_c18_book_2",
+          "num": 1
+        }
+      ]
+    },
+    {
+      "id": "blueprint_transform_weapon_ninja",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 6,
+      "target": "transform_weapon_ninja",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_c20_book_1",
+          "num": 1
+        },
+        {
+          "item": "material_c20_book_2",
+          "num": 1
+        }
+      ]
+    },
+    {
+      "id": "blueprint_transform_weapon_specialforces",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 6,
+      "target": "transform_weapon_specialforces",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_c21_book_1",
+          "num": 1
+        },
+        {
+          "item": "material_c21_book_2",
+          "num": 1
+        }
+      ]
+    },
+    {
+      "id": "blueprint_transform_weapon_transcendent",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 6,
+      "target": "transform_weapon_transcendent",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        },
+        {
+          "item": "material_c17_book_1",
+          "num": 1
+        },
+        {
+          "item": "material_c17_book_2",
+          "num": 1
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_184",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_184",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_188",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_188",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_189",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_189",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 400
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_195",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_195",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 400
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_211",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_211",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 600
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_212",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_212",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 600
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_213",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_213",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_217",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_217",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 8888
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_223",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_223",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 666
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_224",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_224",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_237",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_237",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_238",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_238",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_240",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_240",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 6666
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_242",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_242",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_252",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_252",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 5000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_294",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_294",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 2000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_321",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_321",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_333",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_333",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_340",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_340",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_341",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_341",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_342",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_342",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_344",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_344",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_356",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_356",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_370",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_370",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_380",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_380",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_381",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_381",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_383",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_383",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_385",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_385",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_386",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_386",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_387",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_387",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_392",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_392",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_393",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_393",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_394",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_394",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_395",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_395",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_396",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_396",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_397",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_397",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_398",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_398",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_407",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_407",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_408",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_408",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_409",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_409",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_411",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_411",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_413",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_413",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_415",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_415",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_416",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_416",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 400
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_boss_void_origin",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_boss_void_origin",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_bossrushfinal",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_bossrushfinal",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_bossrushfinalA",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_bossrushfinalA",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_bossrushfinalB",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_bossrushfinalB",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_cg_0",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_cg_0",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_cg_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_cg_1",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_cg_2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_cg_2",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_cg_3",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_cg_3",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1200
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_fel_fabric",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_fel_fabric",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_fish_rod_a",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_fish_rod_a",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 10
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_fish_rod_b",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_fish_rod_b",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 50
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_fish_rod_c",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_fish_rod_c",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 200
+        }
+      ]
+    },
+    {
+      "id": "blueprint_weapon_fish_rod_d",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "weapon",
+      "blueprint_type": 7,
+      "target": "weapon_fish_rod_d",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1000
+        }
+      ]
+    },
+    {
+      "id": "blueprint_work_shop_skin_0",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 0,
+      "target": "work_shop_skin_0",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_work_shop_skin_1",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 0,
+      "target": "work_shop_skin_1",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    },
+    {
+      "id": "blueprint_work_shop_skin_2",
+      "name": {
+        "en": null,
+        "es": null
+      },
+      "subcategory": "others",
+      "blueprint_type": 0,
+      "target": "work_shop_skin_2",
+      "research_materials": [
+        {
+          "item": "material_gem",
+          "num": 1500
+        }
+      ]
+    }
+  ]
+}

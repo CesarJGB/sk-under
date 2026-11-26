@@ -27,8 +27,11 @@ from ..cloud_save import (
     unpack_cloud_save,
 )
 from ..parsers.json_document import parse_json
+from .blueprint_editor import blueprints_snapshot
 from .gems_editor import serialize_aggregate
+from .hero_level_editor import hero_levels_snapshot
 from .lab import BinaryDiff, binary_diff
+from .pet_affinity_editor import pet_progression_snapshot
 
 MATERIALS_PATH = "itemData.materials"
 SEEDS_PATH = "itemData.seeds"
@@ -759,7 +762,7 @@ def read_advanced_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
     pets, pet_skins, pet_food = _pet_snapshot(
         game, material_map, materials, pet_catalog
     )
-    pet_progression = _pet_progression(payload, pet_catalog)
+    pet_progression = pet_progression_snapshot(payload)
 
     return {
         "materials": materials,
@@ -771,6 +774,8 @@ def read_advanced_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
         "pet_skins": pet_skins,
         "pet_food": pet_food,
         "pet_progression": pet_progression,
+        "hero_levels": hero_levels_snapshot(payload),
+        "blueprints": blueprints_snapshot(payload),
         "pet_policy": {
             "field": "pets",
             "experimental": False,
@@ -786,8 +791,9 @@ def read_advanced_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
                 "itemData.materials; no se crea un escritor paralelo."
             ),
             "progression_note": (
-                "La intimidad se muestra en solo lectura. El máximo es específico de cada mascota "
-                "y no se ha recuperado la configuración completa; no se escriben valores especulativos."
+                "La intimidad se puede subir solo cuando existe un máximo observado para esa "
+                "mascota. Serenade, EscapeMonkey y FishChipKing permanecen en solo lectura porque "
+                "no se recuperó su límite."
             ),
         },
         "policy": {
@@ -880,56 +886,3 @@ def _pet_snapshot(
                 "reason": row.get("reason"),
             })
     return pets, pet_skins, food_rows
-
-
-def _pet_progression(
-    payload: Mapping[str, Any], catalog: Mapping[str, object]
-) -> dict[str, object]:
-    statistic = payload.get("statisticData")
-    counts = statistic.get("event2Count") if isinstance(statistic, dict) else None
-    available = isinstance(counts, dict)
-    counts = counts if isinstance(counts, dict) else {}
-    rows_by_id = catalog["pets"]
-    assert isinstance(rows_by_id, dict)
-    entries: list[dict[str, object]] = []
-    for pet_id in catalog["ordered_pets"]:  # type: ignore[union-attr]
-        row = rows_by_id[pet_id]
-        numeric_id = row["numeric_id"]
-        assert type(numeric_id) is int
-        prefix = f"pet_{numeric_id}_"
-        intimacy = counts.get(f"{prefix}intimacy")
-        full_raw = counts.get(f"{prefix}full_intimacy")
-        action = counts.get(f"{prefix}action_unlock")
-        intimacy_valid = type(intimacy) is int and MIN_VALUE <= intimacy <= MAX_VALUE
-        full_valid = type(full_raw) is int and full_raw in (0, 1)
-        action_valid = type(action) is int and action in (0, 1)
-        present = any(key in counts for key in (f"{prefix}intimacy", f"{prefix}full_intimacy"))
-        entries.append({
-            "id": pet_id,
-            "numeric_id": numeric_id,
-            "name": row["name"],
-            "present": present,
-            "intimacy": intimacy if intimacy_valid else None,
-            "full": bool(full_raw) if full_valid else None,
-            "action_unlocked": bool(action) if action_valid else None,
-            "value_type": None if intimacy_valid else type(intimacy).__name__ if intimacy is not None else None,
-            "max": None,
-            "max_note": (
-                "Máximo específico de la mascota; solo el indicador full_intimacy confirma "
-                "que se alcanzó. No se escribe un máximo inventado."
-            ),
-            "path": f"statisticData.event2Count.{prefix}intimacy",
-        })
-    full_count = counts.get("pet_full_intimacy")
-    return {
-        "available": available,
-        "path": "statisticData.event2Count",
-        "read_only": True,
-        "global_full_count": full_count if type(full_count) is int else None,
-        "full_count_key": "pet_full_intimacy",
-        "entries": entries,
-        "note": (
-            "Progresión observada en statisticData.event2Count. La intimidad actual es legible, "
-            "pero los máximos por mascota no están recuperados y no se ofrecen escrituras."
-        ),
-    }

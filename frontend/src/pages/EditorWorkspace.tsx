@@ -4,13 +4,15 @@ import { useBlocker, useLocation, useNavigate } from 'react-router'
 import { AccordionGroup } from '../AccordionGroup'
 import {
   ApiProblem, nativeAuth,
-  type LabAdvanced, type LabUnifiedPrepared, type LabWriteResult, type NativeSaveSummary, type NativeSession,
+  type LabAdvanced, type LabBlueprintEntry, type LabHeroLevelEntry, type LabUnifiedPrepared, type LabWriteResult,
+  type NativeSaveSummary, type NativeSession,
 } from '../api'
 import {
   advancedSnapshot, applyItemMinimum, battlePassRecord, buildDraftPlan, clearSelection, createEmptyDraft,
   eligibility, isSelected, minimumSource, originalQuantity, parseQuantity, protectedMaterial, quantityInput,
-  selectAll, selectedCount, setEdit, setQuick, toggleItem, type BuiltPlan, type BulkKey,
-  type Draft, type Eligibility,
+  quickChecked, selectAll, selectedCount, setBlueprintStatus, setBulk, setEdit, setHeroLevel, setPetAffinity, setQuick,
+  toggleItem,
+  type BuiltPlan, type BulkKey, type Draft, type Eligibility,
 } from '../draft'
 import { skillKey, skinKey } from '../unlockSelections'
 import { Notice, Problem } from '../ui'
@@ -198,6 +200,72 @@ function AmountList({ children }: { children: ReactNode }) {
   return <div className="number-list">{children}</div>
 }
 
+function ProgressRow({ label, status, current, edit, proposed, checked, disabled, invalid, onToggle, onChange }: {
+  label: string
+  status: string
+  current: number | null
+  edit?: string
+  proposed?: number
+  checked: boolean
+  disabled?: boolean
+  invalid?: boolean
+  onToggle: (checked: boolean) => void
+  onChange: (value: string) => void
+}) {
+  const value = edit ?? String(proposed ?? current ?? '')
+  return <div className={`level-row${proposed !== undefined ? ' changed' : ''}`}>
+    <input type="checkbox" checked={checked} disabled={disabled} aria-label={`Incluir ${label} en la mejora masiva`}
+      onChange={(event) => onToggle(event.target.checked)} />
+    <span className="level-copy"><strong>{label}</strong><small>{status}</small></span>
+    <input className="level-input" inputMode="numeric" aria-label={`Nivel o progreso de ${label}`} value={value}
+      disabled={disabled} aria-invalid={invalid || undefined} onChange={(event) => onChange(event.target.value)} />
+  </div>
+}
+
+function HeroLevelsEditor({ save, draft, update, built }: EditorInputs & { built: BuiltPlan }) {
+  const [query, setQuery] = useState('')
+  const levels = advancedSnapshot(save)?.hero_levels
+  if (!levels?.available) return <Notice tone="warning">Niveles de personaje sin datos.</Notice>
+  const eligible = eligibility(save)
+  const selection = eligible.heroLevels
+  const checked = quickChecked('heroLevels', draft, eligible)
+  const planned = new Map((built.plan.hero_levels ?? []).map(({ code, level }) => [code, level]))
+  const search = query.trim().toLowerCase()
+  const rows = levels.entries.filter((row) => row.name.toLowerCase().includes(search) || row.id.toLowerCase().includes(search))
+
+  return <section className="detail-editor progress-editor" aria-labelledby="hero-levels-title">
+    <div className="detail-subhead">
+      <div>
+        <h3 className="detail-subtitle" id="hero-levels-title">Niveles de personaje</h3>
+        <p className="detail-note">Experimental · máximo {levels.max} documentado; el máximo por personaje no se pudo recuperar.</p>
+      </div>
+      <CheckAll checked={checked === 'all'} indeterminate={checked === 'some'}
+        label={`Mejorar ${selection.length} elegibles al máximo`}
+        onChange={(value) => update(setBulk('heroLevels', value, draft))} />
+    </div>
+    <div className="detail-filters">
+      <input type="search" aria-label="Buscar personajes" value={query} placeholder="Buscar"
+        onChange={(event) => setQuery(event.target.value)} />
+      <span className="detail-note">{planned.size} en borrador</span>
+    </div>
+    {rows.length ? <div className="level-list">
+      {rows.map((row: LabHeroLevelEntry) => {
+        const edit = draft.heroLevels[row.id]
+        const parsed = parseQuantity(edit ?? '')
+        const invalid = edit !== undefined && (parsed === null || (row.level !== null && parsed < row.level) || parsed > levels.max)
+        const status = !row.present ? 'Sin registro'
+          : !row.editable ? row.reason ?? 'Solo lectura'
+            : row.level === null ? 'Valor no entero'
+              : `${row.unlocked === false ? 'Bloqueado · ' : ''}Actual ${row.level}/${levels.max}`
+        return <ProgressRow key={row.id} label={row.name} status={status} current={row.level}
+          edit={edit} proposed={planned.get(row.id)} checked={isSelected('heroLevels', row.id, draft, eligible)}
+          disabled={!row.editable} invalid={invalid} onToggle={() => update(toggleItem('heroLevels', row.id, draft, eligible))}
+          onChange={(value) => update(setHeroLevel(row.id, value, draft))} />
+      })}
+    </div> : <p className="detail-note">Sin resultados</p>}
+  </section>
+}
+
 function NumberEdits({ save, draft, update, built, kind }: EditorInputs & {
   built: BuiltPlan
   kind: 'materials' | 'seeds'
@@ -245,6 +313,55 @@ function NumberEdits({ save, draft, update, built, kind }: EditorInputs & {
   </div>
 }
 
+function PetAffinityEditor({ save, draft, update, built }: EditorInputs & { built: BuiltPlan }) {
+  const [query, setQuery] = useState('')
+  const progression = advancedSnapshot(save)?.pet_progression
+  if (!progression?.available) return <Notice tone="warning">Afinidad de mascotas sin datos.</Notice>
+  const eligible = eligibility(save)
+  const selection = eligible.petAffinity
+  const checked = quickChecked('petAffinity', draft, eligible)
+  const planned = new Map((built.plan.pet_affinity ?? []).map(({ code, value }) => [code, value]))
+  const search = query.trim().toLowerCase()
+  const rows = progression.entries.filter((row) =>
+    (row.name.es ?? row.name.en ?? row.id).toLowerCase().includes(search) || row.id.toLowerCase().includes(search))
+
+  return <section className="detail-editor progress-editor" aria-labelledby="pet-affinity-title">
+    <div className="detail-subhead">
+      <div>
+        <h3 className="detail-subtitle" id="pet-affinity-title">Afinidad</h3>
+        <p className="detail-note">Experimental · solo subidas hasta el máximo observado. Indicadores ajenos intactos.</p>
+      </div>
+      <CheckAll checked={checked === 'all'} indeterminate={checked === 'some'}
+        label={`Maximizar ${selection.length} compatibles`}
+        onChange={(value) => update(setBulk('petAffinity', value, draft))} />
+    </div>
+    <div className="detail-filters">
+      <input type="search" aria-label="Buscar mascotas" value={query} placeholder="Buscar"
+        onChange={(event) => setQuery(event.target.value)} />
+      <span className="detail-note">{planned.size} en borrador</span>
+    </div>
+    {rows.length ? <div className="level-list">
+      {rows.map((row) => {
+        const name = row.name.es ?? row.name.en ?? row.id
+        const edit = draft.petAffinity[row.id]
+        const parsed = parseQuantity(edit ?? '')
+        const invalid = edit !== undefined && (parsed === null
+          || (row.intimacy !== null && parsed < row.intimacy) || (row.max !== null && parsed > row.max))
+        const status = !row.present ? 'Sin registro'
+          : !row.editable ? row.reason ?? 'Solo lectura'
+            : row.max === null ? 'Máximo no confirmado'
+              : `Actual ${row.intimacy}/${row.max}`
+        return <ProgressRow key={row.id} label={name} status={status} current={row.intimacy}
+          edit={edit} proposed={planned.get(row.id)} checked={isSelected('petAffinity', row.id, draft, eligible)}
+          disabled={!row.editable} invalid={invalid}
+          onToggle={() => update(toggleItem('petAffinity', row.id, draft, eligible))}
+          onChange={(value) => update(setPetAffinity(row.id, value, draft))} />
+      })}
+    </div> : <p className="detail-note">Sin resultados</p>}
+    {progression.limitation && <p className="detail-note">{progression.limitation}</p>}
+  </section>
+}
+
 function PetsEditor({ save, draft, update, built }: EditorInputs & { built: BuiltPlan }) {
   const advanced = advancedSnapshot(save)
   if (!advanced) return <Notice tone="warning">Mascotas sin datos.</Notice>
@@ -282,8 +399,74 @@ function PetsEditor({ save, draft, update, built }: EditorInputs & { built: Buil
           onChange={(next) => update(setEdit('petFood', row.id, next, current, draft))} />
       })}
     </AmountList> : <p className="detail-note">Sin datos de alimento y baterías</p>}
-    <p className="detail-note">Progreso y afinidad son de solo lectura.</p>
+    <PetAffinityEditor save={save} draft={draft} update={update} built={built} />
   </div>
+}
+
+function BlueprintEditor({ save, draft, update, built }: EditorInputs & { built: BuiltPlan }) {
+  const [query, setQuery] = useState('')
+  const [filter, setFilter] = useState<'all' | 'Got' | 'Researched'>('all')
+  const catalog = advancedSnapshot(save)?.blueprints
+  if (!catalog?.available) return <Notice tone="warning">Planos sin datos.</Notice>
+  const eligible = eligibility(save)
+  const selection = eligible.blueprints
+  const checked = quickChecked('blueprints', draft, eligible)
+  const planned = new Map((built.plan.blueprints ?? []).map(({ id, status }) => [id, status]))
+  const search = query.trim().toLowerCase()
+  const rows = catalog.entries.filter((row: LabBlueprintEntry) => {
+    const name = row.name.es ?? row.name.en ?? row.target ?? row.id
+    const matches = name.toLowerCase().includes(search) || row.id.toLowerCase().includes(search)
+    return matches && (filter === 'all' || row.status === filter)
+  })
+
+  return <section className="detail-editor progress-editor" aria-labelledby="blueprints-title">
+    <div className="detail-subhead">
+      <div>
+        <h3 className="detail-subtitle" id="blueprints-title">Planos</h3>
+        <p className="detail-note">Experimental · solo planos con registro y estado conocido.</p>
+      </div>
+      {selection.length > 0 && <CheckAll checked={checked === 'all'} indeterminate={checked === 'some'}
+        label={`Investigar ${selection.length} obtenidos`}
+        onChange={(value) => update(setBulk('blueprints', value, draft))} />}
+    </div>
+    <div className="detail-filters">
+      <input type="search" aria-label="Buscar planos" value={query} placeholder="Buscar"
+        onChange={(event) => setQuery(event.target.value)} />
+      <select aria-label="Filtrar planos" value={filter} onChange={(event) => setFilter(event.target.value as typeof filter)}>
+        <option value="all">Todos</option>
+        <option value="Got">Obtenidos</option>
+        <option value="Researched">Investigados</option>
+      </select>
+      <span className="detail-note">{planned.size} en borrador</span>
+    </div>
+    {rows.length ? <div className="level-list blueprint-list">
+      {rows.map((row: LabBlueprintEntry) => {
+        const name = row.name.es ?? row.name.en ?? row.target ?? row.id
+        const status = draft.blueprintStatus[row.id] ?? row.status ?? ''
+        const pending = planned.get(row.id)
+        return <div className={`level-row blueprint-row${pending ? ' changed' : ''}`} key={row.id}>
+          <input type="checkbox" checked={isSelected('blueprints', row.id, draft, eligible)}
+            disabled={!row.editable || !row.bulk_eligible}
+            aria-label={`Investigar ${name} en la operación masiva`}
+            onChange={() => update(toggleItem('blueprints', row.id, draft, eligible))} />
+          <span className="level-copy">
+            <strong>{name}</strong>
+            <small>{row.present ? `${row.subcategory ?? 'Plano'} · ${row.target ?? 'Objetivo sin nombre'}` : 'Sin registro'}</small>
+          </span>
+          <select aria-label={`Estado de ${name}`} value={status} disabled={!row.editable}
+            onChange={(event) => update(setBlueprintStatus(row.id, event.target.value as 'Got' | 'Researched', draft))}>
+            {!row.status && <option value="">Sin registro</option>}
+            <option value="Got">Obtenido</option>
+            <option value="Researched">Investigado</option>
+          </select>
+        </div>
+      })}
+    </div> : <p className="detail-note">Sin resultados</p>}
+    {catalog.unmatched.length > 0 && <p className="detail-note">
+      {catalog.unmatched.length === 1 ? '1 clave del guardado no se pudo identificar y se conserva intacta.'
+      : `${catalog.unmatched.length} claves del guardado no se pudieron identificar y se conservan intactas.`}
+    </p>}
+  </section>
 }
 
 function ResourceList({ save, draft, update, built, season = false }: EditorInputs & {
@@ -411,9 +594,26 @@ export function EditorWorkspace({
     quantityInput(originalQuantity(pass?.cur_exp), draft.battlePass.exp),
   ]
   const itemEdits = [...Object.values(draft.materialEdits), ...Object.values(draft.seedEdits)]
+  const advanced = advancedSnapshot(save)
+  const heroMax = advanced?.hero_levels?.max ?? 0
+  const heroEdits = (advanced?.hero_levels?.entries ?? []).flatMap((row) => {
+    const raw = draft.heroLevels[row.id]
+    if (raw === undefined) return []
+    const parsed = parseQuantity(raw)
+    return [{ parsed, current: row.level, max: heroMax, editable: row.editable }]
+  })
+  const petEdits = (advanced?.pet_progression?.entries ?? []).flatMap((row) => {
+    const raw = draft.petAffinity[row.id]
+    if (raw === undefined) return []
+    const parsed = parseQuantity(raw)
+    return [{ parsed, current: row.intimacy, max: row.max, editable: row.editable }]
+  })
   const invalidDraft = quantities.some(({ invalid }) => invalid)
     || itemEdits.some((value) => value !== '' && parseQuantity(value) === null)
+    || [...heroEdits, ...petEdits].some(({ parsed, current, max, editable }) =>
+      !editable || parsed === null || (current !== null && parsed < current) || (max !== null && parsed > max))
   const dirty = hasChanges || invalidDraft || quantities.some(({ changed }) => changed) || itemEdits.includes('')
+    || heroEdits.some(({ parsed, current }) => parsed !== current) || petEdits.some(({ parsed, current }) => parsed !== current)
 
   const editorBase = `${basePath}/editor`
   const editorSuffix = pathname.startsWith(editorBase) ? pathname.slice(editorBase.length) : ''
@@ -636,7 +836,11 @@ export function EditorWorkspace({
           <h2>{activeCategory.label}</h2>
         </div>
         {activeCategory.id === 'recursos' && <ResourceList save={save} draft={draft} update={update} built={built} />}
-        {activeCategory.id === 'personajes' && <LockList key="characters" save={save} draft={draft} update={update} mode="characters" />}
+        {activeCategory.id === 'personajes' && <>
+          <LockList key="characters" save={save} draft={draft} update={update} mode="characters" />
+          <HeroLevelsEditor save={save} draft={draft} update={update} built={built} />
+        </>}
+        {activeCategory.id === 'planos' && <BlueprintEditor save={save} draft={draft} update={update} built={built} />}
         {activeCategory.id === 'habilidades' && <LockList key="skills" save={save} draft={draft} update={update} mode="skills" />}
         {activeCategory.id === 'skins' && <LockList key="skins" save={save} draft={draft} update={update} mode="skins" />}
         {activeCategory.id === 'mascotas' && <PetsEditor save={save} draft={draft} update={update} built={built} />}

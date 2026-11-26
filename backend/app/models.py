@@ -319,6 +319,24 @@ class CloudSkinSelection(BaseModel):
     index: StrictInt = Field(ge=0, le=801)
 
 
+class CloudHeroLevelChange(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    code: StrictStr = Field(min_length=1, max_length=80)
+    level: StrictInt = Field(ge=0, le=7)
+
+
+class CloudPetAffinityChange(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    code: StrictStr = Field(min_length=1, max_length=80)
+    value: StrictInt = Field(ge=0, le=300)
+
+
+class CloudBlueprintChange(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    id: StrictStr = Field(min_length=1, max_length=120)
+    status: Literal["Got", "Researched"]
+
+
 class CloudLabUnifiedPrepareInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     gems: StrictInt | None = Field(default=None, ge=0, le=2_147_483_647)
@@ -328,6 +346,9 @@ class CloudLabUnifiedPrepareInput(BaseModel):
     skills: list[CloudSkillSelection] = Field(default_factory=list, max_length=105)
     skins: list[CloudSkinSelection] = Field(default_factory=list, max_length=802)
     advanced: CloudLabAdvancedPrepareInput | None = None
+    hero_levels: list[CloudHeroLevelChange] = Field(default_factory=list, max_length=42)
+    pet_affinity: list[CloudPetAffinityChange] = Field(default_factory=list, max_length=58)
+    blueprints: list[CloudBlueprintChange] = Field(default_factory=list, max_length=265)
 
 
 class CloudLabSkinPrepared(BaseModel):

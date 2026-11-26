@@ -305,16 +305,74 @@ export type LabPetProgressionEntry = {
   max: number | null
   max_note: string
   path: string
+  editable?: boolean
+  reason?: string | null
+  full_path?: string
 }
 
 export type LabPetProgression = {
   available: boolean
   path: string
-  read_only: true
+  read_only: boolean
   global_full_count: number | null
   full_count_key: string
   entries: LabPetProgressionEntry[]
   note: string
+  limitation?: string
+  experimental?: boolean
+  evidence_level?: 'E1' | 'E2' | 'E3' | 'E4'
+}
+
+export type LabHeroLevelEntry = {
+  id: string
+  name: string
+  level: number | null
+  value_type: string | null
+  present: boolean
+  editable: boolean
+  unlocked: boolean | null
+  path: string
+  reason: string | null
+}
+
+export type LabHeroLevels = {
+  available: boolean
+  path: string
+  min: number
+  max: number
+  max_note: string
+  experimental: boolean
+  evidence_level: 'E1' | 'E2' | 'E3' | 'E4'
+  entries: LabHeroLevelEntry[]
+  note: string
+}
+
+export type LabBlueprintEntry = {
+  id: string
+  key: string | null
+  name: { en?: string | null; es?: string | null }
+  subcategory: string | null
+  blueprint_type: number | null
+  target: string | null
+  research_materials: Array<{ item: string; num: number }>
+  status: 'Got' | 'Researched' | null
+  value_type: string | null
+  present: boolean
+  editable: boolean
+  bulk_eligible: boolean
+  path: string | null
+}
+
+export type LabBlueprints = {
+  available: boolean
+  path: string
+  statuses: Array<'Got' | 'Researched'>
+  entries: LabBlueprintEntry[]
+  unmatched: string[]
+  experimental: boolean
+  evidence_level: 'E1' | 'E2' | 'E3' | 'E4'
+  note: string
+  limitation: string
 }
 
 export type LabAdvanced = {
@@ -329,6 +387,8 @@ export type LabAdvanced = {
   pet_skins: LabPetSkinRow[]
   pet_food: LabPetFoodRow[]
   pet_progression: LabPetProgression
+  hero_levels?: LabHeroLevels
+  blueprints?: LabBlueprints
   pet_policy: {
     field: 'pets'
     experimental: boolean
@@ -417,6 +477,9 @@ export type LabUnifiedPlan = {
   skills?: LabSkillRef[]
   skins?: LabSkinRef[]
   advanced?: LabAdvancedPlan | null
+  hero_levels?: Array<{ code: string; level: number }>
+  pet_affinity?: Array<{ code: string; value: number }>
+  blueprints?: Array<{ id: string; status: 'Got' | 'Researched' }>
 }
 
 export type LabUnifiedCategory = {

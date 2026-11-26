@@ -21,9 +21,24 @@ from .advanced_editor import (
     normalize_advanced_plan,
     prepare_advanced_edit,
 )
+from .blueprint_editor import (
+    BlueprintEdit,
+    normalize_blueprint_plan,
+    prepare_blueprint_edit,
+)
 from .character_editor import (
     CharacterEdit,
     prepare_character_unlock_edit,
+)
+from .hero_level_editor import (
+    HeroLevelEdit,
+    normalize_hero_level_plan,
+    prepare_hero_level_edit,
+)
+from .pet_affinity_editor import (
+    PetAffinityEdit,
+    normalize_pet_affinity_plan,
+    prepare_pet_affinity_edit,
 )
 from .fish_chip_editor import (
     FishChipEdit,
@@ -127,11 +142,64 @@ def _advanced(value: object) -> dict[str, object] | None:
     return normalize_advanced_plan(value)
 
 
+def _code_map(
+    value: object, label: str, id_key: str, value_key: str, normalizer
+) -> dict[str, object] | None:
+    if value is None:
+        return None
+    if isinstance(value, Mapping):
+        entries = value
+    elif isinstance(value, list):
+        entries = {}
+        for item in value:
+            if not isinstance(item, Mapping):
+                raise InvalidUnifiedPlan(f"{label} contiene un elemento inválido.")
+            item_id = item.get(id_key)
+            item_value = item.get(value_key)
+            if not isinstance(item_id, str) or not item_id:
+                raise InvalidUnifiedPlan(f"{label} contiene un identificador inválido.")
+            if item_id in entries:
+                raise InvalidUnifiedPlan(f"{label} repite el identificador {item_id}.")
+            entries[item_id] = item_value
+    else:
+        raise InvalidUnifiedPlan(f"{label} debe ser un objeto o una lista de cambios.")
+    if not entries:
+        return None
+    try:
+        return normalizer(entries)
+    except CloudSaveError as exc:
+        raise InvalidUnifiedPlan(str(exc)) from exc
+
+
+def _blueprints(value: object) -> dict[str, str] | None:
+    if value is None:
+        return None
+    if isinstance(value, Mapping) and not value:
+        return None
+    if isinstance(value, list) and not value:
+        return None
+    try:
+        return normalize_blueprint_plan(value)
+    except CloudSaveError as exc:
+        raise InvalidUnifiedPlan(str(exc)) from exc
+
+
 def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
     """Valida y ordena el plan compuesto que se guarda con el respaldo."""
     if not isinstance(raw, Mapping):
         raise InvalidUnifiedPlan("El plan debe ser un objeto JSON.")
-    allowed = {"gems", "fish_chip", "fish_progress", "characters", "skills", "skins", "advanced"}
+    allowed = {
+        "gems",
+        "fish_chip",
+        "fish_progress",
+        "characters",
+        "skills",
+        "skins",
+        "advanced",
+        "hero_levels",
+        "pet_affinity",
+        "blueprints",
+    }
     unknown = set(raw) - allowed
     if unknown:
         raise InvalidUnifiedPlan(f"El plan contiene claves no autorizadas: {sorted(unknown)}.")
@@ -143,6 +211,13 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
         "skills": _refs(raw.get("skills"), "skills", MAX_SKILLS),
         "skins": _refs(raw.get("skins"), "skins", MAX_SKINS),
         "advanced": _advanced(raw.get("advanced")),
+        "hero_levels": _code_map(
+            raw.get("hero_levels"), "hero_levels", "code", "level", normalize_hero_level_plan
+        ),
+        "pet_affinity": _code_map(
+            raw.get("pet_affinity"), "pet_affinity", "code", "value", normalize_pet_affinity_plan
+        ),
+        "blueprints": _blueprints(raw.get("blueprints")),
     }
     if not any(
         (
@@ -153,6 +228,9 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
             plan["skills"],
             plan["skins"],
             plan["advanced"],
+            plan["hero_levels"],
+            plan["pet_affinity"],
+            plan["blueprints"],
         )
     ):
         raise InvalidUnifiedPlan("El plan no contiene ninguna edición.")
@@ -219,7 +297,20 @@ class UnifiedEdit:
 
 
 def _category(
-    key: str, label: str, edits: list[GemsEdit | FishChipEdit | FishProgressEdit | CharacterEdit | SkillEdit | SkinEdit | AdvancedEdit]
+    key: str,
+    label: str,
+    edits: list[
+        GemsEdit
+        | FishChipEdit
+        | FishProgressEdit
+        | CharacterEdit
+        | SkillEdit
+        | SkinEdit
+        | AdvancedEdit
+        | HeroLevelEdit
+        | PetAffinityEdit
+        | BlueprintEdit
+    ],
 ) -> UnifiedCategory:
     edit = edits[0]
     if isinstance(edit, GemsEdit):
@@ -320,6 +411,24 @@ def prepare_unified_edit(source: bytes, raw_plan: Mapping[str, object]) -> Unifi
         apply("skins", "Skins", lambda value: prepare_skin_unlock_edit(value, plan["skins"]))
     if plan["advanced"] is not None:
         apply("advanced", "Materiales y progreso", lambda value: prepare_advanced_edit(value, plan["advanced"]))
+    if plan["hero_levels"] is not None:
+        apply(
+            "hero_levels",
+            "Niveles de personaje",
+            lambda value: prepare_hero_level_edit(value, plan["hero_levels"]),
+        )
+    if plan["pet_affinity"] is not None:
+        apply(
+            "pet_affinity",
+            "Afinidad de mascotas",
+            lambda value: prepare_pet_affinity_edit(value, plan["pet_affinity"]),
+        )
+    if plan["blueprints"] is not None:
+        apply(
+            "blueprints",
+            "Planos",
+            lambda value: prepare_blueprint_edit(value, plan["blueprints"]),
+        )
 
     candidate = current
     return UnifiedEdit(
