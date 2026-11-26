@@ -406,6 +406,7 @@ def progression_document() -> dict:
         "enemy_001": 9,
         "custom_counter": 4,
         "weapon_unknown_999": 7,
+        "": 11,
     }
     data["itemData"]["forgeWeapons"] = ["weapon_003", "weapon_003", None]
     return data
@@ -426,7 +427,7 @@ def test_weapon_progression_reads_discovery_and_forge_state_without_writing():
     assert set(snapshot.discovered) == {"weapon_311", "weapon_003"}
     assert snapshot.forge_queue == ("weapon_003",)
     assert snapshot.unknown_weapon_ids == ("weapon_unknown_999",)
-    assert snapshot.unknown_counter_count == 3
+    assert snapshot.unknown_counter_count == 4
     by_id = {item["id"]: item for item in snapshot.items}
     assert by_id["weapon_311"]["discovered"] is True
     assert by_id["weapon_311"]["forge_ready"] is True
@@ -450,6 +451,7 @@ def test_weapon_progression_raises_only_missing_or_zero_counters_to_one():
     assert counters["ring_1"] == 0
     assert counters["enemy_001"] == 9
     assert counters["custom_counter"] == 4
+    assert counters[""] == 11
     assert result["itemData"]["forgeWeapons"] == ["weapon_003", "weapon_003", None]
     assert edit.newly_discovered == ("weapon_002", "weapon_004")
     assert edit.new_forge_ready == ("weapon_002", "weapon_004")

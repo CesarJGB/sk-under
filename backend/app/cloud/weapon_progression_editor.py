@@ -193,7 +193,10 @@ def _obtain(root: JsonObject, *, allow_missing: bool = False) -> dict[str, Any]:
             "La copia no contiene statisticData.object2ObtainTime como mapa de contadores."
         )
     for key, value in obtain.items():
-        if not isinstance(key, str) or not key or len(key) > 160:
+        # El mapa real incluye claves no pertenecientes al catálogo de armas,
+        # incluida una cadena vacía en la muestra Android avanzada. No se
+        # interpretan ni se reescriben; solo se validan sus contadores.
+        if not isinstance(key, str):
             raise UnsupportedWeaponProgressionStructure(
                 "statisticData.object2ObtainTime contiene un identificador inválido."
             )
