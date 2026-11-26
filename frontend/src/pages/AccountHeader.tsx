@@ -6,6 +6,7 @@ import {
 import { Link } from 'react-router'
 import { Brand } from '../Brand'
 import { useEmailPrivacy } from '../accountPrivacy'
+import { ThemeSelect } from '../ThemeSelect'
 
 type Section = 'partida' | 'editor'
 
@@ -301,6 +302,9 @@ export function AccountHeader({
             <House size={25} strokeWidth={1.9} aria-hidden="true" /><span>Volver al inicio</span>
           </Link>
         </nav>
+        <div className="drawer-theme">
+          <ThemeSelect variant="drawer" />
+        </div>
       </div>
     </div>}
   </>
