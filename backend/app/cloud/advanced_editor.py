@@ -794,8 +794,8 @@ def read_advanced_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
             ),
             "progression_note": (
                 "La intimidad se puede subir solo cuando existe un máximo observado para esa "
-                "mascota. Serenade, EscapeMonkey y FishChipKing permanecen en solo lectura porque "
-                "no se recuperó su límite."
+                "mascota. Serenade y EscapeMonkey permanecen en solo lectura porque "
+                "no se recuperó su límite; FishChipKing tiene máximo observado 240."
             ),
         },
         "policy": {

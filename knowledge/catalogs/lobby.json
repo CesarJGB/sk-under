@@ -32,17 +32,18 @@
         "observed_unlocked": true,
         "observed_value": [
           0
-        ]
+        ],
+        "initial": true
       },
       "relations": {},
       "save_refs": [
         "itemData.roomDecorateDic"
       ],
       "notes": [
-        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+        "Objeto observado en roomDecorateDic de A y C con valor [0]; B solo posee ItemEggMachine. Objeto inicial observado en la cuenta nueva B sin banderas room_unlock ni planos. La posesión no demuestra disponibilidad funcional; validación en juego pendiente."
       ],
       "evidence": "E2",
-      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "ItemTrashCan",
@@ -58,17 +59,26 @@
         "observed_unlocked": true,
         "observed_value": [
           0
+        ],
+        "requires": [
+          {
+            "kind": "flag",
+            "key": "room_unlock_trash_can"
+          }
         ]
       },
-      "relations": {},
+      "relations": {
+        "room_unlock_trash_can": "flag"
+      },
       "save_refs": [
-        "itemData.roomDecorateDic"
+        "itemData.roomDecorateDic",
+        "statisticData.event2Count.room_unlock_trash_can"
       ],
       "notes": [
-        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+        "Objeto observado en roomDecorateDic de A y C con valor [0]; B solo posee ItemEggMachine. Requiere la bandera room_unlock_trash_can en las muestras avanzadas. La posesión no demuestra disponibilidad funcional; validación en juego pendiente."
       ],
       "evidence": "E2",
-      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "Motorcycle",
@@ -105,17 +115,26 @@
         "observed_unlocked": true,
         "observed_value": [
           0
+        ],
+        "requires": [
+          {
+            "kind": "flag",
+            "key": "room_unlock_book"
+          }
         ]
       },
-      "relations": {},
+      "relations": {
+        "room_unlock_book": "flag"
+      },
       "save_refs": [
-        "itemData.roomDecorateDic"
+        "itemData.roomDecorateDic",
+        "statisticData.event2Count.room_unlock_book"
       ],
       "notes": [
-        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+        "Objeto observado en roomDecorateDic de A y C con valor [0]; B solo posee ItemEggMachine. Requiere la bandera room_unlock_book en las muestras avanzadas. La posesión no demuestra disponibilidad funcional; validación en juego pendiente."
       ],
       "evidence": "E2",
-      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "ObjectDrinkSeller",
@@ -131,17 +150,26 @@
         "observed_unlocked": true,
         "observed_value": [
           0
+        ],
+        "requires": [
+          {
+            "kind": "blueprint",
+            "key": "blueprint_room_decorate_drink_seller"
+          }
         ]
       },
-      "relations": {},
+      "relations": {
+        "blueprint_room_decorate_drink_seller": "blueprint"
+      },
       "save_refs": [
-        "itemData.roomDecorateDic"
+        "itemData.roomDecorateDic",
+        "itemData.blueprints.blueprint_room_decorate_drink_seller"
       ],
       "notes": [
-        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+        "Objeto observado en roomDecorateDic de A y C con valor [0]; B solo posee ItemEggMachine. No se observó bandera room_unlock propia; requiere el plano decorativo investigado. La posesión no demuestra disponibilidad funcional; validación en juego pendiente."
       ],
       "evidence": "E2",
-      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "ObjectFishBowl",
@@ -157,17 +185,26 @@
         "observed_unlocked": true,
         "observed_value": [
           0
+        ],
+        "requires": [
+          {
+            "kind": "blueprint",
+            "key": "blueprint_room_decorate_fishbowl"
+          }
         ]
       },
-      "relations": {},
+      "relations": {
+        "blueprint_room_decorate_fishbowl": "blueprint"
+      },
       "save_refs": [
-        "itemData.roomDecorateDic"
+        "itemData.roomDecorateDic",
+        "itemData.blueprints.blueprint_room_decorate_fishbowl"
       ],
       "notes": [
-        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+        "Objeto observado en roomDecorateDic de A y C con valor [0]; B solo posee ItemEggMachine. Requiere el plano decorativo. room_decorate_fishbowl_level=3 en A y C es un nivel, no una bandera de desbloqueo. La posesión no demuestra disponibilidad funcional; validación en juego pendiente."
       ],
       "evidence": "E2",
-      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "ObjectMagicWell",
@@ -183,17 +220,32 @@
         "observed_unlocked": true,
         "observed_value": [
           0
+        ],
+        "requires": [
+          {
+            "kind": "flag",
+            "key": "room_unlock_magic_area"
+          },
+          {
+            "kind": "blueprint",
+            "key": "blueprint_room_decorate_magic_well"
+          }
         ]
       },
-      "relations": {},
+      "relations": {
+        "room_unlock_magic_area": "flag",
+        "blueprint_room_decorate_magic_well": "blueprint"
+      },
       "save_refs": [
-        "itemData.roomDecorateDic"
+        "itemData.roomDecorateDic",
+        "statisticData.event2Count.room_unlock_magic_area",
+        "itemData.blueprints.blueprint_room_decorate_magic_well"
       ],
       "notes": [
-        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+        "Objeto observado en roomDecorateDic de A y C con valor [0]; B solo posee ItemEggMachine. Requiere la bandera del área mágica y el plano decorativo en las muestras avanzadas. La posesión no demuestra disponibilidad funcional; validación en juego pendiente."
       ],
       "evidence": "E2",
-      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "ObjectMysteriouStatue",
@@ -209,17 +261,26 @@
         "observed_unlocked": true,
         "observed_value": [
           0
+        ],
+        "requires": [
+          {
+            "kind": "blueprint",
+            "key": "blueprint_room_decorate_mysteriou_statue"
+          }
         ]
       },
-      "relations": {},
+      "relations": {
+        "blueprint_room_decorate_mysteriou_statue": "blueprint"
+      },
       "save_refs": [
-        "itemData.roomDecorateDic"
+        "itemData.roomDecorateDic",
+        "itemData.blueprints.blueprint_room_decorate_mysteriou_statue"
       ],
       "notes": [
-        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+        "Objeto observado en roomDecorateDic de A y C con valor [0]; B solo posee ItemEggMachine. No se observó bandera room_unlock propia; requiere el plano decorativo investigado. La posesión no demuestra disponibilidad funcional; validación en juego pendiente."
       ],
       "evidence": "E2",
-      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "ObjectPlant",
@@ -235,17 +296,26 @@
         "observed_unlocked": true,
         "observed_value": [
           0
+        ],
+        "requires": [
+          {
+            "kind": "flag",
+            "key": "room_unlock_plant"
+          }
         ]
       },
-      "relations": {},
+      "relations": {
+        "room_unlock_plant": "flag"
+      },
       "save_refs": [
-        "itemData.roomDecorateDic"
+        "itemData.roomDecorateDic",
+        "statisticData.event2Count.room_unlock_plant"
       ],
       "notes": [
-        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+        "Objeto observado en roomDecorateDic de A y C con valor [0]; B solo posee ItemEggMachine. Requiere la bandera room_unlock_plant en las muestras avanzadas. La posesión no demuestra disponibilidad funcional; validación en juego pendiente."
       ],
       "evidence": "E2",
-      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "ObjectSafe",
@@ -261,17 +331,26 @@
         "observed_unlocked": true,
         "observed_value": [
           0
+        ],
+        "requires": [
+          {
+            "kind": "flag",
+            "key": "room_unlock_safe"
+          }
         ]
       },
-      "relations": {},
+      "relations": {
+        "room_unlock_safe": "flag"
+      },
       "save_refs": [
-        "itemData.roomDecorateDic"
+        "itemData.roomDecorateDic",
+        "statisticData.event2Count.room_unlock_safe"
       ],
       "notes": [
-        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+        "Objeto observado en roomDecorateDic de A y C con valor [0]; B solo posee ItemEggMachine. Requiere la bandera room_unlock_safe en las muestras avanzadas. La posesión no demuestra disponibilidad funcional; validación en juego pendiente."
       ],
       "evidence": "E2",
-      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "PetFood",
@@ -287,17 +366,26 @@
         "observed_unlocked": true,
         "observed_value": [
           0
+        ],
+        "requires": [
+          {
+            "kind": "flag",
+            "key": "room_unlock_pet_food"
+          }
         ]
       },
-      "relations": {},
+      "relations": {
+        "room_unlock_pet_food": "flag"
+      },
       "save_refs": [
-        "itemData.roomDecorateDic"
+        "itemData.roomDecorateDic",
+        "statisticData.event2Count.room_unlock_pet_food"
       ],
       "notes": [
-        "Identificador real de roomDecorateDic observado en la cuenta A; la cuenta B solo contiene ItemEggMachine. [0] no se interpreta como nivel."
+        "Objeto observado en roomDecorateDic de A y C con valor [0]; B solo posee ItemEggMachine. Requiere la bandera room_unlock_pet_food en las muestras avanzadas. La posesión no demuestra disponibilidad funcional; validación en juego pendiente."
       ],
       "evidence": "E2",
-      "source": "OWN@own-phase9-1:knowledge/sources/phase9-1-observations.md"
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "garden_skin_0",
@@ -1028,21 +1116,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A=1; C=1; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_badass"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A=1; C=1; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "room_unlock_book",
@@ -1052,21 +1140,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A=1; C=1; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_book"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A=1; C=1; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "room_unlock_cellar",
@@ -1076,21 +1164,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A=1; C=1; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_cellar"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A=1; C=1; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "room_unlock_defence_mode",
@@ -1100,21 +1188,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A=1; C=1; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_defence_mode"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A=1; C=1; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "room_unlock_garden",
@@ -1124,21 +1212,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A=1; C=1; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_garden"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A=1; C=1; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "room_unlock_magic_area",
@@ -1148,21 +1236,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A=1; C=1; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_magic_area"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A=1; C=1; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "room_unlock_monster_rise",
@@ -1172,21 +1260,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A ausente; C=1; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_monster_rise"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A ausente; C=1; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "room_unlock_pet_food",
@@ -1196,21 +1284,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A=1; C=1; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_pet_food"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A=1; C=1; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "room_unlock_plant",
@@ -1220,21 +1308,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A=1; C=1; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_plant"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A=1; C=1; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "room_unlock_quest_board",
@@ -1244,21 +1332,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A=1; C=1; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_quest_board"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A=1; C=1; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "room_unlock_safe",
@@ -1268,21 +1356,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A=1; C=1; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_safe"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A=1; C=1; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "room_unlock_season_mode",
@@ -1292,21 +1380,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A=1; C=1; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_season_mode"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A=1; C=1; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "room_unlock_statements_count",
@@ -1316,21 +1404,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A ausente; C=85; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_statements_count"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A ausente; C=85; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "room_unlock_trash_can",
@@ -1340,21 +1428,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A=1; C=1; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_trash_can"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A=1; C=1; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     },
     {
       "id": "room_unlock_work_shop",
@@ -1364,21 +1452,21 @@
         "zh_cn": null
       },
       "category": "lobby",
-      "subcategory": "furniture",
+      "subcategory": "room_unlock_flag",
       "attributes": {
-        "kind": "furniture",
-        "observed_in_reference_sample": true
+        "kind": "room_unlock_flag",
+        "observed_values": "A=1; C=1; B ausente",
+        "expected_minimum": 1
       },
       "relations": {},
       "save_refs": [
-        "gameData.roomObjectLevel",
-        "gameData.unlockRoomDecorate"
+        "statisticData.event2Count.room_unlock_work_shop"
       ],
       "notes": [
-        "Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."
+        "Bandera de disponibilidad funcional del vestíbulo. Valores observados: A=1; C=1; B ausente. La correlación con objetos disponibles es E2; la eficacia de escribirla no está validada en juego."
       ],
-      "evidence": "E1",
-      "source": "SKDFE@57b9b86335c080caca55e178c8409cb67658ccf6:data.json"
+      "evidence": "E2",
+      "source": "OWN@own-phase9-2:knowledge/sources/phase9-2-observations.md"
     }
   ]
 }

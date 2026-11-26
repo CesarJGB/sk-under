@@ -741,11 +741,15 @@ def build_lobby(
                 furniture_id,
                 name_from_i2(i2, furniture_id, f"object/{furniture_id}"),
                 "lobby",
-                subcategory="furniture",
-                attributes={"kind": "furniture", "observed_in_reference_sample": True},
-                save_refs=["gameData.unlockRoomDecorate", "gameData.roomObjectLevel"],
+                subcategory="room_unlock_flag",
+                attributes={"kind": "room_unlock_flag", "expected_minimum": 1},
+                save_refs=[f"statisticData.event2Count.{furniture_id}"],
+                evidence="E2",
                 source=item_source(commit, "data.json"),
-                notes=["Identificador observado en una muestra externa con forma de guardado; no se conoce su nombre de juego."],
+                notes=[
+                    "Identificador observado en una muestra externa con forma de guardado; la ruta de guardado se confirmó en las muestras A y C de la fase 9.2.",
+                    "La presencia de la bandera correlaciona con la disponibilidad funcional del vestíbulo; la eficacia de escribirla no está validada en juego.",
+                ],
             )
         )
     for unlock_id in data.get("itemUnlock", []):

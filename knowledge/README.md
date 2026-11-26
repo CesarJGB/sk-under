@@ -16,10 +16,11 @@ aparezca en un catálogo no significa que una cuenta lo tenga desbloqueado.
 - 616 campos técnicos (66 del registro histórico + 550 declarados en metadata).
 - 25 catálogos normalizados con 4.339 elementos (incluye 58 mascotas, 12 variantes de skin, 296 planos y 59 elementos de vestíbulo).
 - 8.562 entradas de nombres en inglés, español y chino simplificado.
-- 43 relaciones documentadas y 19 fuentes con procedencia.
+- 46 relaciones documentadas y 21 fuentes con procedencia.
 - Políticas `confirmed_by_owner` E3 para materiales, semillas, monedas de temporada, tarjeta de renacimiento y progreso acumulado de pesca, confirmadas por el propietario en Android físico.
 - La maximización de niveles de personaje está confirmada E3 por el propietario en Android físico (fase 9.1); no se generaliza a otras categorías.
 - La fase 9.1 añade observaciones propias E2 sobre afinidad inicial de mascotas, codificación textual/entera de planos y desbloqueo de objetos del vestíbulo.
+- La fase 9.2 confirma la escala entera de planos (1=Got, 2=Researched), documenta las banderas `room_unlock_*` como disponibilidad funcional del vestíbulo y actualiza los máximos observados (nivel de personaje 8, `Chest` 5, mascota 57 con 240).
 - Políticas experimentales E2 para pase de batalla, desbloqueo de mascotas, variantes de skin y alimento para mascotas.
 - Herramientas CLI sin autenticación, sin red y sin acceso a guardados reales.
 

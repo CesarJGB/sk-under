@@ -231,7 +231,11 @@ def large_plan_document() -> tuple[bytes, dict, int]:
         "characters": characters,
         "hero_levels": [{"code": code, "level": 1} for code in characters[:7]],
         "pet_affinity": [{"code": code, "value": 10} for code, _ in pet_codes],
-        "blueprints": [{"id": blueprint_id, "status": "Got"} for blueprint_id in blueprints],
+        "blueprints": [
+            {"id": blueprint_id, "status": "Got"}
+            for blueprint_id in blueprints
+            if not blueprint_id.startswith("blueprint_room_decorate_")
+        ],
         "decorations": {
             "objects": [
                 "ItemTrashCan",
@@ -252,7 +256,7 @@ def large_plan_document() -> tuple[bytes, dict, int]:
             ],
         },
     }
-    expected = 366
+    expected = 372
     return canonical(document), plan, expected
 
 

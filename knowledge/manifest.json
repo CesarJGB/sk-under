@@ -21,18 +21,18 @@
       "E3": 11,
       "E4": 6
     },
-    "dependencies": 43,
-    "sources": 19,
+    "dependencies": 46,
+    "sources": 21,
     "translations": 8562,
     "versions_analyzed": 3,
-    "open_questions": 574
+    "open_questions": 578
   },
   "artifacts": [
     {
       "path": "knowledge/README.md",
       "kind": "knowledge",
-      "sha256": "77a49b4c285411f8e8f01d0e4d593986611035f8b7d1968c2fffd4154d0434f7",
-      "bytes": 9549,
+      "sha256": "95218b01dfcaf7f1d08d5b46aabeaaee5c570b02e3d1d0158420ed133b3ec05e",
+      "bytes": 9797,
       "count": null
     },
     {
@@ -108,8 +108,8 @@
     {
       "path": "knowledge/catalogs/lobby.json",
       "kind": "catalogs",
-      "sha256": "363b08480622289f3d8855cabd4995700d8017febac374e0ae37b25678b16a15",
-      "bytes": 36732,
+      "sha256": "177faad21d79022606970e61120153fc93b865ec7618c4049b75df540aad5941",
+      "bytes": 42254,
       "count": 59
     },
     {
@@ -213,9 +213,9 @@
     {
       "path": "knowledge/dependencies/dependencies.json",
       "kind": "dependencies",
-      "sha256": "39746a25f204d6bb35dfb81ea8a2dc71a6e8f9fea4bb5d381c1191d3e6d555da",
-      "bytes": 40085,
-      "count": 43
+      "sha256": "170658f4992323c88caa6ee9344c5446e3675b960939da187c87677cc148a3b1",
+      "bytes": 44926,
+      "count": 46
     },
     {
       "path": "knowledge/evidence/data-json-structure.json",
@@ -248,21 +248,21 @@
     {
       "path": "knowledge/fields/fields.json",
       "kind": "fields",
-      "sha256": "8a693f2865c1537c2bbceb8ed570d94472d63819ebc36e523f189a94068edc48",
-      "bytes": 1220583,
+      "sha256": "84e9ed9769dc75bba620a63553fe79a3012daa06dd2e384ad9ba8e92b4477e93",
+      "bytes": 1224939,
       "count": 616
     },
     {
       "path": "knowledge/fields/overrides.json",
       "kind": "fields",
-      "sha256": "a22500e48d82db22c96b937de0597f46dda1d2b03551814b9837764598b2d211",
-      "bytes": 53117,
+      "sha256": "1947a31d3619ae11040f18aabfbe3795f50cd19c3cda8a93775a4c8787299f50",
+      "bytes": 58197,
       "count": null
     },
     {
       "path": "knowledge/reports/coverage.md",
       "kind": "reports",
-      "sha256": "fe99e9fb1fcf9115ef708a4dd1f8bcb57caf46e1150752b8a7143a598b548348",
+      "sha256": "b9c63a4e6b9fb7c83b3e615ad07ff65e71d1c27ea0a117161bb6d889c89b9040",
       "bytes": 2348,
       "count": null
     },
@@ -330,6 +330,13 @@
       "count": null
     },
     {
+      "path": "knowledge/sources/owner-confirmations-phase9-2.md",
+      "kind": "sources",
+      "sha256": "d6337af41733ec931b46b1a121e88014410aec56cb25498e58b1c1b8b7fba6a2",
+      "bytes": 1732,
+      "count": null
+    },
+    {
       "path": "knowledge/sources/owner-guide-phase7-1.md",
       "kind": "sources",
       "sha256": "4fb8fb212dce0ce101b0125abd30ae2b1e4aa10b4f17c306906ee08a09a5e4c8",
@@ -341,6 +348,13 @@
       "kind": "sources",
       "sha256": "136a1d85f7f8bbfa5a07ba15f7526f1c5c32fab966bd5af1127cf98ad490db66",
       "bytes": 1957,
+      "count": null
+    },
+    {
+      "path": "knowledge/sources/phase9-2-observations.md",
+      "kind": "sources",
+      "sha256": "1857f9a171dc5a90dfddfdac850e6c1957245c3d34bd320c79d98ed7894ede81",
+      "bytes": 7756,
       "count": null
     },
     {
@@ -360,9 +374,9 @@
     {
       "path": "knowledge/sources/sources.json",
       "kind": "sources",
-      "sha256": "e4476802aa6b2855ffa040c41bb3467da3481031906e5c7d15185403d8f721bf",
-      "bytes": 13549,
-      "count": 19
+      "sha256": "7062b4731ab0fbef181a37f23a9a69f74ea6a0f304a8b0c81cff9b69997d296c",
+      "bytes": 15332,
+      "count": 21
     },
     {
       "path": "knowledge/tools/README.md",
@@ -395,8 +409,8 @@
     {
       "path": "knowledge/tools/build_catalog.py",
       "kind": "tools",
-      "sha256": "8a88a2789c9127746c4e6e47dcfcc4708d44005592841db93a3594abcbab3521",
-      "bytes": 54642,
+      "sha256": "5fb37edfbb440cd37ff0130a0694cd5b7993410045e92b56c4646ca467d9731d",
+      "bytes": 54900,
       "count": null
     },
     {

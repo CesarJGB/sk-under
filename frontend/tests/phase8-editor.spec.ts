@@ -1231,13 +1231,13 @@ const PROGRESS_ADVANCED = {
   decorations: {
     available: true, experimental: true, evidence_level: 'E2', note: '', limitation: 'Selección no editable.',
     objects: [
-      { id: 'ItemEggMachine', label: 'Máquina de huevos', unlocked: true, value: [0], editable: false, reason: 'Ya desbloqueado; no se elimina.', path: 'itemData.roomDecorateDic.ItemEggMachine' },
-      { id: 'ObjectSafe', label: 'Caja fuerte', unlocked: false, value: null, editable: true, reason: 'No desbloqueado; se puede crear la clave con [0].', path: null },
-      { id: 'PetFood', label: 'Zona de alimentación de mascotas', unlocked: false, value: null, editable: true, reason: 'No desbloqueado; se puede crear la clave con [0].', path: null },
+      { id: 'ItemEggMachine', label: 'Máquina de huevos', unlocked: true, functional: true, value: [0], requirements: [], editable: false, reason: 'Ya desbloqueado; no se elimina.', path: 'itemData.roomDecorateDic.ItemEggMachine' },
+      { id: 'ObjectSafe', label: 'Caja fuerte', unlocked: false, functional: false, value: null, requirements: [{ kind: 'flag', key: 'room_unlock_safe', value: null, met: false, path: 'statisticData.event2Count.room_unlock_safe' }], editable: true, reason: 'No poseído; se crea la clave y se completan sus requisitos.', path: null },
+      { id: 'PetFood', label: 'Zona de alimentación de mascotas', unlocked: false, functional: false, value: null, requirements: [{ kind: 'flag', key: 'room_unlock_pet_food', value: null, met: false, path: 'statisticData.event2Count.room_unlock_pet_food' }], editable: true, reason: 'No poseído; se crea la clave y se completan sus requisitos.', path: null },
     ],
     levels: [
-      { id: 'Book', level: 2, max_observed: 5, editable: true, reason: 'Se puede subir hasta el máximo observado (5).', path: 'gameData.roomObjectLevel.Book' },
-      { id: 'Safe', level: 5, max_observed: 5, editable: false, reason: 'Ya está en el máximo observado (5).', path: 'gameData.roomObjectLevel.Safe' },
+      { id: 'Book', level: 2, max_observed: 5, gate: 'room_unlock_book', gate_value: null, gate_met: false, editable: true, reason: 'Se puede subir hasta el máximo observado (5).', path: 'gameData.roomObjectLevel.Book' },
+      { id: 'Safe', level: 5, max_observed: 5, gate: 'room_unlock_safe', gate_value: null, gate_met: false, editable: false, reason: 'Ya está en el máximo observado (5).', path: 'gameData.roomObjectLevel.Safe' },
     ],
     appearances: [
       { id: 'blueprint_multi_room_skin_1', key: 'multi_room_skin_1', name: { es: 'Sala uno', en: 'Room one' }, subcategory: 'multi', status: 'Got', obtained: true, researched: false, path: 'itemData.blueprints.multi_room_skin_1' },

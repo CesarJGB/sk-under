@@ -145,7 +145,8 @@ def test_decorations_unlock_objects_raise_observed_levels_and_preserve_unknowns(
     assert objects["ObjectSafe"]["editable"] is True
     assert levels["Book"]["level"] == 2 and levels["Book"]["max_observed"] == 5
     assert levels["Planet"]["editable"] is False
-    assert levels["Chest"]["editable"] is False
+    assert levels["Chest"]["editable"] is True
+    assert levels["Chest"]["max_observed"] == 5
     assert snapshot["room"]["selection_editable"] is False
 
     edit = prepare_decoration_edit(original, {
@@ -159,10 +160,16 @@ def test_decorations_unlock_objects_raise_observed_levels_and_preserve_unknowns(
     assert after["gameData"]["roomObjectLevel"]["Book"] == 5
     assert after["gameData"]["roomObjectLevel"]["Safe"] == 4
     assert after["gameData"]["currentRoomDecorate"] == "Common"
+    assert after["statisticData"]["event2Count"]["room_unlock_safe"] == 1
+    assert after["statisticData"]["event2Count"]["room_unlock_pet_food"] == 1
+    assert after["statisticData"]["event2Count"]["room_unlock_book"] == 1
     assert edit.changed_fields == (
         "itemData.roomDecorateDic.ObjectSafe",
+        "statisticData.event2Count.room_unlock_safe",
         "itemData.roomDecorateDic.PetFood",
+        "statisticData.event2Count.room_unlock_pet_food",
         "gameData.roomObjectLevel.Book",
+        "statisticData.event2Count.room_unlock_book",
     )
 
 
@@ -195,4 +202,130 @@ def test_unified_plan_combines_pets_blueprints_and_decorations_atomically():
     assert after["itemData"]["blueprints"]["multi_room_skin_2"] == "Researched"
     assert after["itemData"]["roomDecorateDic"]["ObjectSafe"] == [0]
     assert after["gameData"]["roomObjectLevel"]["Book"] == 5
+    assert edit.original == original
+
+
+def test_decorations_require_functional_flags_and_blueprints_beyond_possession():
+    snapshot = read_decorations(source())
+    objects = {row["id"]: row for row in snapshot["objects"]}
+    assert objects["ItemEggMachine"]["functional"] is True
+    safe = objects["ObjectSafe"]
+    assert safe["unlocked"] is False and safe["functional"] is False
+    assert safe["requirements"] == [{
+        "kind": "flag",
+        "key": "room_unlock_safe",
+        "value": None,
+        "met": False,
+        "path": "statisticData.event2Count.room_unlock_safe",
+    }]
+    drink = objects["ObjectDrinkSeller"]
+    assert [row["kind"] for row in drink["requirements"]] == ["blueprint"]
+    assert drink["requirements"][0]["key"] == "blueprint_room_decorate_drink_seller"
+    magic = objects["ObjectMagicWell"]
+    assert [row["kind"] for row in magic["requirements"]] == ["flag", "blueprint"]
+
+    data = document()
+    data["itemData"]["roomDecorateDic"]["ObjectSafe"] = [0]
+    partial = read_decorations(source(data))
+    rows = {row["id"]: row for row in partial["objects"]}
+    assert rows["ObjectSafe"]["unlocked"] is True
+    assert rows["ObjectSafe"]["functional"] is False
+    assert rows["ObjectSafe"]["editable"] is True
+
+
+def test_decorations_unlock_creates_flags_and_blueprints_and_is_idempotent():
+    original = source()
+    edit = prepare_decoration_edit(original, {
+        "objects": ["ObjectSafe", "ObjectDrinkSeller", "ObjectMagicWell"],
+    })
+    after = json.loads(edit.candidate)
+    counters = after["statisticData"]["event2Count"]
+    blueprints = after["itemData"]["blueprints"]
+    assert after["itemData"]["roomDecorateDic"]["ObjectSafe"] == [0]
+    assert counters["room_unlock_safe"] == 1
+    assert counters["room_unlock_magic_area"] == 1
+    assert blueprints["blueprint_room_decorate_drink_seller"] == "Researched"
+    assert blueprints["blueprint_room_decorate_magic_well"] == "Researched"
+    assert blueprints["legacy_unknown"] == "Researched"
+    assert edit.changed_fields == (
+        "itemData.roomDecorateDic.ObjectDrinkSeller",
+        "itemData.blueprints.blueprint_room_decorate_drink_seller",
+        "itemData.roomDecorateDic.ObjectMagicWell",
+        "statisticData.event2Count.room_unlock_magic_area",
+        "itemData.blueprints.blueprint_room_decorate_magic_well",
+        "itemData.roomDecorateDic.ObjectSafe",
+        "statisticData.event2Count.room_unlock_safe",
+    )
+    assert edit.original == original
+
+    repeated = prepare_decoration_edit(edit.candidate, {
+        "objects": ["ObjectSafe", "ObjectDrinkSeller", "ObjectMagicWell"],
+    })
+    assert repeated.changed is False
+    assert repeated.candidate == edit.candidate
+
+
+def test_decorations_integer_encoding_upgrades_blueprints_and_preserves_type():
+    data = integer_document()
+    data["itemData"]["roomDecorateDic"] = {"ObjectFishBowl": [0]}
+    data["itemData"]["blueprints"]["room_decorate_fishbowl"] = 1
+    original = source(data)
+    edit = prepare_decoration_edit(original, {"objects": ["ObjectFishBowl"]})
+    blueprints = json.loads(edit.candidate)["itemData"]["blueprints"]
+    assert blueprints["room_decorate_fishbowl"] == 2
+    assert blueprints["multi_room_skin_1"] == 1
+    assert all(type(value) is int for value in blueprints.values())
+
+
+def test_decorations_reject_incompatible_flags_and_missing_containers():
+    data = document()
+    data["statisticData"]["event2Count"]["room_unlock_safe"] = "yes"
+    with pytest.raises(Exception):
+        prepare_decoration_edit(source(data), {"objects": ["ObjectSafe"]})
+
+    data = document()
+    del data["statisticData"]["event2Count"]
+    with pytest.raises(Exception):
+        prepare_decoration_edit(source(data), {"objects": ["ObjectSafe"]})
+
+
+def test_blueprints_create_prefixed_room_decorate_keys_without_alias():
+    original = source()
+    edit = prepare_blueprint_edit(
+        original,
+        {"blueprint_room_decorate_drink_seller": "Researched"},
+    )
+    blueprints = json.loads(edit.candidate)["itemData"]["blueprints"]
+    assert blueprints["blueprint_room_decorate_drink_seller"] == "Researched"
+    assert "room_decorate_drink_seller" not in blueprints
+    repeated = prepare_blueprint_edit(
+        edit.candidate,
+        {"blueprint_room_decorate_drink_seller": "Researched"},
+    )
+    assert repeated.changed is False
+
+    data = document()
+    data["itemData"]["roomDecorateDic"]["ObjectDrinkSeller"] = [0]
+    data["itemData"]["blueprints"]["room_decorate_drink_seller"] = "Unknown"
+    with pytest.raises(Exception):
+        prepare_decoration_edit(source(data), {"objects": ["ObjectDrinkSeller"]})
+
+
+def test_decorations_level_gate_and_combined_reversal():
+    original = source()
+    snapshot = read_decorations(original)
+    levels = {row["id"]: row for row in snapshot["levels"]}
+    assert levels["Book"]["gate"] == "room_unlock_book"
+    assert levels["Book"]["gate_met"] is False
+    assert levels["Planet"]["gate"] is None
+
+    edit = prepare_decoration_edit(original, {"levels": [{"id": "Chest", "level": 5}]})
+    after = json.loads(edit.candidate)
+    assert after["gameData"]["roomObjectLevel"]["Chest"] == 5
+    assert after["statisticData"]["event2Count"]["room_unlock_cellar"] == 1
+    assert after["itemData"]["roomDecorateDic"] == {"ItemEggMachine": [0]}
+    assert edit.changed_fields == (
+        "gameData.roomObjectLevel.Chest",
+        "statisticData.event2Count.room_unlock_cellar",
+    )
     assert edit.original == original

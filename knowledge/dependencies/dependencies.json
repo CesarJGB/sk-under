@@ -10,9 +10,10 @@
     "Las relaciones hypothesis y negative existen para evitar que futuras fases confundan campos parecidos.",
     "Las relaciones de la fase 7.1 distinguen la referencia funcional del propietario de la confirmación empírica en dispositivo; ninguna relación se eleva a E3/E4 sin esa prueba.",
     "La fase 7.2 eleva a E3 las relaciones confirmadas por el propietario en Android físico y mantiene como hipótesis u observación las relativas a mascotas y pase de batalla.",
-    "La fase 9.0 documenta escritores experimentales de niveles, afinidad y planos sin elevar la evidencia de semántica ni declarar validación física."
+    "La fase 9.0 documenta escritores experimentales de niveles, afinidad y planos sin elevar la evidencia de semántica ni declarar validación física.",
+    "La fase 9.2 mantiene E2 las relaciones del vestíbulo: la correlación entre roomDecorateDic, room_unlock_* y planos room_decorate_* es fuerte, pero no se ejecutó una modificación controlada en el juego. La muestra iOS procede de un editor externo y su sobre no se considera representativo del guardado nativo."
   ],
-  "count": 43,
+  "count": 46,
   "dependencies": [
     {
       "id": "gems-balance-composition",
@@ -272,17 +273,18 @@
       "relation": "estado_por_plano",
       "status": "observed",
       "evidence": "E2",
-      "scope": "8.6.0 y 8.8.0, cuentas A y B de la fase 9.1",
-      "description": "A usa texto Got/Researched con 344 claves (312 Researched, 32 Got); B usa enteros con 21 claves de valor 1, interpretado como Got. La ausencia de clave se interpreta como no obtenido. Hay alias con y sin prefijo blueprint_ y claves no catalogadas que se conservan intactas.",
+      "scope": "8.6.0/8.8.0/8.11, cuentas A, B y C",
+      "description": "A usa texto Got/Researched con 344 claves (312 Researched, 32 Got). B usa enteros con 21 claves de valor 1. C usa enteros con 198 claves: 24 de valor 1 y 174 de valor 2, lo que confirma que 2=Researched. La ausencia de clave se interpreta como no obtenido. Hay alias con y sin prefijo blueprint_ y claves no catalogadas que se conservan intactas.",
       "sources": [
         "knowledge/evidence/data-json-structure.json",
         "knowledge/catalogs/blueprints.json",
         "docs/research/phase9-0/README.md",
-        "docs/research/phase9-1/README.md"
+        "docs/research/phase9-1/README.md",
+        "docs/research/phase9-2-crde-comparison.md",
+        "knowledge/sources/phase9-2-observations.md"
       ],
       "edit_implication": "Experimental: crear registros ausentes solo del catálogo o extras observados, respetar la codificación dominante, permitir No→Got, No→Researched y Got→Researched, y rechazar Researched→Got. No sobrescribir claves desconocidas.",
       "experiments_required": [
-        "Confirmar el valor entero 2 para Researched.",
         "Confirmar en Android la creación de un plano ausente.",
         "Confirmar si investigar consume materiales automáticamente."
       ]
@@ -347,16 +349,20 @@
       "relation": "desbloqueo_y_nivel",
       "status": "observed",
       "evidence": "E2",
-      "scope": "8.8.0/8.11, cuentas A y B de la fase 9.1",
-      "description": "itemData.roomDecorateDic contiene diez objetos en A y solo ItemEggMachine en B; la presencia de la clave se interpreta como desbloqueo. gameData.unlockRoomDecorate está vacío en ambas y no sirve como indicador. roomObjectLevel tiene niveles independientes (A: Book/CatFood/Planet/Safe=5, Chest=1; B: todo 0). El valor [0] no es un nivel.",
+      "scope": "8.8.0/8.11, cuentas A, B y C de las fases 9.1 y 9.2",
+      "description": "itemData.roomDecorateDic contiene diez objetos en A y C y solo ItemEggMachine en B. La posesión no basta para la disponibilidad funcional: A y C tienen banderas statisticData.event2Count.room_unlock_* y B no tiene ninguna. gameData.unlockRoomDecorate está vacío en las tres cuentas y gameData.roomLevel no distingue progreso (A=1, C=0). El valor [0] no es un nivel.",
       "sources": [
         "docs/research/phase9-1/README.md",
+        "docs/research/phase9-2-crde-comparison.md",
+        "docs/research/lobby-unlocks.md",
+        "knowledge/sources/phase9-2-observations.md",
         "knowledge/catalogs/lobby.json"
       ],
-      "edit_implication": "Experimental: desbloquear objetos observados creando la clave con [0]; subir niveles existentes hasta el máximo observado por clave. No usar unlockRoomDecorate ni interpretar [0] como máximo.",
+      "edit_implication": "Experimental: al desbloquear un objeto crear roomDecorateDic[objeto]=[0] y sus requisitos conocidos (bandera room_unlock_* y/o plano room_decorate_* Researched). No usar unlockRoomDecorate ni interpretar [0] como máximo. La eficacia no está validada en juego.",
       "experiments_required": [
-        "Validar en Android el desbloqueo por creación de clave y la mejora de nivel.",
-        "Aclarar la relación con planos de decoración y selección de skin."
+        "Validar en Android físico que objeto y bandera juntos hacen aparecer y funcionar el objeto.",
+        "Aclarar el gate de expendedora y estatua, que solo muestran plano.",
+        "Determinar el efecto de room_decorate_fishbowl_level."
       ]
     },
     {
@@ -722,14 +728,16 @@
       "relation": "niveles_independientes_del_desbloqueo",
       "status": "observed",
       "evidence": "E2",
-      "scope": "8.8.0/8.11, cuentas A y B",
-      "description": "La presencia en roomDecorateDic indica desbloqueo; roomObjectLevel contiene la mejora. A tiene Book/CatFood/Planet/Safe=5 y Chest=1; B tiene 0. [0] no es un máximo.",
+      "scope": "8.8.0/8.11, cuentas A, B y C",
+      "description": "La presencia en roomDecorateDic indica posesión; roomObjectLevel contiene la mejora. A: Book/CatFood/Planet/Safe=5 y Chest=1. C: las cinco claves en 5, por lo que Chest también tiene máximo observado 5. B: todas en 0. [0] no es un máximo.",
       "sources": [
-        "docs/research/phase9-1/README.md"
+        "docs/research/phase9-1/README.md",
+        "docs/research/phase9-2-crde-comparison.md",
+        "knowledge/sources/phase9-2-observations.md"
       ],
-      "edit_implication": "Desbloquear creando la clave con [0] y mejorar solo claves de nivel existentes, sin superar el máximo observado por clave.",
+      "edit_implication": "Experimental: mejorar solo claves de nivel existentes, sin superar el máximo observado por clave, y activar la bandera asociada para Book, CatFood, Chest y Safe. Planet no tiene bandera conocida.",
       "experiments_required": [
-        "Validar ambas transiciones en Android físico.",
+        "Validar la mejora y la bandera asociada en Android físico.",
         "Recuperar los máximos reales de la configuración del juego."
       ]
     },
@@ -776,14 +784,78 @@
       "relation": "codificacion_texto_o_entero_por_cuenta",
       "status": "observed",
       "evidence": "E2",
-      "scope": "8.8.0/8.11, A texto y B entero",
-      "description": "A serializa Got/Researched como texto. B usa enteros: 1 coincide con Got; 2 se deduce como Researched pero no se observó. Mezclar tipos en una misma cuenta no está respaldado.",
+      "scope": "8.8.0/8.11, A texto; B y C enteros",
+      "description": "A serializa Got/Researched como texto. B usa enteros con valor 1. C confirma la escala entera con 24 valores 1 y 174 valores 2: 1=Got y 2=Researched. Mezclar tipos en una misma cuenta no está respaldado.",
       "sources": [
-        "docs/research/phase9-1/README.md"
+        "docs/research/phase9-1/README.md",
+        "docs/research/phase9-2-crde-comparison.md",
+        "knowledge/sources/phase9-2-observations.md"
       ],
       "edit_implication": "Detectar la codificación dominante y escribir los registros nuevos con ese tipo; no mezclar texto y enteros.",
       "experiments_required": [
-        "Confirmar el valor entero 2 en una cuenta que investigue un plano."
+        "Confirmar que el cliente acepta la creación de una clave entera nueva."
+      ]
+    },
+    {
+      "id": "lobby-possession-versus-unlock-flag",
+      "from": "itemData.roomDecorateDic",
+      "to": "statisticData.event2Count",
+      "relation": "posesion_frente_a_bandera_funcional",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0/8.11, cuentas A, B y C",
+      "description": "Las cuentas avanzadas A y C poseen los mismos diez objetos y tienen banderas room_unlock_book/safe/pet_food/trash_can/plant/cellar/magic_area/quest_board/work_shop=1. La cuenta nueva B solo posee ItemEggMachine y no tiene ninguna bandera room_unlock_*. La correlación es perfecta, pero no se observó una modificación controlada.",
+      "sources": [
+        "docs/research/phase9-2-crde-comparison.md",
+        "docs/research/lobby-unlocks.md",
+        "knowledge/sources/phase9-2-observations.md",
+        "knowledge/catalogs/lobby.json"
+      ],
+      "edit_implication": "Experimental: crear la bandera junto con la posesión. No declarar el objeto disponible solo por roomDecorateDic. No inventar banderas para objetos sin evidencia.",
+      "experiments_required": [
+        "Escribir objeto+bandera en una copia local, cargar en el juego y comprobar que el objeto aparece y es interactivo.",
+        "Repetir tras reiniciar y volver a descargar la partida."
+      ]
+    },
+    {
+      "id": "lobby-decorate-blueprint-gate",
+      "from": "itemData.roomDecorateDic",
+      "to": "itemData.blueprints",
+      "relation": "decorado_investigable_requiere_plano",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0/8.11, cuentas A y C",
+      "description": "La expendedora, la pecera, el pozo mágico y la estatua tienen planos blueprint_room_decorate_* Researched en A y valor entero 2 en C. No se observaron banderas room_unlock_* propias para expendedora ni estatua. El pozo también coincide con room_unlock_magic_area. El catálogo de configuración solo define esos cuatro planos decorativos.",
+      "sources": [
+        "docs/research/phase9-2-crde-comparison.md",
+        "docs/research/lobby-unlocks.md",
+        "knowledge/sources/phase9-2-observations.md",
+        "knowledge/catalogs/blueprints.json"
+      ],
+      "edit_implication": "Experimental: al desbloquear estos objetos, crear o elevar el plano a Researched respetando la codificación de la cuenta. No crear planos room_decorate_* para objetos que no los tienen en el catálogo.",
+      "experiments_required": [
+        "Validar en juego si Researched habilita el decorado sin otros contadores.",
+        "Confirmar el gate exacto de expendedora y estatua."
+      ]
+    },
+    {
+      "id": "lobby-object-level-unlock-flag",
+      "from": "gameData.roomObjectLevel",
+      "to": "statisticData.event2Count",
+      "relation": "nivel_asociado_a_bandera",
+      "status": "observed",
+      "evidence": "E2",
+      "scope": "8.8.0/8.11, cuentas A y C",
+      "description": "Book, CatFood, Chest y Safe tienen simultáneamente nivel 5 en C y banderas room_unlock_book/pet_food/cellar/safe=1. Planet tiene nivel 5 pero no se identificó bandera. A tiene Chest=1 con room_unlock_cellar=1, por lo que el nivel no sustituye la bandera.",
+      "sources": [
+        "docs/research/phase9-2-crde-comparison.md",
+        "docs/research/lobby-unlocks.md",
+        "knowledge/sources/phase9-2-observations.md"
+      ],
+      "edit_implication": "Experimental: al subir el nivel de Book, CatFood, Chest o Safe, asegurar su bandera. No asociar Planet a una bandera inventada.",
+      "experiments_required": [
+        "Validar que el nivel y la bandera se conservan juntos.",
+        "Determinar si Planet requiere otra condición."
       ]
     }
   ]

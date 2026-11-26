@@ -178,6 +178,12 @@ def preferred_blueprint_key(blueprint_id: str, target: Mapping[str, Any]) -> str
         return existing
     row = _catalog_row(blueprint_id)
     if blueprint_id.startswith(BLUEPRINT_PREFIX) and is_decorative_blueprint(row, blueprint_id):
+        # Las apariencias temáticas se guardan históricamente sin prefijo, pero
+        # los planos de objeto del vestíbulo (room_decorate_*) conservan el
+        # prefijo en las cuentas observadas. No se unifican ambas formas.
+        target_name = row.get("target") if row is not None else None
+        if isinstance(target_name, str) and target_name.startswith("room_decorate_"):
+            return blueprint_id
         return _alias(blueprint_id)
     return blueprint_id
 

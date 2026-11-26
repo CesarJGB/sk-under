@@ -438,3 +438,19 @@ cuenta principal.
 - Máximo de durabilidad y semántica de runas de joyería.
 - Semántica de niveles y skins del vestíbulo.
 - Confirmar si el servidor valida niveles, afinidad o planos.
+
+## 11. Correcciones de la fase 9.2
+
+- `gameData.heroLevel`: el máximo observado es **8**, no 7. A contiene ocho
+  personajes en 8 y C contiene `Knight` en 8. La maximización al 7 sigue
+  confirmada en Android; escribir 8 permanece experimental.
+- `itemData.blueprints`: C usa enteros y confirma `1 = Got`, `2 = Researched`.
+  La deducción de la fase 9.0 queda confirmada.
+- Afinidad: C confirma el máximo 240 para el id 57 (`FishChipKing`). Solo 27 y
+  56 siguen sin máximo observado.
+- Vestíbulo: el desbloqueo no depende solo de `roomDecorateDic`; requiere las
+  banderas `statisticData.event2Count.room_unlock_*` y, en los decorados
+  investigables, el plano `room_decorate_*`. Corregido en la fase 9.2.
+
+Detalle en [../phase9-2-crde-comparison.md](../phase9-2-crde-comparison.md) y
+[../lobby-unlocks.md](../lobby-unlocks.md).

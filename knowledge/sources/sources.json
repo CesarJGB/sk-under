@@ -2,7 +2,7 @@
   "schema": "sk-knowledge/sources@1",
   "schema_version": 1,
   "generated_by": "knowledge/tools/build_sources.py (curaduría de fase 7.0)",
-  "count": 19,
+  "count": 21,
   "sources": [
     {
       "id": "skdfe-main",
@@ -321,6 +321,43 @@
         "No se publican guardados completos ni datos privados.",
         "La presencia de una clave no demuestra causalidad ni la eficacia de un escritor.",
         "Los nombres añadidos son etiquetas de interfaz, no traducciones oficiales."
+      ],
+      "redistributed": false
+    },
+    {
+      "id": "own-phase9-2",
+      "type": "own_observation",
+      "title": "Observaciones propias — fase 9.2",
+      "location": "knowledge/sources/phase9-2-observations.md",
+      "commit": null,
+      "version": "8.x",
+      "accessed": "2026-11-26",
+      "license": null,
+      "evidence": "E2",
+      "usage": "Comparación estructural de solo lectura entre dos cuentas Android y una cuenta iOS avanzada: banderas room_unlock, planos room_decorate, niveles de mobiliario, personajes, mascotas, colecciones y diferencias de formato.",
+      "limitations": [
+        "No se publican guardados completos, credenciales ni identificadores privados.",
+        "La correlación entre banderas y disponibilidad no demuestra por sí sola la reacción del cliente.",
+        "La muestra iOS procede de un editor externo y conserva metadatos de ese editor.",
+        "Las diferencias entre Android e iOS no se separan del progreso ni de la versión del juego."
+      ],
+      "redistributed": false
+    },
+    {
+      "id": "owner-confirmations-phase9-2",
+      "type": "owner_reference",
+      "title": "Confirmaciones del propietario — fase 9.2",
+      "location": "knowledge/sources/owner-confirmations-phase9-2.md",
+      "commit": null,
+      "version": "8.x",
+      "accessed": "2026-11-26",
+      "license": null,
+      "evidence": "E3",
+      "usage": "Confirmación en Android físico de que los niveles de mobiliario se conservan y de que el desbloqueo de algunos objetos no era efectivo con el escritor anterior.",
+      "limitations": [
+        "No valida el nuevo mecanismo de banderas y planos.",
+        "No cubre iOS ni objetos distintos de los probados.",
+        "No confirma persistencia tras reiniciar el juego."
       ],
       "redistributed": false
     }

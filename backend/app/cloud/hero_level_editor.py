@@ -1,10 +1,10 @@
 """Editor conservador de niveles permanentes de personaje.
 
 ``gameData.heroLevel`` es un mapa ``código -> entero``. La semántica del campo
-está respaldada por una mejora legítima del Caballero (0 -> 1). El máximo
-documentado del sistema clásico de mejoras es 7; el nivel 8 perteneció a un
-sistema retirado y no se habilita. No se infiere un máximo distinto por
-personaje ni se modifica ``heroUnlock`` de forma implícita.
+está respaldada por una mejora legítima del Caballero (0 -> 1). Las muestras
+avanzadas de Android e iOS contienen niveles 8 en algunos personajes, por lo que
+el máximo observado es 8; no se infiere un máximo distinto por personaje ni se
+modifica ``heroUnlock`` de forma implícita.
 """
 
 from __future__ import annotations
@@ -30,14 +30,15 @@ from .lab import BinaryDiff, binary_diff
 HERO_LEVEL_PATH = "gameData.heroLevel"
 HERO_UNLOCK_PATH = "gameData.heroUnlock"
 HERO_LEVEL_MIN = 0
-HERO_LEVEL_MAX = 7
+HERO_LEVEL_MAX = 8
 MAX_CHARACTERS = 42
 
 HERO_LEVEL_LIMITATION = (
-    "El máximo 7 corresponde al sistema clásico documentado de siete mejoras "
-    "(500/1000/1500/2000/2500/5000/8000 gemas). La configuración CharactersLevelUpData "
-    "declara un MaxLevel por personaje, pero sus valores no se recuperaron; por eso no se "
-    "ofrecen máximos distintos ni el nivel 8. La eficacia del escritor aún no se validó en el juego."
+    "El máximo observado es 8: las muestras avanzadas de Android e iOS contienen "
+    "personajes en nivel 8, mientras otros permanecen en 7. La configuración "
+    "CharactersLevelUpData declara un MaxLevel por personaje, pero sus valores no se "
+    "recuperaron; por eso se usa un límite global observado y no se ofrecen máximos "
+    "distintos. La eficacia de escribir el nivel 8 aún no se validó en el juego."
 )
 
 

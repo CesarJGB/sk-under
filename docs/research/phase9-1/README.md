@@ -150,3 +150,20 @@ identificadores privados ni guardados completos.
    el juego conserva el nivel.
 5. Restauración: deshacer el lote y verificar que desaparecen las claves
    creadas y que el guardado vuelve a su SHA original.
+
+## Correcciones de la fase 9.2
+
+La comparación posterior con una cuenta iOS avanzada corrigió tres
+observaciones de esta fase:
+
+- El desbloqueo funcional del vestíbulo no depende solo de
+  `itemData.roomDecorateDic`: requiere las banderas
+  `statisticData.event2Count.room_unlock_*` y, en cuatro decorados, el plano
+  `room_decorate_*` investigado. Véase
+  [lobby-unlocks.md](../lobby-unlocks.md).
+- El máximo observado de `roomObjectLevel.Chest` es 5, no 1.
+- El nivel de personaje 8 existe en cuentas avanzadas; el 7 sigue siendo el
+  máximo confirmado físicamente. El id 57 de mascota tiene máximo 240.
+
+Los detalles y los límites de la nueva evidencia están en
+[phase9-2-crde-comparison.md](../phase9-2-crde-comparison.md).

@@ -37,7 +37,7 @@ def document() -> dict:
     data = json.loads(FIXTURE.read_bytes())
     data["gameData"]["heroUnlock"] = {"Knight": True, "Ranger": False}
     data["gameData"]["heroLevel"] = {"Knight": 0, "Ranger": 3, "UnknownHero": 0}
-    data["gameData"]["petUnlock"] = {"Cat": True, "Pig": True, "Cat4": True}
+    data["gameData"]["petUnlock"] = {"Cat": True, "Pig": True, "Cat4": True, "FishChipKing": True}
     data["statisticData"]["event2Count"] = {
         "pet_0_intimacy": 200,
         "pet_0_full_intimacy": 0,
@@ -67,26 +67,26 @@ def test_hero_level_reader_edit_and_current_source_restoration():
     original = source()
     snapshot = read_hero_levels(original)
     entries = {row["id"]: row for row in snapshot["entries"]}
-    assert snapshot["max"] == 7
+    assert snapshot["max"] == 8
     assert entries["Knight"]["level"] == 0
     assert entries["Knight"]["unlocked"] is True
     assert entries["Ranger"]["level"] == 3
     assert "UnknownHero" not in entries
 
-    edit = prepare_hero_level_edit(original, {"Knight": 7, "Ranger": 5})
+    edit = prepare_hero_level_edit(original, {"Knight": 8, "Ranger": 5})
     after = json.loads(edit.candidate)
-    assert after["gameData"]["heroLevel"] == {"Knight": 7, "Ranger": 5, "UnknownHero": 0}
+    assert after["gameData"]["heroLevel"] == {"Knight": 8, "Ranger": 5, "UnknownHero": 0}
     assert after["gameData"]["heroUnlock"] == {"Knight": True, "Ranger": False}
     assert set(edit.changed_fields) == {"gameData.heroLevel.Knight", "gameData.heroLevel.Ranger"}
     assert edit.original == original and original == source()
-    assert prepare_hero_level_edit(original, {"Knight": 7, "Ranger": 5}).candidate == edit.candidate
+    assert prepare_hero_level_edit(original, {"Knight": 8, "Ranger": 5}).candidate == edit.candidate
 
 
 def test_hero_level_rejects_unknown_out_of_range_lowering_and_missing_field():
     with pytest.raises(InvalidHeroLevelPlan):
         normalize_hero_level_plan({"UnknownHero": 1})
     with pytest.raises(InvalidHeroLevelPlan):
-        normalize_hero_level_plan({"Knight": 8})
+        normalize_hero_level_plan({"Knight": 9})
     with pytest.raises(Exception):
         prepare_hero_level_edit(source(), {"Knight": -1})
     with pytest.raises(Exception):
@@ -121,6 +121,25 @@ def test_pet_affinity_maximizes_known_pet_and_preserves_unrelated_counters():
         "statisticData.event2Count.pet_0_full_intimacy",
     }
     assert edit.original == original
+
+
+def test_pet_affinity_includes_observed_id_57_without_prior_counter():
+    original = source()
+    snapshot = read_pet_affinity(original)
+    entries = {row["id"]: row for row in snapshot["entries"]}
+    assert entries["FishChipKing"]["max"] == 240
+    assert entries["FishChipKing"]["intimacy"] == 0
+    assert entries["FishChipKing"]["editable"] is True
+
+    edit = prepare_pet_affinity_edit(original, {"FishChipKing": 240})
+    counters = json.loads(edit.candidate)["statisticData"]["event2Count"]
+    assert counters["pet_57_intimacy"] == 240
+    assert counters["pet_57_full_intimacy"] == 1
+    assert "pet_57_action_unlock" not in counters
+    assert set(edit.changed_fields) == {
+        "statisticData.event2Count.pet_57_intimacy",
+        "statisticData.event2Count.pet_57_full_intimacy",
+    }
 
 
 def test_pet_affinity_rejects_unknown_limit_lowering_and_inconsistent_full():

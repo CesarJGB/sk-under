@@ -2,7 +2,8 @@
   "schema": "sk-knowledge/field-overrides@1",
   "notes": [
     "Las descripciones y relaciones de este archivo solo repiten conclusiones ya documentadas en docs/save-research o docs/research.",
-    "Los campos declarados por metadata sin observación propia conservan semántica H y política de solo lectura."
+    "Los campos declarados por metadata sin observación propia conservan semántica H y política de solo lectura.",
+    "La fase 9.2 incorpora la comparación A/B/C y la muestra RAW de iOS obtenida mediante CRDE en modo de solo lectura."
   ],
   "observed_game_data_keys": [
     "activeShopGemReceiptMarkers",
@@ -248,15 +249,14 @@
       ]
     },
     "gameData.heroLevel": {
-      "description": "Nivel de mejora permanente de cada personaje. La maximización al nivel 7 fue validada por el propietario en Soul Knight para Android físico.",
+      "description": "Nivel de mejora permanente de cada personaje. El propietario confirmó en Android que la maximización al nivel 7 funciona; las cuentas avanzadas A y C muestran además personajes en nivel 8.",
       "known_value_semantics": [
         "Proyección del nivel de héroe observada en XML y JSON.",
         "Una mejora legítima del Caballero cambió Knight de 0 a 1 y persistió tras reiniciar (confirmación del propietario, E3 de semántica).",
-        "La ruta pública de mejoras documenta siete compras secuenciales con gemas (500, 1000, 1500, 2000, 2500, 5000 y 8000) para los niveles 1 a 7.",
-        "El nivel 8 perteneció a un sistema retirado de personajes legendarios; no se incluye en el escritor.",
-        "Cada personaje puede declarar un MaxLevel en CharactersLevelUpData, pero los valores de configuración no se recuperaron; no se inventan máximos por personaje.",
-        "El escritor solo modifica claves existentes del catálogo, no baja niveles y no cambia heroUnlock.",
-        "El propietario confirmó en Android físico que la operación de mejorar personajes al máximo funcionó dentro de Soul Knight (fase 9.1)."
+        "El propietario confirmó en Android físico que la operación de maximizar personajes funciona; la fase 9.1 usó el nivel 7 como límite validado.",
+        "La cuenta Android avanzada A contiene 8 personajes en nivel 8 y 29 en nivel 7; la cuenta iOS avanzada C contiene Knight en 8 y 41 personajes en 7.",
+        "Por tanto el nivel 8 existe en cuentas avanzadas reales. No se recuperó CharactersLevelUpData.MaxLevel por personaje y no se ha validado físicamente escribir 8.",
+        "El escritor solo modifica claves existentes del catálogo, no baja niveles y no cambia heroUnlock."
       ],
       "related_ids": [
         "gameData.heroUnlock",
@@ -275,8 +275,8 @@
       ],
       "limits": {
         "type": "int32",
-        "observed": "Todas las muestras locales están en 0; 1 confirmado en una mejora legítima de Knight y maximización al 7 confirmada por el propietario en Android físico.",
-        "functional": "Máximo documentado 7. MaxLevel por personaje no recuperado; nivel 8 excluido."
+        "observed": "0..8. A y C contienen nivel 8; una mejora legítima de Knight a 1 y la maximización al 7 fueron confirmadas por el propietario en Android.",
+        "functional": "Máximo observado 8. MaxLevel por personaje no recuperado; la escritura del nivel 8 no está validada en juego."
       },
       "known_dependencies": [
         "Catálogo de personajes para resolver códigos."
@@ -285,14 +285,19 @@
         "MaxLevel real por personaje en CharactersLevelUpData"
       ],
       "validation_level": "E3",
-      "edit_policy": "confirmed_by_owner: subida individual o masiva hasta el nivel 7 sobre claves existentes del catálogo; la operación de maximización fue confirmada en Android físico. No se generaliza a otras categorías.",
+      "edit_policy": "confirmed_by_owner: subida individual o masiva hasta 8 sobre claves existentes del catálogo. La maximización al 7 está confirmada en Android físico; el 8 está observado en A/C pero pendiente de validación física.",
       "constraints": [
         "Solo aceptar códigos presentes en el catálogo empaquetado de personajes.",
         "Solo modificar claves heroLevel existentes; no insertar personajes ausentes.",
         "No reducir el nivel actual.",
-        "No superar 7; no usar 8 ni valores arbitrarios.",
+        "No superar 8; el 8 está observado en cuentas avanzadas, pero no validado físicamente.",
         "No desbloquear el personaje ni modificar heroUnlock, heroSkill, skins o recibos.",
         "Conservar códigos y valores desconocidos."
+      ],
+      "sources": [
+        "propia",
+        "docs/research/phase9-0/README.md",
+        "docs/research/phase9-2-crde-comparison.md"
       ]
     },
     "gameData.heroSkill": {
@@ -504,7 +509,8 @@
       "description": "Estado por plano: Got (obtenido) o Researched (investigado). El editor experimental crea registros ausentes del catálogo y no permite retrocesos.",
       "known_value_semantics": [
         "La cuenta A usa texto: 344 claves, 312 Researched y 32 Got.",
-        "La cuenta B usa enteros: 21 claves con valor 1, interpretado como Got porque coinciden con estados Got de A. El valor 2 para Researched es una deducción del mismo enum y no está confirmado.",
+        "La cuenta B usa enteros: 21 claves con valor 1, interpretado como Got porque coinciden con estados Got de A.",
+        "La cuenta iOS avanzada C usa enteros: 198 claves, 24 con valor 1 y 174 con valor 2. Sus claves decorativas con valor 2 también aparecen como Researched en A, lo que confirma E2 que 2 representa Researched.",
         "La ausencia de clave se interpreta como plano no obtenido para identificadores del catálogo; no se confunde con un registro desconocido.",
         "El catálogo de la fase 9.0 contiene 265 identificadores; se añadieron 31 identificadores observados con evidencia E2 hasta 296.",
         "El guardado conserva alias sin prefijo blueprint_ para decorados y algunos planos antiguos. A puede contener simultáneamente la forma con y sin prefijo.",
@@ -524,18 +530,19 @@
         "persistence": "H"
       },
       "open_questions": [
-        "Confirmar el valor entero de Researched (2) en una cuenta que ya lo use.",
         "Confirmar el efecto de Got y Researched en el cliente.",
-        "Aclarar si investigar consume materiales automáticamente."
+        "Aclarar si investigar consume materiales automáticamente.",
+        "Validar físicamente las transiciones y la creación de claves ausentes."
       ],
       "limits": {
         "type": "objeto ID → texto Got/Researched o entero 1/2 según la cuenta",
-        "observed": "A: 344 claves de texto; B: 21 claves enteras con valor 1; catálogo ampliado a 296.",
+        "observed": "A: 344 claves de texto (312 Researched, 32 Got); B: 21 enteros 1; C: 198 enteros (24 unos, 174 doses). Catálogo ampliado a 296.",
         "functional": "No se conoce el efecto completo de cada transición en el cliente."
       },
       "known_dependencies": [
         "Catálogo de planos para resolver identificadores y alias.",
-        "La codificación dominante del mapa determina el tipo de los registros nuevos."
+        "La codificación dominante del mapa determina el tipo de los registros nuevos.",
+        "Cuatro objetos decorativos del vestíbulo requieren su plano en estado Researched."
       ],
       "pending_dependencies": [
         "Transiciones por versión y requisitos de investigación",
@@ -552,6 +559,10 @@
         "Resolver el alias sin prefijo sin duplicar la misma clave.",
         "Conservar el resto de itemData y no tocar compras, recibos ni derechos de servidor.",
         "Al revertir el candidato, eliminar las claves creadas que no existían en el original."
+      ],
+      "sources": [
+        "propia",
+        "docs/research/phase9-2-crde-comparison.md"
       ]
     },
     "itemData.seeds": {
@@ -634,7 +645,7 @@
       ]
     },
     "itemData.itemUnlock": {
-      "description": "Desbloqueos de objetos del vestíbulo.",
+      "description": "Lista de desbloqueos diversos. En A y C contiene plant_pot3..7 y Motorcycle; está vacía en B. No controla los objetos del vestíbulo.",
       "related_ids": [
         "knowledge.catalogs.lobby"
       ],
@@ -643,7 +654,13 @@
         "semantics": "E2",
         "relations": "E2",
         "persistence": "H"
-      }
+      },
+      "known_value_semantics": [
+        "A y C comparten plant_pot3, plant_pot4, plant_pot5, plant_pot6, plant_pot7 y Motorcycle.",
+        "B tiene la lista vacía.",
+        "La lista no contiene los diez objetos de roomDecorateDic; no es el indicador de desbloqueo del vestíbulo."
+      ],
+      "edit_policy": "solo lectura: no se conoce la semántica de cada desbloqueo ni su relación con compras o recibos."
     },
     "itemData.jewelryData": {
       "description": "Joyería poseída, con durabilidad y runas; estructura observada sin máximos funcionales confirmados.",
@@ -919,24 +936,37 @@
       "known_value_semantics": [
         "La cuenta A tiene Book=5, CatFood=5, Planet=5, Safe=5 y Chest=1.",
         "La cuenta B tiene Book, CatFood, Chest, Planet y Safe en 0.",
-        "El máximo observado es 5 para Book/CatFood/Planet/Safe y 1 para Chest; no se extrapola a claves nuevas.",
-        "roomObjectLevel es independiente de la presencia de roomDecorateDic."
+        "La cuenta iOS C tiene Book=5, CatFood=5, Chest=5, Planet=5 y Safe=5.",
+        "El máximo observado es 5 para las cinco claves; Chest=5 en C corrige el máximo 1 que solo mostraba A.",
+        "roomObjectLevel es independiente de la presencia de roomDecorateDic; B contiene las claves con valor 0 sin poseer los objetos.",
+        "Book, CatFood, Chest y Safe se asocian a banderas room_unlock_* en event2Count; Planet no tiene bandera identificada."
       ],
-      "edit_policy": "experimental: sube niveles de claves existentes hasta el máximo observado por clave; no crea claves ni baja niveles.",
+      "edit_policy": "experimental: sube niveles de claves existentes hasta el máximo observado por clave y activa la bandera room_unlock_* asociada cuando existe. No crea claves ni baja niveles.",
       "constraints": [
         "No crear claves ausentes.",
         "No bajar niveles.",
         "No superar el máximo observado por clave.",
         "No asumir que el máximo de una clave aplica a otra.",
+        "Activar solo banderas con asociación observada; no inventar una para Planet.",
         "Conservar claves desconocidas."
       ],
       "pending_dependencies": [
         "Máximos reales por objeto en la configuración del juego",
         "Validación física de la mejora"
-      ]
+      ],
+      "limits": {
+        "type": "mapa nombre de objeto → entero",
+        "observed": "0..5; A Chest=1 y C Chest=5; B todo 0.",
+        "functional": "Se desconoce si el nivel por sí solo activa el objeto; las banderas de desbloqueo viven en event2Count."
+      },
+      "sources": [
+        "propia",
+        "docs/research/phase9-2-crde-comparison.md"
+      ],
+      "validation_level": "E2"
     },
     "gameData.unlockRoomDecorate": {
-      "description": "Lista de desbloqueos del vestíbulo. Está vacía en las dos cuentas reales aunque A tenga diez objetos en roomDecorateDic; no se usa como indicador de desbloqueo.",
+      "description": "Lista de desbloqueos del vestíbulo. Está vacía en las tres cuentas reales (A, B y C) aunque A y C tengan diez objetos en roomDecorateDic; no se usa como indicador de desbloqueo.",
       "related_ids": [
         "knowledge.catalogs.lobby"
       ],
@@ -950,8 +980,9 @@
         "persistence": "H"
       },
       "known_value_semantics": [
-        "Lista vacía en A y B.",
-        "La evidencia de desbloqueo de objetos está en itemData.roomDecorateDic, no en esta lista."
+        "Lista vacía en A, B y C.",
+        "La disponibilidad funcional se expresa mediante banderas room_unlock_* de statisticData.event2Count y, en cuatro objetos, mediante planos investigados.",
+        "La posesión del objeto se expresa en itemData.roomDecorateDic."
       ],
       "edit_policy": "solo lectura: no se conoce qué representan sus elementos ni por qué está vacía en cuentas con objetos desbloqueados.",
       "constraints": [
@@ -960,10 +991,15 @@
       ],
       "open_questions": [
         "Determinar qué desbloqueos registra esta lista y cuándo se rellena."
+      ],
+      "sources": [
+        "propia",
+        "docs/research/phase9-1/README.md",
+        "docs/research/phase9-2-crde-comparison.md"
       ]
     },
     "itemData.roomDecorateDic": {
-      "description": "Objetos del vestíbulo desbloqueados. La presencia de la clave se interpreta como desbloqueo; el valor observado [0] no es un nivel.",
+      "description": "Posesión de objetos del vestíbulo. La presencia de la clave no implica disponibilidad funcional: el juego consulta banderas room_unlock_* y, en cuatro objetos, un plano investigado.",
       "related_ids": [
         "knowledge.catalogs.lobby"
       ],
@@ -977,33 +1013,47 @@
         "persistence": "H"
       },
       "known_value_semantics": [
-        "La cuenta A contiene los diez objetos observados: ItemEggMachine, ItemTrashCan, ObjectBooks, ObjectDrinkSeller, ObjectFishBowl, ObjectMagicWell, ObjectMysteriouStatue, ObjectPlant, ObjectSafe y PetFood, todos con [0].",
-        "La cuenta B contiene solo ItemEggMachine con [0].",
-        "La presencia de la clave distingue el objeto desbloqueado; crear la clave con [0] es la transición compatible documentada.",
+        "A y C contienen los diez objetos observados: ItemEggMachine, ItemTrashCan, ObjectBooks, ObjectDrinkSeller, ObjectFishBowl, ObjectMagicWell, ObjectMysteriouStatue, ObjectPlant, ObjectSafe y PetFood, todos con [0].",
+        "B contiene solo ItemEggMachine con [0].",
+        "La presencia de la clave indica posesión, pero no basta para que el objeto esté disponible: las cuentas avanzadas tienen además banderas room_unlock_*.",
+        "ItemEggMachine se posee sin bandera ni plano conocido; se interpreta como objeto inicial.",
+        "ObjectBooks, ObjectSafe, PetFood, ItemTrashCan y ObjectPlant se asocian a room_unlock_book, safe, pet_food, trash_can y plant.",
+        "ObjectMagicWell se asocia a room_unlock_magic_area y a blueprint_room_decorate_magic_well.",
+        "ObjectDrinkSeller, ObjectFishBowl y ObjectMysteriouStatue se asocian a sus planos room_decorate_*; no se identificó una bandera para la expendedora ni para la estatua.",
         "El valor [0] no se interpreta como nivel máximo ni como selección."
       ],
       "limits": {
         "type": "objeto nombre → lista de enteros",
-        "observed": "Diez objetos en A y uno en B; todos con [0].",
-        "functional": "Niveles, estados y máximos no documentados."
+        "observed": "Diez objetos en A y C, uno en B; todos con [0].",
+        "functional": "La posesión sola no demuestra disponibilidad; las banderas y planos se editan junto al objeto."
       },
       "pending_dependencies": [
         "Selección de skin de objeto",
-        "Relación con planos de decoración",
-        "Validación física del desbloqueo"
+        "Semántica de room_decorate_fishbowl_level",
+        "Validación física del desbloqueo y de la disponibilidad funcional"
       ],
-      "edit_policy": "experimental: desbloquea objetos observados creando la clave ausente con [0]; conserva los objetos existentes y no elimina claves.",
+      "edit_policy": "experimental: crea la clave ausente con [0] y activa los requisitos conocidos (bandera room_unlock_* y plano Researched) en el mismo candidato; conserva objetos existentes y no elimina claves.",
       "constraints": [
         "No interpretar [0] como nivel máximo.",
         "No eliminar objetos existentes.",
         "No crear identificadores fuera de los diez observados.",
         "Conservar objetos desconocidos.",
-        "No modificar unlockRoomDecorate, roomObjectLevel ni currentRoomDecorate desde este campo.",
-        "Al revertir, eliminar las claves creadas."
+        "Crear solo banderas y planos con asociación observada; no inventar requisitos para la estatua ni para la expendedora.",
+        "No modificar currentRoomDecorate ni roomLevel desde este campo.",
+        "Al revertir, eliminar las claves y banderas creadas y restaurar los valores previos."
       ],
       "open_questions": [
-        "Confirmar en Android que la presencia de la clave desbloquea el objeto y que [0] es el valor inicial."
-      ]
+        "Confirmar en un dispositivo real que posesión + bandera + plano habilitan el objeto dentro del juego.",
+        "Determinar si la estatua o la expendedora requieren una bandera no identificada.",
+        "Determinar el significado de room_decorate_fishbowl_level."
+      ],
+      "sources": [
+        "propia",
+        "docs/research/phase9-1/README.md",
+        "docs/research/phase9-2-crde-comparison.md",
+        "docs/research/lobby-unlocks.md"
+      ],
+      "validation_level": "E2"
     },
     "playerprefs.furniture_chest": {
       "description": "Estado del cofre de muebles en PlayerPrefs.",
@@ -1214,7 +1264,7 @@
       ]
     },
     "statisticData.event2Count": {
-      "description": "Contadores de estadísticas y progreso; incluye intimidad de mascotas en claves pet_<ID>_* con creación controlada del estado inicial y límites observados.",
+      "description": "Contadores de estadísticas y progreso; incluye intimidad de mascotas y banderas de disponibilidad del vestíbulo.",
       "known_value_semantics": [
         "pet_<índice>_intimacy contiene la intimidad actual de la mascota con ese identificador numérico.",
         "pet_<índice>_full_intimacy vale 1 cuando la mascota alcanzó su máximo; es la única confirmación de máximo observada.",
@@ -1222,17 +1272,25 @@
         "pet_full_intimacy es un contador global; su valor observado 35 no coincide con el número de mascotas completas y no se recalcula.",
         "En la muestra completa de la cuenta A los máximos observados fueron 180 para los índices 30 y 31, 300 para el 34 y 240 para el resto de índices 0..55 presentes; 27, 56 y 57 no tenían claves.",
         "La cuenta B tiene las 58 mascotas desbloqueadas y ninguna clave pet_<ID>_*; la ausencia de intimidad en una mascota desbloqueada es el estado inicial 0, no una incompatibilidad.",
-        "Las mascotas de la cuenta A ya estaban en el máximo, por lo que el bloqueo de la fase 9.0 era del editor y no una prueba de rechazo del juego."
+        "Las mascotas de la cuenta A ya estaban en el máximo, por lo que el bloqueo de la fase 9.0 era del editor y no una prueba de rechazo del juego.",
+        "Las banderas room_unlock_book, room_unlock_safe, room_unlock_pet_food, room_unlock_trash_can, room_unlock_plant, room_unlock_cellar, room_unlock_magic_area, room_unlock_quest_board y room_unlock_work_shop valen 1 en A, C y una muestra Android avanzada adicional, y están ausentes en B.",
+        "room_unlock_badass, room_unlock_defence_mode, room_unlock_garden y room_unlock_season_mode valen 1 en A y C.",
+        "room_unlock_monster_rise vale 1 en C; room_unlock_road vale 4 y room_unlock_road_before 0 en A; C usa room_unlock_level_index_10/15/20=2 y room_unlock_statements_count=85.",
+        "room_decorate_fishbowl_level vale 3 en A y C y está ausente en B; su significado exacto no está determinado.",
+        "La cuenta iOS C contiene pet_57_intimacy=240, pet_57_full_intimacy=1 y pet_57_action_unlock=1, lo que confirma el máximo 240 para el id 57 (FishChipKing)."
       ],
       "related_ids": [
         "knowledge.catalogs.pets",
+        "knowledge.catalogs.lobby",
         "gameData.petUnlock"
       ],
       "associated_catalog": "pets",
       "sources": [
         "propia",
         "docs/research/phase9-0/README.md",
-        "docs/research/phase9-1/README.md"
+        "docs/research/phase9-1/README.md",
+        "docs/research/phase9-2-crde-comparison.md",
+        "docs/research/lobby-unlocks.md"
       ],
       "evidence": {
         "existence": "E2",
@@ -1248,20 +1306,25 @@
         "No simular máximos con 999, 9999 ni Int32.MaxValue.",
         "Crear pet_<ID>_intimacy solo si gameData.petUnlock[código] es true y no existe la clave.",
         "Conservar todos los contadores ajenos a mascotas.",
-        "Editar solo índices con máximo empírico conocido; 27, 56 y 57 permanecen sin máximo demostrado.",
+        "Editar solo índices con máximo empírico conocido; 27 y 56 permanecen sin máximo demostrado.",
         "No reducir la intimidad.",
         "No modificar pet_<ID>_action_unlock ni pet_full_intimacy.",
         "Rechazar una mascota cuyo full_intimacy ya sea 1 por debajo del máximo conocido.",
-        "Al revertir el candidato, eliminar las claves creadas que no existían en el original."
+        "Al revertir el candidato, eliminar las claves creadas que no existían en el original.",
+        "Crear banderas room_unlock_* solo con asociación observada y sin sobrescribir valores enteros ya activos.",
+        "No inventar banderas para objetos sin evidencia.",
+        "No tocar contadores room_unlock_* ajenos al objeto editado."
       ],
       "open_questions": [
         "Recuperar PetsLevelUpConfig/PetIntimacyConfig para conocer el máximo real de cada mascota.",
-        "Confirmar en Android físico que la intimidad, la marca de máximo y la creación del registro persisten y habilitan la acción."
+        "Confirmar en dispositivo físico que la intimidad, la marca de máximo y la creación del registro persisten y habilitan la acción.",
+        "Confirmar el significado completo de room_decorate_fishbowl_level y de las banderas de modos.",
+        "Determinar el gate de ObjectMysteriouStatue y ObjectDrinkSeller más allá de su plano."
       ],
       "limits": {
-        "type": "int32 por clave",
-        "observed": "Máximos 180, 240 y 300 en la cuenta A; contador global 35; cuenta B con 58 mascotas desbloqueadas y cero claves de intimidad.",
-        "functional": "Máximos por mascota no recuperados desde PetsLevelUpConfig/PetIntimacyConfig."
+        "type": "mapa nombre de contador → entero",
+        "observed": "A: 307 claves; B: 23; C: 78. Incluye banderas room_unlock_* y contadores de mascotas.",
+        "functional": "Los valores 1 y 2 de las banderas room_unlock_* se interpretan como desbloqueo y nivel; el gate exacto de cada objeto no está validado en juego."
       },
       "known_dependencies": [
         "Catálogo de mascotas para resolver código e índice numérico.",
@@ -1303,7 +1366,8 @@
       ],
       "sources": [
         "propia",
-        "docs/research/phase9-1/README.md"
+        "docs/research/phase9-1/README.md",
+        "docs/research/phase9-2-crde-comparison.md"
       ]
     },
     "gameData.roomLevel": {

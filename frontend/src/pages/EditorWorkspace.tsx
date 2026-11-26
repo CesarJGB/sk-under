@@ -562,7 +562,7 @@ function DecorationEditor({ save, draft, update, built }: EditorInputs & { built
       <div className="detail-subhead">
         <div>
           <h3 className="detail-subtitle" id="decor-objects-title">Muebles y objetos</h3>
-          <p className="detail-note">Experimental · desbloqueo por presencia en roomDecorateDic.</p>
+          <p className="detail-note">Experimental · posesión, banderas y planos investigados.</p>
         </div>
         <CheckAll checked={objectChecked === 'all'} indeterminate={objectChecked === 'some'}
           label={`Desbloquear ${eligible.decorations.length} objetos`}
@@ -571,12 +571,20 @@ function DecorationEditor({ save, draft, update, built }: EditorInputs & { built
       <div className="level-list">
         {objectRows.map((row) => {
           const selected = isSelected('decorations', row.id, draft, eligible)
+          const pending = row.requirements.filter((requirement) => !requirement.met)
+          const requirementText = pending.map((requirement) =>
+            requirement.kind === 'flag' ? requirement.key : `plano ${requirement.key}`).join(', ')
           return <div className={`level-row${plannedObjects.has(row.id) ? ' changed' : ''}`} key={row.id}>
             <input type="checkbox" checked={selected} disabled={!row.editable}
               aria-label={`Desbloquear ${row.label}`}
               onChange={() => update(toggleItem('decorations', row.id, draft, eligible))} />
-            <span className="level-copy"><strong>{row.label}</strong><small>{row.reason}</small></span>
-            <span className="unlock-status">{row.unlocked ? 'Disponible' : 'Bloqueado'}</span>
+            <span className="level-copy">
+              <strong>{row.label}</strong>
+              <small>{row.reason}{requirementText ? ` Requiere ${requirementText}.` : ''}</small>
+            </span>
+            <span className="unlock-status">
+              {row.functional ? 'Disponible' : row.unlocked ? 'Incompleto' : 'Bloqueado'}
+            </span>
           </div>
         })}
       </div>

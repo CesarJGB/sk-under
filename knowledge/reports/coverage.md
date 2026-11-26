@@ -5,23 +5,23 @@ Versión del juego: **8.8.0**.
 ## Campos
 
 - Total: **616**
-- Preguntas abiertas: **565**
+- Preguntas abiertas: **578**
 
 | Nivel | Campos |
 | --- | ---: |
 | E1 | 194 |
-| E2 | 406 |
-| E3 | 10 |
+| E2 | 405 |
+| E3 | 11 |
 | E4 | 6 |
 
 ### Semántica
 
 | Nivel | Campos |
 | --- | ---: |
-| E2 | 28 |
-| E3 | 10 |
+| E2 | 29 |
+| E3 | 11 |
 | E4 | 6 |
-| H | 572 |
+| H | 570 |
 
 ### Categorías
 
@@ -38,7 +38,7 @@ Versión del juego: **8.8.0**.
 | Monster Rise | 0 | 3 | 18 | 0 | 0 |
 | Pase de batalla | 0 | 0 | 9 | 0 | 0 |
 | Preferencia interna | 0 | 1 | 0 | 0 | 0 |
-| Progreso y acceso | 0 | 3 | 25 | 5 | 0 |
+| Progreso y acceso | 0 | 3 | 24 | 6 | 0 |
 | PvP | 0 | 0 | 10 | 0 | 0 |
 | Sobre de guardado | 0 | 18 | 0 | 0 | 0 |
 | Tareas | 0 | 2 | 12 | 0 | 0 |
@@ -49,12 +49,12 @@ Versión del juego: **8.8.0**.
 ## Catálogos
 
 - Catálogos: **25**
-- Elementos: **4298**
+- Elementos: **4339**
 - Traducciones indexadas: **8562**
 
 | Catálogo | Elementos | Con nombre EN | Cobertura |
 | --- | ---: | ---: | ---: |
-| blueprints | 265 | 4 | 1.5% |
+| blueprints | 296 | 4 | 1.4% |
 | bosses | 74 | 61 | 82.4% |
 | character_skills | 105 | 105 | 100.0% |
 | character_skins | 802 | 801 | 99.9% |
@@ -64,7 +64,7 @@ Versión del juego: **8.8.0**.
 | enemies | 593 | 257 | 43.3% |
 | followers | 6 | 6 | 100.0% |
 | jewelry | 15 | 0 | 0.0% |
-| lobby | 49 | 28 | 57.1% |
+| lobby | 59 | 28 | 47.5% |
 | materials | 343 | 154 | 44.9% |
 | mounts | 4 | 4 | 100.0% |
 | pet_skills | 57 | 56 | 98.2% |
@@ -82,12 +82,12 @@ Versión del juego: **8.8.0**.
 
 ## Dependencias y fuentes
 
-- Dependencias: **35**
-- Fuentes: **17**
+- Dependencias: **46**
+- Fuentes: **21**
 - Versiones analizadas: **8.6.0, 8.7.0, 8.8.0**
-- confirmed: 5
-- hypothesis: 5
-- negative: 4
-- observed: 21
+- confirmed: 6
+- hypothesis: 6
+- negative: 5
+- observed: 29
 
 > Los catálogos no prueban posesión. La cobertura de nombres no equivale a cobertura funcional.

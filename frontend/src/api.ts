@@ -476,11 +476,22 @@ export type LabBackup = {
   unified_plan?: LabUnifiedPlan
 }
 
+export type LabDecorationRequirement = {
+  kind: 'flag' | 'blueprint'
+  key: string
+  value: unknown
+  met: boolean
+  path: string | null
+  status?: 'Got' | 'Researched' | null
+}
+
 export type LabDecorationObject = {
   id: string
   label: string
   unlocked: boolean
+  functional: boolean
   value: unknown
+  requirements: LabDecorationRequirement[]
   editable: boolean
   reason: string
   path: string | null
@@ -490,6 +501,9 @@ export type LabDecorationLevel = {
   id: string
   level: number | null
   max_observed: number
+  gate: string | null
+  gate_value: unknown
+  gate_met: boolean | null
   editable: boolean
   reason: string
   path: string | null

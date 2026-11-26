@@ -2,9 +2,10 @@
 
 La afinidad vive en ``statisticData.event2Count`` con las claves
 ``pet_<numeric_id>_intimacy`` y ``pet_<numeric_id>_full_intimacy``. Los máximos
-conocidos proceden de una muestra privada completa: 180 para los ids 30/31, 300
-para el 34 y 240 para el resto de ids observados 0..55 excepto el 27. Los ids
-27, 56 y 57 no tienen máximo demostrado y permanecen en solo lectura.
+conocidos proceden de muestras privadas completas: 180 para los ids 30/31, 300
+para el 34 y 240 para el resto de ids observados, incluido el 57 en la muestra
+avanzada de iOS. Los ids 27 y 56 no tienen máximo demostrado y permanecen en
+solo lectura.
 
 El escritor únicamente sube la intimidad. Si la mascota está desbloqueada en
 ``gameData.petUnlock`` pero nunca recibió alimento, crea la clave de intimidad
@@ -39,23 +40,24 @@ AFFINITY_MIN = 0
 MAX_VALUE = 2_147_483_647
 MAX_PETS = 58
 
-# Observado en la muestra completa autorizada: todos los ids 0..55 salvo el 27
-# estaban presentes y mostraban 240, excepto 30/31 (180) y 34 (300).
+# Observado en las muestras completas autorizadas: todos los ids 0..55 salvo el 27
+# estaban presentes; la muestra iOS añadió el 57 en 240. Los ids 30/31 tienen 180
+# y el 34 tiene 300.
 AFFINITY_MAX_OVERRIDES = {30: 180, 31: 180, 34: 300}
 AFFINITY_DEFAULT_MAX = 240
 AFFINITY_OBSERVED_NUMERIC_IDS = frozenset(
-    set(range(0, 27)) | set(range(28, 56))
+    set(range(0, 27)) | set(range(28, 56)) | {57}
 )
-AFFINITY_UNKNOWN_NUMERIC_IDS = frozenset({27, 56, 57})
+AFFINITY_UNKNOWN_NUMERIC_IDS = frozenset({27, 56})
 
 AFFINITY_LIMITATION = (
-    "Máximos derivados de una muestra completa: 180 para Cat4/Dog2, 300 para Cat5 "
-    "y 240 para el resto de ids observados 0..55 salvo Serenade. La ausencia de "
-    "claves de intimidad en una mascota desbloqueada se interpreta como 0: la cuenta "
-    "nueva tiene Cat desbloqueada y ningún registro de afinidad. La configuración "
-    "PetsLevelUpConfig/PetIntimacyConfig no se pudo deserializar; Serenade, "
-    "EscapeMonkey y FishChipKing quedan en solo lectura. La eficacia del escritor "
-    "todavía no se validó dentro del juego."
+    "Máximos derivados de muestras completas: 180 para Cat4/Dog2, 300 para Cat5 "
+    "y 240 para el resto de ids observados, incluido FishChipKing (57). La "
+    "ausencia de claves de intimidad en una mascota desbloqueada se interpreta "
+    "como 0: la cuenta nueva tiene Cat desbloqueada y ningún registro de afinidad. "
+    "La configuración PetsLevelUpConfig/PetIntimacyConfig no se pudo deserializar; "
+    "Serenade (27) y EscapeMonkey (56) quedan en solo lectura. La eficacia del "
+    "escritor todavía no se validó dentro del juego."
 )
 
 _MISSING = object()

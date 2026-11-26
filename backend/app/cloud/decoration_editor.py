@@ -1,17 +1,23 @@
 """Editor experimental de decoraciones del vestíbulo y del jardín.
 
-La evidencia real separa tres mecanismos distintos:
+La evidencia real separa cuatro mecanismos distintos:
 
 * ``itemData.roomDecorateDic``: la presencia de una clave de objeto indica que el
-  objeto está desbloqueado. La cuenta avanzada tiene los diez objetos observados
-  y la nueva solo ``ItemEggMachine``; por eso crear la clave con ``[0]`` es la
-  transición compatible documentada. ``[0]`` no se interpreta como nivel máximo.
-* ``gameData.roomObjectLevel``: niveles de mejora por objeto. La cuenta avanzada
-  confirma nivel 5 en ``Book``, ``CatFood``, ``Planet`` y ``Safe`` y nivel 1 en
-  ``Chest``; solo se permite subir hasta el máximo observado de cada clave.
-* ``itemData.blueprints``: las apariencias temáticas (vestíbulo, jardín, hall,
-  área mágica y taller) se poseen como planos. Este módulo las expone en modo de
-  lectura; su obtención e investigación se realizan con el escritor de planos.
+  objeto está poseído. La cuenta avanzada tiene los diez objetos observados y la
+  nueva solo ``ItemEggMachine``. Crear la clave con ``[0]`` es necesario, pero
+  **no suficiente** para que el objeto esté disponible dentro del juego.
+* ``statisticData.event2Count``: contiene las banderas ``room_unlock_*`` que el
+  juego consulta para habilitar instalaciones del vestíbulo. La cuenta avanzada
+  tiene ``room_unlock_book``, ``room_unlock_safe``, ``room_unlock_pet_food``,
+  ``room_unlock_trash_can``, ``room_unlock_plant``, ``room_unlock_cellar`` y
+  ``room_unlock_magic_area``; la cuenta nueva no tiene ninguna. Este es el
+  indicador funcional que faltaba en la fase 9.1.
+* ``itemData.blueprints``: cuatro objetos decorativos (máquina expendedora,
+  pecera, pozo mágico y estatua) requieren que su plano esté investigado. Las
+  apariencias temáticas también se poseen como planos y se exponen en lectura.
+* ``gameData.roomObjectLevel``: niveles de mejora por objeto. Las muestras
+  avanzadas confirman nivel 5 en ``Book``, ``CatFood``, ``Chest``, ``Planet`` y
+  ``Safe``; solo se permite subir hasta el máximo observado de cada clave.
 
 No se edita ``gameData.currentRoomDecorate`` ni ``unlockRoomDecorate`` porque su
 significado y el mapa de selección todavía no están determinados.
@@ -33,7 +39,15 @@ from ..cloud_save import (
     unpack_cloud_save,
 )
 from ..parsers.json_document import parse_json
-from .blueprint_editor import blueprints_snapshot, is_decorative_blueprint
+from .blueprint_editor import (
+    blueprint_encoding,
+    blueprints_snapshot,
+    decode_blueprint_status,
+    encode_blueprint_status,
+    is_decorative_blueprint,
+    preferred_blueprint_key,
+    resolve_blueprint_key,
+)
 from .gems_editor import serialize_aggregate
 from .lab import BinaryDiff, binary_diff
 
@@ -42,6 +56,8 @@ ROOM_LEVEL_PATH = "gameData.roomObjectLevel"
 ROOM_DECORATE_PATH = "gameData.currentRoomDecorate"
 UNLOCK_LIST_PATH = "gameData.unlockRoomDecorate"
 ROOM_LEVEL_VALUE = "gameData.roomLevel"
+EVENT_COUNT_PATH = "statisticData.event2Count"
+BLUEPRINTS_PATH = "itemData.blueprints"
 MAX_LEVEL = 5
 MAX_OBJECTS = 10
 APPEARANCE_SUBCATEGORIES = frozenset(
@@ -62,23 +78,63 @@ DECORATION_OBJECTS: dict[str, str] = {
     "PetFood": "Zona de alimentación de mascotas",
 }
 
+# Requisitos funcionales observados en las muestras avanzadas. La presencia en
+# roomDecorateDic es posesión; estas banderas y planos son los que habilitan el
+# uso dentro del juego. No se añaden objetos sin evidencia.
+OBJECT_UNLOCK_FLAGS: dict[str, tuple[str, ...]] = {
+    "ItemEggMachine": (),
+    "ItemTrashCan": ("room_unlock_trash_can",),
+    "ObjectBooks": ("room_unlock_book",),
+    "ObjectDrinkSeller": (),
+    "ObjectFishBowl": (),
+    "ObjectMagicWell": ("room_unlock_magic_area",),
+    "ObjectMysteriouStatue": (),
+    "ObjectPlant": ("room_unlock_plant",),
+    "ObjectSafe": ("room_unlock_safe",),
+    "PetFood": ("room_unlock_pet_food",),
+}
+OBJECT_UNLOCK_BLUEPRINTS: dict[str, tuple[str, ...]] = {
+    "ItemEggMachine": (),
+    "ItemTrashCan": (),
+    "ObjectBooks": (),
+    "ObjectDrinkSeller": ("blueprint_room_decorate_drink_seller",),
+    "ObjectFishBowl": ("blueprint_room_decorate_fishbowl",),
+    "ObjectMagicWell": ("blueprint_room_decorate_magic_well",),
+    "ObjectMysteriouStatue": ("blueprint_room_decorate_mysteriou_statue",),
+    "ObjectPlant": (),
+    "ObjectSafe": (),
+    "PetFood": (),
+}
+# Al mejorar estos objetos se garantiza la bandera que habilita la instalación.
+# Planet no tiene bandera identificada y no se inventa.
+ROOM_LEVEL_GATES: dict[str, str] = {
+    "Book": "room_unlock_book",
+    "CatFood": "room_unlock_pet_food",
+    "Chest": "room_unlock_cellar",
+    "Safe": "room_unlock_safe",
+}
+
 # Nivel máximo realmente observado por clave; no se extrapola a claves nuevas.
 ROOM_LEVEL_MAX_OBSERVED: dict[str, int] = {
     "Book": 5,
     "CatFood": 5,
-    "Chest": 1,
+    "Chest": 5,
     "Planet": 5,
     "Safe": 5,
 }
 
 DECORATION_LIMITATION = (
-    "La presencia en roomDecorateDic se interpreta como objeto desbloqueado porque "
-    "la cuenta avanzada contiene los diez objetos y la nueva solo la máquina de "
-    "huevos. El valor [0] se conserva tal cual y no se trata como nivel. Los niveles "
-    "solo suben hasta el máximo observado por clave (5 en Book/CatFood/Planet/Safe, "
-    "1 en Chest). La selección de apariencia activa depende de currentRoomDecorate, "
-    "cuyo mapa de valores aún no está determinado: no se edita. La eficacia de las "
-    "transiciones debe validarse en Android físico."
+    "roomDecorateDic indica posesión, no disponibilidad funcional. El juego "
+    "consulta las banderas room_unlock_* de statisticData.event2Count; los cuatro "
+    "objetos decorativos (máquina expendedora, pecera, pozo mágico y estatua) "
+    "además requieren su plano investigado. El editor crea la clave del objeto y "
+    "sus requisitos conocidos, pero la eficacia debe validarse en el juego. [0] no "
+    "se interpreta como nivel. Los niveles solo suben hasta el máximo observado por "
+    "clave (5). La selección de apariencia activa depende de currentRoomDecorate, "
+    "cuyo mapa de valores aún no está determinado: no se edita. La máquina de "
+    "huevos se posee sin requisitos conocidos. No se identificaron banderas para la "
+    "estatua ni para la máquina expendedora, ni el significado de "
+    "room_decorate_fishbowl_level."
 )
 
 
@@ -157,6 +213,59 @@ def _levels(root: Mapping[str, Any]) -> dict[str, Any]:
     return game_data["roomObjectLevel"]
 
 
+def _event_counters(root: Mapping[str, Any]) -> dict[str, Any]:
+    statistic_data = root.get("statisticData")
+    if not isinstance(statistic_data, dict) or not isinstance(
+        statistic_data.get("event2Count"), dict
+    ):
+        raise DecorationFieldMissing(
+            "No existe statisticData.event2Count; no se crean banderas de desbloqueo."
+        )
+    return statistic_data["event2Count"]
+
+
+def _blueprints(root: Mapping[str, Any]) -> dict[str, Any]:
+    item_data = root.get("itemData")
+    if not isinstance(item_data, dict) or not isinstance(item_data.get("blueprints"), dict):
+        raise DecorationFieldMissing(
+            "No existe itemData.blueprints; no se crean planos de decoración."
+        )
+    return item_data["blueprints"]
+
+
+def _requirement_rows(
+    object_id: str, counters: Mapping[str, Any], blueprints: Mapping[str, Any]
+) -> list[dict[str, object]]:
+    requirements: list[dict[str, object]] = []
+    for flag in OBJECT_UNLOCK_FLAGS.get(object_id, ()):
+        value = counters.get(flag)
+        met = type(value) is int and value >= 1
+        requirements.append(
+            {
+                "kind": "flag",
+                "key": flag,
+                "value": value,
+                "met": met,
+                "path": f"{EVENT_COUNT_PATH}.{flag}",
+            }
+        )
+    for blueprint_id in OBJECT_UNLOCK_BLUEPRINTS.get(object_id, ()):
+        key = resolve_blueprint_key(blueprint_id, blueprints)
+        value = blueprints.get(key) if key is not None else None
+        status = decode_blueprint_status(value)
+        requirements.append(
+            {
+                "kind": "blueprint",
+                "key": key or blueprint_id,
+                "value": value,
+                "status": status,
+                "met": status == "Researched",
+                "path": f"{BLUEPRINTS_PATH}.{key}" if key is not None else None,
+            }
+        )
+    return requirements
+
+
 def normalize_decoration_plan(raw: object) -> dict[str, object]:
     if not isinstance(raw, Mapping):
         raise InvalidDecorationPlan("decorations debe ser un objeto JSON.")
@@ -215,28 +324,49 @@ def normalize_decoration_plan(raw: object) -> dict[str, object]:
 def decorations_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
     item_data = payload.get("itemData")
     game_data = payload.get("gameData")
+    statistic_data = payload.get("statisticData")
     objects = item_data.get("roomDecorateDic") if isinstance(item_data, dict) else None
     levels = game_data.get("roomObjectLevel") if isinstance(game_data, dict) else None
     available = isinstance(objects, dict) and isinstance(levels, dict)
     object_map = objects if isinstance(objects, dict) else {}
     level_map = levels if isinstance(levels, dict) else {}
+    counter_map = (
+        statistic_data.get("event2Count")
+        if isinstance(statistic_data, dict) and isinstance(statistic_data.get("event2Count"), dict)
+        else {}
+    )
+    blueprint_map = (
+        item_data.get("blueprints")
+        if isinstance(item_data, dict) and isinstance(item_data.get("blueprints"), dict)
+        else {}
+    )
 
     object_rows: list[dict[str, object]] = []
     for object_id, label in DECORATION_OBJECTS.items():
         value = object_map.get(object_id)
         unlocked = object_id in object_map
+        requirements = _requirement_rows(object_id, counter_map, blueprint_map)
+        functional = unlocked and all(row["met"] is True for row in requirements)
+        if not available:
+            reason = "No hay mapas de objetos y niveles compatibles."
+        elif functional:
+            reason = "Disponible: objeto y requisitos presentes; no se elimina."
+        elif unlocked:
+            reason = "Presente, pero faltan requisitos para que esté disponible."
+        elif requirements:
+            reason = "No poseído; se crea la clave y se completan sus requisitos."
+        else:
+            reason = "No poseído; se puede crear la clave con [0]."
         object_rows.append(
             {
                 "id": object_id,
                 "label": label,
                 "unlocked": unlocked,
+                "functional": functional,
                 "value": value,
-                "editable": available and not unlocked,
-                "reason": (
-                    "Ya desbloqueado; no se elimina."
-                    if unlocked
-                    else "No desbloqueado; se puede crear la clave con [0]."
-                ),
+                "requirements": requirements,
+                "editable": available and not functional,
+                "reason": reason,
                 "path": f"{DECORATE_PATH}.{object_id}" if unlocked else None,
             }
         )
@@ -246,6 +376,12 @@ def decorations_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
     for key, max_observed in ROOM_LEVEL_MAX_OBSERVED.items():
         value = level_map.get(key)
         valid = type(value) is int and value >= 0
+        gate = ROOM_LEVEL_GATES.get(key)
+        gate_value = counter_map.get(gate) if gate else None
+        gate_met = None if gate is None else type(gate_value) is int and gate_value >= 1
+        gate_compatible = gate is None or gate_value is None or (
+            type(gate_value) is int and gate_value >= 0
+        )
         if not valid:
             reason = "No existe un nivel entero compatible; no se crea."
         elif value > max_observed:
@@ -254,12 +390,19 @@ def decorations_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
             reason = f"Ya está en el máximo observado ({max_observed})."
         else:
             reason = f"Se puede subir hasta el máximo observado ({max_observed})."
+            if gate and not gate_met:
+                reason += (
+                    f" Se activará {gate}." if gate_compatible else f" {gate} no es entero."
+                )
         level_rows.append(
             {
                 "id": key,
                 "level": value if valid else None,
                 "max_observed": max_observed,
-                "editable": available and valid and value < max_observed,
+                "gate": gate,
+                "gate_value": gate_value,
+                "gate_met": gate_met,
+                "editable": available and valid and value < max_observed and gate_compatible,
                 "reason": reason,
                 "path": f"{ROOM_LEVEL_PATH}.{key}" if valid else None,
             }
@@ -309,8 +452,9 @@ def decorations_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
         "experimental": True,
         "evidence_level": "E2",
         "note": (
-            "Los objetos se desbloquean por presencia en roomDecorateDic. Las "
-            "apariencias se poseen como planos y se consultan aquí; su obtención e "
+            "roomDecorateDic indica posesión. La disponibilidad funcional exige las "
+            "banderas room_unlock_* de statisticData.event2Count y, en cuatro objetos, "
+            "el plano investigado. Las apariencias se consultan aquí; su obtención e "
             "investigación se realizan en la categoría Planos."
         ),
         "limitation": DECORATION_LIMITATION,
@@ -377,15 +521,84 @@ def prepare_decoration_edit(source: bytes, plan: object) -> DecorationEdit:
     object_map = _objects(candidate)
     level_map = _levels(candidate)
     changes: list[DecorationChange] = []
-    originals: list[tuple[str, object]] = []
+    requested_objects: dict[str, object] = {}
+    created_objects: dict[str, object] = {}
+    changed_levels: dict[str, int] = {}
+    changed_flags: dict[str, object] = {}
+    changed_blueprints: dict[str, tuple[object, object]] = {}
+    flags_seen: set[str] = set()
+    blueprints_seen: set[str] = set()
+    counter_map: dict[str, Any] | None = None
+    blueprint_map: dict[str, Any] | None = None
+
+    def ensure_flag(flag: str) -> None:
+        nonlocal counter_map
+        if flag in flags_seen:
+            return
+        flags_seen.add(flag)
+        if counter_map is None:
+            counter_map = _event_counters(candidate)
+        before = counter_map.get(flag, _MISSING)
+        if before is _MISSING:
+            counter_map[flag] = 1
+            changed_flags[flag] = _MISSING
+            changes.append(
+                DecorationChange(f"{EVENT_COUNT_PATH}.{flag}", None, 1, created=True)
+            )
+            return
+        if type(before) is not int or before < 0:
+            raise DecorationFieldIncompatible(
+                f"{EVENT_COUNT_PATH}.{flag} no contiene un entero no negativo compatible."
+            )
+        if before >= 1:
+            return
+        counter_map[flag] = 1
+        changed_flags[flag] = before
+        changes.append(DecorationChange(f"{EVENT_COUNT_PATH}.{flag}", before, 1))
+
+    def ensure_blueprint(blueprint_id: str) -> None:
+        nonlocal blueprint_map
+        if blueprint_id in blueprints_seen:
+            return
+        blueprints_seen.add(blueprint_id)
+        if blueprint_map is None:
+            blueprint_map = _blueprints(candidate)
+        key = preferred_blueprint_key(blueprint_id, blueprint_map)
+        before = blueprint_map.get(key, _MISSING)
+        if before is not _MISSING:
+            status = decode_blueprint_status(before)
+            if status is None:
+                raise DecorationFieldIncompatible(
+                    f"{BLUEPRINTS_PATH}.{key} declara un estado desconocido y no se sobrescribe."
+                )
+            if status == "Researched":
+                return
+            encoding = "integer" if type(before) is int else "text"
+        else:
+            encoding = blueprint_encoding(blueprint_map)
+        after = encode_blueprint_status("Researched", encoding)
+        blueprint_map[key] = after
+        changed_blueprints[key] = (before, after)
+        changes.append(
+            DecorationChange(
+                f"{BLUEPRINTS_PATH}.{key}",
+                None if before is _MISSING else before,
+                after,
+                created=before is _MISSING,
+            )
+        )
 
     for object_id in normalized["objects"]:  # type: ignore[union-attr]
         before = object_map.get(object_id, _MISSING)
-        if before is not _MISSING:
-            continue
-        object_map[object_id] = [0]
-        originals.append((object_id, _MISSING))
-        changes.append(DecorationChange(f"{DECORATE_PATH}.{object_id}", None, [0], created=True))
+        requested_objects[object_id] = before
+        if before is _MISSING:
+            object_map[object_id] = [0]
+            created_objects[object_id] = _MISSING
+            changes.append(DecorationChange(f"{DECORATE_PATH}.{object_id}", None, [0], created=True))
+        for flag in OBJECT_UNLOCK_FLAGS.get(object_id, ()):
+            ensure_flag(flag)
+        for blueprint_id in OBJECT_UNLOCK_BLUEPRINTS.get(object_id, ()):
+            ensure_blueprint(blueprint_id)
 
     for key, requested in normalized["levels"].items():  # type: ignore[union-attr]
         before = level_map.get(key, _MISSING)
@@ -402,9 +615,12 @@ def prepare_decoration_edit(source: bytes, plan: object) -> DecorationEdit:
             raise DecorationFieldIncompatible(f"{ROOM_LEVEL_PATH}.{key} supera el máximo observado.")
         if requested == before:
             continue
-        originals.append((key, before))
         level_map[key] = requested
+        changed_levels[key] = before
         changes.append(DecorationChange(f"{ROOM_LEVEL_PATH}.{key}", before, requested))
+        gate = ROOM_LEVEL_GATES.get(key)
+        if gate is not None:
+            ensure_flag(gate)
 
     changed_fields = tuple(change.path for change in changes)
     if not changes:
@@ -442,18 +658,40 @@ def prepare_decoration_edit(source: bytes, plan: object) -> DecorationEdit:
 
     reopened_objects = _objects(reopened)
     reopened_levels = _levels(reopened)
-    for object_id in normalized["objects"]:  # type: ignore[union-attr]
-        if reopened_objects.get(object_id) != [0]:
+    for object_id, before in requested_objects.items():
+        expected = [0] if before is _MISSING else before
+        if reopened_objects.get(object_id) != expected:
             raise DecorationVerificationError(f"No se conservó {DECORATE_PATH}.{object_id}.")
     for key, requested in normalized["levels"].items():  # type: ignore[union-attr]
         if reopened_levels.get(key) != requested:
             raise DecorationVerificationError(f"No se conservó {ROOM_LEVEL_PATH}.{key}.")
+    if changed_flags:
+        reopened_counters = _event_counters(reopened)
+        for flag in changed_flags:
+            if reopened_counters.get(flag) != 1:
+                raise DecorationVerificationError(f"No se conservó {EVENT_COUNT_PATH}.{flag}.")
+    if changed_blueprints:
+        reopened_blueprints = _blueprints(reopened)
+        for key, (_, after) in changed_blueprints.items():
+            if reopened_blueprints.get(key) != after:
+                raise DecorationVerificationError(f"No se conservó {BLUEPRINTS_PATH}.{key}.")
 
-    for key, before in originals:
-        if isinstance(key, str) and key in DECORATION_OBJECTS and before is _MISSING:
-            reopened_objects.pop(key, None)
-        elif before is not _MISSING:
-            reopened_levels[key] = before
+    for object_id in created_objects:
+        reopened_objects.pop(object_id, None)
+    for key, before in changed_levels.items():
+        reopened_levels[key] = before
+    if changed_flags:
+        for flag, before in changed_flags.items():
+            if before is _MISSING:
+                reopened_counters.pop(flag, None)
+            else:
+                reopened_counters[flag] = before
+    if changed_blueprints:
+        for key, (before, _) in changed_blueprints.items():
+            if before is _MISSING:
+                reopened_blueprints.pop(key, None)
+            else:
+                reopened_blueprints[key] = before
     if serialize_aggregate(reopened) != source:
         raise DecorationVerificationError(
             "La reversión del plan no reproduce el guardado original; hay cambios colaterales."
