@@ -153,6 +153,35 @@ filtros, selección individual, selección masiva, valores actuales/propuestos,
 estado de forja y avisos E2. Las skins y los efectos conservan su lógica y ahora
 muestran E3.
 
+### Verificación en producción
+
+La implementación se publicó el 2026-11-26 mediante GitHub Actions, Cloudflare
+Pages y Coolify:
+
+- `34ac692` añadió el catálogo de 995 armas, el editor de progresión, la UI y
+  las pruebas. CI `45910094969` terminó correctamente.
+- `c44f58e` corrigió la lectura de contadores ajenos al catálogo, incluida la
+  clave vacía presente en la partida Android avanzada. CI `45910474911`
+  terminó correctamente y Coolify desplegó el commit.
+- `907beb1` corrigió el valor propuesto mostrado para un arma pendiente con
+  contador `0`. CI `45911296127` terminó correctamente y el frontend quedó
+  publicado.
+
+La API de producción confirmó `commit` igual al último despliegue y el login de
+una cuenta Android Global devolvió `weapon_progression` con 995 armas, 463
+descubiertas y 404 con forja habilitada. Un `prepare-unified` real, sin
+confirmación ni subida, seleccionó `weapon_135x`:
+
+- único campo afectado: `statisticData.object2ObtainTime.weapon_135x`;
+- valor propuesto: `1`;
+- una categoría: `Descubrimiento de armas`;
+- respaldo restaurable creado;
+- ninguna escritura remota.
+
+La UI de producción repitió el flujo con la fila `One Punch`, mostró
+`Actual: sin registrar → Propuesto: 1`, abrió la revisión y dejó el candidato
+sin confirmar. El SHA remoto no se modificó.
+
 ## Evidencia y validación
 
 - Skins de arma y efectos de eliminación: **E3** por validación física del

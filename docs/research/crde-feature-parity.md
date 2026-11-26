@@ -58,6 +58,13 @@ las pruebas físicas registradas.
 | 23 | Unlock trophies | Sin editor de trofeos | Ausente | No hay catálogo/ruta de escritura validada | Identificadores, propiedad y condiciones | Alta | P3 |
 | 24 | Unlock weapon skins | Skins cosméticas de arma | IPV | E3 validado en Android físico el 2026-11-26 | `weaponEvolutionData.weapons.*.UnlockedSkins`; no concede arma base | Baja | P1 |
 
+Verificación productiva del 2026-11-26: el `prepare-unified` real de SK-Under
+creó un candidato para `weapon_135x` que solo cambiaba
+`statisticData.object2ObtainTime.weapon_135x` de `0` a `1`, con respaldo y sin
+subida. La UI repitió la preparación y se detuvo en la revisión explícita. Esto
+demuestra el flujo de preparación, no la aceptación del cliente Android; la
+fila 12 sigue en **Parcial E2** hasta la prueba física.
+
 ## Funciones CRDE fuera de las 24 acciones
 
 | Función CRDE | Estado en SK-Under | Clasificación | Notas |
