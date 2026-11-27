@@ -581,7 +581,7 @@ def test_origin_content_type_and_body_limits_are_enforced(tmp_path):
     )
     assert_error(
         env["client"].post(API + "/login", headers=HEADERS | {"Content-Type": "application/json"},
-                           content=b"x" * 70_000),
+                           content=b"x" * 300_000),
         413, "request_too_large",
     )
     assert_error(env["client"].get(API + "/config", headers={"Origin": "https://foreign.example"}),
@@ -1319,6 +1319,89 @@ def test_native_unified_prepare_confirm_uses_one_backup_and_one_upload(tmp_path)
     duplicate = client.post(API + "/confirm", headers=HEADERS, json=confirmation(draft))
     assert_error(duplicate, 409, "cloud_already_confirmed")
     assert len(env["uploaders"]["unique-a"].calls) == 1
+
+
+@pytest.mark.parametrize("level", [1, 6, 7, 8])
+def test_native_unified_accepts_documented_hero_levels_at_api_boundary(tmp_path, level):
+    """El contrato HTTP debe aceptar los mismos niveles que el editor (1..8).
+
+    El nivel 8 es el máximo observado en las partidas Android/iOS. La prueba
+    pasa deliberadamente por Pydantic y por el endpoint, no solo por el editor.
+    """
+
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = character_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+    source = client.get(API + "/save", headers=HEADERS).json()
+    response = client.post(
+        API + "/prepare-unified",
+        headers=HEADERS,
+        json={
+            "hero_levels": [{"code": "Ranger", "level": level}],
+            "source_sha256": source["sha256"],
+        },
+    )
+    assert response.status_code == 200, response.text
+    draft = response.json()
+    assert draft["backup"]["unified_plan"]["hero_levels"] == {"Ranger": level}
+    assert draft["change_count"] == 1
+    assert draft["backup"]["unified_plan_sha256"]
+
+
+def test_native_unified_level_8_applies_to_locked_and_unlocked_characters(tmp_path):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = character_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+    source = client.get(API + "/save", headers=HEADERS).json()
+    response = client.post(
+        API + "/prepare-unified",
+        headers=HEADERS,
+        json={
+            "hero_levels": [
+                {"code": "Knight", "level": 8},
+                {"code": "Ranger", "level": 8},
+                {"code": "Mage", "level": 8},
+            ],
+            "source_sha256": source["sha256"],
+        },
+    )
+    assert response.status_code == 200, response.text
+    draft = response.json()
+    assert draft["backup"]["unified_plan"]["hero_levels"] == {
+        "Knight": 8,
+        "Mage": 8,
+        "Ranger": 8,
+    }
+    # Ranger y Mage están bloqueados en el fixture; el nivel no desbloquea.
+    assert draft["backup"]["unified_plan"].get("characters", []) == []
+    confirmed = client.post(API + "/confirm", headers=HEADERS, json=confirmation(draft))
+    assert confirmed.status_code == 200, confirmed.text
+    uploaded = json.loads(env["providers"]["unique-a"].payload)
+    assert uploaded["gameData"]["heroLevel"]["Knight"] == 8
+    assert uploaded["gameData"]["heroLevel"]["Ranger"] == 8
+    assert uploaded["gameData"]["heroLevel"]["Mage"] == 8
+    assert uploaded["gameData"]["heroUnlock"]["Mage"] is False
+
+
+@pytest.mark.parametrize("level", [-1, 9, 100])
+def test_native_unified_rejects_out_of_range_hero_levels_before_backup(tmp_path, level):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = character_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+    source = client.get(API + "/save", headers=HEADERS).json()
+    response = client.post(
+        API + "/prepare-unified",
+        headers=HEADERS,
+        json={
+            "hero_levels": [{"code": "Ranger", "level": level}],
+            "source_sha256": source["sha256"],
+        },
+    )
+    assert_error(response, 422, "invalid_request")
+    assert client.get(API + "/backups", headers=HEADERS).json()["backups"] == []
 
 
 def test_native_unified_prepares_weapon_forge_unlock_without_touching_queue(tmp_path):

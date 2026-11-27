@@ -331,7 +331,10 @@ class CloudSkinSelection(BaseModel):
 class CloudHeroLevelChange(BaseModel):
     model_config = ConfigDict(extra="forbid")
     code: StrictStr = Field(min_length=1, max_length=80)
-    level: StrictInt = Field(ge=0, le=7)
+    # El límite debe coincidir con HERO_LEVEL_MAX del editor. El máximo
+    # observado en las partidas Android/iOS es 8; el editor sigue exigiendo
+    # que el valor no reduzca el nivel actual y que la clave exista.
+    level: StrictInt = Field(ge=0, le=8)
 
 
 class CloudPetAffinityChange(BaseModel):

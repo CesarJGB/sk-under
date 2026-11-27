@@ -50,7 +50,10 @@ from .cloud_lab import _http_error
 from .uploads import BoundedJSONRequest
 
 logger = logging.getLogger(__name__)
-JSON_LIMIT = 65536
+# El plan unificado puede seleccionar todo el catálogo (≈74 KB con la partida
+# Android real). El límite sigue siendo pequeño frente al agregado de 8 MB y
+# cada lista tiene además su propio tope en el modelo Pydantic.
+JSON_LIMIT = 262_144
 
 router = APIRouter(prefix="/api/v1/cloud/native", tags=["Autenticación nativa"])
 
