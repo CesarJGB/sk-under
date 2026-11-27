@@ -21,7 +21,8 @@ global, la autorización del perfil y la preparación de la instalación.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Literal
+from hashlib import sha256
+from typing import Collection, Literal
 
 type CapabilityState = Literal[
     "read_only",
@@ -34,6 +35,27 @@ type PlatformName = Literal["android", "ios", "unknown"]
 STATES: frozenset[str] = frozenset(
     {"read_only", "write_pending_validation", "write_experimental", "write_verified"}
 )
+
+# Fase 10.2: la cuenta de pruebas expresamente autorizada por el propietario.
+# Solo se guarda un digest con separación de dominio; nunca el correo ni la
+# contraseña. La escritura iOS general sigue en ``write_pending_validation``.
+_EXPERIMENTAL_DOMAIN = b"sk-under/phase10-2/ios-experimental\x00"
+DEFAULT_IOS_EXPERIMENTAL_ACCOUNT_DIGESTS: frozenset[str] = frozenset(
+    {"2167e7eb7bdaa3b08402534f6df4502d6663e1ca615c2f1f1c42a11057a7f09a"}
+)
+
+
+def account_digest(email: str) -> str:
+    """Huella estable de una cuenta, sin conservar el correo en claro."""
+
+    return sha256(_EXPERIMENTAL_DOMAIN + email.strip().casefold().encode("utf-8")).hexdigest()
+
+
+def experimental_account(email: str | None, extra: Collection[str] = ()) -> bool:
+    if not isinstance(email, str) or not email.strip():
+        return False
+    digest = account_digest(email)
+    return digest in DEFAULT_IOS_EXPERIMENTAL_ACCOUNT_DIGESTS or digest in extra
 
 
 @dataclass(frozen=True)
@@ -170,13 +192,51 @@ _DEFINITIONS: dict[PlatformName, PlatformCapabilities] = {
 }
 
 
-def capability_matrix(platform: object) -> PlatformCapabilities:
+_IOS_EXPERIMENTAL = PlatformCapabilities(
+    platform="ios",
+    state="write_experimental",
+    read_ready=True,
+    prepare_ready=True,
+    write_supported=True,
+    functions=_functions(
+        save="write_experimental",
+        restore="write_experimental",
+        save_detail=(
+            "Subida iOS validada de extremo a extremo solo en la cuenta de "
+            "pruebas autorizada: respuesta 200, descarga posterior idéntica y "
+            "restauración exacta del original."
+        ),
+        restore_detail=(
+            "Restauración iOS validada únicamente en la cuenta de pruebas "
+            "autorizada, con verificación por huella tras la descarga."
+        ),
+    ),
+    reason=(
+        "Modo experimental limitado a la cuenta de pruebas autorizada. La "
+        "escritura iOS general todavía no está validada ni habilitada."
+    ),
+    evidence=(
+        "Fase 10.2, 2026-11-27: cuenta iOS autorizada; respaldo íntegro previo; "
+        "resubida sin cambios con persistencia exacta; cambio aislado de gemas "
+        "persistido y recuperado; restauración del original verificada por "
+        "SHA-256. No se generaliza a otras cuentas iOS."
+    ),
+    confirmation=_COMMON_CONFIRMATION,
+)
+
+
+def capability_matrix(
+    platform: object, *, experimental_authorized: bool = False
+) -> PlatformCapabilities:
     """Devuelve la matriz de una plataforma validada.
 
     Las plataformas desconocidas no heredan la capacidad Android: se degradan a
-    solo lectura y sin preparación remota.
+    solo lectura y sin preparación remota. ``experimental_authorized`` solo lo
+    activa el servicio para la cuenta de pruebas autorizada.
     """
 
+    if platform == "ios" and experimental_authorized:
+        return _IOS_EXPERIMENTAL
     if platform in _DEFINITIONS:
         return _DEFINITIONS[platform]  # type: ignore[index]
     return PlatformCapabilities(
@@ -200,13 +260,13 @@ def capability_matrix(platform: object) -> PlatformCapabilities:
     )
 
 
-def write_state(platform: object) -> CapabilityState:
-    return capability_matrix(platform).state
+def write_state(platform: object, *, experimental_authorized: bool = False) -> CapabilityState:
+    return capability_matrix(platform, experimental_authorized=experimental_authorized).state
 
 
 def can_prepare(platform: object) -> bool:
     return capability_matrix(platform).prepare_ready
 
 
-def can_write(platform: object) -> bool:
-    return capability_matrix(platform).write_supported
+def can_write(platform: object, *, experimental_authorized: bool = False) -> bool:
+    return capability_matrix(platform, experimental_authorized=experimental_authorized).write_supported

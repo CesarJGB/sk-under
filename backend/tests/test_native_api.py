@@ -94,8 +94,8 @@ def make_native(
     providers = {"unique-a": FakeProvider(payload_a), "unique-b": FakeProvider(PAYLOAD_B)}
     uploaders = {key: FakeUploader(provider) for key, provider in providers.items()}
     service.client = auth
-    service.provider_factory = lambda token, unique, distro: providers[unique]
-    service.uploader_factory = lambda token, unique, distro: uploaders[unique]
+    service.provider_factory = lambda token, unique, distro, distribution: providers[unique]
+    service.uploader_factory = lambda token, unique, distro, distribution: uploaders[unique]
     client = TestClient(app, base_url="http://127.0.0.1:8000", client=("127.0.0.1", 50000))
     return {
         "settings": settings, "app": app, "service": service, "store": service.store,
@@ -652,8 +652,8 @@ def test_secure_cookie_and_https_origin(tmp_path):
     auth = FakeAuth()
     provider = FakeProvider(PAYLOAD_A)
     service.client = auth
-    service.provider_factory = lambda token, unique, distro: provider
-    service.uploader_factory = lambda token, unique, distro: FakeUploader(provider)
+    service.provider_factory = lambda token, unique, distro, distribution: provider
+    service.uploader_factory = lambda token, unique, distro, distribution: FakeUploader(provider)
     client = TestClient(app, base_url="https://api.example.test", client=("127.0.0.1", 50000))
     response = client.post(API + "/login", headers={"Origin": origin},
                            json={"distribution": "android-global", "email": "a@example.test",

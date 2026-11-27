@@ -383,6 +383,10 @@ function AccountWorkspace({
             ? 'iOS: descarga, respaldos y preparación de cambios disponibles. La subida remota está pendiente de validación; no se envía nada a la nube.'
             : 'Acceso a la nube de solo lectura.'}
         </p>}
+        {session.write_state === 'write_experimental' && <p className="partida-muted">
+          iOS experimental: esta cuenta de pruebas autorizada puede subir cambios.
+          Cada subida exige respaldo y se verifica descargando de nuevo la partida.
+        </p>}
       </>} />}
     <BackupHistory history={history} pending={historyOperation.pending} loadingMore={moreOperation.pending}
       result={backupResult}

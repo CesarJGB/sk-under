@@ -9,13 +9,14 @@ from __future__ import annotations
 
 import os
 
-API_VERSION = "2026.11.26"
+API_VERSION = "2026.11.27"
 FEATURES = (
     "ios_local_import",
     "ios_read_only_report",
     "ios_native_read_only",
     "ios_candidate_preparation",
     "ios_remote_write_pending_validation",
+    "ios_remote_write_experimental",
     "platform_capability_matrix",
     "native_backup_history",
     "native_backup_history_pagination",

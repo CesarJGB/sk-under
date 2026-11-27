@@ -9,6 +9,7 @@ gzip truncado ni bytes adicionales.
 
 from __future__ import annotations
 
+import re
 import zlib
 
 from ..cloud_save import MAX_JSON_BYTES, CloudSaveError, CopyLimitError
@@ -35,21 +36,31 @@ def build_blob_headers(
     content_type: str = "application/json; charset=utf-8",
     content_encoding: str | None = None,
     content_length: int | None = None,
+    platform: str = "android",
+    app_version: str = "8.8.0",
+    game_version: str = "8.8.0",
 ) -> dict[str, str]:
     """Cabeceras observadas en el cliente 8.8.0 para esta cuenta de laboratorio.
 
     No se afirma que todas sean obligatorias. El llamador sigue siendo
     responsable de verificar las credenciales antes de construir la petición.
     """
+    for label, value in (
+        ("platform", platform),
+        ("app_version", app_version),
+        ("game_version", game_version),
+    ):
+        if not isinstance(value, str) or not re.fullmatch(r"[A-Za-z0-9._-]{1,32}", value):
+            raise BlobWireError(f"El valor de {label} no es válido para las cabeceras.")
     headers = {
         "Authorization": "Bearer " + session_token,
         "x-unique-id": unique_id,
         "x-distro-id": distro_id,
         "x-game-id": "1",
         "x-game": "Soulknight",
-        "x-app-version": "8.8.0",
-        "x-game-version": "8.8.0",
-        "x-platform": "android",
+        "x-app-version": app_version,
+        "x-game-version": game_version,
+        "x-platform": platform,
         "x-game-lang": "en",
         "x-locale": "en_US",
         "Accept": "application/json",

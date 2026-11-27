@@ -132,6 +132,9 @@ class ModernCloudSaveProvider:
     unique_id: str = field(repr=False)
     distro_id: str = field(repr=False)
     timeout: float = 30.0
+    platform: str = "android"
+    app_version: str = "8.8.0"
+    game_version: str = "8.8.0"
     fetch: Fetch = field(default=_fetch, repr=False, compare=False)
 
     def __post_init__(self) -> None:
@@ -145,7 +148,14 @@ class ModernCloudSaveProvider:
     def download(self, limit: int = MAX_INPUT_BYTES) -> AcquiredCloudSave:
         if type(limit) is not int or not 0 < limit <= MAX_INPUT_BYTES:
             raise CopyLimitError('Tamaño de copia fuera de los límites.')
-        headers = build_blob_headers(self.session_token, self.unique_id, self.distro_id)
+        headers = build_blob_headers(
+            self.session_token,
+            self.unique_id,
+            self.distro_id,
+            platform=self.platform,
+            app_version=self.app_version,
+            game_version=self.game_version,
+        )
         try:
             status, encoding, wire = self.fetch(URL, headers, self.timeout)
         except (OSError, urllib.error.URLError, http.client.HTTPException):

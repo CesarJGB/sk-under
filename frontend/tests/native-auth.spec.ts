@@ -617,6 +617,56 @@ test('permite preparar un candidato iOS y mantiene bloqueada la subida', async (
   expect(confirmations).toBe(0)
 })
 
+test('permite subir y verificar en el modo iOS experimental autorizado', async ({ page }) => {
+  const ios = {
+    ...ACTIVE, read_only: false, prepare_ready: true,
+    write_state: 'write_experimental', write_enabled: true, write_ready: true,
+    account: {
+      ...ACTIVE.account, distribution: 'ios-global',
+      distribution_label: 'iOS Global (IOS)', platform: 'ios', read_only: false,
+    },
+    save: SAVE,
+  }
+  await mockBase(page, { ...BASE_CONFIG, session: ios })
+  await mockEditor(page, ios)
+  let prepareBodies = 0
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => {
+    prepareBodies += 1
+    return route.fulfill({ json: IOS_PREPARED })
+  })
+  let confirmations = 0
+  await page.route('**/api/v1/cloud/native/confirm', (route) => {
+    confirmations += 1
+    expect(route.request().postDataJSON()).toEqual({
+      backup_id: BACKUP.id, expected_sha256: CANDIDATE, confirmation: 'SUBIR',
+    })
+    return route.fulfill({ json: {
+      action: 'confirm', backup_id: BACKUP.id, uploaded: true, accepted: true,
+      persisted: true, already_original: false, expected_sha256: CANDIDATE,
+      remote_sha256: CANDIDATE, remote_size: 505, remote_gems: 1002, status: 200,
+      message: 'La descarga posterior coincide con el agregado subido.',
+    } })
+  })
+
+  await page.goto('/editor')
+  await expect(page.getByText('iOS experimental: esta cuenta de pruebas autorizada', { exact: false })).toBeVisible()
+  await expect(page.locator('fieldset.editor-content')).toBeEnabled()
+  await page.getByRole('textbox', { name: 'Gemas', exact: true }).fill('1002')
+  await page.getByRole('button', { name: 'Guardar' }).click()
+
+  await expect(page.getByRole('heading', { name: 'Revisar y guardar' })).toBeVisible()
+  await expect(page.getByText('Modo experimental iOS limitado a esta cuenta de pruebas', { exact: false })).toBeVisible()
+  const confirm = page.getByRole('checkbox')
+  await expect(confirm).toBeVisible()
+  await confirm.check()
+  const save = page.getByRole('button', { name: 'Guardar en la nube' })
+  await expect(save).toBeEnabled()
+  await save.click()
+  expect(prepareBodies).toBe(1)
+  expect(confirmations).toBe(1)
+  await expect(page.getByText('Subida confirmada.', { exact: false })).toBeVisible()
+})
+
 test('mantiene el editor iOS preparable sin desbordamiento en móvil, tablet y escritorio', async ({ page }) => {
   const ios = {
     ...ACTIVE, read_only: true, prepare_ready: true,

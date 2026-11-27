@@ -748,6 +748,7 @@ export function EditorWorkspace({
   // cuando la matriz declara la escritura pendiente de validación (iOS); así
   // una sesión Android con escritura deshabilitada sigue siendo de solo lectura.
   const pendingValidation = !canWrite && session.write_state === 'write_pending_validation'
+  const experimental = canWrite && session.write_state === 'write_experimental'
   const canEdit = canWrite || (pendingValidation && Boolean(session.prepare_ready))
   const busy = action !== null || loadingSave
 
@@ -969,7 +970,14 @@ export function EditorWorkspace({
         <button type="button" className="button quiet" disabled={busy} onClick={() => { setReview(false); setConfirm(false) }}>Volver</button>
       </div>
       {canWrite
-        ? <p className="detail-note">Se creará un respaldo restaurable antes de subir el candidato.</p>
+        ? <>
+          <p className="detail-note">Se creará un respaldo restaurable antes de subir el candidato.</p>
+          {experimental && <Notice tone="warning">
+            Modo experimental iOS limitado a esta cuenta de pruebas. La subida se
+            acepta y se comprueba descargando de nuevo la partida; no está
+            habilitada para el resto de cuentas iOS.
+          </Notice>}
+        </>
         : <Notice tone="warning">
           Se creó un respaldo restaurable y un candidato verificado. La subida remota de iOS
           está pendiente de validación: no se envió nada a la nube.
@@ -990,7 +998,7 @@ export function EditorWorkspace({
       {canWrite
         ? <label className="confirm-row">
           <input type="checkbox" checked={confirm} disabled={busy} onChange={(event) => setConfirm(event.target.checked)} />
-          <span>Confirmo subir el candidato a {accountLabel}.</span>
+          <span>Confirmo subir el candidato a {accountLabel}{experimental ? ' en modo experimental iOS' : ''}.</span>
         </label>
         : <p className="detail-note">
           Respaldo <code>{prepared.backup.id.slice(0, 8)}</code> · candidato{' '}
@@ -1046,7 +1054,12 @@ export function EditorWorkspace({
       <button id="editor-categories-tab" type="button" role="tab" aria-controls="editor-panel" aria-selected={!showQuick}
         tabIndex={showQuick ? -1 : 0} disabled={busy} onClick={() => go(`${editorBase}/categorias`)}>Categorías</button>
     </div>}
-    {pendingValidation
+    {experimental
+      ? <Notice tone="warning">
+        iOS experimental: esta cuenta de pruebas autorizada puede editar, crear
+        respaldo y subir. Cada subida se verifica descargando de nuevo la partida.
+      </Notice>
+      : pendingValidation
       ? <Notice tone="warning">
         iOS: puedes editar, preparar un candidato y crear un respaldo. La subida
         remota está pendiente de validación; no se envía nada a la nube.

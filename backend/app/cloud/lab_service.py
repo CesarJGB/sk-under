@@ -795,6 +795,7 @@ class CloudLabService:
         admin_configured: bool = False,
         max_input_bytes: int = MAX_INPUT_BYTES,
         platform: str = "android",
+        experimental: bool = False,
     ) -> None:
         if isinstance(max_input_bytes, bool) or not isinstance(max_input_bytes, int) or not 0 < max_input_bytes <= MAX_INPUT_BYTES:
             raise LabServiceError("Límite de lectura inválido.")
@@ -805,10 +806,13 @@ class CloudLabService:
         self.admin_configured = admin_configured
         self.max_input_bytes = max_input_bytes
         self.platform = platform
+        self.experimental = experimental
         self._write_lock = threading.Lock()
 
     def status(self) -> LabStatus:
-        capabilities = capability_matrix(self.platform)
+        capabilities = capability_matrix(
+            self.platform, experimental_authorized=self.experimental
+        )
         write_ready = (
             capabilities.write_supported
             and self.write_enabled
@@ -824,7 +828,12 @@ class CloudLabService:
             backups = self.store.count()
         except BackupStoreError:
             backups = 0
-        if mode == "live":
+        if mode == "live" and capabilities.state == "write_experimental":
+            message = (
+                "iOS experimental autorizado solo para esta cuenta de pruebas. "
+                "Cada subida exige respaldo, confirmación y verificación posterior."
+            )
+        elif mode == "live":
             message = "Laboratorio real con escritura administrativa habilitada."
         elif capabilities.state == "write_pending_validation":
             message = (
@@ -852,7 +861,9 @@ class CloudLabService:
         )
 
     def _require_write_ready(self) -> None:
-        capabilities = capability_matrix(self.platform)
+        capabilities = capability_matrix(
+            self.platform, experimental_authorized=self.experimental
+        )
         if not capabilities.write_supported:
             raise LabWritePendingValidation(
                 "La escritura remota de esta plataforma está pendiente de validación. "

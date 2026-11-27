@@ -18,12 +18,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 from secrets import token_urlsafe
 from time import time
-from typing import Callable
+from typing import Callable, Collection
 from urllib.parse import urlsplit
 
 from ..cloud.advanced_editor import read_advanced_source
 from ..cloud.backup_store import BackupIntegrityError, BackupStorageUnavailable, LabBackupStore, backup_problem
-from ..cloud.capabilities import capability_matrix
+from ..cloud.capabilities import capability_matrix, experimental_account
 from ..cloud.fish_chip_editor import MAX_FISH_CHIP, MIN_FISH_CHIP, read_fish_chip
 from ..cloud.fish_progress_editor import read_fish_progress
 from ..cloud.gems_editor import MAX_GEMS, MIN_GEMS, read_gems
@@ -186,8 +186,8 @@ class NativeAuthService:
         secure: bool,
         write_enabled: bool,
         backup_root: Path,
-        provider_factory: Callable[[str, str, str], object],
-        uploader_factory: Callable[[str, str, str], object],
+        provider_factory: Callable[[str, str, str, Distribution], object],
+        uploader_factory: Callable[[str, str, str, Distribution], object],
         min_gems: int = MIN_GEMS,
         max_gems: int = MAX_GEMS,
         min_fish_chip: int = MIN_FISH_CHIP,
@@ -198,6 +198,7 @@ class NativeAuthService:
         backup_key: bytes | None = None,
         backup_require_mount: bool = False,
         identity_factory: Callable[[], GeneratedIdentity] = generate_identity,
+        ios_experimental_accounts: Collection[str] = (),
         now: Callable[[], float] = time,
     ) -> None:
         if backup_key is not None and (not isinstance(backup_key, bytes) or len(backup_key) != 32):
@@ -221,6 +222,7 @@ class NativeAuthService:
         self.backup_key = backup_key
         self.backup_require_mount = backup_require_mount
         self.identity_factory = identity_factory
+        self.ios_experimental_accounts = frozenset(ios_experimental_accounts)
         self.now = now
         self.cookie_name = "__Host-sk_native" if secure else "sk_native_dev"
 
@@ -304,11 +306,13 @@ class NativeAuthService:
         view["expired"] = False
         return view
 
-    @staticmethod
-    def _account_metadata(record) -> dict[str, object]:
+    def _account_metadata(self, record) -> dict[str, object]:
         profile = record.profile
         distribution = get_distribution(profile.distribution)
-        capabilities = capability_matrix(distribution.platform)
+        experimental = self._ios_experimental(record.email, distribution)
+        capabilities = capability_matrix(
+            distribution.platform, experimental_authorized=experimental
+        )
         return {
             "label": profile.label,
             "email": record.email,
@@ -378,6 +382,11 @@ class NativeAuthService:
                 return self.store.account_session(browser_id, record.id)
         raise NativeSessionExpired("La sesión caducó. Vuelve a iniciar sesión.")
 
+    def _ios_experimental(self, email: str | None, distribution: Distribution) -> bool:
+        return distribution.platform == "ios" and experimental_account(
+            email, self.ios_experimental_accounts
+        )
+
     def _view(self, session: NativeSessionRecord) -> dict[str, object]:
         return self._view_values(
             session.profile, session.expires_at, session.idle_expires_at, email=session.email
@@ -393,7 +402,10 @@ class NativeAuthService:
     ) -> dict[str, object]:
         distribution = get_distribution(profile.distribution)
         installation_ready = profile.installation_ready
-        capabilities = capability_matrix(distribution.platform)
+        experimental = self._ios_experimental(email, distribution)
+        capabilities = capability_matrix(
+            distribution.platform, experimental_authorized=experimental
+        )
         return {
             "active": True,
             "identity_verified": True,
@@ -415,7 +427,10 @@ class NativeAuthService:
             "write_state": capabilities.state,
             "capabilities": capabilities.summary(),
             "write_enabled": self.write_enabled,
-            "write_ready": capabilities.write_supported and self.write_enabled and profile.allow_write and installation_ready,
+            "write_ready": capabilities.write_supported
+            and self.write_enabled
+            and (profile.allow_write or experimental)
+            and installation_ready,
             "min_gems": self.min_gems,
             "max_gems": self.max_gems,
             "min_fish_chip": self.min_fish_chip,
@@ -1165,7 +1180,7 @@ class NativeAuthService:
         subject: str,
     ) -> dict[str, object]:
         provider = NativeSaveProvider(
-            self.provider_factory(token, unique_id, distro_id),
+            self.provider_factory(token, unique_id, distro_id, distribution),
             self.store,
             subject,
             distribution.id,
@@ -1305,12 +1320,13 @@ class NativeAuthService:
         if profile.unique_id is None:
             raise NativeInstallationRequired("Completa el identificador de instalación para descargar la partida.")
         self._require_binding_ready(profile)
+        distribution = get_distribution(profile.distribution)
         provider = NativeSaveProvider(
-            self.provider_factory(token, profile.unique_id, profile.distro_id),
+            self.provider_factory(token, profile.unique_id, profile.distro_id, distribution),
             self.store,
             subject,
             profile.distribution,
-            expected_platform=get_distribution(profile.distribution).platform,
+            expected_platform=distribution.platform,
         )
         try:
             save = provider.download()
@@ -1402,21 +1418,34 @@ class NativeAuthService:
             )
         self._require_binding_ready(session.profile)
         distribution = get_distribution(session.profile.distribution)
-        capabilities = capability_matrix(distribution.platform)
+        experimental = self._ios_experimental(session.email, distribution)
+        capabilities = capability_matrix(
+            distribution.platform, experimental_authorized=experimental
+        )
         write = (
             capabilities.write_supported
             and self.write_enabled
-            and session.profile.allow_write
+            and (session.profile.allow_write or experimental)
         )
         provider = NativeSaveProvider(
-            self.provider_factory(session.token, session.unique_id, session.profile.distro_id),
+            self.provider_factory(
+                session.token,
+                session.unique_id,
+                session.profile.distro_id,
+                distribution,
+            ),
             self.store,
             session.subject,
             session.profile.distribution,
             expected_platform=distribution.platform,
         )
         uploader = (
-            self.uploader_factory(session.token, session.unique_id, session.profile.distro_id)
+            self.uploader_factory(
+                session.token,
+                session.unique_id,
+                session.profile.distro_id,
+                distribution,
+            )
             if write else None
         )
         return CloudLabService(
@@ -1426,11 +1455,15 @@ class NativeAuthService:
             write_enabled=write,
             admin_configured=True,
             platform=distribution.platform,
+            experimental=experimental,
         )
 
     def _require_write(self, session: NativeSessionRecord) -> None:
         distribution = get_distribution(session.profile.distribution)
-        capabilities = capability_matrix(distribution.platform)
+        experimental = self._ios_experimental(session.email, distribution)
+        capabilities = capability_matrix(
+            distribution.platform, experimental_authorized=experimental
+        )
         if not capabilities.write_supported:
             raise NativeWritePendingValidation(
                 "La preparación y el respaldo están disponibles, pero la subida "
@@ -1441,7 +1474,7 @@ class NativeAuthService:
             raise NativeWriteDisabled(
                 "La escritura remota está deshabilitada en este entorno experimental."
             )
-        if not session.profile.allow_write:
+        if not session.profile.allow_write and not experimental:
             raise NativeWriteDenied("Esta cuenta está autorizada solo para lectura.")
         if session.unique_id is None:
             raise NativeInstallationRequired("Completa la instalación antes de escribir.")
@@ -1493,16 +1526,35 @@ class NativeAuthService:
             pass
 
 
-def _default_provider(token: str, unique_id: str, distro_id: str):
+def _default_provider(
+    token: str, unique_id: str, distro_id: str, distribution: Distribution
+):
     from ..cloud.modern import ModernCloudSaveProvider
 
-    return ModernCloudSaveProvider(token, unique_id, distro_id)
+    return ModernCloudSaveProvider(
+        token,
+        unique_id,
+        distro_id,
+        platform=distribution.platform,
+        app_version=distribution.game_version,
+        game_version=distribution.game_version,
+    )
 
 
-def _default_uploader(token: str, unique_id: str, distro_id: str):
+def _default_uploader(
+    token: str, unique_id: str, distro_id: str, distribution: Distribution
+):
     from ..cloud.blob_upload import BlobSaveUploader
 
-    return BlobSaveUploader(token, unique_id, distro_id, enabled=True)
+    return BlobSaveUploader(
+        token,
+        unique_id,
+        distro_id,
+        enabled=True,
+        platform=distribution.platform,
+        app_version=distribution.game_version,
+        game_version=distribution.game_version,
+    )
 
 
 def build_native(settings: Settings) -> NativeRuntime:

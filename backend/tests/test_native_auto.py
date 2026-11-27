@@ -138,10 +138,10 @@ def make_auto(tmp_path, *, now=None, provider=None, portal=None, auth=None):
     service.client = auth
     service.portal_client = portal
     providers = {"1": provider or FakeProvider(PAYLOAD_A), "2": FakeProvider(PAYLOAD_B)}
-    service.provider_factory = lambda token, unique, distro: providers.get(
+    service.provider_factory = lambda token, unique, distro, distribution: providers.get(
         token.split("-")[1], FakeProvider(PAYLOAD_A)
     )
-    service.uploader_factory = lambda token, unique, distro: None
+    service.uploader_factory = lambda token, unique, distro, distribution: None
     if now is not None:
         service.now = now
         service.store.now = now
@@ -301,7 +301,7 @@ def test_selects_the_portal_player_that_has_the_save(tmp_path):
     auth = AutoAuth(player_by_distro={PORTAL_DISTRO_EMPTY: 99, PORTAL_DISTRO_A: 11})
     env = make_auto(tmp_path, portal=portal, auth=auth)
     empty = NoSaveProvider()
-    env["service"].provider_factory = lambda token, unique, distro: (
+    env["service"].provider_factory = lambda token, unique, distro, distribution: (
         empty if distro == PORTAL_DISTRO_EMPTY else FakeProvider(PAYLOAD_A)
     )
     response = login(env["client"])
@@ -320,7 +320,7 @@ def test_selects_the_portal_player_that_has_the_save(tmp_path):
 def test_no_cloud_save_is_reported_without_creating_a_false_download(tmp_path):
     portal = FakePortal({"a@example.test": [(11, PORTAL_DISTRO_A)]})
     env = make_auto(tmp_path, portal=portal)
-    env["service"].provider_factory = lambda token, unique, distro: NoSaveProvider()
+    env["service"].provider_factory = lambda token, unique, distro, distribution: NoSaveProvider()
     response = login(env["client"])
     assert response.status_code == 200, response.text
     body = response.json()
@@ -347,7 +347,7 @@ def test_portal_challenge_is_reported_and_does_not_create_a_profile(tmp_path):
 def test_new_account_without_portal_players_gets_a_generated_identity(tmp_path):
     portal = FakePortal({"a@example.test": []})
     env = make_auto(tmp_path, portal=portal)
-    env["service"].provider_factory = lambda token, unique, distro: NoSaveProvider()
+    env["service"].provider_factory = lambda token, unique, distro, distribution: NoSaveProvider()
     response = login(env["client"])
     assert response.status_code == 200, response.text
     body = response.json()
@@ -378,7 +378,7 @@ def test_reuses_a_bound_phase_6_8_profile_without_binding_a_second_device(tmp_pa
     )
     store.bind(existing.id, subject)
     provider = FakeProvider(PAYLOAD_A)
-    env["service"].provider_factory = lambda token, unique, distro: provider
+    env["service"].provider_factory = lambda token, unique, distro, distribution: provider
     response = login(env["client"])
     assert response.status_code == 200, response.text
     profiles = store.list_profiles()
@@ -411,7 +411,7 @@ def test_updates_a_stale_existing_profile_after_identity_verification(tmp_path):
         allow_write=False,
     )
     store.bind(existing.id, subject)
-    env["service"].provider_factory = lambda token, unique, distro: FakeProvider(PAYLOAD_A)
+    env["service"].provider_factory = lambda token, unique, distro, distribution: FakeProvider(PAYLOAD_A)
     response = login(env["client"])
     assert response.status_code == 200, response.text
     body = response.json()

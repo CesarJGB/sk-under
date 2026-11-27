@@ -124,6 +124,9 @@ class BlobSaveUploader:
     request_token: int | None = None
     url: str = UPLOAD_URL
     timeout: float = 30.0
+    platform: str = "android"
+    app_version: str = "8.8.0"
+    game_version: str = "8.8.0"
     send: Send = field(default=_send, repr=False, compare=False)
 
     def __post_init__(self) -> None:
@@ -154,6 +157,9 @@ class BlobSaveUploader:
             content_type="application/json",
             content_encoding="gzip",
             content_length=len(candidate.body),
+            platform=self.platform,
+            app_version=self.app_version,
+            game_version=self.game_version,
         )
         if self.request_token is not None:
             headers["x-request-token"] = str(self.request_token)
