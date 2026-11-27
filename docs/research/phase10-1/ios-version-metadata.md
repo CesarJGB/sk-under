@@ -200,7 +200,22 @@ del servidor.
     de subida sin cambios.
 - No se hizo ninguna escritura remota nueva durante esta fase.
 
-## 8. Estado del blob envenenado
+## 8. Despliegue
+
+- Commit de la corrección: `11fce68304c8c650e49c119b4edda6352ace5412`
+  (`fix(phase10-1): use iOS BlobSave protocol version 8.8.0`), publicado en
+  `main`.
+- CI de GitHub ejecutado sobre ese commit.
+- Despliegue verificado en producción el 2026-11-27:
+  - `GET /api/v1/version` devolvió
+    `commit: 11fce68304c8c650e49c119b4edda6352ace5412`.
+  - `GET /api/v1/cloud/native/config` devolvió `ios-global` con
+    `game_version: 8.8.0.14`, `protocol_app_version: 8.8.0` y
+    `protocol_game_version: 8.8.0`.
+- La escritura iOS general sigue limitada por la matriz de capacidades a la
+  cuenta experimental autorizada.
+
+## 9. Estado del blob envenenado
 
 La cuenta de prueba quedó con un blob marcado `8.8.0.13`. El flujo normal de
 SK-Under descarga antes de confirmar o restaurar, por lo que ahora recibe
@@ -214,7 +229,7 @@ sería subir de nuevo el original sin cambios con las cabeceras `8.8.0`. Debe
 hacerse solo con autorización explícita, respaldo verificado y una prueba
 posterior. No se debe presentar como resuelto hasta comprobarlo.
 
-## 9. Validación manual en iPhone
+## 10. Validación manual en iPhone
 
 1. Confirmar que la cuenta es ChillyRoom por correo (no solo Apple ID).
 2. Abrir Soul Knight 8.8.0.13 o 8.8.0.14 y comprobar que la nube está activa.
