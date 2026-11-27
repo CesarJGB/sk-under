@@ -20,6 +20,14 @@ from ..save_report import read_save_report
 from .backup_store import BackupRecord, BackupStoreError, LabBackupStore
 from .blob_upload import UploadResult
 from .capabilities import CapabilityState, capability_matrix
+from .compatibility import (
+    STORE_CACHE,
+    CompatibilityPending,
+    compatibility_report,
+    preflight_write,
+    require_matching_binding,
+    require_write_preflight,
+)
 from .advanced_editor import (
     ADVANCED_RECORD_FIELD,
     BATTLE_PASS_PATH,
@@ -92,8 +100,10 @@ from .skin_editor import (
 from .unified_editor import (
     UNIFIED_RECORD_FIELD,
     UnifiedEdit,
+    normalize_unified_plan,
     prepare_unified_edit,
     require_unified_write_compatibility,
+    unified_plan_sha256,
 )
 from .weapon_progression_editor import read_weapon_progression
 from .weapon_skin_editor import read_weapon_skins
@@ -157,6 +167,7 @@ class LabStatus:
     prepare_ready: bool = True
     write_state: CapabilityState = "write_verified"
     capabilities: dict[str, object] = field(default_factory=dict)
+    compatibility: dict[str, object] = field(default_factory=dict)
 
     def summary(self) -> dict[str, object]:
         return {
@@ -168,6 +179,7 @@ class LabStatus:
             "write_state": self.write_state,
             "platform": self.platform,
             "capabilities": self.capabilities,
+            "compatibility": self.compatibility,
             "admin_configured": self.admin_configured,
             "admin_required": True,
             "backup_count": self.backup_count,
@@ -201,6 +213,7 @@ class LoadedSave:
     weapon_progression: dict[str, object] = field(default_factory=dict)
     weapon_skins: dict[str, object] = field(default_factory=dict)
     kill_effects: dict[str, object] = field(default_factory=dict)
+    compatibility: dict[str, object] = field(default_factory=dict)
 
     def summary(self) -> dict[str, object]:
         return {
@@ -231,6 +244,7 @@ class LoadedSave:
             "weapon_progression": self.weapon_progression,
             "weapon_skins": self.weapon_skins,
             "kill_effects": self.kill_effects,
+            "compatibility": self.compatibility,
         }
 
 
@@ -796,6 +810,9 @@ class CloudLabService:
         max_input_bytes: int = MAX_INPUT_BYTES,
         platform: str = "android",
         experimental: bool = False,
+        distribution_id: str = "",
+        commercial_version: str = "",
+        account_digest: str = "",
     ) -> None:
         if isinstance(max_input_bytes, bool) or not isinstance(max_input_bytes, int) or not 0 < max_input_bytes <= MAX_INPUT_BYTES:
             raise LabServiceError("Límite de lectura inválido.")
@@ -807,7 +824,49 @@ class CloudLabService:
         self.max_input_bytes = max_input_bytes
         self.platform = platform
         self.experimental = experimental
+        self.distribution_id = distribution_id or (
+            "ios-global" if platform == "ios" else "android-global" if platform == "android" else ""
+        )
+        self.commercial_version = commercial_version or (
+            "8.8.0.14" if platform == "ios" else "8.8.0" if platform == "android" else ""
+        )
+        self.account_digest = account_digest
         self._write_lock = threading.Lock()
+
+    def _compat_report(
+        self, source: bytes, *, refresh_store: bool = False
+    ) -> dict[str, object]:
+        capabilities = capability_matrix(
+            self.platform, experimental_authorized=self.experimental
+        )
+        return compatibility_report(
+            distribution_id=self.distribution_id,
+            commercial_version=self.commercial_version,
+            platform=self.platform,
+            source=source,
+            capability_state=capabilities.state,
+            refresh_store=refresh_store,
+        )
+
+    def _preflight(self, source: bytes, *, plan_sha256: str | None = None):
+        capabilities = capability_matrix(
+            self.platform, experimental_authorized=self.experimental
+        )
+        store = (
+            STORE_CACHE.peek(self.distribution_id)
+            if self.distribution_id
+            else None
+        )
+        return preflight_write(
+            source,
+            distribution_id=self.distribution_id,
+            commercial_version=self.commercial_version,
+            platform=self.platform,
+            capability_state=capabilities.state,
+            account_digest=self.account_digest,
+            plan_sha256=plan_sha256,
+            store=store,
+        )
 
     def status(self) -> LabStatus:
         capabilities = capability_matrix(
@@ -844,6 +903,15 @@ class CloudLabService:
             )
         else:
             message = "Laboratorio en solo lectura: la escritura está deshabilitada en el servidor."
+        compatibility: dict[str, object] = {}
+        if self.distribution_id:
+            compatibility = compatibility_report(
+                distribution_id=self.distribution_id,
+                commercial_version=self.commercial_version,
+                platform=self.platform,
+                source=None,
+                capability_state=capabilities.state,
+            )
         return LabStatus(
             mode=mode,
             read_ready=capabilities.read_ready,
@@ -859,6 +927,7 @@ class CloudLabService:
             prepare_ready=capabilities.prepare_ready,
             write_state=capabilities.state,
             capabilities=capabilities.summary(),
+            compatibility=compatibility,
             message=message,
         )
 
@@ -873,6 +942,12 @@ class CloudLabService:
             )
         if not self.write_enabled or self.uploader is None:
             raise LabWriteDisabled("La escritura remota está deshabilitada en el servidor.")
+
+    def compatibility(self, *, refresh_store: bool = False) -> dict[str, object]:
+        """Comprueba la versión de la copia remota sin preparar ni escribir."""
+
+        save = self.provider.download(self.max_input_bytes)
+        return self._compat_report(save.payload, refresh_store=refresh_store)
 
     def load(self) -> LoadedSave:
         save = self.provider.download(self.max_input_bytes)
@@ -920,6 +995,7 @@ class CloudLabService:
             sha256=snapshot.sha256,
             serialzed_version=snapshot.serialzed_version,
             report=read_save_report(save.payload),
+            compatibility=self._compat_report(save.payload),
         )
 
     def _event(self, backup_id: str, event: dict[str, object]) -> None:
@@ -1047,6 +1123,13 @@ class CloudLabService:
                     historical=True,
                     message="La nube ya contiene exactamente este respaldo; no se envió nada.",
                 )
+            # La restauración de bytes originales no recompone campos: se
+            # permite incluso con una versión nueva, pero solo si es legible.
+            for candidate_source in (current.payload, bundle.original):
+                if not self._preflight(candidate_source).decision.read_ready:
+                    raise CompatibilityPending(
+                        "La partida no se puede validar para una restauración segura."
+                    )
             preventive = self.store.save_snapshot(
                 current.payload,
                 kind="preventive",
@@ -1279,6 +1362,8 @@ class CloudLabService:
         save = self.provider.download(self.max_input_bytes)
         if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
             raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
+        preflight = self._preflight(save.payload)
+        require_write_preflight(preflight)
         edit = prepare_gems_edit(save.payload, new_gems)
         if edit.original_sha256 != save.metadata.sha256:
             raise LabServiceError("El original preparado no coincide con la descarga.")
@@ -1287,6 +1372,7 @@ class CloudLabService:
             remote_source=save.metadata.source,
             remote_size=save.metadata.size,
             remote_sha256=save.metadata.sha256,
+            compatibility_binding=preflight.binding,
         )
         self.store.append_event(
             bundle.record.id,
@@ -1315,6 +1401,8 @@ class CloudLabService:
         save = self.provider.download(self.max_input_bytes)
         if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
             raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
+        preflight = self._preflight(save.payload)
+        require_write_preflight(preflight)
         edit = prepare_fish_chip_edit(save.payload, new_fish_chip)
         if edit.original_sha256 != save.metadata.sha256:
             raise LabServiceError("El original preparado no coincide con la descarga.")
@@ -1323,6 +1411,7 @@ class CloudLabService:
             remote_source=save.metadata.source,
             remote_size=save.metadata.size,
             remote_sha256=save.metadata.sha256,
+            compatibility_binding=preflight.binding,
             field=FISH_CHIP_RECORD_FIELD,
             original_value=edit.original_fish_chip,
             new_value=edit.new_fish_chip,
@@ -1357,6 +1446,8 @@ class CloudLabService:
         save = self.provider.download(self.max_input_bytes)
         if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
             raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
+        preflight = self._preflight(save.payload)
+        require_write_preflight(preflight)
         edit = prepare_fish_progress_edit(save.payload, new_cumulative_fish_count)
         if edit.original_sha256 != save.metadata.sha256:
             raise LabServiceError("El original preparado no coincide con la descarga.")
@@ -1365,6 +1456,7 @@ class CloudLabService:
             remote_source=save.metadata.source,
             remote_size=save.metadata.size,
             remote_sha256=save.metadata.sha256,
+            compatibility_binding=preflight.binding,
             field=PROGRESS_RECORD_FIELD,
             original_value=edit.original_cumulative_fish_count,
             new_value=edit.new_cumulative_fish_count,
@@ -1394,7 +1486,11 @@ class CloudLabService:
         save = self.provider.download(self.max_input_bytes)
         if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
             raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
-        edit = prepare_unified_edit(save.payload, plan)
+        normalized = normalize_unified_plan(plan)
+        plan_hash = unified_plan_sha256(normalized)
+        preflight = self._preflight(save.payload, plan_sha256=plan_hash)
+        require_write_preflight(preflight)
+        edit = prepare_unified_edit(save.payload, normalized)
         if edit.original_sha256 != save.metadata.sha256:
             raise LabServiceError("El original preparado no coincide con la descarga.")
         bundle = self.store.save(
@@ -1406,6 +1502,7 @@ class CloudLabService:
             original_value=0,
             new_value=edit.change_count,
             unified_plan=edit.plan,
+            compatibility_binding=preflight.binding,
         )
         self.store.append_event(
             bundle.record.id,
@@ -1434,6 +1531,8 @@ class CloudLabService:
         save = self.provider.download(self.max_input_bytes)
         if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
             raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
+        preflight = self._preflight(save.payload)
+        require_write_preflight(preflight)
         edit = prepare_character_unlock_edit(save.payload, codes)
         if edit.original_sha256 != save.metadata.sha256:
             raise LabServiceError("El original preparado no coincide con la descarga.")
@@ -1442,6 +1541,7 @@ class CloudLabService:
             remote_source=save.metadata.source,
             remote_size=save.metadata.size,
             remote_sha256=save.metadata.sha256,
+            compatibility_binding=preflight.binding,
             field=CHARACTER_RECORD_FIELD,
             original_value=len(edit.original_unlocked),
             new_value=len(edit.new_unlocked),
@@ -1476,6 +1576,8 @@ class CloudLabService:
         save = self.provider.download(self.max_input_bytes)
         if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
             raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
+        preflight = self._preflight(save.payload)
+        require_write_preflight(preflight)
         edit = prepare_skill_unlock_edit(save.payload, selections)
         if edit.original_sha256 != save.metadata.sha256:
             raise LabServiceError("El original preparado no coincide con la descarga.")
@@ -1484,6 +1586,7 @@ class CloudLabService:
             remote_source=save.metadata.source,
             remote_size=save.metadata.size,
             remote_sha256=save.metadata.sha256,
+            compatibility_binding=preflight.binding,
             field=SKILL_RECORD_FIELD,
             original_value=len(edit.original_unlocked),
             new_value=len(edit.new_unlocked),
@@ -1519,6 +1622,8 @@ class CloudLabService:
         save = self.provider.download(self.max_input_bytes)
         if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
             raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
+        preflight = self._preflight(save.payload)
+        require_write_preflight(preflight)
         edit = prepare_skin_unlock_edit(save.payload, selections)
         if edit.original_sha256 != save.metadata.sha256:
             raise LabServiceError("El original preparado no coincide con la descarga.")
@@ -1527,6 +1632,7 @@ class CloudLabService:
             remote_source=save.metadata.source,
             remote_size=save.metadata.size,
             remote_sha256=save.metadata.sha256,
+            compatibility_binding=preflight.binding,
             field=SKIN_RECORD_FIELD,
             original_value=len(edit.original_unlocked),
             new_value=len(edit.new_unlocked),
@@ -1560,6 +1666,8 @@ class CloudLabService:
         save = self.provider.download(self.max_input_bytes)
         if expected_source is not None and not compare_digest(expected_source, save.metadata.sha256):
             raise LabRemoteChanged("La partida remota cambió desde la descarga. Vuelve a descargarla.")
+        preflight = self._preflight(save.payload)
+        require_write_preflight(preflight)
         edit = prepare_advanced_edit(save.payload, plan)
         if edit.original_sha256 != save.metadata.sha256:
             raise LabServiceError("El original preparado no coincide con la descarga.")
@@ -1568,6 +1676,7 @@ class CloudLabService:
             remote_source=save.metadata.source,
             remote_size=save.metadata.size,
             remote_sha256=save.metadata.sha256,
+            compatibility_binding=preflight.binding,
             field=ADVANCED_RECORD_FIELD,
             original_value=0,
             new_value=len(edit.changes),
@@ -1600,6 +1709,16 @@ class CloudLabService:
                 raise LabHashMismatch("La huella esperada no coincide con el candidato respaldado.")
             if self.store.confirmation(backup_id) is not None:
                 raise LabAlreadyConfirmed("Este respaldo ya fue confirmado; usa la verificación.")
+            plan_hash = (
+                unified_plan_sha256(bundle.record.unified_plan)
+                if bundle.record.field == UNIFIED_RECORD_FIELD and bundle.record.unified_plan
+                else None
+            )
+            preflight = self._preflight(bundle.original, plan_sha256=plan_hash)
+            require_write_preflight(preflight)
+            require_matching_binding(
+                bundle.record.compatibility_binding, preflight.binding
+            )
             if bundle.record.field == FISH_CHIP_RECORD_FIELD:
                 require_fish_chip_write_compatibility(
                     bundle.original, bundle.record.candidate_gems, bundle.candidate
@@ -1635,9 +1754,12 @@ class CloudLabService:
                     bundle.original, bundle.record.advanced_plan, bundle.candidate
                 )
             elif bundle.record.field == UNIFIED_RECORD_FIELD:
-                require_unified_write_compatibility(
-                    bundle.original, bundle.record.unified_plan, bundle.candidate
-                )
+                if not bundle.record.unified_plan_sha256:
+                    # Registros anteriores a la Fase 10.3 no guardaban la
+                    # huella del plan; se recomponen una vez para verificarlos.
+                    require_unified_write_compatibility(
+                        bundle.original, bundle.record.unified_plan, bundle.candidate
+                    )
             else:
                 require_gems_write_compatibility(bundle.original, bundle.record.candidate_gems, bundle.candidate)
             current = self.provider.download(self.max_input_bytes)
@@ -1730,6 +1852,14 @@ class CloudLabService:
                 raise LabRemoteChanged(
                     "La nube no coincide con el candidato confirmado; la restauración se detuvo."
                 )
+            # Restaurar los bytes originales es una recuperación comprobable
+            # incluso cuando la versión es nueva: no se compone ni se inventa
+            # ningún campo. Solo se exige que la partida sea legible.
+            for candidate_source in (current.payload, bundle.original):
+                if not self._preflight(candidate_source).decision.read_ready:
+                    raise CompatibilityPending(
+                        "La partida no se puede validar para una restauración segura."
+                    )
             upload = self.uploader.upload(bundle.original)
             remote = self.provider.download(self.max_input_bytes)
             persisted = (

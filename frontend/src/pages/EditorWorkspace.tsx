@@ -1,5 +1,5 @@
 import { ArrowLeft, CircleAlert, CircleCheck, CloudUpload, LoaderCircle } from 'lucide-react'
-import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
+import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import { useBlocker, useLocation, useNavigate } from 'react-router'
 import { AccordionGroup } from '../AccordionGroup'
 import {
@@ -7,11 +7,12 @@ import {
   type LabAdvanced, type LabBlueprintEntry, type LabHeroLevelEntry, type LabUnifiedPrepared, type LabWriteResult,
   type NativeSaveSummary, type NativeSession,
 } from '../api'
+import { CompatibilityStrip } from '../CompatibilityStrip'
 import {
   advancedSnapshot, applyItemMinimum, battlePassRecord, buildDraftPlan, clearSelection, createEmptyDraft,
   eligibility, isSelected, minimumSource, originalQuantity, parseQuantity, protectedMaterial, quantityInput,
   quickChecked, selectAll, selectedCount, setBlueprintMode, setBlueprintStatus, setBulk, setDecorationLevel,
-  setEdit, setHeroLevel, setPetAffinity, setQuick, toggleItem,
+  setEdit, setHeroLevel, setItems, setPetAffinity, setQuick, toggleItem,
   type BuiltPlan, type BulkKey, type Draft, type Eligibility,
 } from '../draft'
 import { skillKey, skinKey } from '../unlockSelections'
@@ -156,11 +157,13 @@ function LockList({ save, draft, update, mode }: EditorInputs & { mode: 'charact
                 indeterminate={checked > 0 && checked < selectable.length}
                 label={`Seleccionar ${character.name}`}
                 onChange={(enabled) => {
-                  let next = draft
-                  for (const { id } of selectable) {
-                    if (enabled !== selected.has(id)) next = toggleItem(mode, id, next, eligible)
-                  }
-                  update(next)
+                  update(setItems(
+                    mode,
+                    selectable.filter(({ id }) => enabled !== selected.has(id)).map(({ id }) => id),
+                    enabled,
+                    draft,
+                    eligible,
+                  ))
                 }} />
             </div>}
             <div className="lock-options">{visible.map(optionRow)}</div>
@@ -735,15 +738,21 @@ export function EditorWorkspace({
   const [result, setResult] = useState<LabWriteResult | null>(null)
   const [needsRefresh, setNeedsRefresh] = useState(false)
   const [action, setAction] = useState<EditorAction | null>(null)
+  const [stage, setStage] = useState(0)
   const inFlight = useRef(false)
   const preview = useRef<HTMLDivElement>(null)
   const bar = useRef<HTMLElement>(null)
   const operation = useOperation()
   const { pathname } = useLocation()
   const navigate = useNavigate()
-  const built = buildDraftPlan(save, draft, session)
+  const built = useMemo(() => buildDraftPlan(save, draft, session), [save, draft, session])
+  const advanced = useMemo(() => advancedSnapshot(save), [save])
   const hasChanges = built.counts.changes > 0
-  const canWrite = Boolean(session.write_ready)
+  // El estado de sesión es solo de plataforma; el de la partida incluye los
+  // marcadores detectados y el binding. No usamos el perfil de sesión para
+  // bloquear una escritura que la copia descargada sí permite.
+  const compatibility = save.compatibility ?? null
+  const canWrite = Boolean(session.write_ready) && (compatibility?.write_supported ?? true)
   // Preparar un candidato no escribe en la nube. Solo habilitamos esa fase
   // cuando la matriz declara la escritura pendiente de validación (iOS); así
   // una sesión Android con escritura deshabilitada sigue siendo de solo lectura.
@@ -758,7 +767,6 @@ export function EditorWorkspace({
     quantityInput(originalQuantity(pass?.cur_exp), draft.battlePass.exp),
   ]
   const itemEdits = [...Object.values(draft.materialEdits), ...Object.values(draft.seedEdits)]
-  const advanced = advancedSnapshot(save)
   const heroMax = advanced?.hero_levels?.max ?? 0
   const heroEdits = (advanced?.hero_levels?.entries ?? []).flatMap((row) => {
     const raw = draft.heroLevels[row.id]
@@ -813,6 +821,17 @@ export function EditorWorkspace({
     preview.current?.focus({ preventScroll: true })
     window.scrollTo(0, 0)
   }, [review, prepared])
+
+  // Etapas conocidas del flujo, en el orden en que las ejecuta el backend.
+  // Avanzan por tiempo máximo orientativo y no representan un porcentaje; el
+  // resultado real reemplaza al indicador en cuanto termina la solicitud.
+  useEffect(() => {
+    setStage(0)
+    if (action !== 'prepare' && action !== 'upload') return
+    const delays = action === 'prepare' ? [600, 1500, 2400] : [800, 1800, 3500]
+    const timers = delays.map((delay, index) => window.setTimeout(() => setStage(index + 1), delay))
+    return () => timers.forEach((timer) => window.clearTimeout(timer))
+  }, [action])
 
   useEffect(() => {
     const viewport = window.visualViewport
@@ -957,8 +976,15 @@ export function EditorWorkspace({
 
   const expiredConflict = operation.problem?.code === 'cloud_remote_changed'
   const refreshFailed = Boolean(result?.persisted && needsRefresh && operation.problem && !expiredConflict)
-  const progress = action === 'prepare' ? 'Preparando candidato…'
-    : action === 'upload' ? 'Guardando y verificando…' : action === 'reload' || loadingSave ? 'Descargando partida…' : null
+  const stages = action === 'prepare'
+    ? ['Preparando cambios', 'Verificando compatibilidad', 'Validando partida', 'Creando respaldo']
+    : action === 'upload'
+      ? ['Validando partida', 'Creando respaldo', 'Guardando en la nube', 'Verificando resultado']
+      : []
+  const stageLabel = stages[Math.min(stage, stages.length - 1)] ?? ''
+  const progress = action === 'prepare' ? `Preparando candidato… · ${stageLabel}`
+    : action === 'upload' ? `Guardando y verificando… · ${stageLabel}`
+      : action === 'reload' || loadingSave ? 'Descargando partida…' : null
   const barError = operation.problem || (result && !result.persisted)
   const barStatus = progress ?? (invalidDraft ? 'Revisa las cantidades'
     : barError ? 'Revisa el resultado' : result?.persisted ? 'Verificado' : null)
@@ -1054,7 +1080,9 @@ export function EditorWorkspace({
       <button id="editor-categories-tab" type="button" role="tab" aria-controls="editor-panel" aria-selected={!showQuick}
         tabIndex={showQuick ? -1 : 0} disabled={busy} onClick={() => go(`${editorBase}/categorias`)}>Categorías</button>
     </div>}
-    {experimental
+    {compatibility
+      ? <CompatibilityStrip compatibility={compatibility} />
+      : experimental
       ? <Notice tone="warning">
         iOS experimental: esta cuenta de pruebas autorizada puede editar, crear
         respaldo y subir. Cada subida se verifica descargando de nuevo la partida.

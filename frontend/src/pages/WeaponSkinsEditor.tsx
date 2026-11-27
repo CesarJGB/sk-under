@@ -5,7 +5,7 @@ import type {
   LabKillEffectItem, LabWeaponProgressionItem, LabWeaponSkinItem, NativeSaveSummary,
 } from '../api'
 import {
-  clearSelection, eligibility, isSelected, selectAll, selectedCount, toggleItem,
+  clearSelection, eligibility, isSelected, selectAll, selectedCount, setItems, toggleItem,
   type Draft,
 } from '../draft'
 import { Notice } from '../ui'
@@ -207,15 +207,13 @@ function ForgeUnlockPanel({ save, draft, update }: EditorProps) {
             <CheckAll checked={checked === selectable.length}
               indeterminate={checked > 0 && checked < selectable.length}
               label={`Seleccionar forjables de ${category}`}
-              onChange={(enabled) => {
-                let next = draft
-                for (const { id } of selectable) {
-                  if (enabled !== selected.has(id)) {
-                    next = toggleItem('weaponForgeUnlock', id, next, eligible)
-                  }
-                }
-                update(next)
-              }} />
+              onChange={(enabled) => update(setItems(
+                  'weaponForgeUnlock',
+                  selectable.filter(({ id }) => enabled !== selected.has(id)).map(({ id }) => id),
+                  enabled,
+                  draft,
+                  eligible,
+                ))} />
           </div>}
           <div className="lock-options">
             {visible.map((item) => {
@@ -366,13 +364,13 @@ export function WeaponProgressionEditor({ save, draft, update }: EditorProps) {
                 <CheckAll checked={checked === selectable.length}
                   indeterminate={checked > 0 && checked < selectable.length}
                   label={`Seleccionar ${category}`}
-                  onChange={(enabled) => {
-                    let next = draft
-                    for (const { id } of selectable) {
-                      if (enabled !== selected.has(id)) next = toggleItem('weaponProgression', id, next, eligible)
-                    }
-                    update(next)
-                  }} />
+                  onChange={(enabled) => update(setItems(
+                    'weaponProgression',
+                    selectable.filter(({ id }) => enabled !== selected.has(id)).map(({ id }) => id),
+                    enabled,
+                    draft,
+                    eligible,
+                  ))} />
               </div>}
               <div className="lock-options">
                 {visible.map((item) => {
@@ -498,13 +496,13 @@ export function WeaponSkinsEditor({ save, draft, update }: EditorProps) {
               <CheckAll checked={checked === selectable.length}
                 indeterminate={checked > 0 && checked < selectable.length}
                 label={`Seleccionar ${title}`}
-                onChange={(enabled) => {
-                  let next = draft
-                  for (const { id } of selectable) {
-                    if (enabled !== selected.has(id)) next = toggleItem('weaponSkins', id, next, eligible)
-                  }
-                  update(next)
-                }} />
+                onChange={(enabled) => update(setItems(
+                  'weaponSkins',
+                  selectable.filter(({ id }) => enabled !== selected.has(id)).map(({ id }) => id),
+                  enabled,
+                  draft,
+                  eligible,
+                ))} />
             </div>}
             <div className="lock-options">
               {visible.map((item) => {

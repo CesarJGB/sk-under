@@ -69,6 +69,19 @@ const ADVANCED = {
   pet_policy: { field: 'pets', experimental: false, evidence_level: 'E3', path: '', skin_note: '', food_note: '', progression_note: '' },
   policy: { field: 'advanced', experimental: true, evidence_level: 'E3', min: 0, max: 2147483647, max_note: '', material_fish_note: '', confirmed_functions: [], experimental_functions: ['battle_pass'] },
 }
+const COMPATIBILITY = {
+  state: 'compatible', label: 'Compatible',
+  profile: {
+    platform: 'android', commercial_version: '8.8.0',
+    protocol_app_version: '8.8.0', protocol_game_version: '8.8.0',
+    schema_versions: [1], evidence: 'E3', checked_at: '2026-11-27',
+  },
+  detected: { platform: 'android', game_version: 2155, app_version: 1531, serialzed_version: 1 },
+  store: { version: '8.8.0', status: 'current' },
+  read_ready: true, prepare_ready: true, write_supported: true,
+  reason: 'La versión y los catálogos coinciden con la configuración validada.',
+  warnings: [], catalog_versions: { characters: '8.8.0' }, manual_validation: [],
+}
 const SESSION_SAVE = { ...SAVE, report: REPORT, advanced: ADVANCED }
 const ACTIVE = {
   active: true, identity_verified: true,
@@ -182,6 +195,21 @@ function prepared(plan: Record<string, unknown>, categories: Array<[string, stri
     validation: { valid: true, structure_valid: true, atomic: true, message: 'Candidato compuesto.' },
   }
 }
+
+test('muestra el estado de compatibilidad y sus detalles técnicos plegados', async ({ page }) => {
+  await open(page, { save: { ...SESSION_SAVE, compatibility: COMPATIBILITY } })
+  const strip = page.locator('.compatibility-strip')
+  await expect(strip).toContainText('Compatible')
+  await expect(strip).toContainText('Android 8.8.0')
+  await expect(strip).toContainText('La versión y los catálogos coinciden')
+  await expect(strip.locator('details')).not.toHaveAttribute('open', '')
+  await strip.locator('summary').click()
+  await expect(strip).toContainText('Protocolo app / juego')
+  await expect(strip).toContainText('gameVersion 2155')
+  await expect(strip).toContainText('Lectura, preparación y escritura autorizadas.')
+  await goToPartida(page)
+  await expect(page.locator('.partida-cloud .compatibility-strip')).toContainText('Compatible')
+})
 
 for (const width of [320, 360, 375, 390, 430, 768, 1280]) {
   test(`Partida muestra tres bloques y respeta el ancho de ${width} px`, async ({ page }) => {

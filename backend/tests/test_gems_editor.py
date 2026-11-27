@@ -12,6 +12,7 @@ from app.cloud.backup_store import (
     InvalidBackupId,
     LabBackupStore,
 )
+from app.cloud.compatibility import CompatibilityPending
 from app.cloud.gems_editor import (
     MAX_GEMS,
     GemsFieldMissing,
@@ -282,7 +283,7 @@ def test_old_incompatible_draft_cannot_confirm_but_original_can_be_restored(tmp_
         old_edit, remote_source="modern-cloud", remote_size=len(original),
         remote_sha256=old_edit.original_sha256,
     )
-    error = UnsupportedGemsStructure if unknown_version else OutdatedGemsDraft
+    error = CompatibilityPending if unknown_version else OutdatedGemsDraft
     with pytest.raises(error):
         lab.confirm(bundle.record.id, old_edit.candidate_sha256, single_attempt=True)
     assert uploader.calls == []

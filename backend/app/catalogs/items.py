@@ -15,7 +15,9 @@ from pathlib import Path
 from typing import Any, Mapping
 
 ITEMS_PATH = Path(__file__).resolve().parent / "items-880.json"
-EXPECTED_VERSION = "8.8.0"
+from .version import CATALOG_VERSION
+
+EXPECTED_VERSION = CATALOG_VERSION
 EXPECTED_MATERIALS = 343
 EXPECTED_SEEDS = 47
 EXPECTED_SCHEMA = "sk-under/backend-items@1"

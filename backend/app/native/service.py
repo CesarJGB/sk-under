@@ -23,7 +23,8 @@ from urllib.parse import urlsplit
 
 from ..cloud.advanced_editor import read_advanced_source
 from ..cloud.backup_store import BackupIntegrityError, BackupStorageUnavailable, LabBackupStore, backup_problem
-from ..cloud.capabilities import capability_matrix, experimental_account
+from ..cloud.capabilities import account_digest, capability_matrix, experimental_account
+from ..cloud.compatibility import STORE_CACHE
 from ..cloud.fish_chip_editor import MAX_FISH_CHIP, MIN_FISH_CHIP, read_fish_chip
 from ..cloud.fish_progress_editor import read_fish_progress
 from ..cloud.gems_editor import MAX_GEMS, MIN_GEMS, read_gems
@@ -619,6 +620,15 @@ class NativeAuthService:
         return self._operate(session, lambda: self._lab(session).load().summary() | {
             "downloaded_at": _iso(int(self.now()))
         })
+
+    def compatibility(
+        self, session: NativeSessionRecord, *, refresh_store: bool = False
+    ) -> dict[str, object]:
+        return self._operate(
+            session,
+            lambda: self._lab(session).compatibility(refresh_store=refresh_store)
+            | {"downloaded_at": _iso(int(self.now()))},
+        )
 
     def prepare(self, session: NativeSessionRecord, new_gems: object, source_sha256: str) -> dict[str, object]:
         return self._operate(
@@ -1485,6 +1495,9 @@ class NativeAuthService:
             admin_configured=True,
             platform=distribution.platform,
             experimental=experimental,
+            distribution_id=distribution.id,
+            commercial_version=distribution.game_version,
+            account_digest=account_digest(session.email or ""),
         )
 
     def _require_write(self, session: NativeSessionRecord) -> None:
@@ -1668,6 +1681,8 @@ def build_native(settings: Settings) -> NativeRuntime:
                     allow_write=settings.native_profile_allow_write,
                 )
         store.cleanup()
+        if settings.env != "development":
+            STORE_CACHE.refresh_async(("android-global", "ios-global"))
         return NativeRuntime(service, None, True)
     except NativeError as exc:
         return NativeRuntime(None, exc, True)

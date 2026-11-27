@@ -23,6 +23,8 @@ _IOS_DOCUMENT = json.loads(PAYLOAD_A) | {
     "platformId": "IOS",
     "cloudSaveId": "IOS_synthetic",
 }
+# Marcador observado en la partida iOS real 8.8.0.14; no es la versión comercial.
+_IOS_DOCUMENT["gameData"]["gameVersion"] = 2155
 IOS_PAYLOAD = json.dumps(
     _IOS_DOCUMENT,
     ensure_ascii=False,

@@ -29,6 +29,7 @@ from ..cloud_save import (
 )
 from ..parsers.json_document import parse_json
 from .gems_editor import serialize_aggregate
+from .aggregate_cache import validated_document
 from .lab import BinaryDiff, binary_diff
 
 PROGRESS_FIELD_ID = "cumulativeFishCount"
@@ -135,33 +136,15 @@ def validate_fish_progress_value(value: object) -> int:
 
 
 def _validated_document(source: bytes) -> tuple[JsonObject, int]:
-    if not source:
-        raise CopyLimitError("La copia está vacía.")
-    if len(source) > MAX_INPUT_BYTES:
-        raise CopyLimitError("La copia supera el límite permitido.")
-    reconstruct_cloud_save(source)
-    encoding, document = unpack_cloud_save(source)
-    if encoding != "json":
-        raise UnsupportedFishProgressSerialization(
-            "El editor de progreso de fichas solo admite el agregado JSON que usa el sobre de nube."
-        )
-    try:
-        root = parse_json(document)
-    except (ValueError, RecursionError):
-        raise AggregateFormatError("El documento no contiene JSON UTF-8 válido.") from None
-    if not isinstance(root, dict):
-        raise AggregateFormatError("Se esperaba un objeto JSON en la raíz.")
-    if serialize_aggregate(root) != source:
-        raise UnsupportedFishProgressSerialization(
+    root, version = validated_document(
+        source,
+        unsupported_error=UnsupportedFishProgressSerialization,
+        unsupported_message=(
             "La copia no usa la serialización canónica observada; no se puede garantizar "
             "que el cambio sea granular."
-        )
-    version = root.get("serialzedVersion")
-    if isinstance(version, bool) or not isinstance(version, int):
-        raise AggregateFormatError("Se requiere serialzedVersion como entero.")
+        ),
+    )
     return root, version
-
-
 def _item_data(root: JsonObject) -> JsonObject:
     item_data = root.get("itemData")
     if not isinstance(item_data, dict):

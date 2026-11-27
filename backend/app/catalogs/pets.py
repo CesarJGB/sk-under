@@ -14,7 +14,9 @@ from pathlib import Path
 from typing import Any, Mapping
 
 PETS_PATH = Path(__file__).resolve().parent / "pets-880.json"
-EXPECTED_VERSION = "8.8.0"
+from .version import CATALOG_VERSION
+
+EXPECTED_VERSION = CATALOG_VERSION
 EXPECTED_PETS = 58
 EXPECTED_SKINS = 12
 EXPECTED_SCHEMA = "sk-under/backend-pets@1"

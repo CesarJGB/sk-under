@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import gzip
 import json
+from contextvars import ContextVar
 from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
@@ -54,6 +55,14 @@ class LabChange:
 
     def as_dict(self) -> dict[str, object]:
         return {"path": self.path, "before": self.before, "after": self.after}
+
+
+# La composición unificada solo conserva la diferencia final. Los editores
+# granulares siguen calculándola por defecto, pero durante el encadenamiento se
+# suprime para no recorrer catorce veces los mismos megabytes.
+_SUPPRESS_INTERMEDIATE_DIFF: ContextVar[bool] = ContextVar(
+    "sk_under_suppress_intermediate_diff", default=False
+)
 
 
 @dataclass(frozen=True)
@@ -206,7 +215,29 @@ def _is_within(path: JsonPath, allowed: JsonPath) -> bool:
     return path[: len(allowed)] == allowed
 
 
+def suppress_intermediate_diff(enabled: bool) -> object:
+    """Activa o desactiva la diferencia binaria intermedia en este contexto."""
+
+    return _SUPPRESS_INTERMEDIATE_DIFF.set(enabled)
+
+
+def reset_intermediate_diff(token: object) -> None:
+    _SUPPRESS_INTERMEDIATE_DIFF.reset(token)  # type: ignore[arg-type]
+
+
 def binary_diff(before: bytes, after: bytes) -> BinaryDiff:
+    if _SUPPRESS_INTERMEDIATE_DIFF.get():
+        return BinaryDiff(
+            original_size=len(before),
+            modified_size=len(after),
+            first_difference=None if before == after else 0,
+            common_prefix=0,
+            common_suffix=0,
+            changed_original_bytes=0,
+            changed_modified_bytes=0,
+            original_sha256=sha256(before).hexdigest(),
+            modified_sha256=sha256(after).hexdigest(),
+        )
     prefix = 0
     limit = min(len(before), len(after))
     while prefix < limit and before[prefix] == after[prefix]:

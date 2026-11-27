@@ -251,7 +251,36 @@ function eligiblePetSkins(advanced: LabAdvanced | null | undefined): string[] {
 
 export type Eligibility = Record<BulkKey, string[]>
 
+// La elegibilidad depende únicamente de la partida descargada. Se calcula una
+// vez por objeto y se comparte entre la vista rápida y cada categoría para no
+// recorrer de nuevo todos los catálogos en cada tecla o cambio de selección.
+const eligibilityCache = new WeakMap<NativeSaveSummary, Eligibility>()
+const eligibleSets = new WeakMap<Eligibility, Map<BulkKey, Set<string>>>()
+
 export function eligibility(save: NativeSaveSummary | null): Eligibility {
+  if (!save) return eligibilityFor(null)
+  const cached = eligibilityCache.get(save)
+  if (cached) return cached
+  const result = eligibilityFor(save)
+  eligibilityCache.set(save, result)
+  return result
+}
+
+function eligibleSet(key: BulkKey, eligible: Eligibility): Set<string> {
+  let byKey = eligibleSets.get(eligible)
+  if (!byKey) {
+    byKey = new Map()
+    eligibleSets.set(eligible, byKey)
+  }
+  let values = byKey.get(key)
+  if (!values) {
+    values = new Set(eligible[key])
+    byKey.set(key, values)
+  }
+  return values
+}
+
+function eligibilityFor(save: NativeSaveSummary | null): Eligibility {
   const report = save?.report?.characters
   const characters = report?.catalog?.available === false ? null : report
   const advanced = save?.advanced
@@ -312,7 +341,43 @@ export function isSelected(
   draft: Draft,
   eligible: Eligibility,
 ): boolean {
-  return !draft.excluded[key][item] && Boolean(draft.manual[key][item] || (draft.bulk[key] && eligible[key].includes(item)))
+  return !draft.excluded[key][item] && Boolean(draft.manual[key][item] || (draft.bulk[key] && eligibleSet(key, eligible).has(item)))
+}
+
+/**
+ * Aplica la selección de un grupo completo en una sola actualización del
+ * borrador. Antes cada casilla clonaba los mapas de la categoría y provocaba
+ * un renderizado intermedio por elemento.
+ */
+export function setItems(
+  key: BulkKey,
+  items: readonly string[],
+  selected: boolean,
+  draft: Draft,
+  eligible: Eligibility,
+): Draft {
+  if (items.length === 0) return draft
+  const known = eligibleSet(key, eligible)
+  const manual = { ...draft.manual[key] }
+  const excluded = { ...draft.excluded[key] }
+  for (const item of items) {
+    if (draft.bulk[key]) {
+      if (selected) {
+        delete excluded[item]
+        if (!known.has(item)) manual[item] = true
+      } else {
+        delete manual[item]
+        excluded[item] = true
+      }
+    } else if (selected) {
+      manual[item] = true
+      delete excluded[item]
+    } else {
+      delete manual[item]
+      delete excluded[item]
+    }
+  }
+  return { ...draft, manual: { ...draft.manual, [key]: manual }, excluded: { ...draft.excluded, [key]: excluded } }
 }
 
 export function toggleItem(

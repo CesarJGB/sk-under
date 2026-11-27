@@ -20,7 +20,9 @@ from pathlib import Path
 from typing import Any, Mapping
 
 CATALOG_PATH = Path(__file__).resolve().parent / "characters-880.json"
-EXPECTED_VERSION = "8.8.0"
+from .version import CATALOG_VERSION
+
+EXPECTED_VERSION = CATALOG_VERSION
 EXPECTED_CHARACTERS = 42
 EXPECTED_SKILLS = 105
 EXPECTED_SKINS = 802

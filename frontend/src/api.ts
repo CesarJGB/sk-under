@@ -38,6 +38,29 @@ export type Validation = {
 
 type Issue = { code: string; message: string; field_id: string | null }
 
+export type CompatibilityState =
+  | 'compatible'
+  | 'experimental'
+  | 'new_version_detected'
+  | 'pending_verification'
+  | 'read_only'
+
+export type CompatibilitySummary = {
+  state: CompatibilityState
+  label: string
+  profile?: Record<string, unknown> | null
+  store?: Record<string, unknown> | null
+  detected?: Record<string, unknown> | null
+  read_ready: boolean
+  prepare_ready: boolean
+  write_supported: boolean
+  reason: string
+  warnings?: string[]
+  catalog_versions?: Record<string, string>
+  sources?: Record<string, string>
+  manual_validation?: string[]
+}
+
 export type LabStatus = {
   mode: 'live' | 'read_only' | 'disabled'
   read_ready: boolean
@@ -52,6 +75,7 @@ export type LabStatus = {
   prepare_ready?: boolean
   write_state?: CapabilityState
   capabilities?: PlatformCapabilities
+  compatibility?: CompatibilitySummary | null
   message: string
 }
 
@@ -455,6 +479,7 @@ export type LabSave = {
   serialzed_version: number
   report?: SaveReport | null
   advanced?: LabAdvanced | null
+  compatibility?: CompatibilitySummary | null
 }
 
 export type LabBackup = {
@@ -478,6 +503,7 @@ export type LabBackup = {
   skin_selections?: Array<{ code: string; index: number }>
   advanced_plan?: LabAdvancedPlan
   unified_plan?: LabUnifiedPlan
+  compatibility_binding?: Record<string, unknown>
 }
 
 export type LabDecorationRequirement = {
@@ -1180,6 +1206,7 @@ export type NativeSaveSummary = {
   kill_effects?: LabKillEffects | null
   size?: number
   serialzed_version?: number
+  compatibility?: CompatibilitySummary | null
 }
 
 export type NativeBackupKind = 'edit' | 'manual' | 'preventive'
@@ -1290,6 +1317,7 @@ export type NativeSession = {
   character_write_policy?: 'confirmed_by_owner'
   skill_write_policy?: 'confirmed_by_owner'
   skin_write_policy?: 'confirmed_by_owner'
+  compatibility?: CompatibilitySummary | null
   save?: NativeSaveSummary | null
   save_error?: string | null
 }
@@ -1367,6 +1395,13 @@ export const nativeAuth = {
   },
   save: (signal: AbortSignal, accountId?: string) =>
     nativeRequest<NativeSaveSummary & { downloaded_at: string }>('/save', signal, undefined, accountId),
+  compatibility: async (signal: AbortSignal, refresh = false, accountId?: string) => {
+    const query = refresh ? '?refresh=true' : ''
+    const response = await nativeRequest<{ compatibility: CompatibilitySummary; downloaded_at?: string }>(
+      `/compatibility${query}`, signal, undefined, accountId,
+    )
+    return response
+  },
   installation: (unique_id: string, signal: AbortSignal, accountId?: string) =>
     nativeRequest<NativeSession>('/installation', signal, { unique_id }, accountId),
   prepare: (new_gems: number, source_sha256: string, signal: AbortSignal, accountId?: string) =>

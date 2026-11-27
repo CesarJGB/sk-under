@@ -33,6 +33,7 @@ from ..cloud_save import (
 )
 from ..parsers.json_document import parse_json
 from .gems_editor import serialize_aggregate
+from .aggregate_cache import validated_document
 from .lab import BinaryDiff, binary_diff
 
 AFFINITY_PATH = "statisticData.event2Count"
@@ -102,38 +103,15 @@ class OutdatedPetAffinityDraft(PetAffinityEditError):
 
 
 def _validated_document(source: bytes) -> tuple[JsonObject, int, bytes]:
-    try:
-        raw = source.encode("utf-8") if isinstance(source, str) else bytes(source)
-    except (UnicodeEncodeError, TypeError):
-        raise UnsupportedPetAffinitySerialization("El guardado no es UTF-8 válido.") from None
-    if not raw or len(raw) > MAX_INPUT_BYTES:
-        raise UnsupportedPetAffinitySerialization("El tamaño del guardado no es válido.")
-    try:
-        reconstruct_cloud_save(raw)
-        encoding, document = unpack_cloud_save(raw)
-    except AggregateFormatError as exc:
-        raise UnsupportedPetAffinitySerialization(str(exc)) from exc
-    if encoding != "json":
-        raise UnsupportedPetAffinitySerialization("El guardado no usa el formato JSON esperado.")
-    try:
-        root = parse_json(document)
-    except (ValueError, RecursionError) as exc:
-        raise UnsupportedPetAffinitySerialization("El guardado no contiene JSON válido.") from exc
-    if not isinstance(root, dict):
-        raise UnsupportedPetAffinitySerialization("El guardado no contiene un objeto raíz.")
-    if not isinstance(root.get("serialzedVersion"), int):
-        raise UnsupportedPetAffinitySerialization("El guardado no declara serialzedVersion.")
-    try:
-        serialized = serialize_aggregate(root)
-    except (TypeError, ValueError) as exc:
-        raise UnsupportedPetAffinitySerialization(f"No se pudo serializar el guardado: {exc}") from exc
-    if serialized != raw:
-        raise UnsupportedPetAffinitySerialization(
-            "La serialización canónica no coincide con el guardado descargado."
-        )
-    return root, root["serialzedVersion"], raw
-
-
+    root, version = validated_document(
+        source,
+        unsupported_error=UnsupportedPetAffinitySerialization,
+        unsupported_message=(
+            "La copia no usa la serialización canónica observada; no se puede garantizar "
+            "que el cambio sea granular."
+        ),
+    )
+    return root, version, bytes(source)
 def _catalog() -> dict[str, object]:
     catalog = load_pet_catalog()
     if not catalog.get("available"):

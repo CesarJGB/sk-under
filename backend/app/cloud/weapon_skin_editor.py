@@ -40,6 +40,7 @@ from ..cloud_save import (
 )
 from ..parsers.json_document import parse_json
 from .gems_editor import serialize_aggregate
+from .aggregate_cache import validated_document
 from .lab import BinaryDiff, binary_diff
 
 WEAPON_EVOLUTION_PATH = "weaponEvolutionData"
@@ -145,33 +146,15 @@ def _normalize_selection(catalog: WeaponSkinCatalog, selections: object) -> tupl
 
 
 def _validated_document(source: bytes) -> tuple[JsonObject, int]:
-    if not source:
-        raise CopyLimitError("La copia está vacía.")
-    if len(source) > MAX_INPUT_BYTES:
-        raise CopyLimitError("La copia supera el límite permitido.")
-    reconstruct_cloud_save(source)
-    encoding, document = unpack_cloud_save(source)
-    if encoding != "json":
-        raise UnsupportedWeaponSkinSerialization(
-            "El editor de skins de arma solo admite el agregado JSON de la nube."
-        )
-    try:
-        root = parse_json(document)
-    except (ValueError, RecursionError):
-        raise AggregateFormatError("El documento no contiene JSON UTF-8 válido.") from None
-    if not isinstance(root, dict):
-        raise AggregateFormatError("Se esperaba un objeto JSON en la raíz.")
-    if serialize_aggregate(root) != source:
-        raise UnsupportedWeaponSkinSerialization(
+    root, version = validated_document(
+        source,
+        unsupported_error=UnsupportedWeaponSkinSerialization,
+        unsupported_message=(
             "La copia no usa la serialización canónica observada; no se puede garantizar "
             "que el cambio sea granular."
-        )
-    version = root.get("serialzedVersion")
-    if isinstance(version, bool) or not isinstance(version, int):
-        raise AggregateFormatError("Se requiere serialzedVersion como entero.")
+        ),
+    )
     return root, version
-
-
 def _evolution(root: JsonObject) -> JsonObject:
     evolution = root.get(WEAPON_EVOLUTION_PATH)
     if not isinstance(evolution, dict):

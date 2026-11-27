@@ -26,6 +26,7 @@ from ..cloud_save import (
     unpack_cloud_save,
 )
 from ..parsers.json_document import parse_json
+from .aggregate_cache import serialize_canonical, validated_document
 from .lab import BinaryDiff, binary_diff
 from .resource_consistency import (
     RESOURCES,
@@ -145,43 +146,20 @@ def validate_gems_value(value: object) -> int:
 def serialize_aggregate(document: JsonObject) -> bytes:
     """Serializa con la forma canónica observada en la copia real de 8.8.0."""
     try:
-        return json.dumps(
-            document,
-            ensure_ascii=False,
-            sort_keys=True,
-            allow_nan=False,
-            separators=(", ", ": "),
-        ).encode("utf-8")
-    except (TypeError, ValueError):
+        return serialize_canonical(document)
+    except AggregateFormatError:
         raise GemsEditError("El agregado no se puede serializar como JSON.") from None
 
 
 def _validated_document(source: bytes) -> tuple[JsonObject, int]:
-    if not source:
-        raise CopyLimitError("La copia está vacía.")
-    if len(source) > MAX_INPUT_BYTES:
-        raise CopyLimitError("La copia supera el límite permitido.")
-    reconstruct_cloud_save(source)
-    encoding, document = unpack_cloud_save(source)
-    if encoding != "json":
-        raise UnsupportedAggregateSerialization(
-            "El editor de gemas solo admite el agregado JSON que usa el sobre de nube."
-        )
-    try:
-        root = parse_json(document)
-    except (ValueError, RecursionError):
-        raise AggregateFormatError("El documento no contiene JSON UTF-8 válido.") from None
-    if not isinstance(root, dict):
-        raise AggregateFormatError("Se esperaba un objeto JSON en la raíz.")
-    if serialize_aggregate(root) != source:
-        raise UnsupportedAggregateSerialization(
+    return validated_document(
+        source,
+        unsupported_error=UnsupportedAggregateSerialization,
+        unsupported_message=(
             "La copia no usa la serialización canónica observada; no se puede garantizar "
             "que el cambio sea granular."
-        )
-    version = root.get("serialzedVersion")
-    if isinstance(version, bool) or not isinstance(version, int):
-        raise AggregateFormatError("Se requiere serialzedVersion como entero.")
-    return root, version
+        ),
+    )
 
 
 def _game_data(root: JsonObject) -> JsonObject:

@@ -15,7 +15,9 @@ from pathlib import Path
 from typing import Any, Mapping
 
 BLUEPRINTS_PATH = Path(__file__).resolve().parent / "blueprints-880.json"
-EXPECTED_VERSION = "8.8.0"
+from .version import CATALOG_VERSION
+
+EXPECTED_VERSION = CATALOG_VERSION
 EXPECTED_BLUEPRINTS = 265
 EXPECTED_SCHEMA = "sk-under/backend-blueprints@1"
 MAX_TEXT = 120

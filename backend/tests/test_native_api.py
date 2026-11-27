@@ -524,10 +524,15 @@ def test_incompatible_aggregate_is_readable_but_cannot_prepare_a_write(tmp_path,
     env["providers"]["unique-a"].payload = canonical(payload)
     source = client.get(API + "/save", headers=HEADERS)
     assert source.status_code == 200
+    expected = (
+        "cloud_compatibility_pending"
+        if unsupported == "new_version"
+        else "unsupported_gems_structure"
+    )
     assert_error(
         client.post(API + "/prepare", headers=HEADERS,
                     json={"new_gems": 1002, "source_sha256": source.json()["sha256"]}),
-        422, "unsupported_gems_structure",
+        422, expected,
     )
     assert client.get(API + "/backups", headers=HEADERS).json()["backups"] == []
     assert env["uploaders"]["unique-a"].calls == []

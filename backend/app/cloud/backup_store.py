@@ -79,6 +79,7 @@ from .unified_editor import (
     UnifiedEdit,
     normalize_unified_plan,
     prepare_unified_edit,
+    unified_plan_sha256,
 )
 
 _ID = re.compile(r"^[0-9a-f]{32}$")
@@ -186,6 +187,8 @@ class BackupRecord:
     skin_selections: tuple[tuple[str, int], ...] = ()
     advanced_plan: dict[str, object] = dataclass_field(default_factory=dict)
     unified_plan: dict[str, object] = dataclass_field(default_factory=dict)
+    unified_plan_sha256: str = dataclass_field(default="", repr=False)
+    compatibility_binding: dict[str, object] = dataclass_field(default_factory=dict)
     kind: str = "edit"
     format: int = 1
     categories: tuple[str, ...] = ()
@@ -237,6 +240,8 @@ class BackupRecord:
             ],
             "advanced_plan": self.advanced_plan,
             "unified_plan": self.unified_plan,
+            "unified_plan_sha256": self.unified_plan_sha256,
+            "compatibility_binding": self.compatibility_binding,
         }
 
 
@@ -279,6 +284,66 @@ def _require_hash(value: object) -> str:
     if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
         raise BackupIntegrityError("El registro de respaldo contiene una huella inválida.")
     return value
+
+
+def _optional_hash(value: object) -> str:
+    if value is None or value == "":
+        return ""
+    return _require_hash(value)
+
+
+def _require_binding(value: object) -> dict[str, object]:
+    """Valida la vinculación de compatibilidad sin admitir estructuras libres."""
+
+    if value is None:
+        return {}
+    if not isinstance(value, dict):
+        raise BackupIntegrityError(
+            "El registro de respaldo contiene una vinculación de compatibilidad inválida."
+        )
+    allowed = {
+        "format",
+        "distribution_id",
+        "platform",
+        "commercial_version",
+        "protocol_app_version",
+        "protocol_game_version",
+        "schema_version",
+        "game_version",
+        "app_version",
+        "source_sha256",
+        "source_size",
+        "account_digest",
+        "catalog_versions",
+        "plan_sha256",
+        "policy",
+    }
+    if set(value) - allowed:
+        raise BackupIntegrityError(
+            "El registro de respaldo contiene una vinculación de compatibilidad desconocida."
+        )
+    result: dict[str, object] = {}
+    for key, item in value.items():
+        if key == "catalog_versions":
+            if not isinstance(item, dict) or any(
+                not isinstance(name, str) or not name or not isinstance(catalog, str) or not catalog
+                for name, catalog in item.items()
+            ):
+                raise BackupIntegrityError(
+                    "El registro de respaldo contiene catálogos de compatibilidad inválidos."
+                )
+            result[key] = dict(item)
+        elif item is None or isinstance(item, (str, int)) and not isinstance(item, bool):
+            result[key] = item
+        else:
+            raise BackupIntegrityError(
+                "El registro de respaldo contiene un valor de compatibilidad inválido."
+            )
+    if len(json.dumps(result, ensure_ascii=False, sort_keys=True).encode("utf-8")) > 16_384:
+        raise BackupIntegrityError(
+            "El registro de respaldo contiene una vinculación de compatibilidad demasiado grande."
+        )
+    return result
 
 
 def _require_text(value: object, name: str) -> str:
@@ -648,6 +713,7 @@ class LabBackupStore:
         skin_selections: list[dict[str, object]] | tuple[dict[str, object], ...] | None = None,
         advanced_plan: dict[str, object] | None = None,
         unified_plan: dict[str, object] | None = None,
+        compatibility_binding: dict[str, object] | None = None,
     ) -> BackupBundle:
         """Crea un respaldo y devuelve los bytes que quedaron en disco.
 
@@ -668,6 +734,8 @@ class LabBackupStore:
         )
         plan: dict[str, object] = {}
         unified: dict[str, object] = {}
+        plan_hash = ""
+        binding = _require_binding(compatibility_binding)
         if field == CHARACTER_RECORD_FIELD:
             if edit.changed and not codes:
                 raise BackupIntegrityError("El respaldo de personajes requiere la selección preparada.")
@@ -698,6 +766,7 @@ class LabBackupStore:
             unified = _require_unified_plan(unified_plan)
             if getattr(edit, "plan", None) != unified:
                 raise BackupIntegrityError("El plan unificado no coincide con la edición preparada.")
+            plan_hash = unified_plan_sha256(unified)
             codes = ()
             skills = ()
             skins = ()
@@ -771,6 +840,8 @@ class LabBackupStore:
             skin_selections=skins,
             advanced_plan=plan,
             unified_plan=unified,
+            unified_plan_sha256=plan_hash,
+            compatibility_binding=binding,
             format=_RECORD_FORMAT,
             categories=categories,
             change_count=change_count,
@@ -998,6 +1069,11 @@ class LabBackupStore:
             raise BackupIncompatible("El registro de respaldo contiene una copia de partida inválida.")
         plan = _require_advanced_plan(data.get("advanced_plan"), historical=True) if field == ADVANCED_RECORD_FIELD else {}
         unified = _require_unified_plan(data.get("unified_plan"), historical=True) if field == UNIFIED_RECORD_FIELD else {}
+        plan_hash = _optional_hash(data.get("unified_plan_sha256"))
+        if field == UNIFIED_RECORD_FIELD and plan_hash and plan_hash != unified_plan_sha256(unified):
+            raise BackupCandidateMismatch(
+                "El plan del respaldo no coincide con su huella de integridad."
+            )
         record = BackupRecord(
             id=_require_text(data.get("id"), "id"),
             created_at=_require_text(data.get("created_at"), "created_at"),
@@ -1017,6 +1093,8 @@ class LabBackupStore:
             skin_selections=_require_skin_selections(data.get("skin_selections")),
             advanced_plan=plan,
             unified_plan=unified,
+            unified_plan_sha256=plan_hash,
+            compatibility_binding=_require_binding(data.get("compatibility_binding")),
             kind=kind,
             format=format_version,
             categories=_require_categories(data.get("categories")),
@@ -1062,6 +1140,12 @@ class LabBackupStore:
                 raise BackupIntegrityError("El respaldo unificado no contiene su plan.")
             if not record.changed:
                 return BackupBundle(record, original, candidate)
+            if record.unified_plan_sha256:
+                # El registro nuevo vincula el plan normalizado a su huella. Los
+                # hashes de original/candidato ya se comprobaron arriba y el
+                # plan no puede cambiar sin romper esta huella; no hace falta
+                # recomponer todo el agregado para volver a leer el respaldo.
+                return BackupBundle(record, original, candidate, record.categories)
             try:
                 current = prepare_unified_edit(original, record.unified_plan)
             except CloudSaveError:

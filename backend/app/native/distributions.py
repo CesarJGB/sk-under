@@ -17,6 +17,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
+from ..cloud.compatibility import profile_for
 from .errors import NativeDistributionDisabled, NativeDistributionUnknown
 
 type Platform = Literal["android", "ios"]
@@ -36,6 +37,26 @@ class Distribution:
     # iOS muestra 8.8.0.14, pero el cliente y el servidor comparan 8.8.0.
     protocol_app_version: str = "8.8.0"
     protocol_game_version: str = "8.8.0"
+
+    def __post_init__(self) -> None:
+        # El registro de compatibilidad es la fuente de verdad de las versiones
+        # validadas. Si una distribución habilitada declara otra versión o
+        # protocolo, el proceso falla al importar en lugar de escribir con un
+        # perfil incoherente.
+        if not (self.enabled and self.validated and self.platform):
+            return
+        profile = profile_for(self.id, self.game_version)
+        if profile is None:
+            raise ValueError(
+                f"La distribución {self.id} {self.game_version} no tiene perfil de compatibilidad."
+            )
+        if (
+            profile.protocol_app_version != self.protocol_app_version
+            or profile.protocol_game_version != self.protocol_game_version
+        ):
+            raise ValueError(
+                f"El protocolo de {self.id} no coincide con su perfil de compatibilidad."
+            )
 
     def public(self) -> dict[str, object]:
         return {

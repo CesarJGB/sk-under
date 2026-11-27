@@ -15,7 +15,9 @@ from pathlib import Path
 from typing import Any, Mapping
 
 WEAPON_SKINS_PATH = Path(__file__).resolve().parent / "weapon-skins-880.json"
-EXPECTED_VERSION = "8.8.0"
+from .version import CATALOG_VERSION
+
+EXPECTED_VERSION = CATALOG_VERSION
 EXPECTED_SKINS = 192
 EXPECTED_WEAPONS = 180
 EXPECTED_SCHEMA = "sk-under/backend-weapon-skins@1"

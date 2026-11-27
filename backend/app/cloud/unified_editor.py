@@ -11,6 +11,7 @@ reproducir exactamente el candidato antes de confirmarlo o restaurarlo.
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
 from hashlib import sha256
 from typing import Mapping
@@ -54,7 +55,12 @@ from .fish_progress_editor import (
     prepare_fish_progress_edit,
 )
 from .gems_editor import GemsEdit, prepare_gems_edit
-from .lab import BinaryDiff, binary_diff
+from .lab import (
+    BinaryDiff,
+    binary_diff,
+    reset_intermediate_diff,
+    suppress_intermediate_diff,
+)
 from .kill_effect_editor import (
     KillEffectEdit,
     prepare_kill_effect_unlock_edit,
@@ -371,6 +377,19 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
     return plan
 
 
+def unified_plan_sha256(plan: Mapping[str, object]) -> str:
+    """Huella canónica del plan normalizado, independiente del formato del respaldo."""
+
+    encoded = json.dumps(
+        plan,
+        ensure_ascii=False,
+        sort_keys=True,
+        allow_nan=False,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return sha256(encoded).hexdigest()
+
+
 @dataclass(frozen=True)
 class UnifiedCategory:
     key: str
@@ -544,7 +563,11 @@ def prepare_unified_edit(source: bytes, raw_plan: Mapping[str, object]) -> Unifi
 
     def apply(key: str, label: str, editor) -> None:
         nonlocal current
-        edit = editor(current)
+        token = suppress_intermediate_diff(True)
+        try:
+            edit = editor(current)
+        finally:
+            reset_intermediate_diff(token)
         if edit.original_sha256 != sha256(current).hexdigest():
             raise UnifiedVerificationError("Un paso no partió del candidato anterior.")
         overlap = set(edit.changed_fields) & set(changed_fields)

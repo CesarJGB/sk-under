@@ -354,6 +354,16 @@ def save(request: Request) -> dict[str, object]:
     return service.load(current)
 
 
+@router.get("/compatibility", summary="Comprobar la compatibilidad de la partida remota")
+def compatibility(
+    request: Request,
+    refresh: Annotated[bool, Query()] = False,
+) -> dict[str, object]:
+    service = _require_service(request)
+    current = _account_session(request, service)
+    return service.compatibility(current, refresh_store=refresh)
+
+
 @router.post("/prepare", summary="Preparar la edición de gemas y crear un respaldo")
 def prepare(payload: PrepareInput, request: Request) -> dict[str, object]:
     service = _require_service(request)

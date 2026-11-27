@@ -2,6 +2,7 @@ import { AlertTriangle, Archive, ChevronDown, Cloud, CloudDownload, Plus, Refres
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import type { LabVerification, LabWriteResult, NativeBackup, NativeBackupHistory, NativeSaveSummary } from '../api'
+import { CompatibilityStrip } from '../CompatibilityStrip'
 import { formatSize } from '../session'
 import { StatsCarousel } from '../StatsCarousel'
 import { Loading, Notice } from '../ui'
@@ -42,6 +43,7 @@ export function CloudSaveCard({ save, status, downloading, disabled, onDownload,
         <dt>Última descarga</dt>
         <dd><time dateTime={save.downloaded_at}>{formatDate(save.downloaded_at)}</time></dd>
       </dl>
+      {save.compatibility && <CompatibilityStrip compatibility={save.compatibility} compact />}
     </>}
     {feedback}
     <div className="partida-actions">
