@@ -96,7 +96,11 @@ _FIELDS = frozenset(
     }
 )
 _CATEGORY_KEYS = _FIELDS | UNIFIED_CATEGORY_KEYS
-_RECORD_LIMIT = 64 * 1024
+# El plan unificado normalizado se guarda dentro del registro cifrado. El
+# máximo realista de T13 (Unlock All Android) ronda los 94 KB, por encima del
+# límite histórico de 64 KB. El límite sigue acotando el registro y muy por
+# debajo del tamaño máximo del guardado.
+_RECORD_LIMIT = 256 * 1024
 _JOURNAL_LIMIT = 1024 * 1024
 _SEAL_MAGIC = b"SKB1"
 _SEAL_TAG = 16

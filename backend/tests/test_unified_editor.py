@@ -1,6 +1,7 @@
 import json
 from hashlib import sha256
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -143,3 +144,39 @@ def test_unified_backup_plan_is_integrity_checked(tmp_path):
     record_path.write_text(json.dumps(record, ensure_ascii=False, sort_keys=True))
     with pytest.raises(BackupIntegrityError):
         store.load(bundle.record.id)
+
+def test_unified_backup_record_accepts_full_plan_above_legacy_limit(tmp_path):
+    payload = source_bytes()
+    weapon_ids = [f"weapon_{'x' * 72}{index:04d}" for index in range(995)]
+    skin_ids = [f"skin_{'y' * 74}{index:04d}" for index in range(192)]
+    normalized = normalize_unified_plan(
+        {"weapon_progression": weapon_ids, "weapon_skins": skin_ids}
+    )
+    candidate = payload + b"\n"
+    edit = SimpleNamespace(
+        plan=normalized,
+        changed=True,
+        original=payload,
+        candidate=candidate,
+        original_sha256=sha256(payload).hexdigest(),
+        candidate_sha256=sha256(candidate).hexdigest(),
+        original_gems=0,
+        new_gems=1,
+        categories=(),
+    )
+    store = LabBackupStore(tmp_path / "backups")
+    bundle = store.save(
+        edit,
+        remote_source="fake-remote",
+        remote_size=len(payload),
+        remote_sha256=sha256(payload).hexdigest(),
+        field="unified",
+        original_value=0,
+        new_value=1,
+        unified_plan=normalized,
+    )
+    record_path = tmp_path / "backups" / bundle.record.id / "record.json"
+    assert len(record_path.read_bytes()) > 64 * 1024
+    loaded = store.load(bundle.record.id)
+    assert loaded.original == payload
+    assert loaded.record.unified_plan == normalized
