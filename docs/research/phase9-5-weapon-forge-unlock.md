@@ -212,3 +212,31 @@ Cubiertas en backend y Playwright:
 4. Verificar que enemigos, jefes, anillos y contadores desconocidos no cambian.
 5. Verificar que las skins y los efectos de eliminación siguen intactos.
 6. Confirmar que las armas no forjables y las mitológicas no se alteran.
+## Verificación en producción
+
+La implementación se publicó el 2026-11-27 en `main` con el commit
+`ae9efa5712f5ba5efde4f84d5236c416a7e29acc`. El run de CI `45917657448`
+terminó correctamente en backend, frontend, Playwright e higiene. Cloudflare
+Pages registró el despliegue `5f14d631-b4fa-4b6e-9b80-18634634ce79` como
+correcto y el bundle servido en producción contiene las cadenas de la fase
+(`weapon_forge_unlock`, `Forja desbloqueada (provisional)` y el resumen
+`pendiente/pendientes de contador`). Coolify quedó saludable y
+`GET /api/v1/version` devuelve el mismo commit.
+
+La validación productiva usó la cuenta de laboratorio autorizada y una sesión
+nativa real. La descarga devolvió 114.779 bytes y el nuevo snapshot de armas:
+995 armas, 4 descubiertas, 1 con forja desbloqueada, política
+`level_map_with_fusion_proxy` y evidencia de contador `E3`. Después se llamó a
+`prepare-unified` sin confirmar ni subir nada, seleccionando `weapon_035`
+(Aurora, nivel 3, requisito provisional 6):
+
+- única categoría: `weapon_forge_unlock`;
+- único campo afectado: `statisticData.object2ObtainTime.weapon_035`;
+- `newly_unlocked`: `weapon_035`;
+- candidato `831a2aedbd47d42d47191892a0d0e7fcf2ea312ca57d858a2acbdc58faa1dbbf`;
+- respaldo de edición `93e7e380678242b9a4f503085590a3d9`;
+- ninguna escritura remota ni confirmación.
+
+La sesión se cerró al terminar. La comprobación física en Android de que la mesa
+de forja abre las armas con estos contadores sigue pendiente y corresponde al
+propietario.
