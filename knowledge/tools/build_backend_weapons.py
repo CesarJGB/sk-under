@@ -21,6 +21,25 @@ EXPECTED_WEAPONS = 995
 EXPECTED_FORGEABLE = 494
 MAX_TEXT = 120
 
+# ``UIForge.IsUnlockedByObtainTime`` compara el contador de
+# ``statisticData.object2ObtainTime`` con ``UIForge.UnlockCountDict[level]``.
+# El diccionario usa 2/3/4/6/6 para los niveles 0..4 y cae en 8 para claves
+# ausentes (niveles 5, 6 o superiores). La tabla pública coincide con esos
+# umbrales. Sigue siendo evidencia E2 hasta la validación física por arma.
+FORGE_OBTAINS_BY_LEVEL = {0: 2, 1: 3, 2: 4, 3: 6, 4: 6, 5: 8, 6: 8}
+DEFAULT_FORGE_OBTAINS = 8
+
+# Excepciones observadas físicamente. ``weapon_337`` es un objetivo de fusión
+# (UZI + Flor de cerezo) y el juego mostró 1/2, no 1/6.
+FORGE_OBSERVED_OVERRIDES = {
+    "weapon_337": {
+        "required_obtains": 2,
+        "requirement_status": "observed_fusion_exception",
+        "requirement_evidence": "E3",
+        "source": "Validación física Android 8.8.0.13 + weapons.txt FusionList",
+    }
+}
+
 
 class ProjectionError(RuntimeError):
     pass
@@ -65,11 +84,111 @@ def _tags(attributes: dict) -> list[str]:
     return tags
 
 
+def _fusion_targets(items: list[dict]) -> set[str]:
+    targets: set[str] = set()
+    for item in items:
+        relations = item.get("relations")
+        relations = relations if isinstance(relations, dict) else {}
+        values = relations.get("fusion_targets")
+        if not isinstance(values, list):
+            continue
+        for value in values:
+            if isinstance(value, str) and value:
+                targets.add(value)
+    return targets
+
+
+def _forge_requirement(weapon_id: str, level: object, forgeable: bool, fusion: bool) -> dict:
+    if not forgeable:
+        return {
+            "required_obtains": None,
+            "recommended_obtains": None,
+            "requirement_status": "not_forgeable",
+            "requirement_basis": "catalog_not_forgeable",
+            "unlock_method": "not_forgeable",
+            "requirement_evidence": "E1",
+            "additional_requirements": [],
+            "requirement_source": "knowledge/catalogs/weapons.json attributes.forgeable",
+        }
+    observed = FORGE_OBSERVED_OVERRIDES.get(weapon_id)
+    if observed is not None:
+        return {
+            "required_obtains": observed["required_obtains"],
+            "recommended_obtains": observed["required_obtains"],
+            "requirement_status": observed["requirement_status"],
+            "requirement_basis": "fusion_target",
+            "unlock_method": "fusion",
+            "requirement_evidence": observed["requirement_evidence"],
+            "additional_requirements": [],
+            "requirement_source": observed["source"],
+        }
+    if fusion:
+        # El umbral se consulta por TbWeapons.Level. Para los objetivos de
+        # fusión usamos el nivel de prefab como proxy (Aurora nivel 3 -> 6) y
+        # marcamos el requisito como provisional: weapon_337 demuestra que
+        # ambos niveles pueden divergir. Aun así el valor aplicado es el
+        # mínimo estándar, nunca un 8 arbitrario.
+        if type(level) is int and level in FORGE_OBTAINS_BY_LEVEL:
+            required = FORGE_OBTAINS_BY_LEVEL[level]
+            return {
+                "required_obtains": required,
+                "recommended_obtains": required,
+                "requirement_status": "pending_fusion_research",
+                "requirement_basis": "fusion_target_level_proxy",
+                "unlock_method": "fusion",
+                "requirement_evidence": "E2",
+                "additional_requirements": [],
+                "requirement_source": (
+                    "UIForge.UnlockCountDict[nivel de prefab como proxy]; "
+                    "nivel TbWeapons.Level pendiente; weapon_337 validado E3"
+                ),
+            }
+        return {
+            "required_obtains": None,
+            "recommended_obtains": DEFAULT_FORGE_OBTAINS,
+            "requirement_status": "pending_level_research",
+            "requirement_basis": "fusion_target_unknown_level",
+            "unlock_method": "fusion",
+            "requirement_evidence": "E2",
+            "additional_requirements": [],
+            "requirement_source": (
+                "UIForge.GetWeaponUnlockCount fallback 8; "
+                "nivel de fusión desconocido"
+            ),
+        }
+    if type(level) is int and level in FORGE_OBTAINS_BY_LEVEL:
+        required = FORGE_OBTAINS_BY_LEVEL[level]
+        return {
+            "required_obtains": required,
+            "recommended_obtains": required,
+            "requirement_status": "standard_level",
+            "requirement_basis": "level",
+            "unlock_method": "obtain_counter",
+            "requirement_evidence": "E2",
+            "additional_requirements": [],
+            "requirement_source": (
+                "UIForge.UnlockCountDict 0..4 = 2/3/4/6/6; "
+                "GetWeaponUnlockCount fallback 8; wiki Forge Table"
+            ),
+        }
+    return {
+        "required_obtains": None,
+        "recommended_obtains": DEFAULT_FORGE_OBTAINS,
+        "requirement_status": "pending_level_research",
+        "requirement_basis": "unknown_level",
+        "unlock_method": "obtain_counter",
+        "requirement_evidence": "E2",
+        "additional_requirements": [],
+        "requirement_source": "Nivel desconocido; fallback 8 de UIForge.GetWeaponUnlockCount",
+    }
+
+
 def build() -> dict:
     document = _load(WEAPONS)
     if document.get("game_version") != "8.8.0":
         raise ProjectionError("El catálogo de armas no es de la versión 8.8.0")
     items = document["items"]
+    fusion_targets = _fusion_targets(items)
     rows = []
     seen: set[str] = set()
     for item in items:
@@ -85,20 +204,24 @@ def build() -> dict:
         if weapon_id in seen:
             raise ProjectionError(f"Arma repetida: {weapon_id}")
         seen.add(weapon_id)
+        level = attributes.get("level") if type(attributes.get("level")) is int else None
+        forgeable = attributes.get("forgeable") is True
+        requirement = _forge_requirement(
+            weapon_id, level, forgeable, weapon_id in fusion_targets
+        )
         rows.append(
             {
                 "id": weapon_id,
                 "name": _name(item),
                 "subcategory": _text(item.get("subcategory")),
-                "level": attributes.get("level")
-                if type(attributes.get("level")) is int
-                else None,
-                "forgeable": attributes.get("forgeable") is True,
+                "level": level,
+                "forgeable": forgeable,
                 "drop_level": attributes.get("drop_level")
                 if type(attributes.get("drop_level")) is int
                 else None,
                 "in_weapon_catalog": attributes.get("in_weapon_catalog") is True,
                 "tags": _tags(attributes),
+                **requirement,
             }
         )
     forgeable = sum(1 for row in rows if row["forgeable"])

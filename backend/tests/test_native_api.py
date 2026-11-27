@@ -1310,6 +1310,27 @@ def test_native_unified_prepare_confirm_uses_one_backup_and_one_upload(tmp_path)
     assert len(env["uploaders"]["unique-a"].calls) == 1
 
 
+def test_native_unified_prepares_weapon_forge_unlock_without_touching_queue(tmp_path):
+    env = make_native(tmp_path, write=True)
+    env["providers"]["unique-a"].payload = character_payload()
+    client = env["client"]
+    assert login(client).status_code == 200
+    source = client.get(API + "/save", headers=HEADERS).json()
+    response = client.post(
+        API + "/prepare-unified",
+        headers=HEADERS,
+        json={
+            "weapon_forge_unlock": ["weapon_002"],
+            "source_sha256": source["sha256"],
+        },
+    )
+    assert response.status_code == 200, response.text
+    draft = response.json()
+    assert [category["key"] for category in draft["categories"]] == ["weapon_forge_unlock"]
+    assert draft["backup"]["unified_plan"]["weapon_forge_unlock"] == ["weapon_002"]
+    assert draft["backup"]["unified_plan"]["weapon_progression"] == []
+
+
 def test_native_unified_rejects_stale_source_and_empty_plan(tmp_path):
     env = make_native(tmp_path, write=True)
     env["providers"]["unique-a"].payload = character_payload()

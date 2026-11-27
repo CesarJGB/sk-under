@@ -17,8 +17,8 @@ def test_fields_document_matches_schema_and_declares_every_aspect():
     assert document["counts_by_validation_level"] == {
         "H": 0,
         "E1": 194,
-        "E2": 405,
-        "E3": 11,
+        "E2": 404,
+        "E3": 12,
         "E4": 6,
     }
     for field in document["fields"]:

@@ -50,6 +50,7 @@ const unlocks: Array<{ key: BulkKey; label: string; control: string; icon: Lucid
   { key: 'skills', label: 'Habilidades', control: 'Todas las habilidades', icon: Zap },
   { key: 'skins', label: 'Skins', control: 'Todas las skins', icon: Shirt },
   { key: 'weaponProgression', label: 'Descubrimiento de armas', control: 'Todas las armas pendientes', icon: Swords },
+  { key: 'weaponForgeUnlock', label: 'Desbloqueo para forja', control: 'Todas las armas forjables pendientes', icon: Swords },
   { key: 'weaponSkins', label: 'Skins de arma', control: 'Todas las skins de arma', icon: Swords },
   { key: 'killEffects', label: 'Efectos de eliminación', control: 'Todos los efectos', icon: Sparkles },
   { key: 'pets', label: 'Mascotas', control: 'Todas las mascotas', icon: PawPrint },
@@ -88,7 +89,7 @@ export function UnlockStatus({ save, group, eligible, selected = 0 }: {
   if (!total) return <span className="unlock-status">No disponible</span>
   return <span className={`unlock-status ${pending === 0 ? 'complete' : ''}`}>
     {pending === 0 && <CircleCheck size={13} aria-hidden="true" />}
-    <span>{amountFormat.format(unlocked)}/{amountFormat.format(total)} {group === 'characters' || group === 'killEffects' || group === 'weaponProgression' ? 'desbloqueados' : 'desbloqueadas'}</span>
+    <span>{amountFormat.format(unlocked)}/{amountFormat.format(total)} {group === 'characters' || group === 'killEffects' ? 'desbloqueados' : 'desbloqueadas'}</span>
     {pending === 0 ? <span>· Completo</span> : <span>· {amountFormat.format(pending)} {pending === 1 ? 'pendiente' : 'pendientes'}</span>}
     {selected > 0 && <span className="unlock-selected">· {amountFormat.format(selected)} en borrador</span>}
   </span>

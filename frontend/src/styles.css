@@ -2835,3 +2835,8 @@ body:has(.editor-bar) {
   .topbar-inner.topbar-simple { justify-content: space-between; }
   .topbar-inner.account-topbar-inner { justify-content: flex-start; gap: .7rem; }
 }
+
+.weapon-mode-tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 3px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.weapon-mode-tabs button { flex: 1 1 150px; min-height: 40px; border: 0; border-radius: 7px; background: transparent; color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
+.weapon-mode-tabs button.active { background: var(--secondary); color: var(--text-strong); box-shadow: inset 0 0 0 1px var(--border-strong, var(--border)); }
+.weapon-mode-tabs button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }

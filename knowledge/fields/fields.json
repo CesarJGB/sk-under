@@ -28,8 +28,8 @@
   "counts_by_validation_level": {
     "H": 0,
     "E1": 194,
-    "E2": 405,
-    "E3": 11,
+    "E2": 404,
+    "E3": 12,
     "E4": 6
   },
   "fields": [
@@ -254,7 +254,7 @@
       "id": "statisticData.object2ObtainTime",
       "internal_name": "object2ObtainTime",
       "category": "Estadísticas",
-      "description": "Mapa de contadores de obtención por objeto. Incluye armas, anillos, enemigos y jefes; no es una marca temporal Unix demostrada.",
+      "description": "Mapa de contadores de obtención por objeto. Incluye armas, anillos, enemigos y jefes; el cliente lo compara con un umbral por nivel para habilitar la forja. No es una marca temporal Unix demostrada.",
       "locations": {
         "local": "statistic*.data:object2ObtainTime",
         "cloud": "statisticData.object2ObtainTime"
@@ -286,15 +286,17 @@
         ]
       },
       "known_value_semantics": [
-        "Un valor mayor que cero se interpreta como obtención o descubrimiento registrado del objeto.",
-        "El valor 1 es el mínimo positivo observado y suficiente para el editor experimental; no se interpreta como cantidad de objetos.",
-        "IsWeaponForgeUnlockByObtainTimes y ObtainWeaponTimes de la metadata apuntan a este mapa como dependencia de descubrimiento y forja, pero la regla exacta del cliente sigue sin confirmar."
+        "Un valor mayor que cero registra la obtención o el descubrimiento del objeto; no es una cantidad de inventario.",
+        "UIForge.IsUnlockedByObtainTime lee el contador del arma y lo compara con UIForge.UnlockCountDict[nivel]; si falta la clave usa 8.",
+        "Los umbrales estándar observados son 2/3/4/6/6/8 para niveles 0..5; el nivel 6 y las claves ausentes usan 8.",
+        "La cuenta iOS avanzada tiene las 995 armas con valores 10..82, por encima de todos los umbrales; no demuestra que el requisito sea 8/99/999/9999.",
+        "Los objetivos de fusión pueden usar un umbral distinto: weapon_337 (UZI Romántico) mostró 1/2 en Android físico, no 1/6."
       ],
       "initial_values": null,
       "limits": {
         "type": "objeto JSON id -> entero no negativo",
         "observed": "Claves de armas, anillos, enemigos y jefes; valores 0..9999 en muestras propias.",
-        "functional": "No se conoce el máximo lógico ni si todos los objetos comparten la misma semántica."
+        "functional": "El umbral se consulta por nivel de TbWeapons, no por la rareza del catálogo de prefabs. Las fusiones y los requisitos adicionales no están completamente resueltos."
       },
       "related_ids": [
         "knowledge.catalogs.weapons",
@@ -305,6 +307,8 @@
       "sources": [
         "discord",
         "docs/research/phase5-5/metadata-880-inventory.json",
+        "docs/research/phase9-5-weapon-forge-unlock.md",
+        "knowledge/sources/phase9-5-observations.md",
         "propia"
       ],
       "observed_versions": [
@@ -324,25 +328,31 @@
       "evidence": {
         "existence": "E2",
         "data_type": "E2",
-        "semantics": "E2",
+        "semantics": "E3",
         "version_compatibility": "E2",
-        "relations": "E2",
+        "relations": "E3",
         "persistence": "H"
       },
-      "validation_level": "E2",
-      "edit_policy": "experimental E2: solo eleva a 1 un contador ausente o en 0 para armas seleccionadas del catálogo; nunca reduce valores ni escribe máximos.",
+      "validation_level": "E3",
+      "edit_policy": "experimental E2 para forja, con semántica de contador E3: (A) descubrir eleva contadores ausentes o en 0 a 1; (B) desbloquear para forja eleva cada arma al umbral de su nivel, con 8 como fallback si el nivel falta y con 2 confirmado para weapon_337. Los 60 objetivos de fusión restantes usan el umbral de nivel del prefab como proxy provisional. Nunca reduce valores.",
       "constraints": [
         "Conservar todas las claves desconocidas, incluidas enemigos, jefes y anillos.",
         "No escribir itemData.forgeWeapons como si fuera un desbloqueo permanente.",
-        "No asumir que un contador positivo concede por sí solo la posesión mítica, el plano o la evolución del arma."
+        "No reducir contadores existentes ni escribir valores superiores al umbral sin justificación.",
+        "No asumir que un contador positivo concede por sí solo la posesión mítica, el plano o la evolución del arma.",
+        "Marcar como provisionales los objetivos de fusión cuyo TbWeapons.Level exacto no se haya confirmado, sin dejar de aplicar el umbral mínimo de su nivel de prefab."
       ],
       "open_questions": [
-        "Confirmar en dispositivo si un contador en 1 habilita el arma en la colección, la forja y el selector de equipamiento.",
-        "Determinar si el cliente exige un valor mínimo superior para armas concretas."
+        "Confirmar en dispositivo Android 8.8.0.13 que la operación de forja abre las armas estándar con 2/3/4/6/6/8.",
+        "Determinar el TbWeapons.Level de cada objetivo de fusión y si su umbral coincide con el nivel de prefab o diverge como weapon_337.",
+        "Confirmar si alguna arma exige plano, evolución, investigación u otra condición además del contador.",
+        "Verificar si las armas mitológicas requieren itemData.mythicWeapons además del contador."
       ],
       "experiments_required": [
-        "Desbloquear una única arma con contador ausente, subir, reiniciar y comprobar colección, forja y equipamiento.",
-        "Repetir con varias armas y verificar que no cambian contadores ajenos."
+        "Aplicar la operación de forja a un arma estándar de cada nivel y comprobar que la mesa permite forjarla.",
+        "Aplicar a weapon_337 y a otro objetivo de fusión para confirmar o corregir el umbral 2.",
+        "Comprobar que un contador ya superior al umbral se conserva y que las estadísticas ajenas no cambian.",
+        "Validar que las armas no forjables y las mitológicas no se modifican sin evidencia adicional."
       ],
       "registry_tier": "legacy",
       "legacy_record": {

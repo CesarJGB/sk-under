@@ -5,7 +5,7 @@ import type {
 import { pendingCharacterCodes, pendingSkillKeys, pendingSkinKeys, skillKey, skinKey } from './unlockSelections'
 
 export type BulkKey =
-  | 'characters' | 'skills' | 'skins' | 'weaponProgression' | 'weaponSkins' | 'killEffects'
+  | 'characters' | 'skills' | 'skins' | 'weaponProgression' | 'weaponForgeUnlock' | 'weaponSkins' | 'killEffects'
   | 'pets' | 'petSkins'
   | 'heroLevels' | 'petAffinity' | 'blueprints' | 'blueprintObtain'
   | 'decorations' | 'decorationLevels'
@@ -20,6 +20,7 @@ export type Draft = {
     skills: Record<string, true>
     skins: Record<string, true>
     weaponProgression: Record<string, true>
+    weaponForgeUnlock: Record<string, true>
     weaponSkins: Record<string, true>
     killEffects: Record<string, true>
     pets: Record<string, true>
@@ -36,6 +37,7 @@ export type Draft = {
     skills: Record<string, true>
     skins: Record<string, true>
     weaponProgression: Record<string, true>
+    weaponForgeUnlock: Record<string, true>
     weaponSkins: Record<string, true>
     killEffects: Record<string, true>
     pets: Record<string, true>
@@ -117,19 +119,22 @@ function emptySet(): Record<string, true> {
 export function createEmptyDraft(): Draft {
   return {
     bulk: {
-      characters: false, skills: false, skins: false, weaponProgression: false, weaponSkins: false, killEffects: false,
+      characters: false, skills: false, skins: false, weaponProgression: false, weaponForgeUnlock: false,
+      weaponSkins: false, killEffects: false,
       pets: false, petSkins: false,
       heroLevels: false, petAffinity: false, blueprints: false, blueprintObtain: false,
       decorations: false, decorationLevels: false,
     },
     manual: {
-      characters: emptySet(), skills: emptySet(), skins: emptySet(), weaponProgression: emptySet(), weaponSkins: emptySet(),
+      characters: emptySet(), skills: emptySet(), skins: emptySet(), weaponProgression: emptySet(),
+      weaponForgeUnlock: emptySet(), weaponSkins: emptySet(),
       killEffects: emptySet(), pets: emptySet(), petSkins: emptySet(),
       heroLevels: emptySet(), petAffinity: emptySet(), blueprints: emptySet(),
       blueprintObtain: emptySet(), decorations: emptySet(), decorationLevels: emptySet(),
     },
     excluded: {
-      characters: emptySet(), skills: emptySet(), skins: emptySet(), weaponProgression: emptySet(), weaponSkins: emptySet(),
+      characters: emptySet(), skills: emptySet(), skins: emptySet(), weaponProgression: emptySet(),
+      weaponForgeUnlock: emptySet(), weaponSkins: emptySet(),
       killEffects: emptySet(), pets: emptySet(), petSkins: emptySet(),
       heroLevels: emptySet(), petAffinity: emptySet(), blueprints: emptySet(),
       blueprintObtain: emptySet(), decorations: emptySet(), decorationLevels: emptySet(),
@@ -214,6 +219,14 @@ function eligibleWeaponProgression(save: NativeSaveSummary | null | undefined): 
     .map((item) => item.id)
 }
 
+function eligibleWeaponForgeUnlock(save: NativeSaveSummary | null | undefined): string[] {
+  return (save?.weapon_progression?.items ?? [])
+    .filter((item) => item.forgeable
+      && item.proposed_forge_count !== null
+      && (item.count ?? 0) < item.proposed_forge_count)
+    .map((item) => item.id)
+}
+
 function eligibleWeaponSkins(save: NativeSaveSummary | null | undefined): string[] {
   return (save?.weapon_skins?.items ?? []).filter((item) => !item.unlocked).map((item) => item.id)
 }
@@ -247,6 +260,7 @@ export function eligibility(save: NativeSaveSummary | null): Eligibility {
     skills: eligibleSkills(characters),
     skins: eligibleSkins(characters),
     weaponProgression: eligibleWeaponProgression(save),
+    weaponForgeUnlock: eligibleWeaponForgeUnlock(save),
     weaponSkins: eligibleWeaponSkins(save),
     killEffects: eligibleKillEffects(save),
     pets: eligiblePets(advanced),
@@ -439,6 +453,10 @@ export function effectiveWeaponProgression(draft: Draft, save: NativeSaveSummary
   return effectiveUnlockedSet('weaponProgression', draft, eligibility(save))
 }
 
+export function effectiveWeaponForgeUnlock(draft: Draft, save: NativeSaveSummary): string[] {
+  return effectiveUnlockedSet('weaponForgeUnlock', draft, eligibility(save))
+}
+
 export function effectiveWeaponSkins(draft: Draft, save: NativeSaveSummary): string[] {
   return effectiveUnlockedSet('weaponSkins', draft, eligibility(save))
 }
@@ -528,10 +546,18 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft, session: N
     plan.skins = skins
     bump('Skins', skins.length)
   }
+  const weaponForgeUnlock = effectiveWeaponForgeUnlock(draft, save)
+  const forgeSet = new Set(weaponForgeUnlock)
+  // La forja ya registra el arma al subir su contador; no se cuenta dos veces.
   const weaponProgression = effectiveWeaponProgression(draft, save)
+    .filter((id) => !forgeSet.has(id))
   if (weaponProgression.length > 0) {
     plan.weapon_progression = weaponProgression
     bump('Descubrimiento de armas', weaponProgression.length)
+  }
+  if (weaponForgeUnlock.length > 0) {
+    plan.weapon_forge_unlock = weaponForgeUnlock
+    bump('Desbloqueo para forja', weaponForgeUnlock.length)
   }
   const weaponSkins = effectiveWeaponSkins(draft, save)
   if (weaponSkins.length > 0) {
@@ -716,6 +742,8 @@ export function unlockProgress(save: NativeSaveSummary, key: BulkKey, eligible: 
     ).length, 0),
     weaponProgression: () => save.weapon_progression?.discovered_count
       ?? (save.weapon_progression?.items ?? []).filter((item) => item.discovered).length,
+    weaponForgeUnlock: () => (save.weapon_progression?.items ?? [])
+      .filter((item) => item.forge_unlock_ready).length,
     weaponSkins: () => save.weapon_skins?.unlocked_count
       ?? (save.weapon_skins?.items ?? []).filter((item) => item.unlocked).length,
     killEffects: () => save.kill_effects?.unlocked_count

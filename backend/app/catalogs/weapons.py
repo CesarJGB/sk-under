@@ -108,6 +108,113 @@ def _parse_tags(value: object, weapon_id: str) -> list[str]:
     return tags
 
 
+REQUIREMENT_STATUSES = frozenset(
+    {
+        "not_forgeable",
+        "standard_level",
+        "observed_fusion_exception",
+        "pending_fusion_research",
+        "pending_level_research",
+    }
+)
+UNLOCK_METHODS = frozenset({"not_forgeable", "obtain_counter", "fusion"})
+
+
+def _optional_count(value: object) -> int | None:
+    return value if type(value) is int and value >= 1 else None
+
+
+def _parse_requirement(row: Mapping[str, Any], weapon_id: str, forgeable: bool) -> dict[str, object]:
+    status = row.get("requirement_status")
+    if status not in REQUIREMENT_STATUSES:
+        raise WeaponCatalogError(
+            "weapon_catalog_invalid_structure",
+            f"{weapon_id} declara un estado de requisito inválido.",
+        )
+    required = _optional_count(row.get("required_obtains"))
+    recommended = _optional_count(row.get("recommended_obtains"))
+    if not forgeable:
+        if required is not None or recommended is not None:
+            raise WeaponCatalogError(
+                "weapon_catalog_invalid_structure",
+                f"{weapon_id} no es forjable pero declara un contador objetivo.",
+            )
+    elif recommended is None:
+        raise WeaponCatalogError(
+            "weapon_catalog_invalid_structure",
+            f"{weapon_id} es forjable pero no declara un contador objetivo.",
+        )
+    if required is not None and recommended is not None and required > recommended:
+        raise WeaponCatalogError(
+            "weapon_catalog_invalid_structure",
+            f"{weapon_id} declara un requisito mayor que su objetivo seguro.",
+        )
+    unlock_method = row.get("unlock_method")
+    if unlock_method not in UNLOCK_METHODS:
+        raise WeaponCatalogError(
+            "weapon_catalog_invalid_structure",
+            f"{weapon_id} declara un método de desbloqueo inválido.",
+        )
+    if (unlock_method == "not_forgeable") != (not forgeable):
+        raise WeaponCatalogError(
+            "weapon_catalog_invalid_structure",
+            f"{weapon_id} declara un método de desbloqueo incoherente.",
+        )
+    if unlock_method == "fusion" and row.get("requirement_basis") not in {
+        "fusion_target",
+        "fusion_target_level_proxy",
+        "fusion_target_unknown_level",
+    }:
+        raise WeaponCatalogError(
+            "weapon_catalog_invalid_structure",
+            f"{weapon_id} declara fusión sin base de fusión.",
+        )
+    basis = row.get("requirement_basis")
+    if not isinstance(basis, str) or not basis or len(basis) > 80:
+        raise WeaponCatalogError(
+            "weapon_catalog_invalid_structure",
+            f"{weapon_id} declara una base de requisito inválida.",
+        )
+    evidence = row.get("requirement_evidence")
+    if evidence not in {"E1", "E2", "E3", "E4"}:
+        raise WeaponCatalogError(
+            "weapon_catalog_invalid_structure",
+            f"{weapon_id} declara una evidencia de requisito inválida.",
+        )
+    source = _safe_text(row.get("requirement_source"), 240)
+    if source is None:
+        raise WeaponCatalogError(
+            "weapon_catalog_invalid_structure",
+            f"{weapon_id} no declara la fuente de su requisito.",
+        )
+    additional = row.get("additional_requirements")
+    if not isinstance(additional, list):
+        raise WeaponCatalogError(
+            "weapon_catalog_invalid_structure",
+            f"{weapon_id} declara requisitos adicionales inválidos.",
+        )
+    additional_requirements: list[str] = []
+    for value in additional:
+        text = _safe_text(value, 120)
+        if text is None:
+            raise WeaponCatalogError(
+                "weapon_catalog_invalid_structure",
+                f"{weapon_id} contiene un requisito adicional inválido.",
+            )
+        if text not in additional_requirements:
+            additional_requirements.append(text)
+    return {
+        "required_obtains": required,
+        "recommended_obtains": recommended,
+        "requirement_status": status,
+        "requirement_basis": basis,
+        "unlock_method": unlock_method,
+        "requirement_evidence": evidence,
+        "additional_requirements": additional_requirements,
+        "requirement_source": source,
+    }
+
+
 def _parse_catalog(document: Mapping[str, Any]) -> dict[str, object]:
     if document.get("schema") != EXPECTED_SCHEMA:
         raise WeaponCatalogError(
@@ -162,6 +269,7 @@ def _parse_catalog(document: Mapping[str, Any]) -> dict[str, object]:
             "drop_level": drop_level if type(drop_level) is int else None,
             "in_weapon_catalog": row.get("in_weapon_catalog") is True,
             "tags": _parse_tags(row.get("tags"), weapon_id),
+            **_parse_requirement(row, weapon_id, can_forge),
         }
         by_id[weapon_id] = entry
         ordered.append(weapon_id)

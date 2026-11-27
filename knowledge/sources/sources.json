@@ -2,7 +2,7 @@
   "schema": "sk-knowledge/sources@1",
   "schema_version": 1,
   "generated_by": "knowledge/tools/build_sources.py (curaduría de fase 7.0)",
-  "count": 21,
+  "count": 23,
   "sources": [
     {
       "id": "skdfe-main",
@@ -358,6 +358,37 @@
         "No valida el nuevo mecanismo de banderas y planos.",
         "No cubre iOS ni objetos distintos de los probados.",
         "No confirma persistencia tras reiniciar el juego."
+      ],
+      "redistributed": false
+    },
+    {
+      "id": "phase9-5-owner-android",
+      "type": "owner_reference",
+      "title": "Validación física Android 8.8.0.13 — forja",
+      "location": "knowledge/sources/phase9-5-observations.md",
+      "version": "8.8.0.13",
+      "accessed": "2026-11-26",
+      "license": null,
+      "evidence": "E3",
+      "usage": "Confirma que editar object2ObtainTime registra el arma y que weapon_337 muestra 1/2 para forja.",
+      "limitations": [
+        "No se ha validado todavía la operación masiva de forja en dispositivo."
+      ],
+      "redistributed": false
+    },
+    {
+      "id": "phase9-5-research",
+      "type": "internal_document",
+      "title": "Fase 9.5 — umbrales de forja y excepciones",
+      "location": "docs/research/phase9-5-weapon-forge-unlock.md",
+      "version": "8.8.0",
+      "accessed": "2026-11-26",
+      "license": null,
+      "evidence": "E2",
+      "usage": "Metadatos 8.8.0, desensamblado de UIForge, catálogo de armas, muestras iOS/Android y reglas de umbral por nivel.",
+      "limitations": [
+        "La tabla TbWeapons.Level no se pudo extraer del bundle Luban cifrado.",
+        "Los umbrales de los objetivos de fusión distintos de weapon_337 siguen pendientes."
       ],
       "redistributed": false
     }

@@ -1,6 +1,6 @@
 # Matriz persistente de paridad funcional CRDE ↔ SK-Under
 
-Actualizada: 2026-11-26 (fase 9.4)
+Actualizada: 2026-11-26 (fase 9.5)
 
 ## Método y límites
 
@@ -44,7 +44,7 @@ las pruebas físicas registradas.
 | 9 | Set plants maximum count | Parcelas en solo lectura | Ausente | Semántica de `state` no confirmada | `plantPotData`, cultivos y ciclo de crecimiento | Alta | P2 |
 | 10 | Set season coins | Monedas de temporada | IPV | Campo E3 confirmado por el propietario | `seasonData.coin` y temporada activa | Baja | P1 |
 | 11 | Set starting coins | Sin campo canónico identificado | Investigación | No se ha demostrado una ruta de monedas iniciales | `gameData`, configuración de nueva partida | Media | P3 |
-| 12 | Unlock all weapons in forge table | Descubrimiento y elegibilidad de forja | Parcial | E2: `statisticData.object2ObtainTime`, 995 armas, 494 forjables | Contador de obtención, catálogo, cola de forja, evolución y mitológicas | Alta | P1 |
+| 12 | Unlock all weapons in forge table | Descubrimiento y desbloqueo individual/masivo para forja | IPP | E3 semántica del contador; E2 umbrales y operación masiva; 995 armas, 494 forjables | `statisticData.object2ObtainTime`, nivel de arma, excepciones de fusión, cola transitoria, evolución y mitológicas | Alta | P1 |
 | 13 | Unlock battle pass | Nivel y compra de pase | IPP | Escritor E2 | Temporada y registros de pase | Media | P1 |
 | 14 | Unlock everything in hall | Objetos y niveles del vestíbulo | IPP | Escritores E2; causa de banderas probable | `roomDecorateDic`, `roomObjectLevel`, banderas `room_unlock_*`, planos | Alta | P1 |
 | 15 | Unlock heroes and skills | Personajes y habilidades | IPV | Políticas `confirmed_by_owner` | `heroUnlock`, `heroSkillUnlock`, catálogo | Media | P1 |
@@ -58,12 +58,19 @@ las pruebas físicas registradas.
 | 23 | Unlock trophies | Sin editor de trofeos | Ausente | No hay catálogo/ruta de escritura validada | Identificadores, propiedad y condiciones | Alta | P3 |
 | 24 | Unlock weapon skins | Skins cosméticas de arma | IPV | E3 validado en Android físico el 2026-11-26 | `weaponEvolutionData.weapons.*.UnlockedSkins`; no concede arma base | Baja | P1 |
 
-Verificación productiva del 2026-11-26: el `prepare-unified` real de SK-Under
-creó un candidato para `weapon_135x` que solo cambiaba
+La fase 9.5 añade la operación «Desbloquear para forja». El cliente compara
+`object2ObtainTime` con `UIForge.UnlockCountDict[nivel]` y usa 8 si falta la
+clave. Los umbrales estándar son 2/3/4/6/6/8; `weapon_337` es una excepción de
+fusión confirmada con 2 y otros 60 objetivos de fusión usan el umbral estándar
+de su nivel de prefab como proxy provisional. La semántica del contador es E3;
+la operación masiva sigue en E2/IPP hasta que el propietario confirme en Android
+que la mesa abre todas las armas estándar. No se modifican la cola de forja, planos, evolución,
+`mythicWeapons` ni estadísticas ajenas.
+
+Verificación productiva de 9.4 conservada: el `prepare-unified` real creó un
+candidato para `weapon_135x` que solo cambiaba
 `statisticData.object2ObtainTime.weapon_135x` de `0` a `1`, con respaldo y sin
-subida. La UI repitió la preparación y se detuvo en la revisión explícita. Esto
-demuestra el flujo de preparación, no la aceptación del cliente Android; la
-fila 12 sigue en **Parcial E2** hasta la prueba física.
+subida. La 9.5 no ha subido candidatos durante las pruebas automatizadas.
 
 ## Funciones CRDE fuera de las 24 acciones
 
@@ -92,10 +99,12 @@ fila 12 sigue en **Parcial E2** hasta la prueba física.
 ## Dependencias de la paridad de armas
 
 `statisticData.object2ObtainTime` se interpreta como contador de adquisición,
-no como cantidad ni fecha Unix. La fase 9.4 solo eleva contadores ausentes o en
-cero a `1`. La cola `itemData.forgeWeapons` es transitoria y no se escribe como
-desbloqueo. La posesión base, la evolución, las mitológicas y los planos son
-sistemas independientes que requieren evidencia coordinada.
+no como cantidad ni fecha Unix. La fase 9.4 eleva contadores ausentes o en cero
+a `1` para descubrir. La fase 9.5 añade una operación distinta que eleva el
+contador al umbral de forja por nivel, conserva valores superiores y marca las
+fusiones no confirmadas. La cola `itemData.forgeWeapons` es transitoria y no se
+escribe como desbloqueo. La posesión base, la evolución, las mitológicas y los
+planos son sistemas independientes que requieren evidencia coordinada.
 
 ## Prioridad recomendada
 

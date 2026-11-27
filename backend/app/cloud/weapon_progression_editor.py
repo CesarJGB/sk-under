@@ -45,6 +45,7 @@ FORGE_QUEUE_PATH = "itemData.forgeWeapons"
 WEAPON_PROGRESSION_RECORD_FIELD = "weapon_progression"
 MAX_WEAPONS = 995
 MIN_DISCOVERY_VALUE = 1
+FORGE_REQUIREMENT_POLICY = "level_map_with_fusion_proxy"
 
 
 class WeaponProgressionEditError(CloudSaveError):
@@ -77,6 +78,14 @@ class UnsupportedWeaponProgressionSerialization(WeaponProgressionEditError):
 
 class WeaponProgressionVerificationError(WeaponProgressionEditError):
     code = "weapon_progression_verification_failed"
+
+
+class NotForgeableWeapon(WeaponProgressionEditError):
+    code = "not_forgeable_weapon"
+
+
+class ForgeRequirementPending(WeaponProgressionEditError):
+    code = "forge_requirement_pending"
 
 
 class OutdatedWeaponProgressionDraft(WeaponProgressionEditError):
@@ -228,6 +237,8 @@ class WeaponProgressionSnapshot:
     items: tuple[dict[str, object], ...]
     discovered: tuple[str, ...]
     forge_ready: tuple[str, ...]
+    forge_unlock_ready: tuple[str, ...]
+    pending_requirements: tuple[str, ...]
     forge_queue: tuple[str, ...]
     unknown_weapon_ids: tuple[str, ...]
     total: int
@@ -248,6 +259,12 @@ class WeaponProgressionSnapshot:
             "forgeable_total": self.forgeable_total,
             "forge_ready": list(self.forge_ready),
             "forge_ready_count": len(self.forge_ready),
+            "forge_unlock_ready": list(self.forge_unlock_ready),
+            "forge_unlock_ready_count": len(self.forge_unlock_ready),
+            "pending_requirements": list(self.pending_requirements),
+            "pending_requirements_count": len(self.pending_requirements),
+            "requirement_policy": FORGE_REQUIREMENT_POLICY,
+            "obtain_counter_evidence": "E3",
             "forge_queue": list(self.forge_queue),
             "forge_queue_path": FORGE_QUEUE_PATH,
             "unknown_weapon_ids": list(self.unknown_weapon_ids),
@@ -309,6 +326,31 @@ class WeaponProgressionEdit:
         }
 
 
+def _forge_requirement(entry: Mapping[str, object]) -> dict[str, object]:
+    required = entry.get("required_obtains")
+    recommended = entry.get("recommended_obtains")
+    return {
+        "required_obtains": required if type(required) is int else None,
+        "recommended_obtains": recommended if type(recommended) is int else None,
+        "requirement_status": entry.get("requirement_status"),
+        "requirement_basis": entry.get("requirement_basis"),
+        "unlock_method": entry.get("unlock_method"),
+        "requirement_evidence": entry.get("requirement_evidence"),
+        "additional_requirements": list(entry.get("additional_requirements") or []),  # type: ignore[arg-type]
+        "requirement_source": entry.get("requirement_source"),
+    }
+
+
+def _forge_state(can_forge: bool, count: int | None, required: int | None) -> str:
+    if not can_forge:
+        return "not_forgeable"
+    if required is None:
+        return "pending_research"
+    if count is not None and count >= required:
+        return "ready"
+    return "requires_obtains"
+
+
 def read_weapon_progression(source: bytes) -> WeaponProgressionSnapshot:
     root, version = _validated_document(source)
     catalog = weapon_catalog()
@@ -316,6 +358,8 @@ def read_weapon_progression(source: bytes) -> WeaponProgressionSnapshot:
     queue = _forge_queue(root)
     discovered: list[str] = []
     forge_ready: list[str] = []
+    forge_unlock_ready: list[str] = []
+    pending_requirements: list[str] = []
     items: list[dict[str, object]] = []
     for weapon_id in catalog.ordered:
         entry = catalog.entries[weapon_id]
@@ -323,16 +367,29 @@ def read_weapon_progression(source: bytes) -> WeaponProgressionSnapshot:
         count = raw_count if type(raw_count) is int else None
         is_discovered = count is not None and count > 0
         can_forge = entry.get("forgeable") is True
+        requirement = _forge_requirement(entry)
+        required = requirement["required_obtains"]
+        recommended = requirement["recommended_obtains"]
         if is_discovered:
             discovered.append(weapon_id)
         if is_discovered and can_forge:
             forge_ready.append(weapon_id)
+        unlock_state = _forge_state(can_forge, count, required)
+        if unlock_state == "ready":
+            forge_unlock_ready.append(weapon_id)
+        if can_forge and required is None:
+            pending_requirements.append(weapon_id)
         if not can_forge:
             forge_status = "not_forgeable"
         elif is_discovered:
             forge_status = "ready"
         else:
             forge_status = "requires_discovery"
+        proposed_forge = (
+            max(count or 0, recommended)
+            if can_forge and type(recommended) is int
+            else None
+        )
         items.append(
             {
                 "id": weapon_id,
@@ -345,9 +402,13 @@ def read_weapon_progression(source: bytes) -> WeaponProgressionSnapshot:
                 "discovered": is_discovered,
                 "count": count,
                 "proposed_count": count if is_discovered else MIN_DISCOVERY_VALUE,
+                "proposed_forge_count": proposed_forge,
                 "forge_status": forge_status,
                 "forge_ready": is_discovered and can_forge,
+                "forge_unlock_status": unlock_state,
+                "forge_unlock_ready": unlock_state == "ready",
                 "in_forge_queue": weapon_id in queue,
+                **requirement,
             }
         )
     unknown = tuple(
@@ -361,6 +422,8 @@ def read_weapon_progression(source: bytes) -> WeaponProgressionSnapshot:
         items=tuple(items),
         discovered=tuple(discovered),
         forge_ready=tuple(forge_ready),
+        forge_unlock_ready=tuple(forge_unlock_ready),
+        pending_requirements=tuple(pending_requirements),
         forge_queue=queue,
         unknown_weapon_ids=unknown,
         total=catalog.total,
@@ -488,6 +551,196 @@ def prepare_weapon_progression_edit(source: bytes, selections: object) -> Weapon
         serialzed_version=version,
         changed_fields=tuple(
             f"{OBTAIN_PATH}.{weapon_id}" for weapon_id in newly_discovered
+        ),
+    )
+
+
+@dataclass(frozen=True)
+class WeaponForgeUnlockEdit:
+    original_forge_ready: tuple[str, ...]
+    selected_weapons: tuple[str, ...]
+    newly_forge_ready: tuple[str, ...]
+    new_forge_ready: tuple[str, ...]
+    pending_requirements: tuple[str, ...]
+    total: int
+    changed: bool
+    original: bytes = field(repr=False)
+    candidate: bytes = field(repr=False)
+    original_sha256: str = field(repr=False)
+    candidate_sha256: str = field(repr=False)
+    binary: BinaryDiff = field(repr=False)
+    serialzed_version: int
+    changed_fields: tuple[str, ...] = ()
+
+    @property
+    def original_size(self) -> int:
+        return len(self.original)
+
+    @property
+    def candidate_size(self) -> int:
+        return len(self.candidate)
+
+    def summary(self) -> dict[str, object]:
+        return {
+            "field": OBTAIN_PATH,
+            "original_forge_ready_count": len(self.original_forge_ready),
+            "new_forge_ready_count": len(self.new_forge_ready),
+            "total_weapons": self.total,
+            "selected_weapons": list(self.selected_weapons),
+            "newly_forge_ready": list(self.newly_forge_ready),
+            "pending_requirements": list(self.pending_requirements),
+            "changed": self.changed,
+            "original_size": len(self.original),
+            "candidate_size": len(self.candidate),
+            "original_sha256": self.original_sha256,
+            "candidate_sha256": self.candidate_sha256,
+            "serialzed_version": self.serialzed_version,
+            "binary": self.binary.as_dict(),
+            "changed_fields": list(self.changed_fields),
+            "requirement_policy": FORGE_REQUIREMENT_POLICY,
+            "forge_policy": "obtain_threshold_experimental",
+            "evidence": "E2",
+            "obtain_counter_evidence": "E3",
+        }
+
+
+def _normalize_forge_selection(
+    catalog: WeaponCatalog, selections: object
+) -> tuple[str, ...]:
+    selected = _normalize_selection(catalog, selections)
+    for weapon_id in selected:
+        entry = catalog.entries[weapon_id]
+        if entry.get("forgeable") is not True:
+            raise NotForgeableWeapon(
+                f"El arma {weapon_id} no es forjable y no se puede preparar para forja."
+            )
+        if type(entry.get("recommended_obtains")) is not int:
+            raise ForgeRequirementPending(
+                f"El arma {weapon_id} no tiene un umbral de forja confirmado."
+            )
+    return selected
+
+
+def prepare_weapon_forge_unlock_edit(
+    source: bytes, selections: object
+) -> WeaponForgeUnlockEdit:
+    catalog = weapon_catalog()
+    selected = _normalize_forge_selection(catalog, selections)
+    root, version = _validated_document(source)
+    statistic = _statistic(root)
+    had_obtain = "object2ObtainTime" in statistic
+    had_statistic = STATISTIC_PATH in root
+    obtain = _obtain(root, allow_missing=True)
+    original_sha = sha256(source).hexdigest()
+    before = read_weapon_progression(source)
+    before_ready = set(before.forge_unlock_ready)
+
+    changed_ids: list[str] = []
+    targets: dict[str, int] = {}
+    for weapon_id in selected:
+        current = obtain.get(weapon_id)
+        current_count = current if type(current) is int else 0
+        target = max(current_count, catalog.entries[weapon_id]["recommended_obtains"])  # type: ignore[arg-type]
+        targets[weapon_id] = target
+        if current_count < target:
+            changed_ids.append(weapon_id)
+
+    if not changed_ids:
+        return WeaponForgeUnlockEdit(
+            original_forge_ready=before.forge_unlock_ready,
+            selected_weapons=selected,
+            newly_forge_ready=(),
+            new_forge_ready=before.forge_unlock_ready,
+            pending_requirements=before.pending_requirements,
+            total=catalog.total,
+            changed=False,
+            original=source,
+            candidate=source,
+            original_sha256=original_sha,
+            candidate_sha256=original_sha,
+            binary=binary_diff(source, source),
+            serialzed_version=version,
+        )
+
+    modified = deepcopy(root)
+    modified_statistic = _statistic(modified)
+    if "object2ObtainTime" not in modified_statistic:
+        modified_statistic["object2ObtainTime"] = {}
+    modified_obtain = modified_statistic["object2ObtainTime"]
+    if not isinstance(modified_obtain, dict):
+        raise WeaponProgressionStructureMissing(
+            "La copia no contiene statisticData.object2ObtainTime como mapa de contadores."
+        )
+    for weapon_id in changed_ids:
+        modified_obtain[weapon_id] = targets[weapon_id]
+
+    candidate = serialize_aggregate(modified)
+    if len(candidate) > MAX_INPUT_BYTES:
+        raise CopyLimitError("La copia editada supera el límite permitido.")
+    reconstruct_cloud_save(candidate)
+    try:
+        reopened = parse_json(unpack_cloud_save(candidate)[1])
+    except (ValueError, RecursionError):
+        raise WeaponProgressionVerificationError(
+            "La copia editada no se puede volver a abrir."
+        ) from None
+    if reopened != modified:
+        raise WeaponProgressionVerificationError(
+            "La copia reabierta no coincide con la copia editada."
+        )
+    if serialize_aggregate(reopened) != candidate:
+        raise WeaponProgressionVerificationError(
+            "La copia editada no es estable al serializarla de nuevo."
+        )
+    reopened_snapshot = read_weapon_progression(candidate)
+    reopened_obtain = _obtain(reopened)
+    for weapon_id in selected:
+        current = reopened_obtain.get(weapon_id)
+        if type(current) is not int or current < targets[weapon_id]:
+            raise WeaponProgressionVerificationError(
+                f"La copia editada no alcanza el contador de forja de {weapon_id}."
+            )
+        original = obtain.get(weapon_id)
+        if type(original) is int and current < original:
+            raise WeaponProgressionVerificationError(
+                f"La edición redujo el contador de {weapon_id}."
+            )
+    reopened_statistic = _statistic(reopened)
+    if had_obtain:
+        reopened_statistic["object2ObtainTime"] = statistic["object2ObtainTime"]
+    else:
+        reopened_statistic.pop("object2ObtainTime", None)
+    if not had_statistic:
+        reopened.pop(STATISTIC_PATH, None)
+    if serialize_aggregate(reopened) != source:
+        raise WeaponProgressionVerificationError(
+            "La edición afectó a datos fuera de statisticData.object2ObtainTime."
+        )
+    binary = binary_diff(source, candidate)
+    if binary.first_difference is None:
+        raise WeaponProgressionVerificationError("La copia editada es idéntica al original.")
+
+    after_ready = set(reopened_snapshot.forge_unlock_ready)
+    newly_ready = tuple(
+        weapon_id for weapon_id in catalog.ordered
+        if weapon_id in after_ready and weapon_id not in before_ready
+    )
+    return WeaponForgeUnlockEdit(
+        original_forge_ready=before.forge_unlock_ready,
+        selected_weapons=selected,
+        newly_forge_ready=newly_ready,
+        new_forge_ready=reopened_snapshot.forge_unlock_ready,
+        pending_requirements=reopened_snapshot.pending_requirements,
+        total=catalog.total,
+        changed=True,
+        original=source,
+        candidate=candidate,
+        original_sha256=original_sha,
+        candidate_sha256=sha256(candidate).hexdigest(),
+        binary=binary,
+        serialzed_version=version,
+        changed_fields=tuple(
+            f"{OBTAIN_PATH}.{weapon_id}" for weapon_id in changed_ids
         ),
     )
 

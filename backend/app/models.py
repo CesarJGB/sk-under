@@ -358,6 +358,7 @@ class CloudLabUnifiedPrepareInput(BaseModel):
     skills: list[CloudSkillSelection] = Field(default_factory=list, max_length=105)
     skins: list[CloudSkinSelection] = Field(default_factory=list, max_length=802)
     weapon_progression: list[StrictStr] = Field(default_factory=list, max_length=995)
+    weapon_forge_unlock: list[StrictStr] = Field(default_factory=list, max_length=995)
     weapon_skins: list[StrictStr] = Field(default_factory=list, max_length=192)
     kill_effects: list[StrictInt] = Field(default_factory=list, max_length=9)
     advanced: CloudLabAdvancedPrepareInput | None = None

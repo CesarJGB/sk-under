@@ -5,23 +5,23 @@ Versión del juego: **8.8.0**.
 ## Campos
 
 - Total: **616**
-- Preguntas abiertas: **578**
+- Preguntas abiertas: **587**
 
 | Nivel | Campos |
 | --- | ---: |
 | E1 | 194 |
-| E2 | 405 |
-| E3 | 11 |
+| E2 | 404 |
+| E3 | 12 |
 | E4 | 6 |
 
 ### Semántica
 
 | Nivel | Campos |
 | --- | ---: |
-| E2 | 29 |
-| E3 | 11 |
+| E2 | 30 |
+| E3 | 14 |
 | E4 | 6 |
-| H | 570 |
+| H | 566 |
 
 ### Categorías
 
@@ -30,7 +30,7 @@ Versión del juego: **8.8.0**.
 | Configuración | 0 | 45 | 0 | 0 | 0 |
 | Datos varios | 0 | 0 | 17 | 0 | 0 |
 | Escape | 0 | 39 | 0 | 0 | 0 |
-| Estadísticas | 0 | 12 | 157 | 0 | 0 |
+| Estadísticas | 0 | 12 | 156 | 1 | 0 |
 | Evolución de armas | 0 | 0 | 9 | 0 | 0 |
 | Fichas de pesca | 0 | 0 | 9 | 1 | 1 |
 | Gemas | 0 | 0 | 0 | 0 | 5 |
@@ -48,8 +48,8 @@ Versión del juego: **8.8.0**.
 
 ## Catálogos
 
-- Catálogos: **25**
-- Elementos: **4339**
+- Catálogos: **26**
+- Elementos: **4348**
 - Traducciones indexadas: **8562**
 
 | Catálogo | Elementos | Con nombre EN | Cobertura |
@@ -64,6 +64,7 @@ Versión del juego: **8.8.0**.
 | enemies | 593 | 257 | 43.3% |
 | followers | 6 | 6 | 100.0% |
 | jewelry | 15 | 0 | 0.0% |
+| kill_effects | 9 | 4 | 44.4% |
 | lobby | 59 | 28 | 47.5% |
 | materials | 343 | 154 | 44.9% |
 | mounts | 4 | 4 | 100.0% |
@@ -82,12 +83,12 @@ Versión del juego: **8.8.0**.
 
 ## Dependencias y fuentes
 
-- Dependencias: **46**
-- Fuentes: **21**
+- Dependencias: **49**
+- Fuentes: **23**
 - Versiones analizadas: **8.6.0, 8.7.0, 8.8.0**
 - confirmed: 6
 - hypothesis: 6
 - negative: 5
-- observed: 29
+- observed: 32
 
 > Los catálogos no prueban posesión. La cobertura de nombres no equivale a cobertura funcional.

@@ -18,7 +18,9 @@ from app.cloud.kill_effect_editor import (
 from app.cloud.unified_editor import prepare_unified_edit
 from app.cloud.weapon_progression_editor import (
     InvalidWeaponSelection,
+    NotForgeableWeapon,
     UnknownWeapon,
+    prepare_weapon_forge_unlock_edit,
     prepare_weapon_progression_edit,
     read_weapon_progression,
     require_weapon_progression_write_compatibility,
@@ -419,6 +421,34 @@ def test_weapon_catalog_is_available():
     assert len(WEAPON_CATALOG["forgeable_ids"]) == 494
 
 
+def test_weapon_catalog_has_standard_requirements_and_marked_exceptions():
+    expected = {
+        "ring_0": 2,
+        "weapon_006": 3,
+        "weapon_018": 4,
+        "weapon_041": 6,
+        "weapon_028": 6,
+        "weapon_077": 8,
+        "weapon_mythic_00": 8,
+    }
+    weapons = WEAPON_CATALOG["weapons"]
+    for weapon_id, required in expected.items():
+        entry = weapons[weapon_id]
+        assert entry["required_obtains"] == required
+        assert entry["requirement_status"] == "standard_level"
+        assert entry["unlock_method"] == "obtain_counter"
+    assert weapons["weapon_337"]["required_obtains"] == 2
+    assert weapons["weapon_337"]["unlock_method"] == "fusion"
+    assert weapons["weapon_337"]["requirement_evidence"] == "E3"
+    assert weapons["weapon_311"]["required_obtains"] == 6
+    assert weapons["weapon_311"]["recommended_obtains"] == 6
+    assert weapons["weapon_311"]["requirement_status"] == "pending_fusion_research"
+    assert weapons["weapon_311"]["unlock_method"] == "fusion"
+    assert weapons["transform_weapon_beheaded"]["required_obtains"] is None
+    assert weapons["transform_weapon_beheaded"]["requirement_status"] == "not_forgeable"
+    assert weapons["transform_weapon_beheaded"]["unlock_method"] == "not_forgeable"
+
+
 def test_weapon_progression_reads_discovery_and_forge_state_without_writing():
     source = canonical(progression_document())
     snapshot = read_weapon_progression(source)
@@ -492,6 +522,104 @@ def test_weapon_progression_rejects_unknown_ids_and_invalid_counters():
     with pytest.raises(Exception) as error:
         read_weapon_progression(canonical(data))
     assert "no es un contador" in str(error.value)
+
+
+def test_weapon_progression_exposes_individual_forge_requirements():
+    source = canonical(progression_document())
+    snapshot = read_weapon_progression(source)
+    by_id = {item["id"]: item for item in snapshot.items}
+    assert by_id["weapon_002"]["required_obtains"] == 2
+    assert by_id["weapon_002"]["requirement_status"] == "standard_level"
+    assert by_id["weapon_002"]["forge_unlock_status"] == "requires_obtains"
+    assert by_id["weapon_002"]["proposed_forge_count"] == 2
+    assert by_id["weapon_337"]["required_obtains"] == 2
+    assert by_id["weapon_337"]["requirement_evidence"] == "E3"
+    assert by_id["weapon_311"]["required_obtains"] == 6
+    assert by_id["weapon_311"]["recommended_obtains"] == 6
+    assert by_id["weapon_311"]["forge_unlock_status"] == "requires_obtains"
+    assert by_id["transform_weapon_beheaded"]["forge_unlock_status"] == "not_forgeable"
+    assert snapshot.pending_requirements == ()
+    assert snapshot.summary()["obtain_counter_evidence"] == "E3"
+    assert snapshot.summary()["evidence"] == "E2"
+
+
+def test_weapon_forge_unlock_raises_to_required_and_preserves_progress():
+    data = progression_document()
+    data["statisticData"]["object2ObtainTime"]["weapon_004"] = 9
+    source = canonical(data)
+    edit = prepare_weapon_forge_unlock_edit(
+        source, ["weapon_002", "weapon_003", "weapon_004", "weapon_337"]
+    )
+    result = json.loads(edit.candidate)
+    counters = result["statisticData"]["object2ObtainTime"]
+    assert counters["weapon_002"] == 2
+    assert counters["weapon_003"] == 2
+    assert counters["weapon_004"] == 9
+    assert counters["weapon_337"] == 2
+    assert counters["weapon_311"] == 5
+    assert counters["enemy_001"] == 9
+    assert counters["custom_counter"] == 4
+    assert counters["weapon_unknown_999"] == 7
+    assert counters[""] == 11
+    assert result["itemData"]["forgeWeapons"] == ["weapon_003", "weapon_003", None]
+    assert edit.newly_forge_ready == ("weapon_002", "weapon_337")
+    assert edit.changed_fields == (
+        "statisticData.object2ObtainTime.weapon_002",
+        "statisticData.object2ObtainTime.weapon_337",
+    )
+    assert prepare_weapon_forge_unlock_edit(
+        edit.candidate, ["weapon_002", "weapon_003", "weapon_004", "weapon_337"]
+    ).changed is False
+
+
+def test_weapon_forge_unlock_uses_level_proxy_for_fusion_target():
+    source = canonical(progression_document())
+    edit = prepare_weapon_forge_unlock_edit(source, ["weapon_311"])
+    counters = json.loads(edit.candidate)["statisticData"]["object2ObtainTime"]
+    assert counters["weapon_311"] == 6
+    assert edit.changed is True
+    assert edit.newly_forge_ready == ("weapon_311",)
+    assert "weapon_311" not in edit.pending_requirements
+
+
+def test_weapon_forge_unlock_rejects_non_forgeable_and_empty_selection():
+    source = canonical(progression_document())
+    with pytest.raises(NotForgeableWeapon):
+        prepare_weapon_forge_unlock_edit(source, ["transform_weapon_beheaded"])
+    with pytest.raises(InvalidWeaponSelection):
+        prepare_weapon_forge_unlock_edit(source, [])
+
+
+def test_weapon_forge_unlock_creates_only_the_obtain_map_when_missing():
+    data = document()
+    data["statisticData"].pop("object2ObtainTime", None)
+    source = canonical(data)
+    edit = prepare_weapon_forge_unlock_edit(source, ["weapon_002"])
+    result = json.loads(edit.candidate)
+    assert result["statisticData"]["object2ObtainTime"] == {"weapon_002": 2}
+    assert result["statisticData"]["StatisticsData"] == data["statisticData"]["StatisticsData"]
+
+
+def test_unified_plan_discovers_then_forges_with_weapon_skins():
+    source = canonical(progression_document())
+    plan = {
+        "weapon_progression": ["weapon_002"],
+        "weapon_forge_unlock": ["weapon_002"],
+        "weapon_skins": ["weapon_002_s_1"],
+        "kill_effects": [2],
+    }
+    edit = prepare_unified_edit(source, plan)
+    assert edit.steps == (
+        "weapon_forge_unlock",
+        "weapon_skins",
+        "kill_effects",
+    )
+    result = json.loads(edit.candidate)
+    assert result["statisticData"]["object2ObtainTime"]["weapon_002"] == 2
+    assert result["weaponEvolutionData"]["weapons"]["weapon_002"]["UnlockedSkins"] == [
+        "weapon_002_s_1"
+    ]
+    assert result["miscData"]["unlockedKillEffectIds"] == [0, 1, 9, 2]
 
 
 def test_unified_plan_preserves_weapon_skins_and_kill_effects_with_progression():

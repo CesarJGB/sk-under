@@ -224,15 +224,16 @@ sin confirmar. El SHA remoto no se modificó.
 9. Registrar plataforma, versión, arma, contador previo, resultado visual y
    cualquier corrección automática del cliente.
 
-## Recomendación para la fase 9.5
+## Continuación en la fase 9.5
 
-- Validar físicamente el descubrimiento y la forja antes de ampliar el alcance.
-- Investigar la relación exacta entre contador, nivel de arma, planos y mesa de
-  forja con una prueba controlada.
-- Estudiar `itemData.mythicWeapons` y los niveles mitológicos solo con evidencia
-  de posesión y aceptación del cliente.
-- Resolver la semántica de `Level` y `CurrentSkinIndex` antes de editar evolución.
-- Investigar marcos de enemigos, monturas, trofeos y monedas iniciales para
-  completar la matriz CRDE.
-- No implementar migración de cuentas ni edición RAW arbitraria sin un diseño de
-  seguridad y derechos de servidor.
+La [Fase 9.5](phase9-5-weapon-forge-unlock.md) resolvió la pregunta principal:
+la forja no se habilita con cualquier contador positivo, sino al alcanzar el
+umbral del nivel del arma. Se añadió una operación separada para desbloquear la
+forja, se documentaron los umbrales estándar y la excepción de fusión
+`weapon_337`, y se marcaron como pendientes los requisitos que todavía no tienen
+evidencia suficiente.
+
+Siguen abiertas las preguntas sobre `itemData.mythicWeapons`, la semántica de
+`Level`/`CurrentSkinIndex` en evolución, los marcos de enemigos, monturas,
+trofeos y monedas iniciales. No se implementa migración de cuentas ni edición
+RAW arbitraria sin un diseño de seguridad y derechos de servidor.

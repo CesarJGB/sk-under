@@ -68,12 +68,12 @@ def test_validation_passes_without_the_manifest_check(capsys):
 def test_coverage_report_matches_the_generated_artifacts():
     report = generate_report.coverage(generate_report.load_all())
     assert report["fields"]["total"] == 616
-    assert report["fields"]["by_level"] == {"E1": 194, "E2": 405, "E3": 11, "E4": 6}
+    assert report["fields"]["by_level"] == {"E1": 194, "E2": 404, "E3": 12, "E4": 6}
     assert report["catalog_items"] == 4348
     assert len(report["catalogs"]) == 26
     assert report["translations"] == 8562
     assert report["dependencies"]["total"] == 49
-    assert report["sources"] == 21
+    assert report["sources"] == 23
     assert report["versions_analyzed"] == ["8.6.0", "8.7.0", "8.8.0"]
     rendered = generate_report.render_coverage(report)
     assert "Cobertura del Save Knowledge Engine" in rendered
@@ -87,7 +87,7 @@ def test_dependency_and_source_headers_match_their_lists():
         dependencies, common.load_schema("dependencies.schema.json")
     ) == []
     sources = common.read_json(common.SOURCES_DIR / "sources.json")
-    assert sources["count"] == len(sources["sources"]) == 21
+    assert sources["count"] == len(sources["sources"]) == 23
     assert common.validate_schema(sources, common.load_schema("sources.schema.json")) == []
     for source in sources["sources"]:
         location = source["location"]

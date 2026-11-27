@@ -62,7 +62,9 @@ from .kill_effect_editor import (
 from .skill_editor import SkillEdit, prepare_skill_unlock_edit
 from .skin_editor import SkinEdit, prepare_skin_unlock_edit
 from .weapon_progression_editor import (
+    WeaponForgeUnlockEdit,
     WeaponProgressionEdit,
+    prepare_weapon_forge_unlock_edit,
     prepare_weapon_progression_edit,
 )
 from .weapon_skin_editor import (
@@ -90,6 +92,7 @@ UNIFIED_CATEGORY_KEYS = frozenset(
         "skills",
         "skins",
         "weapon_progression",
+        "weapon_forge_unlock",
         "weapon_skins",
         "kill_effects",
         "advanced",
@@ -108,6 +111,7 @@ UNIFIED_OPTIONAL_DEFAULTS: dict[str, object] = {
     "blueprints": None,
     "decorations": None,
     "weapon_progression": [],
+    "weapon_forge_unlock": [],
     "weapon_skins": [],
     "kill_effects": [],
 }
@@ -321,6 +325,7 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
         "skills": _refs(raw.get("skills"), "skills", MAX_SKILLS),
         "skins": _refs(raw.get("skins"), "skins", MAX_SKINS),
         "weapon_progression": _weapons(raw.get("weapon_progression")),
+        "weapon_forge_unlock": _weapons(raw.get("weapon_forge_unlock")),
         "weapon_skins": _weapon_skins(raw.get("weapon_skins")),
         "kill_effects": _kill_effects(raw.get("kill_effects")),
         "advanced": _advanced(raw.get("advanced")),
@@ -333,6 +338,16 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
         "blueprints": _blueprints(raw.get("blueprints")),
         "decorations": _decorations(raw.get("decorations")),
     }
+    # El desbloqueo para forja ya registra el arma y eleva su contador por
+    # encima del valor de descubrimiento. Evitamos que ambas operaciones
+    # escriban el mismo campo cuando el plan incluye las dos selecciones.
+    forge_ids = set(plan["weapon_forge_unlock"])
+    if forge_ids:
+        plan["weapon_progression"] = [
+            weapon_id
+            for weapon_id in plan["weapon_progression"]
+            if weapon_id not in forge_ids
+        ]
     if not any(
         (
             plan["gems"] is not None,
@@ -342,6 +357,7 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
             plan["skills"],
             plan["skins"],
             plan["weapon_progression"],
+            plan["weapon_forge_unlock"],
             plan["weapon_skins"],
             plan["kill_effects"],
             plan["advanced"],
@@ -425,6 +441,7 @@ def _category(
         | SkillEdit
         | SkinEdit
         | WeaponProgressionEdit
+        | WeaponForgeUnlockEdit
         | WeaponSkinEdit
         | KillEffectEdit
         | AdvancedEdit
@@ -483,6 +500,14 @@ def _category(
             "newly_unlocked": list(edit.newly_discovered),
             "new_forge_ready": list(edit.new_forge_ready),
             "kind": "unlock",
+        }
+    elif isinstance(edit, WeaponForgeUnlockEdit):
+        detail = {
+            "original": len(edit.original_forge_ready),
+            "new": len(edit.new_forge_ready),
+            "newly_unlocked": list(edit.newly_forge_ready),
+            "pending_requirements": list(edit.pending_requirements),
+            "kind": "forge_unlock",
         }
     elif isinstance(edit, WeaponSkinEdit):
         detail = {
@@ -560,6 +585,14 @@ def prepare_unified_edit(source: bytes, raw_plan: Mapping[str, object]) -> Unifi
             "Descubrimiento de armas",
             lambda value: prepare_weapon_progression_edit(
                 value, plan["weapon_progression"]
+            ),
+        )
+    if plan["weapon_forge_unlock"]:
+        apply(
+            "weapon_forge_unlock",
+            "Desbloqueo para forja",
+            lambda value: prepare_weapon_forge_unlock_edit(
+                value, plan["weapon_forge_unlock"]
             ),
         )
     if plan["weapon_skins"]:

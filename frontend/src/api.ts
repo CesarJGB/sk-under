@@ -552,8 +552,19 @@ export type LabWeaponProgressionItem = {
   discovered: boolean
   count: number | null
   proposed_count: number
+  proposed_forge_count: number | null
   forge_status: 'ready' | 'requires_discovery' | 'not_forgeable'
   forge_ready: boolean
+  forge_unlock_status: 'ready' | 'requires_obtains' | 'pending_research' | 'not_forgeable'
+  forge_unlock_ready: boolean
+  required_obtains: number | null
+  recommended_obtains: number | null
+  requirement_status: string | null
+  requirement_basis: string | null
+  unlock_method: string | null
+  requirement_evidence: string | null
+  additional_requirements: string[]
+  requirement_source: string | null
   in_forge_queue: boolean
 }
 
@@ -569,6 +580,12 @@ export type LabWeaponProgression = {
   forgeable_total?: number
   forge_ready?: string[]
   forge_ready_count?: number
+  forge_unlock_ready?: string[]
+  forge_unlock_ready_count?: number
+  pending_requirements?: string[]
+  pending_requirements_count?: number
+  requirement_policy?: string
+  obtain_counter_evidence?: string
   forge_queue?: string[]
   forge_queue_path?: string
   unknown_weapon_ids?: string[]
@@ -652,6 +669,7 @@ export type LabUnifiedPlan = {
   skills?: LabSkillRef[]
   skins?: LabSkinRef[]
   weapon_progression?: string[]
+  weapon_forge_unlock?: string[]
   weapon_skins?: string[]
   kill_effects?: number[]
   advanced?: LabAdvancedPlan | null
@@ -666,7 +684,7 @@ export type LabUnifiedPlan = {
 
 export type LabCategoryKey =
   | 'gems' | 'fish_chip' | 'fish_progress' | 'characters' | 'skills' | 'skins'
-  | 'weapon_progression' | 'weapon_skins' | 'kill_effects'
+  | 'weapon_progression' | 'weapon_forge_unlock' | 'weapon_skins' | 'kill_effects'
   | 'advanced' | 'hero_levels' | 'pet_affinity' | 'blueprints' | 'decorations'
 
 export type LabUnifiedCategory = {
