@@ -1,10 +1,12 @@
 """Registro extensible de distribuciones de Soul Knight.
 
-Solo ``android-global`` tiene un contrato observado en el laboratorio. Las
-demás distribuciones se enumeran para que el frontend las muestre, pero no se
-presentan como funcionales ni se usan para autenticar. Añadir una distribución
-nueva exige cambiar este registro y aportar evidencia propia; no hay lógica de
-distribución repartida por el resto del código.
+``android-global`` es la distribución validada para lectura y escritura.
+``ios-global`` está validada para autenticación y descarga de solo lectura con
+la cuenta iOS autorizada; su escritura remota sigue deshabilitada. Las demás
+distribuciones se enumeran para que el frontend las muestre, pero no se
+presentan como funcionales. Añadir una distribución nueva exige cambiar este
+registro y aportar evidencia propia; no hay lógica de distribución repartida
+por el resto del código.
 """
 
 from __future__ import annotations
@@ -62,10 +64,10 @@ DISTRIBUTIONS: tuple[Distribution, ...] = (
         id="ios-global",
         label="iOS Global (IOS)",
         platform="ios",
-        game_version="8.8.0",
-        enabled=False,
-        validated=False,
-        note="iOS no está validado. El flujo nativo de esta fase es solo Android Global.",
+        game_version="8.8.0.13",
+        enabled=True,
+        validated=True,
+        note="Login y descarga verificados (8.8.0.13). Solo lectura: la escritura remota no está validada.",
     ),
     Distribution(
         id="ios-vietnam",
@@ -109,7 +111,7 @@ def require_enabled(distribution_id: object) -> Distribution:
     distribution = get_distribution(distribution_id)
     if not distribution.enabled or not distribution.validated or distribution.platform is None:
         raise NativeDistributionDisabled(
-            "Esta distribución todavía no está validada; solo Android Global está habilitada."
+            "Esta distribución todavía no está validada. Usa Android Global o iOS Global."
         )
     return distribution
 

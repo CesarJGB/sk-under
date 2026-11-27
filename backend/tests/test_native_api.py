@@ -150,7 +150,7 @@ def confirmation(draft):
     }
 
 
-def test_config_lists_all_distributions_but_only_global_is_enabled(tmp_path):
+def test_config_lists_all_distributions_with_android_and_ios_enabled(tmp_path):
     env = make_native(tmp_path)
     response = env["client"].get(API + "/config", headers=HEADERS)
     assert response.status_code == 200
@@ -158,7 +158,11 @@ def test_config_lists_all_distributions_but_only_global_is_enabled(tmp_path):
     assert body["available"] is True and body["login_available"] is True
     assert body["native_auth_ready"] is True
     assert len(body["distributions"]) == 6
-    assert [item["id"] for item in body["distributions"] if item["enabled"]] == ["android-global"]
+    enabled = [item for item in body["distributions"] if item["enabled"]]
+    assert [item["id"] for item in enabled] == ["android-global", "ios-global"]
+    ios = next(item for item in enabled if item["id"] == "ios-global")
+    assert ios["platform"] == "ios" and ios["game_version"] == "8.8.0.13"
+    assert "solo lectura" in ios["note"].lower()
     assert {item["id"] for item in body["distributions"]} == {
         "android-global", "android-vietnam", "ios-global",
         "ios-vietnam", "ios-china", "taptap",

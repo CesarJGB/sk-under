@@ -32,6 +32,7 @@ export const FRIENDLY: Record<string, string> = {
   cloud_write_disabled: 'La subida a la nube está deshabilitada.',
   cloud_session_rejected: 'ChillyRoom rechazó el acceso a la partida. Vuelve a iniciar sesión.',
   cloud_already_confirmed: 'Esta edición ya se subió. Verifica su respaldo en Partida.',
+  native_platform_mismatch: 'La partida disponible pertenece a la otra plataforma. No se modificó nada.',
   native_save_identity_mismatch: 'No se pudo verificar que la partida pertenezca a tu cuenta.',
   cloud_remote_changed: 'La partida cambió en la nube. Descárgala de nuevo antes de editar.',
   network_error: 'No se pudo conectar con la API de SK-Under. Revisa tu conexión.',

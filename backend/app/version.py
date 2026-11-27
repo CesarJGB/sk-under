@@ -11,6 +11,9 @@ import os
 
 API_VERSION = "2026.11.25"
 FEATURES = (
+    "ios_local_import",
+    "ios_read_only_report",
+    "ios_native_read_only",
     "native_backup_history",
     "native_backup_history_pagination",
     "native_backup_manual",

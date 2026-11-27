@@ -14,7 +14,7 @@ const SECOND_PROFILE = {
 const DISTRIBUTIONS = [
   { id: 'android-global', label: 'Android Global (GP)', platform: 'android', game_version: '8.8.0', enabled: true, validated: true, note: 'Validada.' },
   { id: 'android-vietnam', label: 'Android Vietnam (GP_VNM)', platform: 'android', game_version: '8.8.0', enabled: false, validated: false, note: 'No validada.' },
-  { id: 'ios-global', label: 'iOS Global (IOS)', platform: 'ios', game_version: '8.8.0', enabled: false, validated: false, note: 'No validada.' },
+  { id: 'ios-global', label: 'iOS Global (IOS)', platform: 'ios', game_version: '8.8.0.13', enabled: true, validated: true, note: 'Solo lectura.' },
   { id: 'ios-vietnam', label: 'iOS Vietnam (IOS_VNM)', platform: 'ios', game_version: '8.8.0', enabled: false, validated: false, note: 'No validada.' },
   { id: 'ios-china', label: 'iOS China (IOS_CN)', platform: 'ios', game_version: '8.8.0', enabled: false, validated: false, note: 'No validada.' },
   { id: 'taptap', label: 'TapTap', platform: 'android', game_version: '8.8.0', enabled: false, validated: false, note: 'No validada.' },
@@ -329,13 +329,14 @@ test.beforeEach(async ({ page }) => {
   await page.route('**/api/v1/formats', (route) => route.fulfill({ json: { formats: [] } }))
 })
 
-test('muestra las seis distribuciones, solo Android Global habilitada y alterna la contraseña', async ({ page }) => {
+test('muestra las seis distribuciones, Android e iOS Global habilitadas y alterna la contraseña', async ({ page }) => {
   await mockBase(page)
   await page.setViewportSize({ width: 320, height: 730 })
   await page.goto('/partida')
   await expect(page.getByRole('heading', { name: 'Iniciar sesión en ChillyRoom' })).toBeVisible()
   await expect(page.getByLabel('Distribución')).toHaveValue('android-global')
-  await expect(page.getByRole('option', { name: /iOS Global/ })).toBeDisabled()
+  await expect(page.getByRole('option', { name: /iOS Global.*Solo lectura/ })).toBeEnabled()
+  await expect(page.getByRole('option', { name: /iOS Vietnam/ })).toBeDisabled()
   await expect(page.getByRole('option', { name: /TapTap/ })).toBeDisabled()
   const password = page.getByLabel('Contraseña', { exact: true })
   await expect(password).toHaveAttribute('type', 'password')
@@ -554,17 +555,35 @@ test('oculta el correo y conserva la preferencia sin guardarlo en texto plano', 
   await expect(page.locator(`[title*="${email}"]`)).toHaveCount(0)
 })
 
-test.fixme('mantiene el editor en solo lectura cuando la escritura está deshabilitada', async ({ page }) => {
-  await mockBase(page, { ...BASE_CONFIG, write_enabled: false })
-  await mockEditor(page, { ...ACTIVE, write_enabled: false, write_ready: false, save: SAVE })
+test('mantiene la cuenta iOS y el editor en solo lectura', async ({ page }) => {
+  const ios = {
+    ...ACTIVE, read_only: true, write_enabled: false, write_ready: false,
+    account: {
+      ...ACTIVE.account, distribution: 'ios-global',
+      distribution_label: 'iOS Global (IOS)', platform: 'ios', read_only: true,
+    },
+    save: SAVE,
+  }
+  const report = {
+    ...REPORT, platform: 'ios', read_only: true, write_enabled: false, sha256: SHA,
+    fish_chips: {
+      ...REPORT.fish_chips, evidence: 'E2', validation_level: 'E2',
+      write_policy: 'not_exposed', transaction_validated: false,
+    },
+    characters: { ...REPORT.characters, skins_status: 'not_validated' },
+    limitations: ['El informe iOS es de solo lectura.'],
+  }
+  await mockBase(page, { ...BASE_CONFIG, write_enabled: false, session: ios })
+  await mockEditor(page, ios)
+  await page.route('**/api/v1/cloud/native/save', (route) => route.fulfill({
+    json: { ...SAVE, report, downloaded_at: '2026-11-26T20:00:00Z' },
+  }))
+  await page.goto('/editor')
+  await expect(page.getByText('Partida de solo lectura.')).toBeVisible()
+  await expect(page.locator('fieldset.editor-content')).toHaveAttribute('disabled', '')
+  await expect(page.getByRole('button', { name: 'Guardar' })).toBeDisabled()
   await page.goto('/partida')
-  await submitLogin(page)
-  await page.getByRole('link', { name: 'Abrir Editor' }).click()
-  await expect(page.getByText('La subida a la nube está deshabilitada.', { exact: false })).toBeVisible()
-  await page.getByLabel('Nueva cantidad de gemas').fill('1002')
-  await page.getByRole('button', { name: 'Preparar edición' }).click()
-  await expect(page.getByText('+1', { exact: true })).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Subir y verificar' })).toHaveCount(0)
+  await expect(page.getByText('iOS está en modo de solo lectura', { exact: false })).toBeVisible()
 })
 
 test('explica el desafío del portal y no simula una sesión', async ({ page }) => {

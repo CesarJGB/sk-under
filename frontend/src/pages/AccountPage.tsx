@@ -378,7 +378,11 @@ function AccountWorkspace({
     {installationPanel || <CloudSaveCard save={save} status={saveStatus} downloading={downloading}
       disabled={disabled} onDownload={download} editorHref={`${basePath}/editor`} feedback={<>
         {downloadFeedback}
-        {!session.write_ready && <p className="partida-muted">Acceso a la nube de solo lectura.</p>}
+        {!session.write_ready && <p className="partida-muted">
+          {session.account?.platform === 'ios'
+            ? 'iOS está en modo de solo lectura: puedes descargar la partida y crear respaldos locales; la subida no está habilitada.'
+            : 'Acceso a la nube de solo lectura.'}
+        </p>}
       </>} />}
     <BackupHistory history={history} pending={historyOperation.pending} loadingMore={moreOperation.pending}
       result={backupResult}

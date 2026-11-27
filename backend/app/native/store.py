@@ -354,8 +354,14 @@ class NativeStore:
     def hash_email(self, email: str) -> str:
         return self._digest("email", email.strip().casefold())
 
-    def identity_subject(self, *, email: str, uid: int, player_id: int) -> str:
-        return self._digest("native-identity", f"{email.strip().casefold()}\x00{uid}\x00{player_id}")
+    def identity_subject(self, *, email: str, uid: int, player_id: int, scope: str = "") -> str:
+        base = f"{email.strip().casefold()}\x00{uid}\x00{player_id}"
+        # ``scope`` separa sujetos de plataforma cuando el mismo jugador puede
+        # tener partidas distintas. Vacío conserva exactamente el hash Android
+        # ya usado por perfiles y respaldos existentes.
+        if scope:
+            base = f"{base}\x00platform:{scope}"
+        return self._digest("native-identity", base)
 
     def hash_uid(self, uid: int) -> str:
         return self._digest("uid", str(uid))

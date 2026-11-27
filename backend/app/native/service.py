@@ -26,6 +26,7 @@ from ..cloud.backup_store import BackupIntegrityError, BackupStorageUnavailable,
 from ..cloud.fish_chip_editor import MAX_FISH_CHIP, MIN_FISH_CHIP, read_fish_chip
 from ..cloud.fish_progress_editor import read_fish_progress
 from ..cloud.gems_editor import MAX_GEMS, MIN_GEMS, read_gems
+from ..cloud.ios import save_platform
 from ..cloud.kill_effect_editor import read_kill_effects
 from ..cloud.lab_service import CloudLabService
 from ..cloud.provider import (
@@ -64,6 +65,7 @@ from .errors import (
     NativeSessionExpired,
     NativeSessionRejected,
     NativeSessionRequired,
+    NativeSavePlatformMismatch,
     NativeWriteDenied,
     NativeWriteDisabled,
 )
@@ -123,9 +125,17 @@ class NativeSaveProvider:
     store: NativeStore
     subject: str = field(repr=False)
     distribution: str
+    expected_platform: str | None = None
 
     def download(self, limit: int = MAX_INPUT_BYTES) -> AcquiredCloudSave:
         save = self.remote.download(limit)
+        if self.expected_platform is not None:
+            detected = save_platform(save.payload)
+            if detected != self.expected_platform:
+                raise NativeSavePlatformMismatch(
+                    "La partida descargada pertenece a otra plataforma. "
+                    "No se vinculó ni se modificó ninguna copia."
+                )
         save_subject = self.store.save_subject(self.distribution, save.payload)
         self.store.bind_save_subject(self.subject, self.distribution, save_subject)
         return save
@@ -302,6 +312,7 @@ class NativeAuthService:
             "distribution": distribution.id,
             "distribution_label": distribution.label,
             "platform": distribution.platform,
+            "read_only": distribution.platform == "ios",
         }
 
     def accounts(self, cookie: str = "") -> list[dict[str, object]]:
@@ -377,6 +388,7 @@ class NativeAuthService:
     ) -> dict[str, object]:
         distribution = get_distribution(profile.distribution)
         installation_ready = profile.installation_ready
+        read_only = distribution.platform == "ios"
         return {
             "active": True,
             "identity_verified": True,
@@ -393,8 +405,9 @@ class NativeAuthService:
             "auto_identity": profile.auto_generated,
             "binding_wait_until": _iso(profile.binding_wait_until) if profile.binding_wait_until else None,
             "save_error": profile.last_save_error,
+            "read_only": read_only,
             "write_enabled": self.write_enabled,
-            "write_ready": self.write_enabled and profile.allow_write and installation_ready,
+            "write_ready": (not read_only) and self.write_enabled and profile.allow_write and installation_ready,
             "min_gems": self.min_gems,
             "max_gems": self.max_gems,
             "min_fish_chip": self.min_fish_chip,
@@ -870,7 +883,10 @@ class NativeAuthService:
         if session.distro_id != profile.distro_id:
             raise NativeIdentityMismatch("La sesión no corresponde al perfil de instalación.")
         subject = self.store.identity_subject(
-            email=session.email, uid=session.uid, player_id=session.player_id
+            email=session.email,
+            uid=session.uid,
+            player_id=session.player_id,
+            scope="ios" if distribution.platform == "ios" else "",
         )
         self.store.bind(profile.id, subject, email_hash=email_hash)
         save, save_error = self._save_or_error(profile, session.token, subject)
@@ -1026,6 +1042,7 @@ class NativeAuthService:
     ) -> _Candidate:
         first: _Candidate | None = None
         mismatch = False
+        platform_mismatch = False
         for player in players[:8]:
             try:
                 candidate = self._probe_candidate(
@@ -1045,12 +1062,20 @@ class NativeAuthService:
                 continue
             if first is None:
                 first = candidate
+            if candidate.save_error == "native_platform_mismatch":
+                platform_mismatch = True
+                continue
             if candidate.reuse_profile or candidate.save is not None:
                 return candidate
             if candidate.save_error == "native_device_binding_throttled":
                 return candidate
             if candidate.save_error not in (None, "native_no_cloud_save"):
                 return candidate
+        if platform_mismatch:
+            raise NativeSavePlatformMismatch(
+                "La cuenta autenticó, pero la partida disponible pertenece a otra plataforma. "
+                "No se vinculó ni se modificó ninguna copia."
+            )
         if first is None:
             if mismatch:
                 raise NativePortalIdentityMismatch(
@@ -1087,7 +1112,10 @@ class NativeAuthService:
                 "El distro del portal no corresponde al jugador devuelto por el gateway."
             )
         subject = self.store.identity_subject(
-            email=session.email, uid=session.uid, player_id=session.player_id
+            email=session.email,
+            uid=session.uid,
+            player_id=session.player_id,
+            scope="ios" if distribution.platform == "ios" else "",
         )
         existing = self.store.profile_by_subject(subject)
         if existing is not None and existing.distribution == distribution.id:
@@ -1133,6 +1161,7 @@ class NativeAuthService:
             self.store,
             subject,
             distribution.id,
+            expected_platform=distribution.platform,
         )
         save = provider.download()
         gems = read_gems(save.payload)
@@ -1257,7 +1286,7 @@ class NativeAuthService:
             return profile
         if not profiles:
             raise NativeProfileMissing(
-                "No hay un perfil de instalación aprovisionado para Android Global. "
+                "No hay un perfil de instalación aprovisionado para esta distribución. "
                 "El propietario debe aprovisionarlo antes de iniciar sesión."
             )
         if len(profiles) == 1:
@@ -1273,6 +1302,7 @@ class NativeAuthService:
             self.store,
             subject,
             profile.distribution,
+            expected_platform=get_distribution(profile.distribution).platform,
         )
         try:
             save = provider.download()
@@ -1285,6 +1315,9 @@ class NativeAuthService:
             ) from None
         except CloudProviderUnauthenticated:
             self.store.set_save_error(profile.id, "native_session_rejected")
+            raise
+        except NativeSavePlatformMismatch:
+            self.store.set_save_error(profile.id, "native_platform_mismatch")
             raise
         except CloudProviderUnavailable as exc:
             if getattr(exc, "provider_code", None) == 100504:
@@ -1344,8 +1377,12 @@ class NativeAuthService:
         }
 
     def _backup_store(self, session: NativeSessionRecord) -> LabBackupStore:
+        root = self.backup_root / session.subject
+        if get_distribution(session.profile.distribution).platform == "ios":
+            # Separación explícita además del sujeto con ámbito de plataforma.
+            root = root / "ios"
         return LabBackupStore(
-            self.backup_root / session.subject,
+            root,
             cipher_key=self.backup_key,
             required_mount=self.backup_root if self.backup_require_mount else None,
         )
@@ -1356,12 +1393,17 @@ class NativeAuthService:
                 "Completa el identificador de instalación para acceder a la partida."
             )
         self._require_binding_ready(session.profile)
-        write = self.write_enabled and session.profile.allow_write
+        write = (
+            self.write_enabled
+            and session.profile.allow_write
+            and get_distribution(session.profile.distribution).platform == "android"
+        )
         provider = NativeSaveProvider(
             self.provider_factory(session.token, session.unique_id, session.profile.distro_id),
             self.store,
             session.subject,
             session.profile.distribution,
+            expected_platform=get_distribution(session.profile.distribution).platform,
         )
         uploader = (
             self.uploader_factory(session.token, session.unique_id, session.profile.distro_id)

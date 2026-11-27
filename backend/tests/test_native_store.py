@@ -173,13 +173,15 @@ def test_login_rate_limit_is_per_identity_or_address(tmp_path):
     store.check_login_rate(store.hash_ip("127.0.0.2"), other_email)  # otra IP no está limitada
 
 
-def test_distribution_registry_only_enables_validated_global():
+def test_distribution_registry_enables_validated_global_platforms():
     distribution = require_enabled("android-global")
     assert distribution.enabled and distribution.validated
+    ios = require_enabled("ios-global")
+    assert ios.enabled and ios.validated and ios.platform == "ios"
     from app.native.errors import NativeDistributionDisabled
 
     with pytest.raises(NativeDistributionDisabled):
-        require_enabled("ios-global")
+        require_enabled("ios-vietnam")
 
 
 def test_email_hash_maps_one_profile_per_account_and_distribution(tmp_path):

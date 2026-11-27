@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .api.cloud_accounts import router as cloud_accounts_router
 from .api.cloud_lab import router as cloud_lab_router
+from .api.ios import router as ios_router
 from .api.native import router as native_router
 from .api.routes import router
 from .cloud.accounts import AccountError, CloudAccounts
@@ -58,4 +59,5 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(cloud_lab_router)
     app.include_router(cloud_accounts_router)
     app.include_router(native_router)
+    app.include_router(ios_router)
     return app

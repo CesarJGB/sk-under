@@ -74,7 +74,7 @@ export function AccountLoginForm({
           <select name="distribution" defaultValue="android-global" disabled={!available}>
             {config.distributions.map((distribution) => <option key={distribution.id}
               value={distribution.id} disabled={!distribution.enabled}>
-              {distributionLabel(distribution.label)}{distribution.enabled ? '' : ' · No disponible'}
+              {distributionLabel(distribution.label)}{distribution.platform === 'ios' ? ' · Solo lectura' : ''}{distribution.enabled ? '' : ' · No disponible'}
             </option>)}
           </select>
           <ChevronDown size={16} aria-hidden="true" />

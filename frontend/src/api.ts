@@ -69,8 +69,8 @@ export type SaveFishChips = {
   server_authority: 'unknown'
   status: 'read_only'
   evidence: string
-  validation_level?: 'E2' | 'E4'
-  write_policy?: 'experimental_authorized' | 'confirmed_by_owner'
+  validation_level?: 'E2' | 'E3' | 'E4'
+  write_policy?: 'experimental_authorized' | 'confirmed_by_owner' | 'not_exposed'
   transaction_validated: boolean
   missing_proof: string
   fields: SaveFishChipField[]
@@ -103,7 +103,7 @@ export type SaveCharacter = {
   equipped_skin: SaveSkin | null
   skins_recorded: number
   skin_options: SaveSkinOption[]
-  skins_status: 'confirmed_by_owner'
+  skins_status: 'confirmed_by_owner' | 'not_validated'
 }
 
 export type SaveSkillSummary = {
@@ -122,7 +122,7 @@ export type SaveSkinsSummary = {
   selected: number
   incompatible: number
   characters_with_data: number
-  status: 'confirmed_by_owner'
+  status: 'confirmed_by_owner' | 'not_validated'
 }
 
 export type SaveCharacterReport = {
@@ -131,7 +131,7 @@ export type SaveCharacterReport = {
   skills?: SaveSkillSummary
   skins?: SaveSkinsSummary
   level_status: 'not_validated'
-  skins_status: 'confirmed_by_owner'
+  skins_status: 'confirmed_by_owner' | 'not_validated'
   catalog: {
     available: boolean
     error: string | null
@@ -1242,12 +1242,14 @@ export type NativeSession = {
     distribution: string
     distribution_label: string
     platform: string | null
+    read_only?: boolean
   }
   session_expires_at?: string
   idle_expires_at?: string
   installation_ready?: boolean
   auto_identity?: boolean
   binding_wait_until?: string | null
+  read_only?: boolean
   write_enabled?: boolean
   write_ready?: boolean
   min_gems?: number

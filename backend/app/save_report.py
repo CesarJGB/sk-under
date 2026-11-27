@@ -57,7 +57,7 @@ def _load_character_catalog() -> dict[str, object]:
     return load_character_catalog()
 
 
-def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
+def _character_rows(game: Mapping[str, Any], *, platform: str = "android") -> dict[str, object]:
     catalog = _load_character_catalog()
     codes = catalog["codes"] or None
     skins = catalog["skins"] or None
@@ -125,7 +125,7 @@ def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
                 "skin_options": skin_options,
                 "equipped_skin": equipped,
                 "skins_recorded": len(observed_skins),
-                "skins_status": "confirmed_by_owner",
+                "skins_status": "confirmed_by_owner" if platform == "android" else "not_validated",
             }
         )
         rows.append(row)
@@ -201,10 +201,10 @@ def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
             "selected": selected_skins,
             "incompatible": incompatible_skins,
             "characters_with_data": characters_with_skins,
-            "status": "confirmed_by_owner",
+            "status": "confirmed_by_owner" if platform == "android" else "not_validated",
         },
         "level_status": "not_validated",
-        "skins_status": "confirmed_by_owner",
+        "skins_status": "confirmed_by_owner" if platform == "android" else "not_validated",
         "catalog": {
             "available": bool(catalog.get("available", bool(catalog.get("codes")))),
             "error": catalog.get("error"),
@@ -214,11 +214,25 @@ def _character_rows(game: Mapping[str, Any]) -> dict[str, object]:
         },
         "notes": [
             "El nivel se muestra tal como aparece en la partida; no hay máximo validado.",
-            "Solo Knight tiene un cambio de nivel observado experimentalmente (E3).",
-            "El desbloqueo de skins está confirmado por el propietario en Android físico (E3): interpreta Value=1 como desbloqueada, no crea posiciones y conserva currentSkinDatas. Los demás valores de skinLock no tienen semántica validada.",
+            "Solo Knight tiene un cambio de nivel observado experimentalmente (E3)."
+            if platform == "android"
+            else "El nivel se muestra tal como aparece; no se ha validado ningún cambio de nivel en iOS.",
+            (
+                "El desbloqueo de skins está confirmado por el propietario en Android físico (E3): interpreta Value=1 como desbloqueada, no crea posiciones y conserva currentSkinDatas. Los demás valores de skinLock no tienen semántica validada."
+                if platform == "android"
+                else "Las skins se muestran como lectura. La validación Android no se extrapola a iOS y no se ha probado una escritura en el cliente oficial de iOS."
+            ),
             "Las habilidades se muestran con nombre de catálogo y el estado observado en heroSkillUnlock.",
-            "El desbloqueo de personajes está confirmado por el propietario en Android físico; solo activa gameData.heroUnlock y conserva niveles, habilidades y skins.",
-            "El desbloqueo de habilidades fue confirmado por el propietario en el cliente oficial y Android físico (E3); solo activa posiciones existentes de gameData.heroSkillUnlock y conserva gameData.heroSkill.",
+            (
+                "El desbloqueo de personajes está confirmado por el propietario en Android físico; solo activa gameData.heroUnlock y conserva niveles, habilidades y skins."
+                if platform == "android"
+                else "Los personajes se muestran como lectura; no se ha validado el desbloqueo ni su persistencia en iOS."
+            ),
+            (
+                "El desbloqueo de habilidades fue confirmado por el propietario en el cliente oficial y Android físico (E3); solo activa posiciones existentes de gameData.heroSkillUnlock y conserva gameData.heroSkill."
+                if platform == "android"
+                else "Las habilidades se muestran como lectura; la validación Android no se considera validación iOS."
+            ),
         ],
         "status": READ_ONLY,
     }
@@ -448,19 +462,23 @@ def _resources(document: Mapping[str, Any]) -> dict[str, object]:
     }
 
 
-def build_save_report(document: Mapping[str, Any]) -> dict[str, object]:
+def build_save_report(document: Mapping[str, Any], *, platform: str = "android") -> dict[str, object]:
     """Construye el informe saneado a partir del agregado ya decodificado."""
+    ios = platform == "ios"
     game = _mapping(document.get("gameData")) or {}
     fish = fish_chip_report(document)
     fish.update(
         {
             "status": READ_ONLY,
-            "evidence": E4,
-            "validation_level": "E4",
-            "write_policy": "confirmed_by_owner",
-            "transaction_validated": True,
+            "evidence": E2 if ios else E4,
+            "validation_level": "E2" if ios else "E4",
+            "write_policy": "not_exposed" if ios else "confirmed_by_owner",
+            "transaction_validated": not ios,
             "missing_proof": (
-                "El propietario confirmó en Android la subida y recuperación desde la nube, "
+                "La muestra iOS confirma la estructura y el saldo, pero no se ha validado "
+                "en un dispositivo iOS físico la escritura, la sincronización ni la recuperación."
+                if ios
+                else "El propietario confirmó en Android la subida y recuperación desde la nube, "
                 "la visualización del saldo, la compra de paquetes con descuento correcto y "
                 "el guardado posterior desde el cliente oficial al modificar conjuntamente "
                 "gameData.fishChip e itemData.materials.material_fish."
@@ -468,19 +486,30 @@ def build_save_report(document: Mapping[str, Any]) -> dict[str, object]:
         }
     )
     game_version = game.get("gameVersion")
-    return {
-        "version": REPORT_VERSION,
-        "game_version": game_version if type(game_version) is int else None,
-        "fish_chips": fish,
-        "characters": _character_rows(game),
-        "resources": _resources(document),
-        "limitations": [
+    limitations = (
+        [
+            "El informe iOS es de solo lectura. La validación Android no se extrapola a iOS.",
+            "No se ha validado la escritura ni la persistencia de una copia modificada en el cliente oficial de iOS.",
+            "El saldo y las colecciones se interpretan con los mismos analizadores de lectura; los valores ausentes o desconocidos no se inventan.",
+            "Los desbloqueos, niveles y topes observados en Android no se consideran validados en iOS.",
+            "La descarga remota iOS está verificada en 8.8.0.13; la subida remota permanece deshabilitada.",
+        ]
+        if ios
+        else [
             "El propietario confirmó el saldo de fichas de pesca y la escritura conjunta de gameData.fishChip e itemData.materials.material_fish en un dispositivo Android físico.",
             "El desbloqueo de personajes confirmado por el propietario solo modifica gameData.heroUnlock; no edita niveles, habilidades, skins ni recursos.",
             "No se habilita la escritura de niveles, recursos ni otras categorías. El desbloqueo de personajes, habilidades y skins está confirmado por el propietario; no se declara persistencia posterior.",
             "Solo se interpreta skinLock Value=1 como skin desbloqueada; el propietario confirmó el resultado en Android físico (E3). Los demás valores se conservan sin semántica validada.",
             "Los niveles máximos de personaje no están validados; no se muestran como si lo estuvieran.",
-        ],
+        ]
+    )
+    return {
+        "version": REPORT_VERSION,
+        "game_version": game_version if type(game_version) is int else None,
+        "fish_chips": fish,
+        "characters": _character_rows(game, platform=platform),
+        "resources": _resources(document),
+        "limitations": limitations,
     }
 
 

@@ -52,7 +52,7 @@ def test_provision_cli_rejects_an_unvalidated_distribution(tmp_path, capsys):
     configuration = settings(tmp_path)
     code = run(
         configuration,
-        ["--label", "iOS", "--distribution", "ios-global", "--distro-stdin", "--no-unique"],
+        ["--label", "iOS", "--distribution", "ios-vietnam", "--distro-stdin", "--no-unique"],
         stdin_reader=lambda: "distro-ios",
     )
     assert code == 1

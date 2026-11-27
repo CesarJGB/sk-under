@@ -127,6 +127,18 @@ class NativeSaveIdentityMismatch(NativeError):
     status = 422
 
 
+class NativeSavePlatformMismatch(NativeError):
+    """La partida descargada pertenece a la otra plataforma.
+
+    El gateway histórico selecciona la partida por distro, no por la cabecera
+    ``x-platform``. Sin esta comprobación una cuenta con partidas Android e iOS
+    podría recibir la copia equivocada al elegir una distribución.
+    """
+
+    code = "native_platform_mismatch"
+    status = 409
+
+
 class NativeLoginThrottled(NativeError):
     code = "native_login_throttled"
     status = 429

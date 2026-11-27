@@ -982,7 +982,7 @@ export function EditorWorkspace({
         <span>Confirmo subir el candidato a {accountLabel}.</span>
       </label>
     </div>
-    : <fieldset className="editor-content" disabled={busy || needsRefresh}>
+    : <fieldset className="editor-content" disabled={busy || needsRefresh || !canWrite}>
       {showQuick && <QuickEdit save={save} draft={draft} built={built} update={update} />}
       {route === 'categories' && <CategoryGrid built={built} onOpen={(id) => go(`${editorBase}/categoria/${id}`)} />}
       {activeCategory && <div className="category-detail" data-testid={`category-${activeCategory.id}`}>
