@@ -19,12 +19,42 @@ from app.cloud.lab_service import CloudLabService, LabWritePendingValidation
 from test_gems_editor import FakeUploader, FixedProvider
 from test_native_api import API, HEADERS, PAYLOAD_A, login, make_native
 
+_IOS_DOCUMENT = json.loads(PAYLOAD_A) | {
+    "platformId": "IOS",
+    "cloudSaveId": "IOS_synthetic",
+    "futureSection": {"preserve": True},
+}
+_IOS_DOCUMENT["gameData"]["futureField"] = {"nested": [1, 2, 3]}
 IOS_PAYLOAD = json.dumps(
-    json.loads(PAYLOAD_A) | {"platformId": "IOS", "cloudSaveId": "IOS_synthetic"},
+    _IOS_DOCUMENT,
     ensure_ascii=False,
     sort_keys=True,
     separators=(", ", ": "),
 ).encode()
+
+
+def _changed_paths(before: object, after: object, prefix: str = "") -> set[str]:
+    """Rutas modificadas entre dos documentos, incluidas listas y anidamientos."""
+
+    if type(before) is not type(after):
+        return {prefix or "<root>"}
+    if isinstance(before, dict):
+        changes: set[str] = set()
+        for key in before.keys() | after.keys():
+            path = f"{prefix}.{key}" if prefix else str(key)
+            if key not in before or key not in after:
+                changes.add(path)
+            else:
+                changes |= _changed_paths(before[key], after[key], path)
+        return changes
+    if isinstance(before, list):
+        if len(before) != len(after):
+            return {prefix or "<root>"}
+        changes = set()
+        for index, (left, right) in enumerate(zip(before, after, strict=True)):
+            changes |= _changed_paths(left, right, f"{prefix}[{index}]")
+        return changes
+    return set() if before == after else {prefix or "<root>"}
 
 
 def test_capability_matrix_states_are_explicit_and_do_not_extrapolate_android():
@@ -69,7 +99,18 @@ def test_ios_lab_prepares_a_candidate_and_blocks_upload_and_restore(tmp_path: Pa
     assert prepared.backup.changed is True
     assert prepared.backup.original_sha256 == sha256(IOS_PAYLOAD).hexdigest()
     assert prepared.edit.candidate != IOS_PAYLOAD
-    assert json.loads(prepared.edit.candidate)["gameData"]["gems"] == 1002
+    candidate = json.loads(prepared.edit.candidate)
+    assert candidate["gameData"]["gems"] == 1002
+    # Una edición pequeña no debe alterar metadatos ni campos desconocidos.
+    # varGems es el contrapeso de consistencia que ya usa el editor Android.
+    assert _changed_paths(json.loads(IOS_PAYLOAD), candidate) == {
+        "gameData.gems",
+        "gameData.varGems",
+    }
+    assert candidate["platformId"] == "IOS"
+    assert candidate["cloudSaveId"] == "IOS_synthetic"
+    assert candidate["futureSection"] == {"preserve": True}
+    assert candidate["gameData"]["futureField"] == {"nested": [1, 2, 3]}
 
     with pytest.raises(LabWritePendingValidation):
         lab.confirm(prepared.backup.id, prepared.edit.candidate_sha256)
