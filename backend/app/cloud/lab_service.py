@@ -19,6 +19,7 @@ from ..cloud_save import MAX_INPUT_BYTES, CloudSaveError, CopyLimitError
 from ..save_report import read_save_report
 from .backup_store import BackupRecord, BackupStoreError, LabBackupStore
 from .blob_upload import UploadResult
+from .capabilities import CapabilityState, capability_matrix
 from .advanced_editor import (
     ADVANCED_RECORD_FIELD,
     BATTLE_PASS_PATH,
@@ -106,6 +107,12 @@ class LabWriteDisabled(LabServiceError):
     code = "cloud_write_disabled"
 
 
+class LabWritePendingValidation(LabServiceError):
+    """La lectura y la preparación están disponibles, pero no la subida."""
+
+    code = "cloud_write_pending_validation"
+
+
 class LabNoChanges(LabServiceError):
     code = "cloud_no_changes"
 
@@ -146,13 +153,21 @@ class LabStatus:
     message: str
     min_fish_chip: int = MIN_FISH_CHIP
     max_fish_chip: int = MAX_FISH_CHIP
+    platform: str = "android"
+    prepare_ready: bool = True
+    write_state: CapabilityState = "write_verified"
+    capabilities: dict[str, object] = field(default_factory=dict)
 
     def summary(self) -> dict[str, object]:
         return {
             "mode": self.mode,
             "read_ready": self.read_ready,
+            "prepare_ready": self.prepare_ready,
             "write_enabled": self.write_enabled,
             "write_ready": self.write_ready,
+            "write_state": self.write_state,
+            "platform": self.platform,
+            "capabilities": self.capabilities,
             "admin_configured": self.admin_configured,
             "admin_required": True,
             "backup_count": self.backup_count,
@@ -779,6 +794,7 @@ class CloudLabService:
         write_enabled: bool = False,
         admin_configured: bool = False,
         max_input_bytes: int = MAX_INPUT_BYTES,
+        platform: str = "android",
     ) -> None:
         if isinstance(max_input_bytes, bool) or not isinstance(max_input_bytes, int) or not 0 < max_input_bytes <= MAX_INPUT_BYTES:
             raise LabServiceError("Límite de lectura inválido.")
@@ -788,11 +804,17 @@ class CloudLabService:
         self.write_enabled = write_enabled
         self.admin_configured = admin_configured
         self.max_input_bytes = max_input_bytes
+        self.platform = platform
         self._write_lock = threading.Lock()
 
     def status(self) -> LabStatus:
-        read_ready = True
-        write_ready = self.write_enabled and self.uploader is not None and self.admin_configured
+        capabilities = capability_matrix(self.platform)
+        write_ready = (
+            capabilities.write_supported
+            and self.write_enabled
+            and self.uploader is not None
+            and self.admin_configured
+        )
         if write_ready:
             mode: Literal["live", "read_only", "disabled"] = "live"
         else:
@@ -802,14 +824,18 @@ class CloudLabService:
             backups = self.store.count()
         except BackupStoreError:
             backups = 0
-        message = (
-            "Laboratorio real con escritura administrativa habilitada."
-            if mode == "live"
-            else "Laboratorio en solo lectura: la escritura está deshabilitada en el servidor."
-        )
+        if mode == "live":
+            message = "Laboratorio real con escritura administrativa habilitada."
+        elif capabilities.state == "write_pending_validation":
+            message = (
+                "iOS: descarga, respaldos y preparación de candidatos disponibles. "
+                "La subida remota está pendiente de validación; no se envía nada a la nube."
+            )
+        else:
+            message = "Laboratorio en solo lectura: la escritura está deshabilitada en el servidor."
         return LabStatus(
             mode=mode,
-            read_ready=read_ready,
+            read_ready=capabilities.read_ready,
             write_enabled=self.write_enabled,
             write_ready=write_ready,
             admin_configured=self.admin_configured,
@@ -818,8 +844,22 @@ class CloudLabService:
             max_gems=MAX_GEMS,
             min_fish_chip=MIN_FISH_CHIP,
             max_fish_chip=MAX_FISH_CHIP,
+            platform=self.platform,
+            prepare_ready=capabilities.prepare_ready,
+            write_state=capabilities.state,
+            capabilities=capabilities.summary(),
             message=message,
         )
+
+    def _require_write_ready(self) -> None:
+        capabilities = capability_matrix(self.platform)
+        if not capabilities.write_supported:
+            raise LabWritePendingValidation(
+                "La escritura remota de esta plataforma está pendiente de validación. "
+                "El candidato y su respaldo se conservan, pero no se envió nada a la nube."
+            )
+        if not self.write_enabled or self.uploader is None:
+            raise LabWriteDisabled("La escritura remota está deshabilitada en el servidor.")
 
     def load(self) -> LoadedSave:
         save = self.provider.download(self.max_input_bytes)
@@ -949,8 +989,7 @@ class CloudLabService:
         recupera los bytes originales del respaldo y conserva el estado actual
         como un respaldo independiente que permite deshacer la operación.
         """
-        if not self.write_enabled or self.uploader is None:
-            raise LabWriteDisabled("La escritura remota está deshabilitada en el servidor.")
+        self._require_write_ready()
         if expected_sha256 is not None and (
             not isinstance(expected_sha256, str) or not _SHA256.fullmatch(expected_sha256)
         ):
@@ -1536,8 +1575,7 @@ class CloudLabService:
         return PreparedAdvancedEdit(bundle.record, edit, save.metadata.source)
 
     def confirm(self, backup_id: str, expected_sha256: str, *, single_attempt: bool = False) -> WriteResult:
-        if not self.write_enabled or self.uploader is None:
-            raise LabWriteDisabled("La escritura remota está deshabilitada en el servidor.")
+        self._require_write_ready()
         if not isinstance(expected_sha256, str) or not _SHA256.fullmatch(expected_sha256):
             raise LabHashMismatch("La huella esperada no es válida.")
         with self._write_lock:
@@ -1644,8 +1682,7 @@ class CloudLabService:
             return result
 
     def restore(self, backup_id: str) -> WriteResult:
-        if not self.write_enabled or self.uploader is None:
-            raise LabWriteDisabled("La escritura remota está deshabilitada en el servidor.")
+        self._require_write_ready()
         with self._write_lock:
             bundle = self.store.load(backup_id)
             label = self._field_label(bundle.record.field)

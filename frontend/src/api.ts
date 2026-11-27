@@ -48,6 +48,10 @@ export type LabStatus = {
   backup_count: number
   min_gems: number
   max_gems: number
+  platform?: string
+  prepare_ready?: boolean
+  write_state?: CapabilityState
+  capabilities?: PlatformCapabilities
   message: string
 }
 
@@ -1229,6 +1233,29 @@ export type NativeVersion = {
   commit: string | null
 }
 
+export type CapabilityState =
+  | 'read_only'
+  | 'write_pending_validation'
+  | 'write_experimental'
+  | 'write_verified'
+
+export type PlatformCapabilities = {
+  platform: 'android' | 'ios' | 'unknown'
+  state: CapabilityState
+  read_ready: boolean
+  prepare_ready: boolean
+  write_supported: boolean
+  functions: Record<string, {
+    id: string
+    label: string
+    state: CapabilityState
+    detail: string
+  }>
+  reason: string
+  evidence: string
+  confirmation: string
+}
+
 export type NativeSession = {
   active: boolean
   reason?: 'none' | 'expired' | 'disabled' | 'unavailable'
@@ -1250,6 +1277,9 @@ export type NativeSession = {
   auto_identity?: boolean
   binding_wait_until?: string | null
   read_only?: boolean
+  prepare_ready?: boolean
+  write_state?: CapabilityState
+  capabilities?: PlatformCapabilities
   write_enabled?: boolean
   write_ready?: boolean
   min_gems?: number

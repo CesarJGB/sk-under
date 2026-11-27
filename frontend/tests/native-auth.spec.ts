@@ -149,6 +149,15 @@ const PREPARED = {
   },
   validation: { valid: true, structure_valid: true, only_gems_changed: false, message: 'Campos modificados: gameData.gems, gameData.varGems.' },
 }
+const IOS_PREPARED = {
+  ...PREPARED,
+  field: 'unified',
+  plan: { gems: 1002 },
+  categories: [{ key: 'gems', label: 'Gemas', changes: 1, detail: { kind: 'explicit' } }],
+  steps: ['gems'],
+  change_count: 1,
+  validation: { ...PREPARED.validation, atomic: true },
+}
 const FISH_BACKUP = {
   ...BACKUP, field: 'fish_chip', original_gems: 3, original_value: 3,
   candidate_gems: 7, candidate_value: 7,
@@ -335,7 +344,7 @@ test('muestra las seis distribuciones, Android e iOS Global habilitadas y altern
   await page.goto('/partida')
   await expect(page.getByRole('heading', { name: 'Iniciar sesión en ChillyRoom' })).toBeVisible()
   await expect(page.getByLabel('Distribución')).toHaveValue('android-global')
-  await expect(page.getByRole('option', { name: /iOS Global.*Solo lectura/ })).toBeEnabled()
+  await expect(page.getByRole('option', { name: /iOS Global.*Subida pendiente/ })).toBeEnabled()
   await expect(page.getByRole('option', { name: /iOS Vietnam/ })).toBeDisabled()
   await expect(page.getByRole('option', { name: /TapTap/ })).toBeDisabled()
   const password = page.getByLabel('Contraseña', { exact: true })
@@ -555,9 +564,10 @@ test('oculta el correo y conserva la preferencia sin guardarlo en texto plano', 
   await expect(page.locator(`[title*="${email}"]`)).toHaveCount(0)
 })
 
-test('mantiene la cuenta iOS y el editor en solo lectura', async ({ page }) => {
+test('permite preparar un candidato iOS y mantiene bloqueada la subida', async ({ page }) => {
   const ios = {
-    ...ACTIVE, read_only: true, write_enabled: false, write_ready: false,
+    ...ACTIVE, read_only: true, prepare_ready: true,
+    write_state: 'write_pending_validation', write_enabled: false, write_ready: false,
     account: {
       ...ACTIVE.account, distribution: 'ios-global',
       distribution_label: 'iOS Global (IOS)', platform: 'ios', read_only: true,
@@ -578,12 +588,58 @@ test('mantiene la cuenta iOS y el editor en solo lectura', async ({ page }) => {
   await page.route('**/api/v1/cloud/native/save', (route) => route.fulfill({
     json: { ...SAVE, report, downloaded_at: '2026-11-26T20:00:00Z' },
   }))
+  let prepareBodies = 0
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => {
+    prepareBodies += 1
+    return route.fulfill({ json: IOS_PREPARED })
+  })
+  let confirmations = 0
+  await page.route('**/api/v1/cloud/native/confirm', (route) => {
+    confirmations += 1
+    return route.fulfill({ json: {} })
+  })
+
   await page.goto('/editor')
-  await expect(page.getByText('Partida de solo lectura.')).toBeVisible()
-  await expect(page.locator('fieldset.editor-content')).toHaveAttribute('disabled', '')
-  await expect(page.getByRole('button', { name: 'Guardar' })).toBeDisabled()
+  await expect(page.getByText('La subida remota está pendiente de validación', { exact: false })).toBeVisible()
+  await expect(page.locator('fieldset.editor-content')).toBeEnabled()
+  await page.getByRole('textbox', { name: 'Gemas', exact: true }).fill('1002')
+  const prepare = page.getByRole('button', { name: 'Preparar candidato' })
+  await expect(prepare).toBeEnabled()
+  await prepare.click()
+
+  await expect(page.getByRole('heading', { name: 'Revisar candidato' })).toBeVisible()
+  await expect(page.getByText('Se creó un respaldo restaurable y un candidato verificado.', { exact: false })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Subida pendiente de validación' })).toBeDisabled()
+  await expect(page.getByRole('checkbox')).toHaveCount(0)
+  expect(prepareBodies).toBe(1)
   await page.goto('/partida')
-  await expect(page.getByText('iOS está en modo de solo lectura', { exact: false })).toBeVisible()
+  await expect(page.getByText('La subida remota está pendiente de validación', { exact: false })).toBeVisible()
+  expect(confirmations).toBe(0)
+})
+
+test('mantiene el editor iOS preparable sin desbordamiento en móvil, tablet y escritorio', async ({ page }) => {
+  const ios = {
+    ...ACTIVE, read_only: true, prepare_ready: true,
+    write_state: 'write_pending_validation', write_enabled: false, write_ready: false,
+    account: {
+      ...ACTIVE.account, distribution: 'ios-global',
+      distribution_label: 'iOS Global (IOS)', platform: 'ios', read_only: true,
+    },
+    save: SAVE,
+  }
+  await mockBase(page, { ...BASE_CONFIG, write_enabled: false, session: ios })
+  await mockEditor(page, ios)
+  await page.route('**/api/v1/cloud/native/save', (route) => route.fulfill({ json: SAVE }))
+
+  for (const [width, height] of [[320, 730], [360, 780], [375, 812], [390, 844], [430, 932], [768, 1024], [1280, 900]]) {
+    await page.setViewportSize({ width, height })
+    await page.goto('/editor')
+    await expect(page.getByText('La subida remota está pendiente de validación', { exact: false })).toBeVisible()
+    await expect(page.locator('fieldset.editor-content')).toBeEnabled()
+    await expect(page.getByTestId('editor-bar')).toBeInViewport()
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    await page.screenshot({ path: `test-results/phase10-1/ios-${width}.png`, fullPage: true })
+  }
 })
 
 test('explica el desafío del portal y no simula una sesión', async ({ page }) => {

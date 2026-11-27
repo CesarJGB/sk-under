@@ -23,6 +23,7 @@ from urllib.parse import urlsplit
 
 from ..cloud.advanced_editor import read_advanced_source
 from ..cloud.backup_store import BackupIntegrityError, BackupStorageUnavailable, LabBackupStore, backup_problem
+from ..cloud.capabilities import capability_matrix
 from ..cloud.fish_chip_editor import MAX_FISH_CHIP, MIN_FISH_CHIP, read_fish_chip
 from ..cloud.fish_progress_editor import read_fish_progress
 from ..cloud.gems_editor import MAX_GEMS, MIN_GEMS, read_gems
@@ -68,6 +69,7 @@ from .errors import (
     NativeSavePlatformMismatch,
     NativeWriteDenied,
     NativeWriteDisabled,
+    NativeWritePendingValidation,
 )
 from .portal import PortalClient, PortalPlayer
 from .identity import (
@@ -306,13 +308,16 @@ class NativeAuthService:
     def _account_metadata(record) -> dict[str, object]:
         profile = record.profile
         distribution = get_distribution(profile.distribution)
+        capabilities = capability_matrix(distribution.platform)
         return {
             "label": profile.label,
             "email": record.email,
             "distribution": distribution.id,
             "distribution_label": distribution.label,
             "platform": distribution.platform,
-            "read_only": distribution.platform == "ios",
+            "read_only": not capabilities.write_supported,
+            "prepare_ready": capabilities.prepare_ready,
+            "write_state": capabilities.state,
         }
 
     def accounts(self, cookie: str = "") -> list[dict[str, object]]:
@@ -388,7 +393,7 @@ class NativeAuthService:
     ) -> dict[str, object]:
         distribution = get_distribution(profile.distribution)
         installation_ready = profile.installation_ready
-        read_only = distribution.platform == "ios"
+        capabilities = capability_matrix(distribution.platform)
         return {
             "active": True,
             "identity_verified": True,
@@ -405,9 +410,12 @@ class NativeAuthService:
             "auto_identity": profile.auto_generated,
             "binding_wait_until": _iso(profile.binding_wait_until) if profile.binding_wait_until else None,
             "save_error": profile.last_save_error,
-            "read_only": read_only,
+            "read_only": not capabilities.write_supported,
+            "prepare_ready": installation_ready and capabilities.prepare_ready,
+            "write_state": capabilities.state,
+            "capabilities": capabilities.summary(),
             "write_enabled": self.write_enabled,
-            "write_ready": (not read_only) and self.write_enabled and profile.allow_write and installation_ready,
+            "write_ready": capabilities.write_supported and self.write_enabled and profile.allow_write and installation_ready,
             "min_gems": self.min_gems,
             "max_gems": self.max_gems,
             "min_fish_chip": self.min_fish_chip,
@@ -1393,17 +1401,19 @@ class NativeAuthService:
                 "Completa el identificador de instalación para acceder a la partida."
             )
         self._require_binding_ready(session.profile)
+        distribution = get_distribution(session.profile.distribution)
+        capabilities = capability_matrix(distribution.platform)
         write = (
-            self.write_enabled
+            capabilities.write_supported
+            and self.write_enabled
             and session.profile.allow_write
-            and get_distribution(session.profile.distribution).platform == "android"
         )
         provider = NativeSaveProvider(
             self.provider_factory(session.token, session.unique_id, session.profile.distro_id),
             self.store,
             session.subject,
             session.profile.distribution,
-            expected_platform=get_distribution(session.profile.distribution).platform,
+            expected_platform=distribution.platform,
         )
         uploader = (
             self.uploader_factory(session.token, session.unique_id, session.profile.distro_id)
@@ -1415,9 +1425,18 @@ class NativeAuthService:
             uploader=uploader,
             write_enabled=write,
             admin_configured=True,
+            platform=distribution.platform,
         )
 
     def _require_write(self, session: NativeSessionRecord) -> None:
+        distribution = get_distribution(session.profile.distribution)
+        capabilities = capability_matrix(distribution.platform)
+        if not capabilities.write_supported:
+            raise NativeWritePendingValidation(
+                "La preparación y el respaldo están disponibles, pero la subida "
+                "remota de esta plataforma está pendiente de validación. No se "
+                "envió nada a la nube."
+            )
         if not self.write_enabled:
             raise NativeWriteDisabled(
                 "La escritura remota está deshabilitada en este entorno experimental."

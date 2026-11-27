@@ -29,6 +29,8 @@ export const FRIENDLY: Record<string, string> = {
   native_auth_disabled: 'El inicio de sesión está temporalmente deshabilitado.',
   native_write_disabled: 'La subida a la nube está deshabilitada.',
   native_write_denied: 'Esta cuenta tiene acceso de solo lectura.',
+  native_write_pending_validation: 'La preparación y el respaldo están disponibles, pero la subida remota de iOS aún no está validada. No se envió nada a la nube.',
+  cloud_write_pending_validation: 'La subida remota de iOS aún no está validada. El candidato y su respaldo se conservan; no se envió nada a la nube.',
   cloud_write_disabled: 'La subida a la nube está deshabilitada.',
   cloud_session_rejected: 'ChillyRoom rechazó el acceso a la partida. Vuelve a iniciar sesión.',
   cloud_already_confirmed: 'Esta edición ya se subió. Verifica su respaldo en Partida.',

@@ -744,6 +744,11 @@ export function EditorWorkspace({
   const built = buildDraftPlan(save, draft, session)
   const hasChanges = built.counts.changes > 0
   const canWrite = Boolean(session.write_ready)
+  // Preparar un candidato no escribe en la nube. Solo habilitamos esa fase
+  // cuando la matriz declara la escritura pendiente de validación (iOS); así
+  // una sesión Android con escritura deshabilitada sigue siendo de solo lectura.
+  const pendingValidation = !canWrite && session.write_state === 'write_pending_validation'
+  const canEdit = canWrite || (pendingValidation && Boolean(session.prepare_ready))
   const busy = action !== null || loadingSave
 
   const pass = battlePassRecord(advancedSnapshot(save), draft.battlePass.seasonId)
@@ -889,7 +894,7 @@ export function EditorWorkspace({
   }
 
   function prepare() {
-    if (!hasChanges || invalidDraft || !canWrite || needsRefresh) return
+    if (!hasChanges || invalidDraft || !canEdit || needsRefresh) return
     run('prepare', async (signal) => {
       setResult(null)
       setConfirm(false)
@@ -960,10 +965,15 @@ export function EditorWorkspace({
   const content = review && prepared
     ? <div className="review-panel" data-testid="unified-preview" ref={preview} tabIndex={-1}>
       <div className="review-head">
-        <h2>Revisar y guardar</h2>
+        <h2>{canWrite ? 'Revisar y guardar' : 'Revisar candidato'}</h2>
         <button type="button" className="button quiet" disabled={busy} onClick={() => { setReview(false); setConfirm(false) }}>Volver</button>
       </div>
-      <p className="detail-note">Se creará un respaldo restaurable antes de subir el candidato.</p>
+      {canWrite
+        ? <p className="detail-note">Se creará un respaldo restaurable antes de subir el candidato.</p>
+        : <Notice tone="warning">
+          Se creó un respaldo restaurable y un candidato verificado. La subida remota de iOS
+          está pendiente de validación: no se envió nada a la nube.
+        </Notice>}
       <div className="review-categories">
         {prepared.categories.map((category) => <details key={category.key} className="review-category">
           <summary><span>{category.label}</span><strong>{amountFormat.format(category.changes)}</strong></summary>
@@ -977,12 +987,17 @@ export function EditorWorkspace({
         <summary>Campos afectados ({amountFormat.format(prepared.changed_fields.length)})</summary>
         <code>{prepared.changed_fields.join(', ')}</code>
       </details>
-      <label className="confirm-row">
-        <input type="checkbox" checked={confirm} disabled={busy} onChange={(event) => setConfirm(event.target.checked)} />
-        <span>Confirmo subir el candidato a {accountLabel}.</span>
-      </label>
+      {canWrite
+        ? <label className="confirm-row">
+          <input type="checkbox" checked={confirm} disabled={busy} onChange={(event) => setConfirm(event.target.checked)} />
+          <span>Confirmo subir el candidato a {accountLabel}.</span>
+        </label>
+        : <p className="detail-note">
+          Respaldo <code>{prepared.backup.id.slice(0, 8)}</code> · candidato{' '}
+          <code>{prepared.candidate_sha256.slice(0, 12)}…</code>
+        </p>}
     </div>
-    : <fieldset className="editor-content" disabled={busy || needsRefresh || !canWrite}>
+    : <fieldset className="editor-content" disabled={busy || needsRefresh || !canEdit}>
       {showQuick && <QuickEdit save={save} draft={draft} built={built} update={update} />}
       {route === 'categories' && <CategoryGrid built={built} onOpen={(id) => go(`${editorBase}/categoria/${id}`)} />}
       {activeCategory && <div className="category-detail" data-testid={`category-${activeCategory.id}`}>
@@ -1031,7 +1046,12 @@ export function EditorWorkspace({
       <button id="editor-categories-tab" type="button" role="tab" aria-controls="editor-panel" aria-selected={!showQuick}
         tabIndex={showQuick ? -1 : 0} disabled={busy} onClick={() => go(`${editorBase}/categorias`)}>Categorías</button>
     </div>}
-    {!canWrite && <Notice tone="warning">Partida de solo lectura.</Notice>}
+    {pendingValidation
+      ? <Notice tone="warning">
+        iOS: puedes editar, preparar un candidato y crear un respaldo. La subida
+        remota está pendiente de validación; no se envía nada a la nube.
+      </Notice>
+      : !canWrite && <Notice tone="warning">Partida de solo lectura.</Notice>}
     {expiredConflict && <div className="conflict-banner" role="alert">
       La partida cambió en la nube. <button type="button" className="button quiet" disabled={busy} onClick={reload}>Descargar de nuevo</button>
     </div>}
@@ -1066,11 +1086,13 @@ export function EditorWorkspace({
           </small>}
         </div>
         <button type="button" className="button quiet" disabled={!dirty || busy} onClick={discard}>Descartar</button>
-        <button type="button" className="button primary" disabled={!canWrite || busy || needsRefresh
-          || (review ? !confirm : !hasChanges || invalidDraft || expiredConflict)}
-          onClick={review ? upload : prepare}>
-          {!review && <CloudUpload size={16} aria-hidden="true" />}
-          {review ? 'Guardar en la nube' : 'Guardar'}
+        <button type="button" className="button primary" disabled={!canEdit || busy || needsRefresh
+          || (review ? !canWrite || !confirm : !hasChanges || invalidDraft || expiredConflict)}
+          onClick={review && canWrite ? upload : prepare}>
+          {!review && canWrite && <CloudUpload size={16} aria-hidden="true" />}
+          {review
+            ? canWrite ? 'Guardar en la nube' : 'Subida pendiente de validación'
+            : canWrite ? 'Guardar' : 'Preparar candidato'}
         </button>
       </div>
     </footer>

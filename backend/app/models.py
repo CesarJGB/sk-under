@@ -110,6 +110,15 @@ class CloudLabStatus(BaseModel):
     backup_count: int
     min_gems: int
     max_gems: int
+    platform: str = "android"
+    prepare_ready: bool = True
+    write_state: Literal[
+        "read_only",
+        "write_pending_validation",
+        "write_experimental",
+        "write_verified",
+    ] = "write_verified"
+    capabilities: dict[str, object] = Field(default_factory=dict)
     min_fish_chip: int = 0
     max_fish_chip: int = 2_147_483_647
     fish_chip_write_policy: Literal["confirmed_by_owner"] = "confirmed_by_owner"

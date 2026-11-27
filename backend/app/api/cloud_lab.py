@@ -52,6 +52,7 @@ from ..cloud.lab_service import (
     LabRemoteChanged,
     LabServiceError,
     LabWriteDisabled,
+    LabWritePendingValidation,
 )
 from ..cloud.provider import (
     CloudProviderProtocolError,
@@ -172,6 +173,8 @@ def _http_error(exc: CloudSaveError) -> EditorError:
     if isinstance(exc, BackupStorageUnavailable):
         _log_backup_failure(exc)
         return EditorError(503, exc.code, str(exc))
+    if isinstance(exc, LabWritePendingValidation):
+        return EditorError(409, exc.code, str(exc))
     if isinstance(exc, LabWriteDisabled):
         return EditorError(503, exc.code, "La escritura remota está deshabilitada en el servidor.")
     if isinstance(exc, (BackupNotFound,)):

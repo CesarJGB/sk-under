@@ -197,3 +197,15 @@ class NativeWriteDisabled(NativeError):
 class NativeWriteDenied(NativeError):
     code = "native_write_denied"
     status = 403
+
+
+class NativeWritePendingValidation(NativeError):
+    """La plataforma permite preparar, pero su escritura aún no está validada.
+
+    Es un estado distinto de ``native_write_denied``: la cuenta puede descargar,
+    respaldar y preparar candidatos, pero SK-Under no envía nada a la nube hasta
+    contar con evidencia propia de persistencia.
+    """
+
+    code = "native_write_pending_validation"
+    status = 409

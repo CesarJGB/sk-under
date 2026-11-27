@@ -380,7 +380,7 @@ function AccountWorkspace({
         {downloadFeedback}
         {!session.write_ready && <p className="partida-muted">
           {session.account?.platform === 'ios'
-            ? 'iOS está en modo de solo lectura: puedes descargar la partida y crear respaldos locales; la subida no está habilitada.'
+            ? 'iOS: descarga, respaldos y preparación de cambios disponibles. La subida remota está pendiente de validación; no se envía nada a la nube.'
             : 'Acceso a la nube de solo lectura.'}
         </p>}
       </>} />}
