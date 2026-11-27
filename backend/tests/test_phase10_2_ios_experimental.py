@@ -1,8 +1,8 @@
-"""Pruebas del modo iOS experimental limitado a una cuenta autorizada.
+"""Pruebas del modo de prueba iOS y del aislamiento por cuenta.
 
 La cuenta real no aparece en las pruebas: se usa un correo sintético y el mismo
-digest con separación de dominio que aplica el servicio. La escritura general
-iOS debe seguir bloqueada.
+digest con separación de dominio que aplica el servicio. El modo global es
+temporal y reversible; no equivale a compatibilidad nativa validada.
 """
 
 from __future__ import annotations
@@ -31,10 +31,10 @@ IOS_PAYLOAD = json.dumps(
 ).encode()
 
 
-def test_experimental_state_is_scoped_and_never_default():
+def test_ios_write_test_mode_is_enabled_and_explicit():
     default = capability_matrix("ios")
-    assert default.state == "write_pending_validation"
-    assert default.write_supported is False
+    assert default.state == "write_experimental"
+    assert default.write_supported is True
 
     experimental = capability_matrix("ios", experimental_authorized=True)
     assert experimental.state == "write_experimental"
@@ -97,7 +97,7 @@ def test_experimental_lab_requires_backup_and_verifies_persistence(tmp_path: Pat
     assert provider.payload == IOS_PAYLOAD
 
 
-def test_native_ios_experimental_account_can_write_and_other_accounts_remain_blocked(tmp_path: Path):
+def test_native_ios_test_mode_keeps_accounts_isolated(tmp_path: Path):
     env = make_native(tmp_path, payload_a=IOS_PAYLOAD, write=True)
     env["service"].ios_experimental_accounts = frozenset({account_digest(_EMAIL)})
     profile = env["store"].create_profile(
@@ -167,5 +167,6 @@ def test_native_ios_experimental_account_can_write_and_other_accounts_remain_blo
     )
     assert other_login.status_code == 200, other_login.text
     other_body = other_login.json()
-    assert other_body["write_state"] == "write_pending_validation"
-    assert other_body["write_ready"] is False
+    assert other_body["write_state"] == "write_experimental"
+    assert other_body["write_ready"] is True
+    assert env["uploaders"]["unique-b"].calls == []

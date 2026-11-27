@@ -830,8 +830,10 @@ class CloudLabService:
             backups = 0
         if mode == "live" and capabilities.state == "write_experimental":
             message = (
-                "iOS experimental autorizado solo para esta cuenta de pruebas. "
-                "Cada subida exige respaldo, confirmación y verificación posterior."
+                "iOS en modo de prueba: la subida está habilitada temporalmente "
+                "por el propietario. No se declara compatible hasta validar la "
+                "recuperación en el cliente oficial. Cada subida exige respaldo, "
+                "confirmación y verificación posterior."
             )
         elif mode == "live":
             message = "Laboratorio real con escritura administrativa habilitada."

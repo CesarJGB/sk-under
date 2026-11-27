@@ -384,8 +384,9 @@ function AccountWorkspace({
             : 'Acceso a la nube de solo lectura.'}
         </p>}
         {session.write_state === 'write_experimental' && <p className="partida-muted">
-          iOS experimental: esta cuenta de pruebas autorizada puede subir cambios.
-          Cada subida exige respaldo y se verifica descargando de nuevo la partida.
+          iOS en modo de prueba: la subida está habilitada temporalmente. No se declara
+          compatible hasta validar la recuperación en el cliente oficial. Cada subida exige
+          respaldo y se verifica descargando de nuevo la partida.
         </p>}
       </>} />}
     <BackupHistory history={history} pending={historyOperation.pending} loadingMore={moreOperation.pending}

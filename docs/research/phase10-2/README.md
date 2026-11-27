@@ -102,6 +102,13 @@ con otro dispositivo debe esperar el intervalo correspondiente.
 
 ## Modo experimental restringido
 
+> **Actualización 2026-11-27:** a petición explícita del propietario se habilitó
+> temporalmente la subida iOS para todas las cuentas mediante
+> `IOS_WRITE_TEST_ENABLED = True`. El estado sigue siendo `write_experimental`,
+> no `write_verified`, y el modo se puede revertir. Ver
+> [Fase 10.1, sección 11](../phase10-1/ios-version-metadata.md#11-modo-de-prueba-de-escritura-2026-11-27).
+> El texto siguiente describe el modo restringido original de la Fase 10.2.
+
 La escritura iOS general sigue en `write_pending_validation`. Se añadió un modo
 `write_experimental` que solo se activa para la cuenta de pruebas autorizada,
 identificada mediante un digest SHA-256 con separación de dominio. El correo no

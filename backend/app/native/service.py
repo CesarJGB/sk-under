@@ -389,6 +389,21 @@ class NativeAuthService:
             email, self.ios_experimental_accounts
         )
 
+    @staticmethod
+    def _write_authorized(capabilities, profile: Profile, experimental: bool) -> bool:
+        """Autoriza escritura por perfil, por digest o por modo de prueba global.
+
+        ``write_experimental`` es el modo temporal habilitado por el
+        propietario para validar iOS; no implica que la plataforma esté
+        verificada.
+        """
+
+        return bool(
+            profile.allow_write
+            or experimental
+            or capabilities.state == "write_experimental"
+        )
+
     def _view(self, session: NativeSessionRecord) -> dict[str, object]:
         return self._view_values(
             session.profile, session.expires_at, session.idle_expires_at, email=session.email
@@ -431,7 +446,7 @@ class NativeAuthService:
             "write_enabled": self.write_enabled,
             "write_ready": capabilities.write_supported
             and self.write_enabled
-            and (profile.allow_write or experimental)
+            and self._write_authorized(capabilities, profile, experimental)
             and installation_ready,
             "min_gems": self.min_gems,
             "max_gems": self.max_gems,
@@ -1439,7 +1454,7 @@ class NativeAuthService:
         write = (
             capabilities.write_supported
             and self.write_enabled
-            and (session.profile.allow_write or experimental)
+            and self._write_authorized(capabilities, session.profile, experimental)
         )
         provider = NativeSaveProvider(
             self.provider_factory(
@@ -1488,7 +1503,7 @@ class NativeAuthService:
             raise NativeWriteDisabled(
                 "La escritura remota está deshabilitada en este entorno experimental."
             )
-        if not session.profile.allow_write and not experimental:
+        if not self._write_authorized(capabilities, session.profile, experimental):
             raise NativeWriteDenied("Esta cuenta está autorizada solo para lectura.")
         if session.unique_id is None:
             raise NativeInstallationRequired("Completa la instalación antes de escribir.")

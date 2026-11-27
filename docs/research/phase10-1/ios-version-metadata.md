@@ -212,8 +212,9 @@ del servidor.
   - `GET /api/v1/cloud/native/config` devolvió `ios-global` con
     `game_version: 8.8.0.14`, `protocol_app_version: 8.8.0` y
     `protocol_game_version: 8.8.0`.
-- La escritura iOS general sigue limitada por la matriz de capacidades a la
-  cuenta experimental autorizada.
+- La escritura iOS general quedó inicialmente limitada por la matriz de
+  capacidades a la cuenta experimental autorizada. El 2026-11-27 el propietario
+  pidió habilitarla para probar la corrección; ver la sección 11.
 
 ## 9. Estado del blob envenenado
 
@@ -246,3 +247,38 @@ posterior. No se debe presentar como resuelto hasta comprobarlo.
    sin compartir credenciales ni el guardado completo.
 
 No se declara compatibilidad nativa hasta que este paso 8 sea correcto.
+
+## 11. Modo de prueba de escritura (2026-11-27)
+
+A petición explícita del propietario se habilitó la subida iOS para poder
+probar la corrección de versión en un iPhone físico. El cambio es deliberado y
+reversible:
+
+- `IOS_WRITE_TEST_ENABLED = True` en `backend/app/cloud/capabilities.py`.
+- La matriz declara iOS como `write_experimental`, no `write_verified`.
+- Cualquier cuenta iOS con el interruptor global de escritura activo y el perfil
+  listo puede subir. Ya no se exige el digest de la cuenta de la Fase 10.2,
+  aunque ese mecanismo se conserva para volver al modo limitado.
+- Cada subida sigue exigiendo respaldo completo, confirmación explícita,
+  detección de cambios remotos y verificación por descarga posterior.
+- La interfaz muestra que es un modo de prueba y que la compatibilidad nativa
+  no está declarada.
+
+Para desactivarlo, poner `IOS_WRITE_TEST_ENABLED = False` y desplegar. La
+capacidad vuelve a `write_pending_validation` salvo para las cuentas cuyo digest
+esté autorizado.
+
+Este modo no demuestra que el cliente oficial recupere la partida. Si el
+guarda remoto sigue marcado con una versión superior, `native_save_version_ahead`
+bloquea la operación antes de subir. La validación real sigue siendo la prueba
+manual del propietario en el iPhone.
+
+### Procedimiento recomendado para la prueba
+
+1. Usar preferiblemente una cuenta iOS secundaria para la primera subida.
+2. Descargar y respaldar; anotar SHA-256.
+3. Hacer un cambio pequeño y subir.
+4. Comprobar que SK-Under verifica la persistencia.
+5. Abrir el cliente oficial y usar «Recuperar progreso».
+6. Si el cliente rechaza la copia, restaurar el respaldo y conservar el mensaje
+   exacto. No repetir subidas sobre la misma cuenta hasta identificar la causa.

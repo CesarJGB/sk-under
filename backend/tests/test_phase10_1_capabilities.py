@@ -1,7 +1,7 @@
 """Pruebas de la matriz de capacidades y de la preparación iOS aislada.
 
-No se envía ninguna escritura iOS: la plataforma debe conservar el candidato y
-el respaldo, pero rechazar la subida con un código específico.
+El modo de prueba iOS puede subir, pero cada operación exige respaldo y
+verificación posterior; no se declara compatibilidad nativa.
 """
 
 from __future__ import annotations
@@ -11,11 +11,9 @@ import time
 from hashlib import sha256
 from pathlib import Path
 
-import pytest
-
 from app.cloud.backup_store import LabBackupStore
 from app.cloud.capabilities import STATES, can_prepare, can_write, capability_matrix
-from app.cloud.lab_service import CloudLabService, LabWritePendingValidation
+from app.cloud.lab_service import CloudLabService
 from test_gems_editor import FakeUploader, FixedProvider
 from test_native_api import API, HEADERS, PAYLOAD_A, login, make_native
 
@@ -66,18 +64,18 @@ def test_capability_matrix_states_are_explicit_and_do_not_extrapolate_android():
     ios_functions = {function.id: function for function in ios.functions}
     assert android_functions["save"].state == "write_verified"
     assert android_functions["restore"].state == "write_verified"
-    assert ios.state == "write_pending_validation"
-    assert ios.write_supported is False and ios.prepare_ready is True
-    assert ios_functions["save"].state == "write_pending_validation"
-    assert ios_functions["restore"].state == "write_pending_validation"
+    assert ios.state == "write_experimental"
+    assert ios.write_supported is True and ios.prepare_ready is True
+    assert ios_functions["save"].state == "write_experimental"
+    assert ios_functions["restore"].state == "write_experimental"
     assert ios_functions["download"].state == "read_only"
-    assert can_prepare("ios") is True and can_write("ios") is False
+    assert can_prepare("ios") is True and can_write("ios") is True
     assert {function.state for function in ios.functions} <= STATES
     unknown = capability_matrix("unknown")
     assert unknown.state == "read_only" and unknown.prepare_ready is False
 
 
-def test_ios_lab_prepares_a_candidate_and_blocks_upload_and_restore(tmp_path: Path):
+def test_ios_lab_prepares_and_uploads_in_test_mode(tmp_path: Path):
     provider = FixedProvider(IOS_PAYLOAD)
     uploader = FakeUploader(provider)
     lab = CloudLabService(
@@ -89,10 +87,10 @@ def test_ios_lab_prepares_a_candidate_and_blocks_upload_and_restore(tmp_path: Pa
         platform="ios",
     )
     status = lab.status()
-    assert status.mode == "read_only"
-    assert status.write_state == "write_pending_validation"
-    assert status.prepare_ready is True and status.write_ready is False
-    assert status.capabilities["functions"]["save"]["state"] == "write_pending_validation"
+    assert status.mode == "live"
+    assert status.write_state == "write_experimental"
+    assert status.prepare_ready is True and status.write_ready is True
+    assert status.capabilities["functions"]["save"]["state"] == "write_experimental"
 
     prepared = lab.prepare(1002)
     assert prepared.changed is True
@@ -112,16 +110,16 @@ def test_ios_lab_prepares_a_candidate_and_blocks_upload_and_restore(tmp_path: Pa
     assert candidate["futureSection"] == {"preserve": True}
     assert candidate["gameData"]["futureField"] == {"nested": [1, 2, 3]}
 
-    with pytest.raises(LabWritePendingValidation):
-        lab.confirm(prepared.backup.id, prepared.edit.candidate_sha256)
-    assert uploader.calls == []
-    with pytest.raises(LabWritePendingValidation):
-        lab.restore(prepared.backup.id)
-    assert uploader.calls == []
+    result = lab.confirm(prepared.backup.id, prepared.edit.candidate_sha256)
+    assert result.uploaded is True and result.accepted is True
+    assert result.persisted is True and result.remote_gems == 1002
+    assert uploader.calls[-1] == prepared.edit.candidate
+    restored = lab.restore(prepared.backup.id)
+    assert restored.persisted is True
     assert provider.payload == IOS_PAYLOAD
 
 
-def test_native_ios_session_can_prepare_but_cannot_confirm(tmp_path: Path):
+def test_native_ios_session_can_confirm_in_test_mode(tmp_path: Path):
     env = make_native(tmp_path, payload_a=IOS_PAYLOAD, write=True)
     profile = env["store"].create_profile(
         label="Instalación iOS sintética",
@@ -143,10 +141,10 @@ def test_native_ios_session_can_prepare_but_cannot_confirm(tmp_path: Path):
     assert response.status_code == 200, response.text
     body = response.json()
     assert body["account"]["platform"] == "ios"
-    assert body["read_only"] is True
+    assert body["read_only"] is False
     assert body["prepare_ready"] is True
-    assert body["write_state"] == "write_pending_validation"
-    assert body["write_ready"] is False
+    assert body["write_state"] == "write_experimental"
+    assert body["write_ready"] is True
     assert body["save"]["sha256"] == sha256(IOS_PAYLOAD).hexdigest()
 
     source = env["client"].get(API + "/save", headers=HEADERS)
@@ -160,7 +158,7 @@ def test_native_ios_session_can_prepare_but_cannot_confirm(tmp_path: Path):
     draft = prepared.json()
     assert draft["backup"]["changed"] is True
 
-    blocked = env["client"].post(
+    confirmed = env["client"].post(
         API + "/confirm",
         headers=HEADERS,
         json={
@@ -169,14 +167,15 @@ def test_native_ios_session_can_prepare_but_cannot_confirm(tmp_path: Path):
             "confirmation": "SUBIR",
         },
     )
-    assert blocked.status_code == 409, blocked.text
-    assert blocked.json()["error"]["code"] == "native_write_pending_validation"
-    assert env["uploaders"]["unique-a"].calls == []
-    assert env["providers"]["unique-a"].payload == IOS_PAYLOAD
+    assert confirmed.status_code == 200, confirmed.text
+    result = confirmed.json()
+    assert result["persisted"] is True and result["remote_gems"] == 1002
+    assert sha256(env["uploaders"]["unique-a"].calls[-1]).hexdigest() == draft["candidate_sha256"]
+    assert json.loads(env["providers"]["unique-a"].payload)["platformId"] == "IOS"
 
 
 def test_native_view_exposes_platform_capabilities(tmp_path: Path):
-    env = make_native(tmp_path)
+    env = make_native(tmp_path, write=True)
     profile = env["store"].create_profile(
         label="Instalación iOS sintética",
         distribution_id="ios-global",
@@ -191,7 +190,7 @@ def test_native_view_exposes_platform_capabilities(tmp_path: Path):
         email="a@example.test",
     )
     assert view["prepare_ready"] is True
-    assert view["write_ready"] is False
-    assert view["write_state"] == "write_pending_validation"
+    assert view["write_ready"] is True
+    assert view["write_state"] == "write_experimental"
     assert view["capabilities"]["platform"] == "ios"
-    assert view["capabilities"]["functions"]["save"]["state"] == "write_pending_validation"
+    assert view["capabilities"]["functions"]["save"]["state"] == "write_experimental"

@@ -38,11 +38,17 @@ STATES: frozenset[str] = frozenset(
 
 # Fase 10.2: la cuenta de pruebas expresamente autorizada por el propietario.
 # Solo se guarda un digest con separación de dominio; nunca el correo ni la
-# contraseña. La escritura iOS general sigue en ``write_pending_validation``.
+# contraseña.
 _EXPERIMENTAL_DOMAIN = b"sk-under/phase10-2/ios-experimental\x00"
 DEFAULT_IOS_EXPERIMENTAL_ACCOUNT_DIGESTS: frozenset[str] = frozenset(
     {"2167e7eb7bdaa3b08402534f6df4502d6663e1ca615c2f1f1c42a11057a7f09a"}
 )
+
+# 2026-11-27: el propietario pidió habilitar la subida iOS para probar la
+# corrección de versión en un iPhone físico. Es un modo de prueba global y
+# reversible, no una validación nativa. Al ponerlo en ``False`` se vuelve al
+# acceso limitado por digest de la Fase 10.2.
+IOS_WRITE_TEST_ENABLED = True
 
 
 def account_digest(email: str) -> str:
@@ -202,27 +208,28 @@ _IOS_EXPERIMENTAL = PlatformCapabilities(
         save="write_experimental",
         restore="write_experimental",
         save_detail=(
-            "Subida iOS experimental limitada a la cuenta autorizada. La Fase "
-            "10.2 confirmó aceptación y persistencia del servidor, pero el "
-            "cliente oficial rechazó la copia por metadatos de versión; la "
-            "Fase 10.1 corrige el protocolo y espera validación física."
+            "Modo de prueba: la subida iOS está habilitada temporalmente por el "
+            "propietario para validar la corrección de versión. No se declara "
+            "compatible hasta que el cliente oficial recupere la copia; cada "
+            "subida exige respaldo, confirmación y verificación posterior."
         ),
         restore_detail=(
-            "Restauración iOS experimental limitada a la cuenta autorizada. "
-            "La escritura usa la versión de protocolo 8.8.0; no se declara "
-            "compatible hasta que el cliente oficial recupere la copia."
+            "Restauración iOS en modo de prueba. Usa la versión de protocolo "
+            "8.8.0; no se declara compatible hasta que el cliente oficial "
+            "recupere la copia."
         ),
     ),
     reason=(
-        "Modo experimental limitado a la cuenta de pruebas autorizada. La "
-        "escritura iOS general todavía no está validada ni habilitada."
+        "Modo de prueba global habilitado por el propietario el 2026-11-27. "
+        "La escritura iOS no está validada en el cliente oficial y puede "
+        "desactivarse volviendo a ``IOS_WRITE_TEST_ENABLED = False``."
     ),
     evidence=(
         "Fase 10.2, 2026-11-27: subida aceptada con HTTP 200 y persistencia "
         "exacta en el servidor, pero el cliente iOS mostró 'versión demasiado "
         "antigua'. Fase 10.1: causa identificada en x-app-version/x-game-version "
-        "(se enviaba 8.8.0.13 en vez de 8.8.0); pendiente de prueba física."
-        " No se generaliza a otras cuentas iOS."
+        "(se enviaba 8.8.0.13 en vez de 8.8.0); pendiente de prueba física. "
+        "El modo de prueba se activa a petición explícita del propietario."
     ),
     confirmation=_COMMON_CONFIRMATION,
 )
@@ -234,11 +241,12 @@ def capability_matrix(
     """Devuelve la matriz de una plataforma validada.
 
     Las plataformas desconocidas no heredan la capacidad Android: se degradan a
-    solo lectura y sin preparación remota. ``experimental_authorized`` solo lo
-    activa el servicio para la cuenta de pruebas autorizada.
+    solo lectura y sin preparación remota. En iOS, ``experimental_authorized``
+    activa el modo limitado por cuenta; ``IOS_WRITE_TEST_ENABLED`` activa el
+    modo de prueba global solicitado por el propietario.
     """
 
-    if platform == "ios" and experimental_authorized:
+    if platform == "ios" and (IOS_WRITE_TEST_ENABLED or experimental_authorized):
         return _IOS_EXPERIMENTAL
     if platform in _DEFINITIONS:
         return _DEFINITIONS[platform]  # type: ignore[index]

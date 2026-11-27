@@ -17,6 +17,7 @@ FEATURES = (
     "ios_candidate_preparation",
     "ios_remote_write_pending_validation",
     "ios_remote_write_experimental",
+    "ios_remote_write_test",
     "platform_capability_matrix",
     "native_backup_history",
     "native_backup_history_pagination",
