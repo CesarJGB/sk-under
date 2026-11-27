@@ -80,8 +80,8 @@ DISTRIBUTIONS: tuple[Distribution, ...] = (
         note=(
             "Login y descarga verificados (compilación 8.8.0.14). El cuarto "
             "componente es compilación/hotfix; el protocolo usa 8.8.0. La "
-            "escritura remota sigue limitada hasta validar la recuperación en "
-            "el cliente oficial."
+            "escritura remota está habilitada en modo de prueba, pendiente de "
+            "validación en el cliente oficial."
         ),
     ),
     Distribution(
