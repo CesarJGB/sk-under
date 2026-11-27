@@ -492,7 +492,7 @@ def build_save_report(document: Mapping[str, Any], *, platform: str = "android")
             "No se ha validado la escritura ni la persistencia de una copia modificada en el cliente oficial de iOS.",
             "El saldo y las colecciones se interpretan con los mismos analizadores de lectura; los valores ausentes o desconocidos no se inventan.",
             "Los desbloqueos, niveles y topes observados en Android no se consideran validados en iOS.",
-            "La descarga remota iOS está verificada en 8.8.0.13; la subida remota permanece deshabilitada.",
+            "La descarga remota iOS está verificada en 8.8.0.14; la subida remota permanece deshabilitada.",
         ]
         if ios
         else [

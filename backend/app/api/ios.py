@@ -35,7 +35,7 @@ def capabilities(request: Request) -> dict[str, object]:
         "authentication": "available_read_only",
         "download": "available_read_only",
         "native_distribution": "ios-global",
-        "game_version": "8.8.0.13",
+        "game_version": "8.8.0.14",
         "import_sources": ["crde-raw", "native-json"],
         "capabilities": list(CAPABILITIES),
     }

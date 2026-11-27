@@ -2,6 +2,16 @@
 
 Fecha: 2026-11-27.
 
+> **Corrección posterior (Fase 10.1, 2026-11-27):** la persistencia en el
+> servidor descrita aquí fue real, pero **el cliente oficial de iOS rechazó el
+> guardado** con «La versión de tu juego es demasiado antigua». La causa era
+> enviar `8.8.0.13` (versión visible) en `x-app-version` y `x-game-version` en
+> lugar de la versión de protocolo `8.8.0`. Por tanto el nivel D no estaba
+> realmente alcanzado y el nivel E seguía pendiente. El análisis y la corrección
+> están en
+> [`../phase10-1/ios-version-metadata.md`](../phase10-1/ios-version-metadata.md).
+> Este documento se conserva como registro de lo que se probó y de sus límites.
+
 Esta fase deja de tratar la escritura iOS como una hipótesis. Con una cuenta iOS
 de pruebas expresamente autorizada por el propietario se comprobó que el mismo
 transporte `BlobSave` usado para Android acepta, conserva y devuelve un guardado
@@ -158,7 +168,9 @@ declarando que la plataforma iOS no está verificada de forma general.
 - B: preparación completa de candidatos iOS en la infraestructura web — alcanzado.
 - C: mecanismo remoto autorizado identificado y validado — alcanzado.
 - D: escritura remota integrada en SK-Under con respaldo y verificación de
-  persistencia — alcanzado para la cuenta de pruebas autorizada.
+  persistencia — **no alcanzado**: el cliente oficial rechazó el blob por
+  metadatos de versión. Corregido en la Fase 10.1, pendiente de validación
+  física.
 - E: confirmación del propietario en un iPhone físico — pendiente.
 
 ## Pasos mínimos para el propietario

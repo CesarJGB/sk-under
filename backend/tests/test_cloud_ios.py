@@ -142,8 +142,10 @@ def test_capabilities_publish_verified_download_and_disabled_write():
 def test_ios_distribution_is_enabled_and_read_only_metadata_is_explicit():
     distribution = require_enabled("ios-global")
     assert distribution.platform == "ios"
-    assert distribution.game_version == "8.8.0.13"
-    assert "solo lectura" in distribution.note.lower()
+    assert distribution.game_version == "8.8.0.14"
+    assert distribution.protocol_app_version == "8.8.0"
+    assert distribution.protocol_game_version == "8.8.0"
+    assert "escritura remota" in distribution.note.lower()
 
 
 def test_identity_subjects_are_scoped_per_platform(tmp_path):

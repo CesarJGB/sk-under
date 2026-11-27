@@ -2,6 +2,12 @@
 
 Fecha: 2026-11-26
 
+> **Actualización 2026-11-27:** la Fase 10.2 llegó a subir un guardado iOS real,
+> pero el cliente oficial lo rechazó. La causa era el uso de la versión visible
+> `8.8.0.13` como versión de protocolo. El análisis y la corrección están en
+> [`ios-version-metadata.md`](ios-version-metadata.md). Este documento se
+> conserva como registro del estado anterior a esa evidencia.
+
 ## Resumen ejecutivo
 
 La fase alcanza el **nivel B** del encargo: la cuenta iOS ya puede descargar,

@@ -1,8 +1,11 @@
 """Registro extensible de distribuciones de Soul Knight.
 
 ``android-global`` es la distribución validada para lectura y escritura.
-``ios-global`` está validada para autenticación y descarga de solo lectura con
-la cuenta iOS autorizada; su escritura remota sigue deshabilitada. Las demás
+``ios-global`` está validada para autenticación y descarga con la cuenta iOS
+autorizada; su escritura remota sigue limitada a la cuenta experimental hasta
+que el cliente oficial confirme la recuperación. ``game_version`` es la versión
+visible (iOS 8.8.0.14); ``protocol_*_version`` es la que entiende BlobSave
+(8.8.0 en ambas plataformas). Las demás
 distribuciones se enumeran para que el frontend las muestre, pero no se
 presentan como funcionales. Añadir una distribución nueva exige cambiar este
 registro y aportar evidencia propia; no hay lógica de distribución repartida
@@ -28,6 +31,11 @@ class Distribution:
     enabled: bool
     validated: bool
     note: str
+    # Versión que viaja en las cabeceras del protocolo (x-app-version y
+    # x-game-version). No es la versión comercial/mostrada por la tienda:
+    # iOS muestra 8.8.0.14, pero el cliente y el servidor comparan 8.8.0.
+    protocol_app_version: str = "8.8.0"
+    protocol_game_version: str = "8.8.0"
 
     def public(self) -> dict[str, object]:
         return {
@@ -35,6 +43,8 @@ class Distribution:
             "label": self.label,
             "platform": self.platform,
             "game_version": self.game_version,
+            "protocol_app_version": self.protocol_app_version,
+            "protocol_game_version": self.protocol_game_version,
             "enabled": self.enabled,
             "validated": self.validated,
             "note": self.note,
@@ -64,10 +74,15 @@ DISTRIBUTIONS: tuple[Distribution, ...] = (
         id="ios-global",
         label="iOS Global (IOS)",
         platform="ios",
-        game_version="8.8.0.13",
+        game_version="8.8.0.14",
         enabled=True,
         validated=True,
-        note="Login y descarga verificados (8.8.0.13). Solo lectura: la escritura remota no está validada.",
+        note=(
+            "Login y descarga verificados (compilación 8.8.0.14). El cuarto "
+            "componente es compilación/hotfix; el protocolo usa 8.8.0. La "
+            "escritura remota sigue limitada hasta validar la recuperación en "
+            "el cliente oficial."
+        ),
     ),
     Distribution(
         id="ios-vietnam",

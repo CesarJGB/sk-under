@@ -64,6 +64,19 @@ class CloudProviderDeviceRejected(CloudProviderUnavailable):
     code = "cloud_device_rejected"
 
 
+class CloudProviderSaveVersionAhead(CloudProviderUnavailable):
+    """La copia remota está marcada con una versión superior a la del cliente.
+
+    El servicio compara la versión de la petición con la que se guardó junto al
+    BlobSave. Si la copia se subió con una versión posterior (por ejemplo, la
+    versión comercial de iOS ``8.8.0.13`` en vez de la de protocolo ``8.8.0``),
+    el cliente oficial recibe esta incompatibilidad y muestra "versión
+    demasiado antigua". No se corrige enviando una versión inventada.
+    """
+
+    code = "cloud_save_version_ahead"
+
+
 class CloudProviderDeviceBindingThrottled(CloudProviderUnavailable):
     """El proveedor limita la vinculación de dispositivos nuevos.
 

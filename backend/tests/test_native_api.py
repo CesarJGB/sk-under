@@ -161,8 +161,10 @@ def test_config_lists_all_distributions_with_android_and_ios_enabled(tmp_path):
     enabled = [item for item in body["distributions"] if item["enabled"]]
     assert [item["id"] for item in enabled] == ["android-global", "ios-global"]
     ios = next(item for item in enabled if item["id"] == "ios-global")
-    assert ios["platform"] == "ios" and ios["game_version"] == "8.8.0.13"
-    assert "solo lectura" in ios["note"].lower()
+    assert ios["platform"] == "ios" and ios["game_version"] == "8.8.0.14"
+    assert ios["protocol_app_version"] == "8.8.0"
+    assert ios["protocol_game_version"] == "8.8.0"
+    assert "escritura remota" in ios["note"].lower()
     assert {item["id"] for item in body["distributions"]} == {
         "android-global", "android-vietnam", "ios-global",
         "ios-vietnam", "ios-china", "taptap",

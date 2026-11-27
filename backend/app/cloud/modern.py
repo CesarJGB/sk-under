@@ -11,6 +11,7 @@ import argparse
 import http.client
 import json
 import os
+import re
 import urllib.error
 import urllib.request
 import zlib
@@ -24,7 +25,8 @@ from ..parsers.json_document import parse_json
 from .blob_wire import DOWNLOAD_URL, build_blob_headers, is_credential
 from .provider import (AcquiredCloudSave, CloudProviderDeviceBindingThrottled,
                        CloudProviderDeviceRejected, CloudProviderProtocolError,
-                       CloudProviderUnauthenticated, CloudProviderUnavailable, CloudSaveMetadata)
+                       CloudProviderSaveVersionAhead, CloudProviderUnauthenticated,
+                       CloudProviderUnavailable, CloudSaveMetadata)
 
 URL = DOWNLOAD_URL
 Fetch = Callable[[str, dict[str, str], float], tuple[int, str, bytes]]
@@ -77,6 +79,26 @@ def _decode_response(body: bytes, encoding: str) -> bytes:
     return result
 
 
+def _is_version_ahead_marker(value: object) -> bool:
+    """Reconoce el marcador de versión sin depender de su texto exacto.
+
+    El cliente enumera el error como ``VersionLowerThanBlobSave``. El servicio
+    puede devolver el nombre del enum o una descripción equivalente; se
+    normaliza a letras minúsculas para tolerar separadores. Solo se usa para
+    dar un diagnóstico claro: nunca autoriza a saltarse la comprobación.
+    """
+
+    try:
+        text = value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)
+    except (TypeError, ValueError):
+        text = str(value)
+    normalized = re.sub(r"[^a-z]", "", text.casefold())
+    return (
+        "versionlowerthanblobsave" in normalized
+        or "lowerthanblobsave" in normalized
+    )
+
+
 def _raise_remote_error(status: int, wire: bytes, encoding: str) -> None:
     """Traduce el error del servicio sin conservar su cuerpo ni sus mensajes.
 
@@ -118,6 +140,11 @@ def _raise_remote_error(status: int, wire: bytes, encoding: str) -> None:
     if error_code == 100505:
         raise CloudProviderDeviceRejected(
             'El servicio rechazó el identificador de instalación generado.'
+        )
+    if _is_version_ahead_marker(details):
+        raise CloudProviderSaveVersionAhead(
+            "La copia remota está marcada con una versión de protocolo superior "
+            "a la que admite este cliente. No se envió ningún candidato."
         )
     raise CloudProviderUnavailable(
         f'El servicio respondió con estado {status}.', provider_code=error_code

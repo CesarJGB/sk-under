@@ -182,7 +182,7 @@ _DEFINITIONS: dict[PlatformName, PlatformCapabilities] = {
             "estructural con Android no es prueba de escritura."
         ),
         evidence=(
-            "Login y descarga iOS verificados (8.8.0.13, respuesta IOS_). "
+            "Login y descarga iOS verificados (8.8.0.14, respuesta IOS_). "
             "Publicaciones oficiales describen la subida solo desde el cliente. "
             "CRDE edita iOS, pero su mecanismo remoto no es público ni se ha "
             "reproducido. No se ha realizado ninguna subida iOS."
@@ -202,13 +202,15 @@ _IOS_EXPERIMENTAL = PlatformCapabilities(
         save="write_experimental",
         restore="write_experimental",
         save_detail=(
-            "Subida iOS validada de extremo a extremo solo en la cuenta de "
-            "pruebas autorizada: respuesta 200, descarga posterior idéntica y "
-            "restauración exacta del original."
+            "Subida iOS experimental limitada a la cuenta autorizada. La Fase "
+            "10.2 confirmó aceptación y persistencia del servidor, pero el "
+            "cliente oficial rechazó la copia por metadatos de versión; la "
+            "Fase 10.1 corrige el protocolo y espera validación física."
         ),
         restore_detail=(
-            "Restauración iOS validada únicamente en la cuenta de pruebas "
-            "autorizada, con verificación por huella tras la descarga."
+            "Restauración iOS experimental limitada a la cuenta autorizada. "
+            "La escritura usa la versión de protocolo 8.8.0; no se declara "
+            "compatible hasta que el cliente oficial recupere la copia."
         ),
     ),
     reason=(
@@ -216,10 +218,11 @@ _IOS_EXPERIMENTAL = PlatformCapabilities(
         "escritura iOS general todavía no está validada ni habilitada."
     ),
     evidence=(
-        "Fase 10.2, 2026-11-27: cuenta iOS autorizada; respaldo íntegro previo; "
-        "resubida sin cambios con persistencia exacta; cambio aislado de gemas "
-        "persistido y recuperado; restauración del original verificada por "
-        "SHA-256. No se generaliza a otras cuentas iOS."
+        "Fase 10.2, 2026-11-27: subida aceptada con HTTP 200 y persistencia "
+        "exacta en el servidor, pero el cliente iOS mostró 'versión demasiado "
+        "antigua'. Fase 10.1: causa identificada en x-app-version/x-game-version "
+        "(se enviaba 8.8.0.13 en vez de 8.8.0); pendiente de prueba física."
+        " No se generaliza a otras cuentas iOS."
     ),
     confirmation=_COMMON_CONFIRMATION,
 )

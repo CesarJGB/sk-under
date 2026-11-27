@@ -125,7 +125,7 @@ CAPABILITIES: tuple[dict[str, str], ...] = (
         "read": "read_compatible",
         "write": "not_exposed",
         "evidence": "E3",
-        "note": "Login y descarga verificados con la cuenta iOS autorizada (8.8.0.13). La escritura remota no está validada.",
+        "note": "Login y descarga verificados con la cuenta iOS autorizada (8.8.0.14). La escritura remota no está validada.",
     },
 )
 

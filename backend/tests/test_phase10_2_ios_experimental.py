@@ -48,7 +48,7 @@ def test_experimental_state_is_scoped_and_never_default():
     assert experimental_account("otra@example.test", {account_digest(_EMAIL)}) is False
 
 
-def test_blob_headers_can_describe_ios_without_changing_android_defaults():
+def test_blob_headers_use_the_protocol_version_on_both_platforms():
     android = build_blob_headers("token", "unique", "distro")
     assert android["x-platform"] == "android"
     assert android["x-app-version"] == "8.8.0"
@@ -57,12 +57,12 @@ def test_blob_headers_can_describe_ios_without_changing_android_defaults():
         "unique",
         "distro",
         platform="ios",
-        app_version="8.8.0.13",
-        game_version="8.8.0.13",
+        app_version="8.8.0",
+        game_version="8.8.0",
     )
     assert ios["x-platform"] == "ios"
-    assert ios["x-app-version"] == "8.8.0.13"
-    assert ios["x-game-version"] == "8.8.0.13"
+    assert ios["x-app-version"] == "8.8.0"
+    assert ios["x-game-version"] == "8.8.0"
 
 
 def test_experimental_lab_requires_backup_and_verifies_persistence(tmp_path: Path):

@@ -33,6 +33,7 @@ from ..cloud.lab_service import CloudLabService
 from ..cloud.provider import (
     AcquiredCloudSave,
     CloudProviderDeviceBindingThrottled,
+    CloudProviderSaveVersionAhead,
     CloudProviderUnauthenticated,
     CloudProviderUnavailable,
     CloudSaveMetadata,
@@ -67,6 +68,7 @@ from .errors import (
     NativeSessionRejected,
     NativeSessionRequired,
     NativeSavePlatformMismatch,
+    NativeSaveVersionAhead,
     NativeWriteDenied,
     NativeWriteDisabled,
     NativeWritePendingValidation,
@@ -1158,6 +1160,10 @@ class NativeAuthService:
                 distro_id, unique_id, session, subject, None,
                 "native_device_binding_throttled", exc.retry_after,
             )
+        except CloudProviderSaveVersionAhead:
+            return _Candidate(
+                distro_id, unique_id, session, subject, None, "native_save_version_ahead"
+            )
         except CloudProviderUnauthenticated:
             raise NativeSessionRejected(
                 "ChillyRoom rechazó la sesión emitida para el servicio de guardado."
@@ -1343,6 +1349,14 @@ class NativeAuthService:
         except NativeSavePlatformMismatch:
             self.store.set_save_error(profile.id, "native_platform_mismatch")
             raise
+        except CloudProviderSaveVersionAhead:
+            self.store.set_save_error(profile.id, "native_save_version_ahead")
+            raise NativeSaveVersionAhead(
+                "La nube de esta cuenta contiene una partida marcada con una "
+                "versión de protocolo superior. El cliente oficial la rechazará "
+                "como 'versión demasiado antigua'. No se envió ni se sobrescribió "
+                "ningún candidato."
+            ) from None
         except CloudProviderUnavailable as exc:
             if getattr(exc, "provider_code", None) == 100504:
                 self.store.set_save_error(profile.id, "native_no_cloud_save")
@@ -1499,6 +1513,14 @@ class NativeAuthService:
             raise NativeDeviceBindingThrottled(
                 self._binding_message(exc.retry_after), retry_after=exc.retry_after
             ) from None
+        except CloudProviderSaveVersionAhead:
+            self.store.set_save_error(session.profile.id, "native_save_version_ahead")
+            raise NativeSaveVersionAhead(
+                "La nube de esta cuenta contiene una partida marcada con una "
+                "versión de protocolo superior. El cliente oficial la rechazará "
+                "como 'versión demasiado antigua'. No se envió ni se sobrescribió "
+                "ningún candidato."
+            ) from None
         except CloudProviderUnavailable as exc:
             if getattr(exc, "provider_code", None) == 100504:
                 self.store.set_save_error(session.profile.id, "native_no_cloud_save")
@@ -1536,8 +1558,8 @@ def _default_provider(
         unique_id,
         distro_id,
         platform=distribution.platform,
-        app_version=distribution.game_version,
-        game_version=distribution.game_version,
+        app_version=distribution.protocol_app_version,
+        game_version=distribution.protocol_game_version,
     )
 
 
@@ -1552,8 +1574,8 @@ def _default_uploader(
         distro_id,
         enabled=True,
         platform=distribution.platform,
-        app_version=distribution.game_version,
-        game_version=distribution.game_version,
+        app_version=distribution.protocol_app_version,
+        game_version=distribution.protocol_game_version,
     )
 
 

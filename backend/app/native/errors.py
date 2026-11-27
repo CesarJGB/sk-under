@@ -173,6 +173,18 @@ class NativeNoCloudSave(NativeError):
     status = 404
 
 
+class NativeSaveVersionAhead(NativeError):
+    """El BlobSave remoto fue marcado con una versión de protocolo superior.
+
+    No es un fallo de autenticación ni de formato. La copia existe, pero el
+    servicio la considera más nueva que este cliente. Se impide cualquier
+    subida para no agravar la discrepancia y se explica cómo recuperarla.
+    """
+
+    code = "native_save_version_ahead"
+    status = 409
+
+
 class NativeDeviceBindingThrottled(NativeError):
     """La cuenta está en espera para vincular un dispositivo nuevo.
 
