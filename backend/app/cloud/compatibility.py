@@ -132,6 +132,12 @@ _PROFILES: tuple[CompatibilityProfile, ...] = (
         evidence="E3: flujo Android validado con respaldo, confirmación y persistencia.",
         source="docs/save-research/version-compatibility.md; docs/research/phase5-7",
         checked_at="2026-11-27",
+        game_version=2155,
+        app_version=80800,
+        note=(
+            "Marcadores observados en la copia Android Global 8.8.0 autorizada. "
+            "Un valor distinto o ausente exige revisión antes de escribir."
+        ),
     ),
     CompatibilityProfile(
         distribution_id="ios-global",
@@ -515,13 +521,15 @@ def decision_for(
         warnings.append(
             f"serialzedVersion={detected.serialzed_version} no está validado para esta versión."
         )
-    if profile.game_version is not None and detected.game_version not in (None, profile.game_version):
+    if profile.game_version is not None and detected.game_version != profile.game_version:
         warnings.append(
-            f"gameVersion={detected.game_version} difiere del marcador validado {profile.game_version}."
+            f"gameVersion={detected.game_version} no coincide con el marcador validado "
+            f"{profile.game_version}."
         )
-    if profile.app_version is not None and detected.app_version not in (None, profile.app_version):
+    if profile.app_version is not None and detected.app_version != profile.app_version:
         warnings.append(
-            f"AppVersion={detected.app_version} difiere del marcador validado {profile.app_version}."
+            f"AppVersion={detected.app_version} no coincide con el marcador validado "
+            f"{profile.app_version}."
         )
     for key, expected in profile.catalog_versions.items():
         actual = catalog_versions.get(key)

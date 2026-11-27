@@ -11,7 +11,6 @@ Got, no inventa identificadores y conserva las claves desconocidas.
 
 from __future__ import annotations
 
-from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
 from typing import Any, Mapping
@@ -28,7 +27,7 @@ from ..cloud_save import (
 from ..parsers.json_document import parse_json
 from .gems_editor import serialize_aggregate
 from .aggregate_cache import validated_document
-from .lab import BinaryDiff, binary_diff
+from .lab import BinaryDiff, binary_diff, clone_json
 
 BLUEPRINTS_PATH = "itemData.blueprints"
 BLUEPRINT_STATUSES = frozenset({"Got", "Researched"})
@@ -379,7 +378,7 @@ _MISSING = object()
 def prepare_blueprint_edit(source: bytes, plan: object) -> BlueprintEdit:
     root, version, source = _validated_document(source)
     normalized = normalize_blueprint_plan(plan)
-    candidate = deepcopy(root)
+    candidate = clone_json(root)
     target = _blueprint_map(candidate)
     encoding = blueprint_encoding(target)
     changes: list[BlueprintChange] = []
@@ -451,7 +450,7 @@ def prepare_blueprint_edit(source: bytes, plan: object) -> BlueprintEdit:
         raise BlueprintVerificationError(f"El candidato no se puede volver a abrir: {exc}") from exc
     if not isinstance(reopened, dict):
         raise BlueprintVerificationError("El candidato no conserva el objeto raíz.")
-    if serialize_aggregate(deepcopy(reopened)) != candidate_source:
+    if serialize_aggregate(clone_json(reopened)) != candidate_source:
         raise BlueprintVerificationError("El candidato no es estable al reserializarlo.")
 
     reopened_map = _blueprint_map(reopened)

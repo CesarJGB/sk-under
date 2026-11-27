@@ -19,7 +19,6 @@ y se documenta como E3. La semántica de las escenas sigue sin confirmarse.
 
 from __future__ import annotations
 
-from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
 from typing import Any
@@ -37,7 +36,7 @@ from ..cloud_save import (
 from ..parsers.json_document import parse_json
 from .gems_editor import serialize_aggregate
 from .aggregate_cache import validated_document
-from .lab import BinaryDiff, binary_diff
+from .lab import BinaryDiff, binary_diff, clone_json
 
 MISC_PATH = "miscData"
 UNLOCKED_PATH = "miscData.unlockedKillEffectIds"
@@ -373,7 +372,7 @@ def prepare_kill_effect_unlock_edit(source: bytes, selections: object) -> KillEf
             serialzed_version=version,
         )
 
-    modified = deepcopy(root)
+    modified = clone_json(root)
     if not had_misc:
         modified[MISC_PATH] = {}
     modified_misc = _misc(modified)

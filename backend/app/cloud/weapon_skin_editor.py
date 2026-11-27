@@ -23,7 +23,6 @@ la posesión del arma base siguen sin confirmarse.
 
 from __future__ import annotations
 
-from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
 from typing import Any, Mapping
@@ -41,7 +40,7 @@ from ..cloud_save import (
 from ..parsers.json_document import parse_json
 from .gems_editor import serialize_aggregate
 from .aggregate_cache import validated_document
-from .lab import BinaryDiff, binary_diff
+from .lab import BinaryDiff, binary_diff, clone_json
 
 WEAPON_EVOLUTION_PATH = "weaponEvolutionData"
 WEAPONS_PATH = "weaponEvolutionData.weapons"
@@ -405,7 +404,7 @@ def prepare_weapon_skin_unlock_edit(source: bytes, selections: object) -> Weapon
             serialzed_version=version,
         )
 
-    modified = deepcopy(root)
+    modified = clone_json(root)
     modified_evolution = _evolution(modified)
     if "weapons" not in modified_evolution:
         modified_evolution["weapons"] = {}

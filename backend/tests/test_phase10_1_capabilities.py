@@ -25,6 +25,7 @@ _IOS_DOCUMENT = json.loads(PAYLOAD_A) | {
 _IOS_DOCUMENT["gameData"]["futureField"] = {"nested": [1, 2, 3]}
 # Marcador observado en la partida iOS real 8.8.0.14; no es la versión comercial.
 _IOS_DOCUMENT["gameData"]["gameVersion"] = 2155
+_IOS_DOCUMENT["itemData"]["AppVersion"] = 1531
 IOS_PAYLOAD = json.dumps(
     _IOS_DOCUMENT,
     ensure_ascii=False,

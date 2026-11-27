@@ -17,7 +17,6 @@ otra clave.
 
 from __future__ import annotations
 
-from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
 from typing import Any, Mapping
@@ -34,7 +33,7 @@ from ..cloud_save import (
 from ..parsers.json_document import parse_json
 from .gems_editor import serialize_aggregate
 from .aggregate_cache import validated_document
-from .lab import BinaryDiff, binary_diff
+from .lab import BinaryDiff, binary_diff, clone_json
 
 AFFINITY_PATH = "statisticData.event2Count"
 AFFINITY_MIN = 0
@@ -323,7 +322,7 @@ def read_pet_affinity(source: bytes) -> dict[str, object]:
 def prepare_pet_affinity_edit(source: bytes, plan: object) -> PetAffinityEdit:
     root, version, source = _validated_document(source)
     normalized = normalize_pet_affinity_plan(plan)
-    candidate = deepcopy(root)
+    candidate = clone_json(root)
     counts = _counts(candidate)
     catalog = _catalog()
     unlock = _unlocked_pets(candidate)
@@ -418,7 +417,7 @@ def prepare_pet_affinity_edit(source: bytes, plan: object) -> PetAffinityEdit:
         raise PetAffinityVerificationError(f"El candidato no se puede volver a abrir: {exc}") from exc
     if not isinstance(reopened, dict):
         raise PetAffinityVerificationError("El candidato no conserva el objeto raíz.")
-    if serialize_aggregate(deepcopy(reopened)) != candidate_source:
+    if serialize_aggregate(clone_json(reopened)) != candidate_source:
         raise PetAffinityVerificationError("El candidato no es estable al reserializarlo.")
 
     reopened_counts = _counts(reopened)

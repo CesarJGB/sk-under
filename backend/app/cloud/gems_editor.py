@@ -12,7 +12,6 @@ rutas del plan debe reproducir exactamente los bytes de entrada.
 from __future__ import annotations
 
 import json
-from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
 
@@ -27,7 +26,7 @@ from ..cloud_save import (
 )
 from ..parsers.json_document import parse_json
 from .aggregate_cache import serialize_canonical, validated_document
-from .lab import BinaryDiff, binary_diff
+from .lab import BinaryDiff, binary_diff, clone_json
 from .resource_consistency import (
     RESOURCES,
     ConsistencyUnknown,
@@ -235,7 +234,7 @@ def _prepare(source: bytes, new_gems: object, *, legacy: bool) -> GemsEdit:
             serialzed_version=version,
         )
 
-    modified = deepcopy(root)
+    modified = clone_json(root)
     _game_data(modified).update(fields)
 
     candidate = serialize_aggregate(modified)

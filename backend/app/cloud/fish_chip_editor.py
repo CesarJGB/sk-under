@@ -18,7 +18,6 @@ tocan los historiales ``fishChipStore*`` ni ``cumulativeFishCount``.
 
 from __future__ import annotations
 
-from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
 
@@ -34,7 +33,7 @@ from ..cloud_save import (
 from ..parsers.json_document import parse_json
 from .gems_editor import serialize_aggregate
 from .aggregate_cache import validated_document
-from .lab import BinaryDiff, binary_diff
+from .lab import BinaryDiff, binary_diff, clone_json
 
 FISH_CHIP_FIELD_ID = "fishChip"
 FISH_CHIP_PATH = "gameData.fishChip"
@@ -264,7 +263,7 @@ def prepare_fish_chip_edit(source: bytes, new_fish_chip: object) -> FishChipEdit
     if value != original_material:
         changed_fields.append(MATERIAL_FISH_PATH)
 
-    modified = deepcopy(root)
+    modified = clone_json(root)
     _game_data(modified)[FISH_CHIP_FIELD_ID] = value
     _materials_for_edit(modified)[MATERIAL_FISH_FIELD_ID] = value
 

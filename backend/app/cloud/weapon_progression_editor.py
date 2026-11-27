@@ -20,7 +20,6 @@ Reglas deliberadamente conservadoras:
 
 from __future__ import annotations
 
-from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
 from typing import Any, Mapping
@@ -38,7 +37,7 @@ from ..cloud_save import (
 from ..parsers.json_document import parse_json
 from .gems_editor import serialize_aggregate
 from .aggregate_cache import validated_document
-from .lab import BinaryDiff, binary_diff
+from .lab import BinaryDiff, binary_diff, clone_json
 
 STATISTIC_PATH = "statisticData"
 OBTAIN_PATH = "statisticData.object2ObtainTime"
@@ -465,7 +464,7 @@ def prepare_weapon_progression_edit(source: bytes, selections: object) -> Weapon
             serialzed_version=version,
         )
 
-    modified = deepcopy(root)
+    modified = clone_json(root)
     modified_statistic = _statistic(modified)
     if "object2ObtainTime" not in modified_statistic:
         modified_statistic["object2ObtainTime"] = {}
@@ -645,7 +644,7 @@ def prepare_weapon_forge_unlock_edit(
             serialzed_version=version,
         )
 
-    modified = deepcopy(root)
+    modified = clone_json(root)
     modified_statistic = _statistic(modified)
     if "object2ObtainTime" not in modified_statistic:
         modified_statistic["object2ObtainTime"] = {}

@@ -154,6 +154,9 @@ export function QuickEdit({ save, draft, built, update }: {
     <QuickQuantityRow key={key} label={label} icon={icon} quantity={built.quantities[key]} changed={changed} minimum={minimum}
       onChange={(value) => update(setQuick(key, value, draft))} />
   const allPendingSelected = unlocks.every(({ key }) => quickChecked(key, draft, eligible) === 'all' || eligible[key].length === 0)
+  const minimumChanges = new Map<string, number>()
+  for (const change of built.plan.advanced?.materials ?? []) minimumChanges.set(change.id, change.value)
+  for (const change of built.plan.advanced?.seeds ?? []) minimumChanges.set(change.id, change.value)
 
   return <div className="quick-edit" data-testid="quick-edit">
     <section className="quick-group" aria-label="Recursos">
@@ -163,10 +166,9 @@ export function QuickEdit({ save, draft, built, update }: {
     <section className="quick-group" aria-label="Cantidades mínimas">
       <h2>Cantidades mínimas</h2>
       {minimums.map(({ key, label, icon }) => {
-        const changes = key === 'seedsMin' ? built.plan.advanced?.seeds : built.plan.advanced?.materials
         const value = built.quantities[key].requested
         const changed = value !== null && minimumRows(save, key).some((row) => row.editable && row.owned
-          && minimumTarget(row.count, value) !== null && changes?.some((change) => change.id === row.id && change.value === value))
+          && minimumTarget(row.count, value) !== null && minimumChanges.get(row.id) === value)
         return quantityRow(key, label, icon, changed, true)
       })}
     </section>

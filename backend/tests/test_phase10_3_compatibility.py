@@ -55,7 +55,8 @@ def test_registry_separates_commercial_protocol_and_save_versions():
     assert android.profile is not None
     assert android.profile.protocol_game_version == "8.8.0"
     assert android.detected.serialzed_version == 1
-    assert android.detected.game_version == 80800
+    assert android.detected.game_version == 2155
+    assert android.detected.app_version == 80800
     assert android.write_supported is True
 
     ios = decision_for(
@@ -97,6 +98,35 @@ def test_unknown_version_is_read_only_and_cannot_pass_preflight():
     )
     with pytest.raises(CompatibilityPending):
         require_write_preflight(preflight)
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("gameVersion", 80800),
+        ("gameVersion", None),
+        ("AppVersion", 1531),
+        ("AppVersion", None),
+    ],
+)
+def test_android_marker_mismatch_blocks_prepare_and_write(field, value):
+    document = json.loads(android_source())
+    if field == "gameVersion":
+        document["gameData"][field] = value
+    else:
+        document["itemData"][field] = value
+    decision = decision_for(
+        distribution_id="android-global",
+        commercial_version="8.8.0",
+        platform="android",
+        source=canonical(document),
+        capability_state="write_verified",
+    )
+    assert decision.state == "pending_verification"
+    assert decision.read_ready is True
+    assert decision.prepare_ready is False
+    assert decision.write_supported is False
+    assert any("marcador validado" in warning for warning in decision.warnings)
 
 
 def test_new_store_version_is_detected_but_not_adopted():

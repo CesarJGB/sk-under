@@ -315,16 +315,25 @@ function eligibilityFor(save: NativeSaveSummary | null): Eligibility {
   }
 }
 
-function effective(
+function effectiveCount(
   key: BulkKey,
   draft: Draft,
   eligible: Eligibility,
-): Record<string, true> {
-  const result: Record<string, true> = {}
-  if (draft.bulk[key]) for (const item of eligible[key]) result[item] = true
-  for (const item of Object.keys(draft.manual[key])) result[item] = true
-  for (const item of Object.keys(draft.excluded[key])) delete result[item]
-  return result
+): number {
+  const manual = Object.keys(draft.manual[key])
+  const excluded = draft.excluded[key]
+  if (!draft.bulk[key]) {
+    return manual.reduce((total, item) => total + (excluded[item] ? 0 : 1), 0)
+  }
+  const known = eligibleSet(key, eligible)
+  let total = eligible[key].length
+  for (const item of Object.keys(excluded)) {
+    if (known.has(item)) total -= 1
+  }
+  for (const item of manual) {
+    if (!known.has(item) && !excluded[item]) total += 1
+  }
+  return total
 }
 
 export function selectedCount(
@@ -332,7 +341,7 @@ export function selectedCount(
   draft: Draft,
   eligible: Eligibility,
 ): number {
-  return Object.keys(effective(key, draft, eligible)).length
+  return effectiveCount(key, draft, eligible)
 }
 
 export function isSelected(
@@ -387,24 +396,47 @@ export function toggleItem(
   eligible: Eligibility,
 ): Draft {
   const selected = isSelected(key, item, draft, eligible)
-  const manual = { ...draft.manual[key] }
-  const excluded = { ...draft.excluded[key] }
   if (draft.bulk[key]) {
+    const excluded = { ...draft.excluded[key] }
+    let manual = draft.manual[key]
     if (selected) {
-      delete manual[item]
       excluded[item] = true
+      if (manual[item]) {
+        manual = { ...manual }
+        delete manual[item]
+      }
     } else {
       delete excluded[item]
-      if (!eligible[key].includes(item)) manual[item] = true
+      if (!eligibleSet(key, eligible).has(item) && !manual[item]) {
+        manual = { ...manual, [item]: true }
+      }
     }
-  } else if (selected) {
+    return {
+      ...draft,
+      manual: manual === draft.manual[key] ? draft.manual : { ...draft.manual, [key]: manual },
+      excluded: { ...draft.excluded, [key]: excluded },
+    }
+  }
+  const manual = { ...draft.manual[key] }
+  let excluded = draft.excluded[key]
+  if (selected) {
     delete manual[item]
-    delete excluded[item]
+    if (excluded[item]) {
+      excluded = { ...excluded }
+      delete excluded[item]
+    }
   } else {
     manual[item] = true
-    delete excluded[item]
+    if (excluded[item]) {
+      excluded = { ...excluded }
+      delete excluded[item]
+    }
   }
-  return { ...draft, manual: { ...draft.manual, [key]: manual }, excluded: { ...draft.excluded, [key]: excluded } }
+  return {
+    ...draft,
+    manual: { ...draft.manual, [key]: manual },
+    excluded: excluded === draft.excluded[key] ? draft.excluded : { ...draft.excluded, [key]: excluded },
+  }
 }
 
 export function setBulk(key: BulkKey, value: boolean, draft: Draft): Draft {
@@ -493,7 +525,18 @@ function effectiveUnlockedSet(
   draft: Draft,
   eligible: Eligibility,
 ): string[] {
-  return Object.keys(effective(key, draft, eligible))
+  const manual = Object.keys(draft.manual[key])
+  const excluded = draft.excluded[key]
+  if (draft.bulk[key]) {
+    if (manual.length === 0 && Object.keys(excluded).length === 0) return eligible[key]
+    const known = eligibleSet(key, eligible)
+    const result = eligible[key].filter((item) => !excluded[item])
+    for (const item of manual) {
+      if (!known.has(item) && !excluded[item]) result.push(item)
+    }
+    return result
+  }
+  return manual.filter((item) => !excluded[item])
 }
 
 export function effectiveCharacters(draft: Draft, save: NativeSaveSummary): string[] {
@@ -787,13 +830,32 @@ export function quickChecked(
   draft: Draft,
   eligible: Eligibility,
 ): 'all' | 'some' | 'none' {
-  const selection = effective(key, draft, eligible)
-  const selected = eligible[key].filter((id) => selection[id]).length
+  const known = eligibleSet(key, eligible)
+  let selected = 0
+  if (draft.bulk[key]) {
+    selected = eligible[key].length
+    for (const item of Object.keys(draft.excluded[key])) {
+      if (known.has(item)) selected -= 1
+    }
+  } else {
+    for (const item of Object.keys(draft.manual[key])) {
+      if (known.has(item) && !draft.excluded[key][item]) selected += 1
+    }
+  }
   if (selected === 0) return 'none'
   return selected === eligible[key].length ? 'all' : 'some'
 }
 
+const progressCache = new WeakMap<NativeSaveSummary, Map<BulkKey, { unlocked: number; pending: number; total: number }>>()
+
 export function unlockProgress(save: NativeSaveSummary, key: BulkKey, eligible: Eligibility) {
+  let cached = progressCache.get(save)
+  if (!cached) {
+    cached = new Map()
+    progressCache.set(save, cached)
+  }
+  const previous = cached.get(key)
+  if (previous) return previous
   const report = save.report?.characters
   const characters = report?.catalog?.available === false ? [] : report?.items ?? []
   const advanced = advancedSnapshot(save)
@@ -829,7 +891,9 @@ export function unlockProgress(save: NativeSaveSummary, key: BulkKey, eligible: 
       .filter((row) => row.level !== null && row.level >= row.max_observed).length,
   }[key]()
   const pending = eligible[key].length
-  return { unlocked, pending, total: unlocked + pending }
+  const result = { unlocked, pending, total: unlocked + pending }
+  cached.set(key, result)
+  return result
 }
 
 export { parseQuantity, skillKey, skinKey }

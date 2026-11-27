@@ -9,7 +9,6 @@ modifica ``heroUnlock`` de forma implícita.
 
 from __future__ import annotations
 
-from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
 from typing import Any, Mapping
@@ -26,7 +25,7 @@ from ..cloud_save import (
 from ..parsers.json_document import parse_json
 from .gems_editor import serialize_aggregate
 from .aggregate_cache import validated_document
-from .lab import BinaryDiff, binary_diff
+from .lab import BinaryDiff, binary_diff, clone_json
 
 HERO_LEVEL_PATH = "gameData.heroLevel"
 HERO_UNLOCK_PATH = "gameData.heroUnlock"
@@ -239,7 +238,7 @@ def read_hero_levels(source: bytes) -> dict[str, object]:
 def prepare_hero_level_edit(source: bytes, plan: object) -> HeroLevelEdit:
     root, version, source = _validated_document(source)
     normalized = normalize_hero_level_plan(plan)
-    candidate = deepcopy(root)
+    candidate = clone_json(root)
     target = _level_map(candidate)
     changes: list[HeroLevelChange] = []
     originals: list[tuple[str, object]] = []
@@ -300,7 +299,7 @@ def prepare_hero_level_edit(source: bytes, plan: object) -> HeroLevelEdit:
         raise HeroLevelVerificationError(f"El candidato no se puede volver a abrir: {exc}") from exc
     if not isinstance(reopened, dict):
         raise HeroLevelVerificationError("El candidato no conserva el objeto raíz.")
-    if serialize_aggregate(deepcopy(reopened)) != candidate_source:
+    if serialize_aggregate(clone_json(reopened)) != candidate_source:
         raise HeroLevelVerificationError("El candidato no es estable al reserializarlo.")
 
     reopened_levels = _level_map(reopened)

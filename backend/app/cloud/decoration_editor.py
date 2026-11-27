@@ -25,7 +25,6 @@ significado y el mapa de selección todavía no están determinados.
 
 from __future__ import annotations
 
-from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
 from typing import Any, Mapping
@@ -50,7 +49,7 @@ from .blueprint_editor import (
 )
 from .gems_editor import serialize_aggregate
 from .aggregate_cache import validated_document
-from .lab import BinaryDiff, binary_diff
+from .lab import BinaryDiff, binary_diff, clone_json
 
 DECORATE_PATH = "itemData.roomDecorateDic"
 ROOM_LEVEL_PATH = "gameData.roomObjectLevel"
@@ -495,7 +494,7 @@ _MISSING = object()
 def prepare_decoration_edit(source: bytes, plan: object) -> DecorationEdit:
     root, version, source = _validated_document(source)
     normalized = normalize_decoration_plan(plan)
-    candidate = deepcopy(root)
+    candidate = clone_json(root)
     object_map = _objects(candidate)
     level_map = _levels(candidate)
     changes: list[DecorationChange] = []
@@ -631,7 +630,7 @@ def prepare_decoration_edit(source: bytes, plan: object) -> DecorationEdit:
         raise DecorationVerificationError(f"El candidato no se puede volver a abrir: {exc}") from exc
     if not isinstance(reopened, dict):
         raise DecorationVerificationError("El candidato no conserva el objeto raíz.")
-    if serialize_aggregate(deepcopy(reopened)) != candidate_source:
+    if serialize_aggregate(clone_json(reopened)) != candidate_source:
         raise DecorationVerificationError("El candidato no es estable al reserializarlo.")
 
     reopened_objects = _objects(reopened)

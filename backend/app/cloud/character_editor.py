@@ -15,7 +15,6 @@ como experimental y conserva el flujo de respaldo, confirmación y restauración
 
 from __future__ import annotations
 
-from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
 
@@ -32,7 +31,7 @@ from ..cloud_save import (
 from ..parsers.json_document import parse_json
 from .gems_editor import serialize_aggregate
 from .aggregate_cache import validated_document
-from .lab import BinaryDiff, binary_diff
+from .lab import BinaryDiff, binary_diff, clone_json
 
 CHARACTER_FIELD_ID = "heroUnlock"
 CHARACTER_PATH = "gameData.heroUnlock"
@@ -271,7 +270,7 @@ def prepare_character_unlock_edit(source: bytes, codes: object) -> CharacterEdit
             serialzed_version=version,
         )
 
-    modified = deepcopy(root)
+    modified = clone_json(root)
     modified_unlock = _unlock_map(modified)
     for code in selected:
         modified_unlock[code] = True

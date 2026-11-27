@@ -18,7 +18,6 @@ original.
 
 from __future__ import annotations
 
-from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
 
@@ -35,7 +34,7 @@ from ..cloud_save import (
 from ..parsers.json_document import parse_json
 from .gems_editor import serialize_aggregate
 from .aggregate_cache import validated_document
-from .lab import BinaryDiff, binary_diff
+from .lab import BinaryDiff, binary_diff, clone_json
 
 SKIN_FIELD_ID = "skinLock"
 SKIN_PATH = "gameData.skinLock"
@@ -478,7 +477,7 @@ def prepare_skin_unlock_edit(source: bytes, selections: object) -> SkinEdit:
             serialzed_version=version,
         )
 
-    modified = deepcopy(root)
+    modified = clone_json(root)
     modified_map = _skin_map(modified, catalog)
     for ref in newly_unlocked:
         for entry in modified_map[ref.code]:

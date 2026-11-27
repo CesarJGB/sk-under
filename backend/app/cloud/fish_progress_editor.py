@@ -14,7 +14,6 @@ resto del agregado, incluidos el saldo, el material y los historiales.
 
 from __future__ import annotations
 
-from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
 
@@ -30,7 +29,7 @@ from ..cloud_save import (
 from ..parsers.json_document import parse_json
 from .gems_editor import serialize_aggregate
 from .aggregate_cache import validated_document
-from .lab import BinaryDiff, binary_diff
+from .lab import BinaryDiff, binary_diff, clone_json
 
 PROGRESS_FIELD_ID = "cumulativeFishCount"
 PROGRESS_PATH = "itemData.cumulativeFishCount"
@@ -196,7 +195,7 @@ def prepare_fish_progress_edit(source: bytes, new_value: object) -> FishProgress
             serialzed_version=version,
         )
 
-    modified = deepcopy(root)
+    modified = clone_json(root)
     _item_data(modified)[PROGRESS_FIELD_ID] = value
 
     candidate = serialize_aggregate(modified)

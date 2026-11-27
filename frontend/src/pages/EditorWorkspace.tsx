@@ -525,7 +525,7 @@ function DecorationEditor({ save, draft, update, built }: EditorInputs & { built
     row.id.toLowerCase().includes(search))
   const appearanceGroups = decorations.appearances.reduce<Record<string, typeof decorations.appearances>>((groups, row) => {
     const key = row.subcategory ?? 'otros'
-    groups[key] = [...(groups[key] ?? []), row]
+    ;(groups[key] ??= []).push(row)
     return groups
   }, {})
   const groupLabels: Record<string, string> = {

@@ -11,7 +11,6 @@ confirmación existente.
 from __future__ import annotations
 
 import json
-from copy import deepcopy
 from dataclasses import dataclass, field
 from hashlib import sha256
 from typing import Any, Iterable, Mapping
@@ -32,7 +31,7 @@ from .decoration_editor import decorations_snapshot
 from .gems_editor import serialize_aggregate
 from .aggregate_cache import validated_document
 from .hero_level_editor import hero_levels_snapshot
-from .lab import BinaryDiff, binary_diff
+from .lab import BinaryDiff, binary_diff, clone_json
 from .pet_affinity_editor import pet_progression_snapshot
 
 MATERIALS_PATH = "itemData.materials"
@@ -356,7 +355,7 @@ def _restore_originals(root: dict[str, Any], originals: Iterable[tuple[str, obje
 def prepare_advanced_edit(source: bytes, plan: Mapping[str, object]) -> AdvancedEdit:
     root, version, source = _validated_document(source)
     normalized = normalize_advanced_plan(plan)
-    candidate = deepcopy(root)
+    candidate = clone_json(root)
     catalog = _load_catalog()
     changes: list[AdvancedChange] = []
     originals: list[tuple[str, object, bool]] = []
@@ -534,7 +533,7 @@ def prepare_advanced_edit(source: bytes, plan: Mapping[str, object]) -> Advanced
         raise AdvancedVerificationError(f"El candidato no se puede volver a abrir: {exc}") from exc
     if not isinstance(reopened_root, dict):
         raise AdvancedVerificationError("El candidato no conserva el objeto raíz.")
-    if serialize_aggregate(deepcopy(reopened_root)) != candidate_source:
+    if serialize_aggregate(clone_json(reopened_root)) != candidate_source:
         raise AdvancedVerificationError("El candidato no es estable al reserializarlo.")
 
     # Comprueba cada valor solicitado sobre la copia reabierta.

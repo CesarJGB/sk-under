@@ -114,6 +114,21 @@ class LabReport:
         }
 
 
+def clone_json(value: JsonValue) -> JsonValue:
+    """Copia un árbol JSON sin el coste genérico de ``copy.deepcopy``.
+
+    Los agregados solo contienen objetos, listas y primitivas JSON; las
+    primitivas son inmutables y se comparten. No se usa para estructuras con
+    tuplas, conjuntos ni objetos personalizados.
+    """
+
+    if type(value) is dict:
+        return {key: clone_json(item) for key, item in value.items()}  # type: ignore[union-attr]
+    if type(value) is list:
+        return [clone_json(item) for item in value]  # type: ignore[union-attr]
+    return value
+
+
 def parse_path(path: str) -> JsonPath:
     if not isinstance(path, str) or not path:
         raise LabPathError("La ruta está vacía.")
