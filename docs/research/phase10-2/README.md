@@ -43,6 +43,29 @@ La segunda prueba de integración usó 1.050 gemas y terminó restaurando 1.000.
 resultado confirmó `persisted: true`, `remote_gems: 1050` y después
 `remote_gems: 1000`, con los hashes esperados.
 
+Se probó un segundo campo aislado, las fichas de pesca: 0 → 1 → 0. La edición
+cambió solo `gameData.fishChip` y su contraparte `itemData.materials.material_fish`.
+La subida persistió en la nube, la descarga posterior devolvió 1 y la
+restauración devolvió el archivo original exacto. Esto descarta que la escritura
+funcione únicamente para el campo de gemas.
+
+## Verificación en producción
+
+Tras desplegar el commit `b40ae3c` se repitió el ciclo completo contra
+`https://api-sk.underdive.space` con la cuenta autorizada, no solo en local:
+
+- Login correcto con `write_state: write_experimental` y `write_ready: true`; el
+  perfil de dispositivo existente se reutilizó sin nueva espera de vinculación.
+- Respaldo manual creado y visible en el historial junto al respaldo previo.
+- Candidato unificado de 1.050 gemas: `accepted: true`, `persisted: true`,
+  descarga posterior con 1.050 y SHA-256 del candidato.
+- Verificación `matches_candidate: true`.
+- Restauración: `persisted: true`, 1.000 gemas y SHA-256 original exacto.
+- Segundo campo de fichas de pesca 0 → 1 → 0 con la misma persistencia y
+  restauración exacta.
+- La interfaz de producción muestra el aviso experimental, el editor habilitado y
+  el botón de guardado a 390 px, sin desbordamiento horizontal.
+
 ## Apple ID, Game Center y autorización
 
 - La cuenta de prueba es una cuenta ChillyRoom vinculada por correo y contraseña.
