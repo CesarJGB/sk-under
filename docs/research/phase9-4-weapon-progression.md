@@ -184,8 +184,11 @@ sin confirmar. El SHA remoto no se modificó.
 
 ## Evidencia y validación
 
-- Skins de arma y efectos de eliminación: **E3** por validación física del
-  propietario en Android el 2026-11-26.
+- Skins de arma: **E3** en Android (validación física del propietario el
+  2026-11-26) y **E4** en iOS experimental (validación física del propietario el
+  2026-11-27).
+- Efectos de eliminación: **E3** por validación física del propietario en Android
+  el 2026-11-26.
 - Descubrimiento/forja: **E2 experimental**. La escritura es estructuralmente
   válida y conserva datos, pero el cliente aún no ha confirmado que el arma
   aparezca desbloqueada ni que la mesa de forja la acepte.

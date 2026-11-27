@@ -473,7 +473,7 @@ export function WeaponSkinsEditor({ save, draft, update }: EditorProps) {
 
   return <div className="detail-editor" data-testid="weapon-skins-editor">
     <Notice>
-      <strong>Validado en Android físico (E3).</strong> Añade skins a <code>UnlockedSkins</code> de cada arma. No cambia la
+      <strong>Validado en Android físico (E3) y en iOS experimental (E4).</strong> Añade skins a <code>UnlockedSkins</code> de cada arma. No cambia la
       skin equipada ni el nivel del arma. Crear el registro de un arma no la desbloquea: el arma base puede seguir
       bloqueada hasta desbloquear su descubrimiento.
     </Notice>

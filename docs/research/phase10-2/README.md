@@ -2,6 +2,11 @@
 
 Fecha: 2026-11-27.
 
+> **Informe de estabilización (Fase 10.2, 2026-11-27):** la corrección del nivel
+> 8, el endurecimiento de versiones, la comparativa de rendimiento, la matriz
+> real T01–T16 y la restauración final están en
+> [`stability-report.md`](stability-report.md).
+
 > **Corrección posterior (Fase 10.1, 2026-11-27):** la persistencia en el
 > servidor descrita aquí fue real, pero **el cliente oficial de iOS rechazó el
 > guardado** con «La versión de tu juego es demasiado antigua». La causa era

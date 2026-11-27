@@ -56,7 +56,7 @@ las pruebas físicas registradas.
 | 21 | Unlock reborn card | Tarjeta de renacimiento | IPV | Campo E3 confirmado por el propietario | `gameData` y límites | Baja | P1 |
 | 22 | Unlock skins | Skins de personaje | IPV | Política `confirmed_by_owner` | `skinLock`, catálogo y compatibilidad | Media | P1 |
 | 23 | Unlock trophies | Sin editor de trofeos | Ausente | No hay catálogo/ruta de escritura validada | Identificadores, propiedad y condiciones | Alta | P3 |
-| 24 | Unlock weapon skins | Skins cosméticas de arma | IPV | E3 validado en Android físico el 2026-11-26 | `weaponEvolutionData.weapons.*.UnlockedSkins`; no concede arma base | Baja | P1 |
+| 24 | Unlock weapon skins | Skins cosméticas de arma | IPV | E3 en Android físico el 2026-11-26; E4 en iOS experimental validado por el propietario el 2026-11-27 | `weaponEvolutionData.weapons.*.UnlockedSkins`; no concede arma base | Baja | P1 |
 
 La fase 9.5 añade la operación «Desbloquear para forja». El cliente compara
 `object2ObtainTime` con `UIForge.UnlockCountDict[nivel]` y usa 8 si falta la
