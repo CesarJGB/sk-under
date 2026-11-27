@@ -23,6 +23,7 @@ aparezca en un catálogo no significa que una cuenta lo tenga desbloqueado.
 - La fase 9.2 confirma la escala entera de planos (1=Got, 2=Researched), documenta las banderas `room_unlock_*` como disponibilidad funcional del vestíbulo y actualiza los máximos observados (nivel de personaje 8, `Chest` 5, mascota 57 con 240).
 - La fase 9.3 añade catálogos independientes de skins de arma y efectos de eliminación. Sus editores solo añaden disponibilidad y no modifican la skin equipada ni la escena activa. El propietario validó ambos en Android físico el 2026-11-26: **E3** para disponibilidad y persistencia en el alcance probado; la semántica de `CurrentSkinIndex` y de las claves de escena sigue siendo hipótesis.
 - La fase 9.4 añade un editor experimental E2 de descubrimiento y forja de armas basado en `statisticData.object2ObtainTime`; solo eleva contadores ausentes o en cero a 1 y no escribe la cola de forja como desbloqueo. Está pendiente de validación física.
+- La fase 10.0 verifica la lectura nativa de iOS 8.8.0.13: autenticación con distro iOS, descarga `BlobSave`, informe de solo lectura, respaldos separados y editor deshabilitado. La estructura coincide con Android 8.8.0; `platformId`, `cloudSaveId` y `AppVersion` son marcadores de plataforma. La escritura iOS sigue sin evidencia y no se expone.
 - Políticas experimentales E2 para pase de batalla, desbloqueo de mascotas, variantes de skin, alimento para mascotas y descubrimiento/forja de armas.
 - Herramientas CLI sin autenticación, sin red y sin acceso a guardados reales.
 

@@ -1,5 +1,10 @@
 # Compatibilidad preliminar con iOS — fase 9.2
 
+> **Actualización fase 10.0:** esta fase ya no describe el estado actual. La
+> Fase 10.0 verificó autenticación y descarga nativas de iOS 8.8.0.13, añadió
+> importación local, respaldos separados y editor de solo lectura. Consulta
+> [phase10-0](../phase10-0/README.md). La escritura iOS sigue sin validar.
+
 ## Estado
 
 No se implementa soporte iOS en producción. Esta fase solo investiga la
