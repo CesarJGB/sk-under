@@ -355,10 +355,17 @@ class CloudDecorationLevelChange(BaseModel):
     level: StrictInt = Field(ge=1, le=5)
 
 
+class CloudWeaponSkinEquipChange(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    weapon_id: StrictStr = Field(min_length=1, max_length=120)
+    skin_id: StrictStr | None = Field(default=None, max_length=120)
+
+
 class CloudLabDecorationInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
     objects: list[StrictStr] = Field(default_factory=list, max_length=10)
     levels: list[CloudDecorationLevelChange] = Field(default_factory=list, max_length=5)
+    facilities: list[StrictStr] = Field(default_factory=list, max_length=7)
 
 
 class CloudLabUnifiedPrepareInput(BaseModel):
@@ -372,6 +379,9 @@ class CloudLabUnifiedPrepareInput(BaseModel):
     weapon_progression: list[StrictStr] = Field(default_factory=list, max_length=995)
     weapon_forge_unlock: list[StrictStr] = Field(default_factory=list, max_length=995)
     weapon_skins: list[StrictStr] = Field(default_factory=list, max_length=192)
+    weapon_skin_equip: list[CloudWeaponSkinEquipChange] = Field(
+        default_factory=list, max_length=180
+    )
     kill_effects: list[StrictInt] = Field(default_factory=list, max_length=9)
     advanced: CloudLabAdvancedPrepareInput | None = None
     hero_levels: list[CloudHeroLevelChange] = Field(default_factory=list, max_length=42)

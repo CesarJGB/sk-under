@@ -516,13 +516,17 @@ function DecorationEditor({ save, draft, update, built }: EditorInputs & { built
   const eligible = eligibility(save)
   const objectChecked = quickChecked('decorations', draft, eligible)
   const levelChecked = quickChecked('decorationLevels', draft, eligible)
+  const facilityChecked = quickChecked('facilities', draft, eligible)
   const plannedObjects = new Set(built.plan.decorations?.objects ?? [])
   const plannedLevels = new Map((built.plan.decorations?.levels ?? []).map(({ id, level }) => [id, level]))
+  const plannedFacilities = new Set(built.plan.decorations?.facilities ?? [])
   const search = query.trim().toLowerCase()
   const objectRows = decorations.objects.filter((row) =>
     row.label.toLowerCase().includes(search) || row.id.toLowerCase().includes(search))
   const levelRows = decorations.levels.filter((row) =>
     row.id.toLowerCase().includes(search))
+  const facilityRows = (decorations.facilities ?? []).filter((row) =>
+    row.label.toLowerCase().includes(search) || row.id.toLowerCase().includes(search))
   const appearanceGroups = decorations.appearances.reduce<Record<string, typeof decorations.appearances>>((groups, row) => {
     const key = row.subcategory ?? 'otros'
     ;(groups[key] ??= []).push(row)
@@ -595,6 +599,33 @@ function DecorationEditor({ save, draft, update, built }: EditorInputs & { built
       {decorations.unknown_objects.length > 0 && <p className="detail-note">
         {decorations.unknown_objects.length} objetos del guardado no están identificados y se conservan intactos.
       </p>}
+    </section>
+
+    <section aria-labelledby="decor-facilities-title">
+      <div className="detail-subhead">
+        <div>
+          <h3 className="detail-subtitle" id="decor-facilities-title">Instalaciones y modos</h3>
+          <p className="detail-note">Banderas funcionales del vestíbulo; no acreditan progreso dentro de cada modo.</p>
+        </div>
+        <CheckAll checked={facilityChecked === 'all'} indeterminate={facilityChecked === 'some'}
+          label={`Desbloquear ${eligible.facilities.length} instalaciones`}
+          onChange={(value) => update(setBulk('facilities', value, draft))} />
+      </div>
+      {facilityRows.length ? <div className="level-list">
+        {facilityRows.map((row) => {
+          const selected = isSelected('facilities', row.id, draft, eligible)
+          return <div className={`level-row${plannedFacilities.has(row.id) ? ' changed' : ''}`} key={row.id}>
+            <input type="checkbox" checked={selected} disabled={!row.editable}
+              aria-label={`Desbloquear ${row.label}`}
+              onChange={() => update(toggleItem('facilities', row.id, draft, eligible))} />
+            <span className="level-copy">
+              <strong>{row.label}</strong>
+              <small>{row.reason} <code>{row.id}</code></small>
+            </span>
+            <span className="unlock-status">{row.enabled ? 'Activa' : 'Bloqueada'}</span>
+          </div>
+        })}
+      </div> : <p className="detail-note">Sin resultados</p>}
     </section>
 
     <section aria-labelledby="decor-levels-title">

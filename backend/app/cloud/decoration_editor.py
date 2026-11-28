@@ -105,6 +105,19 @@ OBJECT_UNLOCK_BLUEPRINTS: dict[str, tuple[str, ...]] = {
     "ObjectSafe": (),
     "PetFood": (),
 }
+# Instalaciones y modos del vestíbulo que usan banderas room_unlock_* sin ser
+# objetos de roomDecorateDic. La cuenta avanzada las tiene a 1; la nueva no
+# declara ninguna. Son desbloqueos funcionales, no posesión de muebles.
+FACILITY_FLAGS: dict[str, str] = {
+    "room_unlock_garden": "Jardín",
+    "room_unlock_work_shop": "Taller",
+    "room_unlock_quest_board": "Tablero de misiones",
+    "room_unlock_badass": "Modo Badass",
+    "room_unlock_defence_mode": "Modo defensa",
+    "room_unlock_season_mode": "Modo temporada",
+    "room_unlock_monster_rise": "Monster Rise",
+}
+MAX_FACILITIES = len(FACILITY_FLAGS)
 # Al mejorar estos objetos se garantiza la bandera que habilita la instalación.
 # Planet no tiene bandera identificada y no se inventa.
 ROOM_LEVEL_GATES: dict[str, str] = {
@@ -134,7 +147,9 @@ DECORATION_LIMITATION = (
     "cuyo mapa de valores aún no está determinado: no se edita. La máquina de "
     "huevos se posee sin requisitos conocidos. No se identificaron banderas para la "
     "estatua ni para la máquina expendedora, ni el significado de "
-    "room_decorate_fishbowl_level."
+    "room_decorate_fishbowl_level. Las banderas de instalaciones desbloquean el uso "
+    "del jardín, taller, tablero, modos y Monster Rise, pero no acreditan objetos ni "
+    "progreso dentro de esos modos."
 )
 
 
@@ -246,11 +261,12 @@ def _requirement_rows(
 def normalize_decoration_plan(raw: object) -> dict[str, object]:
     if not isinstance(raw, Mapping):
         raise InvalidDecorationPlan("decorations debe ser un objeto JSON.")
-    unknown = set(raw) - {"objects", "levels"}
+    unknown = set(raw) - {"objects", "levels", "facilities"}
     if unknown:
         raise InvalidDecorationPlan(f"decorations contiene claves no autorizadas: {sorted(unknown)}.")
     raw_objects = raw.get("objects") or []
     raw_levels = raw.get("levels") or {}
+    raw_facilities = raw.get("facilities") or []
     if isinstance(raw_objects, Mapping):
         objects = [key for key, value in raw_objects.items() if value is True]
         invalid = [key for key, value in raw_objects.items() if value is not True]
@@ -269,6 +285,24 @@ def normalize_decoration_plan(raw: object) -> dict[str, object]:
         if object_id in normalized_objects:
             raise InvalidDecorationPlan(f"decorations.objects repite {object_id}.")
         normalized_objects.append(object_id)
+    if isinstance(raw_facilities, Mapping):
+        facilities = [key for key, value in raw_facilities.items() if value is True]
+        invalid = [key for key, value in raw_facilities.items() if value is not True]
+        if invalid:
+            raise InvalidDecorationPlan("facilities solo admite el valor true para desbloquear.")
+    elif isinstance(raw_facilities, list):
+        facilities = list(raw_facilities)
+    else:
+        raise InvalidDecorationPlan("decorations.facilities debe ser una lista o un mapa.")
+    if len(facilities) > MAX_FACILITIES:
+        raise InvalidDecorationPlan(f"decorations.facilities supera el máximo de {MAX_FACILITIES}.")
+    normalized_facilities: list[str] = []
+    for flag in facilities:
+        if not isinstance(flag, str) or flag not in FACILITY_FLAGS:
+            raise InvalidDecorationPlan(f"{flag!r} no es una instalación observada.")
+        if flag in normalized_facilities:
+            raise InvalidDecorationPlan(f"decorations.facilities repite {flag}.")
+        normalized_facilities.append(flag)
     if isinstance(raw_levels, list):
         level_entries: dict[str, object] = {}
         for item in raw_levels:
@@ -290,11 +324,12 @@ def normalize_decoration_plan(raw: object) -> dict[str, object]:
                 f"{key} solo admite un nivel entre 1 y {ROOM_LEVEL_MAX_OBSERVED[key]}."
             )
         normalized_levels[key] = value
-    if not normalized_objects and not normalized_levels:
+    if not normalized_objects and not normalized_levels and not normalized_facilities:
         raise InvalidDecorationPlan("decorations no contiene ningún cambio.")
     return {
         "objects": sorted(normalized_objects),
         "levels": dict(sorted(normalized_levels.items())),
+        "facilities": sorted(normalized_facilities),
     }
 
 
@@ -386,6 +421,33 @@ def decorations_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
         )
     unknown_levels = sorted(key for key in level_map if key not in ROOM_LEVEL_MAX_OBSERVED)
 
+    facility_rows: list[dict[str, object]] = []
+    for flag, label in FACILITY_FLAGS.items():
+        value = counter_map.get(flag)
+        present = flag in counter_map
+        compatible = value is None or (type(value) is int and value >= 0)
+        enabled = type(value) is int and value >= 1
+        if not available:
+            reason = "No hay datos de banderas del vestíbulo."
+        elif enabled:
+            reason = "Ya está desbloqueada; se conserva."
+        elif compatible:
+            reason = "Se puede activar la bandera room_unlock_*."
+        else:
+            reason = "La bandera existente no es un entero compatible; no se sobrescribe."
+        facility_rows.append(
+            {
+                "id": flag,
+                "label": label,
+                "value": value,
+                "present": present,
+                "enabled": enabled,
+                "editable": available and compatible and not enabled,
+                "reason": reason,
+                "path": f"{EVENT_COUNT_PATH}.{flag}" if present else None,
+            }
+        )
+
     blueprints = blueprints_snapshot(payload)
     appearances = [
         {
@@ -412,6 +474,7 @@ def decorations_snapshot(payload: Mapping[str, Any]) -> dict[str, object]:
         "available": available,
         "objects": object_rows,
         "levels": level_rows,
+        "facilities": facility_rows,
         "appearances": appearances,
         "unknown_objects": unknown_objects,
         "unknown_levels": unknown_levels,
@@ -576,6 +639,9 @@ def prepare_decoration_edit(source: bytes, plan: object) -> DecorationEdit:
             ensure_flag(flag)
         for blueprint_id in OBJECT_UNLOCK_BLUEPRINTS.get(object_id, ()):
             ensure_blueprint(blueprint_id)
+
+    for flag in normalized["facilities"]:  # type: ignore[union-attr]
+        ensure_flag(flag)
 
     for key, requested in normalized["levels"].items():  # type: ignore[union-attr]
         before = level_map.get(key, _MISSING)

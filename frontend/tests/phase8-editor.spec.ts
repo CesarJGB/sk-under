@@ -697,7 +697,7 @@ test('precarga los importes en ambos modos y solo conserva casillas para accione
   }
   await expect(quick.getByText(/^Actual /)).toHaveCount(0)
   await expect(quick.getByRole('region', { name: 'Desbloqueos' })).toContainText('1/4 desbloqueados')
-  await expect(quick.getByRole('region', { name: 'Desbloqueos' }).getByRole('checkbox')).toHaveCount(9)
+  await expect(quick.getByRole('region', { name: 'Desbloqueos' }).getByRole('checkbox')).toHaveCount(10)
   await expect(quick.getByRole('region', { name: 'Beneficios' }).getByRole('checkbox')).toHaveCount(2)
   await openCategory(page, 'Mascotas')
   await expect(page.getByRole('textbox', { name: 'Cantidad de Bocadillos' })).toHaveValue('10')
@@ -832,7 +832,7 @@ test('distingue colecciones completas de datos ausentes o incompatibles', async 
     advanced: { available: false, error: 'Estructura incompatible.' },
   }
   await open(page, { save: unknown, sessionSave: null })
-  await expect(unlocks.getByText('No disponible', { exact: true })).toHaveCount(9)
+  await expect(unlocks.getByText('No disponible', { exact: true })).toHaveCount(10)
   await expect(unlocks.locator('.unlock-status.complete')).toHaveCount(0)
   const quick = page.getByTestId('quick-edit')
   for (const name of ['Gemas', 'Fichas de pesca', 'Recompensas de pesca', 'Monedas de temporada', 'Materiales', 'Semillas', 'Alimento de mascotas', 'Baterías']) {
@@ -1268,6 +1268,9 @@ const PROGRESS_ADVANCED = {
       { id: 'Book', level: 2, max_observed: 5, gate: 'room_unlock_book', gate_value: null, gate_met: false, editable: true, reason: 'Se puede subir hasta el máximo observado (5).', path: 'gameData.roomObjectLevel.Book' },
       { id: 'Safe', level: 5, max_observed: 5, gate: 'room_unlock_safe', gate_value: null, gate_met: false, editable: false, reason: 'Ya está en el máximo observado (5).', path: 'gameData.roomObjectLevel.Safe' },
     ],
+    facilities: [
+      { id: 'room_unlock_garden', label: 'Jardín', value: null, present: false, enabled: false, editable: true, reason: 'No activa; se crea la bandera.', path: null },
+    ],
     appearances: [
       { id: 'blueprint_multi_room_skin_1', key: 'multi_room_skin_1', name: { es: 'Sala uno', en: 'Room one' }, subcategory: 'multi', status: 'Got', obtained: true, researched: false, path: 'itemData.blueprints.multi_room_skin_1' },
     ],
@@ -1326,7 +1329,7 @@ test('integra decoraciones en el borrador global sin controles ficticios', async
     const plan = route.request().postDataJSON()
     plans.push(plan)
     return route.fulfill({ json: prepared(plan, [
-      ['decorations', 'Decoraciones', 3],
+      ['decorations', 'Decoraciones', 4],
     ]) })
   })
 
@@ -1337,17 +1340,59 @@ test('integra decoraciones en el borrador global sin controles ficticios', async
   await expect(page.getByText('Obtenida', { exact: false }).first()).toBeVisible()
   await page.getByLabel('Desbloquear Caja fuerte').check()
   await page.getByLabel('Desbloquear Zona de alimentación de mascotas').check()
-  await expect(page.getByTestId('editor-bar')).toContainText('2 cambios')
-  await page.getByLabel('Nivel o progreso de Book').fill('5')
+  await page.getByLabel('Desbloquear Jardín').check()
   await expect(page.getByTestId('editor-bar')).toContainText('3 cambios')
+  await page.getByLabel('Nivel o progreso de Book').fill('5')
+  await expect(page.getByTestId('editor-bar')).toContainText('4 cambios')
   await expect(page.locator('input[aria-label="Desbloquear Máquina de huevos"]')).toBeDisabled()
   await page.screenshot({ path: 'test-results/edicion-numerica/decoraciones-320.png' })
 
   await page.getByTestId('editor-bar').getByRole('button', { name: 'Guardar', exact: true }).click()
   await expect(page.getByTestId('unified-preview')).toBeVisible()
   expect(plans).toHaveLength(1)
-  expect(plans[0].decorations).toEqual({ objects: ['ObjectSafe', 'PetFood'], levels: [{ id: 'Book', level: 5 }] })
+  expect(plans[0].decorations).toEqual({ objects: ['ObjectSafe', 'PetFood'], levels: [{ id: 'Book', level: 5 }], facilities: ['room_unlock_garden'] })
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('planos y decoraciones comparten un único propietario sin conflicto', async ({ page }) => {
+  const plans: Array<Record<string, unknown>> = []
+  const conflictSave = {
+    ...PROGRESS_SAVE,
+    advanced: {
+      ...PROGRESS_ADVANCED,
+      blueprints: {
+        ...PROGRESS_ADVANCED.blueprints,
+        entries: [
+          ...PROGRESS_ADVANCED.blueprints.entries,
+          { id: 'blueprint_room_decorate_drink_seller', key: 'blueprint_room_decorate_drink_seller', name: { es: 'Vendedor de bebidas', en: 'Drink seller' }, subcategory: 'others', blueprint_type: 2, target: 'room_decorate_drink_seller', research_materials: [], status: null, value_type: null, present: false, creatable: true, editable: false, bulk_eligible: false, path: null },
+        ],
+      },
+      decorations: {
+        ...PROGRESS_ADVANCED.decorations,
+        objects: [
+          ...PROGRESS_ADVANCED.decorations.objects,
+          { id: 'ObjectDrinkSeller', label: 'Vendedor de bebidas', unlocked: false, functional: false, value: null, requirements: [{ kind: 'blueprint', key: 'blueprint_room_decorate_drink_seller', value: null, met: false, path: null, status: null }], editable: true, reason: 'No poseído; se crea la clave y se completan sus requisitos.', path: null },
+        ],
+      },
+    },
+  }
+  await open(page, { save: conflictSave, width: 320 })
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => {
+    const plan = route.request().postDataJSON()
+    plans.push(plan)
+    return route.fulfill({ json: prepared(plan, [['decorations', 'Decoraciones', 2]]) })
+  })
+
+  await openCategory(page, 'Planos')
+  await page.getByLabel('Estado de Vendedor de bebidas').selectOption('Got')
+  await openCategory(page, 'Decoraciones')
+  await page.getByLabel('Desbloquear Vendedor de bebidas').check()
+  await expect(page.getByTestId('editor-bar')).toContainText('1 cambio')
+  await page.getByTestId('editor-bar').getByRole('button', { name: 'Guardar', exact: true }).click()
+  await expect(page.getByTestId('unified-preview')).toBeVisible()
+  expect(plans).toHaveLength(1)
+  expect(plans[0].blueprints).toBeUndefined()
+  expect(plans[0].decorations).toMatchObject({ objects: ['ObjectDrinkSeller'] })
 })
 
 const CUSTOMIZATION_SAVE = {
@@ -1509,6 +1554,37 @@ test('detalla descubrimiento, forja y skins dentro de la categoría Armas', asyn
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 
+test('cambia la skin activa y la combina con el desbloqueo en un solo plan', async ({ page }) => {
+  const plans: Array<Record<string, unknown>> = []
+  await open(page, { save: CUSTOMIZATION_SAVE, width: 320 })
+  await page.route('**/api/v1/cloud/native/prepare-unified', (route) => {
+    const plan = route.request().postDataJSON()
+    plans.push(plan)
+    return route.fulfill({ json: prepared(plan, [['weapon_skins', 'Skins de arma', 1], ['weapon_skin_equip', 'Skin de arma activa', 1]]) })
+  })
+  await openCategory(page, 'Armas')
+  await page.getByTestId('weapon-skins-editor').getByLabel('Filtrar estado').selectOption('all')
+  const huskyGroup = page.getByTestId('weapon-skin-group-weapon_002')
+  await huskyGroup.getByRole('button').click()
+  await page.getByLabel('Skin activa de AK-47').selectOption('')
+  await expect(page.getByTestId('editor-bar')).toContainText('1 cambio')
+
+  const cannonGroup = page.getByTestId('weapon-skin-group-weapon_006')
+  await cannonGroup.getByRole('button').click()
+  await page.getByLabel('Emberwrath de Cañón Fragmentario').check()
+  await page.getByLabel('Skin activa de Cañón Fragmentario').selectOption('weapon_006_s_1')
+  await expect(page.getByTestId('editor-bar')).toContainText('3 cambios')
+  await page.getByTestId('editor-bar').getByRole('button', { name: 'Guardar', exact: true }).click()
+  await expect(page.getByTestId('unified-preview')).toBeVisible()
+  expect(plans).toHaveLength(1)
+  expect(plans[0].weapon_skins).toEqual(['weapon_006_s_1'])
+  expect(plans[0].weapon_skin_equip).toEqual([
+    { weapon_id: 'weapon_002', skin_id: null },
+    { weapon_id: 'weapon_006', skin_id: 'weapon_006_s_1' },
+  ])
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
 test('desbloquea para forja con umbral individual y filtros distintos', async ({ page }) => {
   const plans: Array<Record<string, unknown>> = []
   await open(page, { save: CUSTOMIZATION_SAVE, width: 320 })
@@ -1553,7 +1629,7 @@ test('capturas de desbloqueo para forja en móvil, tableta y escritorio', async 
   }
 })
 
-test('detalla skins por arma y efectos con estado activo de solo lectura', async ({ page }) => {
+test('detalla skins por arma y efectos con estado activo', async ({ page }) => {
   await open(page, { save: CUSTOMIZATION_SAVE, width: 320 })
   await openCategory(page, 'Armas')
   const group = page.getByTestId('weapon-skin-group-weapon_006')
@@ -1566,7 +1642,7 @@ test('detalla skins por arma y efectos con estado activo de solo lectura', async
   await page.getByRole('searchbox', { name: 'Buscar skins de arma' }).fill('Husky')
   await expect(page.getByTestId('weapon-skin-group-weapon_002')).toContainText('Husky')
   await expect(page.getByLabel('Husky de AK-47')).toBeDisabled()
-  await expect(page.getByTestId('weapon-skins-editor')).toContainText('En uso · solo lectura')
+  await expect(page.getByTestId('weapon-skins-editor')).toContainText('En uso')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 
   await openCategory(page, 'Efectos de eliminación')

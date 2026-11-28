@@ -5,7 +5,7 @@ import type {
   LabKillEffectItem, LabWeaponProgressionItem, LabWeaponSkinItem, NativeSaveSummary,
 } from '../api'
 import {
-  clearSelection, eligibility, isSelected, selectAll, selectedCount, setItems, toggleItem,
+  clearSelection, eligibility, isSelected, selectAll, selectedCount, setItems, setWeaponSkinEquip, toggleItem,
   type Draft,
 } from '../draft'
 import { Notice } from '../ui'
@@ -473,9 +473,10 @@ export function WeaponSkinsEditor({ save, draft, update }: EditorProps) {
 
   return <div className="detail-editor" data-testid="weapon-skins-editor">
     <Notice>
-      <strong>Validado en Android físico (E3) y en iOS experimental (E4).</strong> Añade skins a <code>UnlockedSkins</code> de cada arma. No cambia la
-      skin equipada ni el nivel del arma. Crear el registro de un arma no la desbloquea: el arma base puede seguir
-      bloqueada hasta desbloquear su descubrimiento.
+      <strong>Desbloqueo validado en Android físico (E3) e iOS (E4).</strong> Añade skins a <code>UnlockedSkins</code> de cada arma.
+      La skin activa se puede cambiar de forma experimental (E2): se escribe <code>CurrentSkinIndex</code> con el índice
+      del catálogo o 0 para la predeterminada. No cambia el nivel del arma. Crear el registro de un arma no la desbloquea:
+      el arma base puede seguir bloqueada hasta desbloquear su descubrimiento.
     </Notice>
     <Toolbar save={save} group="weaponSkins" draft={draft} update={update} />
     {items.length ? <>
@@ -487,11 +488,31 @@ export function WeaponSkinsEditor({ save, draft, update }: EditorProps) {
           const unlocked = options.filter((item) => item.unlocked).length
           const chosen = options.filter((item) => selected.has(item.id)).length
           const title = weaponName(options[0])
+          const currentIndex = options.find((item) => item.current_skin_index !== null)?.current_skin_index ?? null
+          const hasRecord = currentIndex !== null
+          const currentSkin = options.find((item) => item.skin_index === currentIndex)
+          const hasDraftEquip = Object.prototype.hasOwnProperty.call(draft.weaponSkinEquip, weaponId)
+          const equipValue = hasDraftEquip
+            ? draft.weaponSkinEquip[weaponId] ?? ''
+            : currentIndex === 0 ? '' : currentSkin?.id ?? ''
           return <AccordionGroup key={weaponId} title={title}
             testId={`weapon-skin-group-${weaponId}`}
             meta={`${options.length} ${options.length === 1 ? 'skin' : 'skins'}`}
             summary={`${unlocked}/${options.length} desbloqueadas${chosen ? ` · ${chosen} en borrador` : ''}`}
             expanded={expanded.has(weaponId) || Boolean(search)} onToggle={() => toggleGroup(weaponId)}>
+            {hasRecord && <div className="detail-filters">
+              <span className="detail-note">Skin activa</span>
+              <select aria-label={`Skin activa de ${title}`} value={equipValue}
+                onChange={(event) => update(setWeaponSkinEquip(
+                  weaponId, event.target.value === '' ? null : event.target.value, draft,
+                ))}>
+                <option value="">Predeterminada (sin skin)</option>
+                {options.filter((item) => item.unlocked || selected.has(item.id)
+                  || item.equipped || item.id === equipValue).map((item) => (
+                  <option key={item.id} value={item.id}>{skinName(item)} · #{item.skin_index}</option>
+                ))}
+              </select>
+            </div>}
             {selectable.length > 1 && <div className="accordion-tools">
               <CheckAll checked={checked === selectable.length}
                 indeterminate={checked > 0 && checked < selectable.length}
@@ -513,7 +534,7 @@ export function WeaponSkinsEditor({ save, draft, update }: EditorProps) {
                     onChange={() => update(toggleItem('weaponSkins', item.id, draft, eligible))} />
                   <span>{skinName(item)} <small className="skin-index">#{item.skin_index}</small></span>
                   {item.equipped
-                    ? <small className="unlock-status complete"><CircleCheck size={14} aria-hidden="true" />En uso · solo lectura</small>
+                    ? <small className="unlock-status complete"><CircleCheck size={14} aria-hidden="true" />En uso</small>
                     : item.unlocked
                       ? <small className="unlock-status complete"><CircleCheck size={14} aria-hidden="true" />Disponible</small>
                       : <small className="unlock-status">Bloqueada</small>}
@@ -530,7 +551,7 @@ export function WeaponSkinsEditor({ save, draft, update }: EditorProps) {
           {amountFormat.format(snapshot?.weapons_with_data ?? 0)} armas con registro · {' '}
           {amountFormat.format(snapshot?.unknown_weapon_ids?.length ?? 0)} armas desconocidas · {' '}
           {amountFormat.format(snapshot?.unknown_skin_ids?.length ?? 0)} skins desconocidas preservadas.
-          La selección equipada se muestra solo como referencia y no se modifica.
+          La skin activa se escribe en <code>CurrentSkinIndex</code> solo si el arma ya tiene registro de evolución y la skin está desbloqueada. Los índices observados son 0 para la predeterminada y el índice del catálogo para una skin.
         </p>
       </details>
     </> : <p className="detail-note">La copia no contiene un catálogo legible de skins de arma.</p>}

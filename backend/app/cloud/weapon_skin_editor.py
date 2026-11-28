@@ -85,6 +85,22 @@ class OutdatedWeaponSkinDraft(WeaponSkinEditError):
     code = "outdated_weapon_skin_draft"
 
 
+class InvalidWeaponSkinEquip(WeaponSkinEditError):
+    code = "invalid_weapon_skin_equip"
+
+
+class UnknownWeaponSkinEquip(WeaponSkinEditError):
+    code = "unknown_weapon_skin_equip"
+
+
+class WeaponSkinEquipVerificationError(WeaponSkinEditError):
+    code = "weapon_skin_equip_verification_failed"
+
+
+class OutdatedWeaponSkinEquipDraft(WeaponSkinEditError):
+    code = "outdated_weapon_skin_equip_draft"
+
+
 @dataclass(frozen=True)
 class WeaponSkinCatalog:
     ordered: tuple[str, ...]
@@ -250,7 +266,8 @@ class WeaponSkinSnapshot:
             "size": self.size,
             "sha256": self.sha256,
             "serialzed_version": self.serialzed_version,
-            "equip_policy": "read_only_unconfirmed",
+            "equip_policy": "experimental_e2",
+            "equip_evidence": "E2",
             "evidence": "E4",
         }
 
@@ -485,4 +502,192 @@ def require_weapon_skin_write_compatibility(
     if prepare_weapon_skin_unlock_edit(source, selections).candidate != candidate:
         raise OutdatedWeaponSkinDraft(
             "El respaldo usa un borrador antiguo. Prepara de nuevo la selección antes de subirla."
+        )
+
+
+@dataclass(frozen=True)
+class WeaponSkinEquipChange:
+    weapon_id: str
+    skin_id: str | None
+    before: int
+    after: int
+
+    def summary(self) -> dict[str, object]:
+        return {
+            "path": f"{WEAPONS_PATH}.{self.weapon_id}.CurrentSkinIndex",
+            "weapon_id": self.weapon_id,
+            "skin_id": self.skin_id,
+            "before": self.before,
+            "after": self.after,
+        }
+
+
+@dataclass(frozen=True)
+class WeaponSkinEquipEdit:
+    selections: tuple[dict[str, object], ...]
+    changes: list[WeaponSkinEquipChange]
+    changed: bool
+    original: bytes = field(repr=False)
+    candidate: bytes = field(repr=False)
+    original_sha256: str = field(repr=False)
+    candidate_sha256: str = field(repr=False)
+    binary: BinaryDiff = field(repr=False)
+    serialzed_version: int = 0
+    changed_fields: tuple[str, ...] = ()
+
+    def summary(self) -> dict[str, object]:
+        return {
+            "field": WEAPONS_PATH,
+            "selections": [dict(item) for item in self.selections],
+            "changes": [change.summary() for change in self.changes],
+            "changed": self.changed,
+            "original_size": len(self.original),
+            "candidate_size": len(self.candidate),
+            "original_sha256": self.original_sha256,
+            "candidate_sha256": self.candidate_sha256,
+            "binary": self.binary.as_dict(),
+            "changed_fields": list(self.changed_fields),
+            "evidence": "E2",
+        }
+
+
+def _normalize_equip_selection(
+    catalog: WeaponSkinCatalog, selections: object
+) -> tuple[tuple[str, str | None, int], ...]:
+    if not isinstance(selections, (list, tuple)) or not selections:
+        raise InvalidWeaponSkinEquip("Selecciona al menos una skin activa.")
+    if len(selections) > 180:
+        raise InvalidWeaponSkinEquip("La selección de skins activas supera el máximo admitido.")
+    by_weapon: dict[str, tuple[str, str | None, int]] = {}
+    weapon_ids = {str(entry["weapon_id"]) for entry in catalog.entries.values()}
+    for item in selections:
+        if not isinstance(item, Mapping):
+            raise InvalidWeaponSkinEquip("La selección contiene una entrada inválida.")
+        weapon_id = item.get("weapon_id")
+        skin_id = item.get("skin_id")
+        if not isinstance(weapon_id, str) or weapon_id not in weapon_ids:
+            raise UnknownWeaponSkinEquip(f"El arma {weapon_id!r} no está en el catálogo de skins.")
+        if skin_id is not None and not isinstance(skin_id, str):
+            raise InvalidWeaponSkinEquip("skin_id debe ser texto o null.")
+        if skin_id is None:
+            target = 0
+        else:
+            entry = catalog.entries.get(skin_id)
+            if entry is None:
+                raise UnknownWeaponSkinEquip(f"La skin {skin_id} no está en el catálogo.")
+            if str(entry["weapon_id"]) != weapon_id:
+                raise InvalidWeaponSkinEquip(
+                    f"La skin {skin_id} no pertenece al arma {weapon_id}."
+                )
+            target = int(entry["skin_index"])
+        if weapon_id in by_weapon:
+            raise InvalidWeaponSkinEquip(f"La selección repite el arma {weapon_id}.")
+        by_weapon[weapon_id] = (weapon_id, skin_id, target)
+    return tuple(by_weapon[key] for key in sorted(by_weapon))
+
+
+def prepare_weapon_skin_equip_edit(source: bytes, selections: object) -> WeaponSkinEquipEdit:
+    catalog = weapon_skin_catalog()
+    selected = _normalize_equip_selection(catalog, selections)
+    root, version = _validated_document(source)
+    weapons = _validated_weapons(root)
+    original_sha = sha256(source).hexdigest()
+    changes: list[WeaponSkinEquipChange] = []
+    normalized_selections: list[dict[str, object]] = []
+    for weapon_id, skin_id, target in selected:
+        normalized_selections.append({"weapon_id": weapon_id, "skin_id": skin_id})
+        record = weapons.get(weapon_id)
+        if record is None:
+            raise UnknownWeaponSkinEquip(
+                f"El arma {weapon_id} no tiene registro de evolución; no se crea para equipar."
+            )
+        current = record.get("CurrentSkinIndex")
+        if type(current) is not int:
+            raise UnsupportedWeaponSkinStructure(
+                f"weaponEvolutionData.weapons.{weapon_id}.CurrentSkinIndex no es un entero."
+            )
+        if skin_id is not None:
+            unlocked = record.get("UnlockedSkins", ())
+            if not isinstance(unlocked, list) or skin_id not in unlocked:
+                raise InvalidWeaponSkinEquip(
+                    f"La skin {skin_id} no está desbloqueada para {weapon_id}."
+                )
+        if current != target:
+            changes.append(WeaponSkinEquipChange(weapon_id, skin_id, current, target))
+
+    if not changes:
+        return WeaponSkinEquipEdit(
+            selections=tuple(normalized_selections),
+            changes=[],
+            changed=False,
+            original=source,
+            candidate=source,
+            original_sha256=original_sha,
+            candidate_sha256=original_sha,
+            binary=binary_diff(source, source),
+            serialzed_version=version,
+        )
+
+    modified = clone_json(root)
+    modified_weapons = _validated_weapons(modified)
+    for change in changes:
+        modified_weapons[change.weapon_id]["CurrentSkinIndex"] = change.after
+    candidate = serialize_aggregate(modified)
+    if len(candidate) > MAX_INPUT_BYTES:
+        raise CopyLimitError("La copia editada supera el límite permitido.")
+    reconstruct_cloud_save(candidate)
+    try:
+        reopened = parse_json(unpack_cloud_save(candidate)[1])
+    except (ValueError, RecursionError):
+        raise WeaponSkinEquipVerificationError(
+            "La copia editada no se puede volver a abrir."
+        ) from None
+    if reopened != modified:
+        raise WeaponSkinEquipVerificationError(
+            "La copia reabierta no coincide con la copia editada."
+        )
+    if serialize_aggregate(reopened) != candidate:
+        raise WeaponSkinEquipVerificationError(
+            "La copia editada no es estable al serializarla de nuevo."
+        )
+    reopened_weapons = _validated_weapons(reopened)
+    for change in changes:
+        record = reopened_weapons.get(change.weapon_id)
+        if not isinstance(record, dict) or record.get("CurrentSkinIndex") != change.after:
+            raise WeaponSkinEquipVerificationError(
+                f"No se conservó la skin activa de {change.weapon_id}."
+            )
+    for change in changes:
+        reopened_weapons[change.weapon_id]["CurrentSkinIndex"] = change.before
+    if serialize_aggregate(reopened) != source:
+        raise WeaponSkinEquipVerificationError(
+            "La edición afectó a datos fuera de CurrentSkinIndex."
+        )
+    binary = binary_diff(source, candidate)
+    if binary.first_difference is None:
+        raise WeaponSkinEquipVerificationError(
+            "La selección de skin activa no produjo una diferencia binaria."
+        )
+    return WeaponSkinEquipEdit(
+        selections=tuple(normalized_selections),
+        changes=changes,
+        changed=True,
+        original=source,
+        candidate=candidate,
+        original_sha256=original_sha,
+        candidate_sha256=sha256(candidate).hexdigest(),
+        binary=binary,
+        serialzed_version=version,
+        changed_fields=tuple(
+            f"{WEAPONS_PATH}.{change.weapon_id}.CurrentSkinIndex" for change in changes
+        ),
+    )
+
+
+def require_weapon_skin_equip_compatibility(
+    source: bytes, selections: object, candidate: bytes
+) -> None:
+    if prepare_weapon_skin_equip_edit(source, selections).candidate != candidate:
+        raise OutdatedWeaponSkinEquipDraft(
+            "El respaldo usa un borrador antiguo. Prepara de nuevo la skin activa."
         )

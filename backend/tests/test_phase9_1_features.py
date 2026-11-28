@@ -329,3 +329,159 @@ def test_decorations_level_gate_and_combined_reversal():
         "statisticData.event2Count.room_unlock_cellar",
     )
     assert edit.original == original
+
+
+def test_unified_blueprint_and_decoration_share_required_blueprint_without_overlap():
+    original = source()
+    plan = {
+        "blueprints": [
+            {"id": "blueprint_room_decorate_drink_seller", "status": "Got"},
+            {"id": "blueprint_multi_room_skin_2", "status": "Researched"},
+        ],
+        "decorations": {"objects": ["ObjectDrinkSeller"]},
+    }
+    edit = prepare_unified_edit(original, plan)
+    after = json.loads(edit.candidate)
+    assert edit.steps == ("blueprints", "decorations")
+    assert after["itemData"]["blueprints"]["blueprint_room_decorate_drink_seller"] == "Researched"
+    assert after["itemData"]["blueprints"]["multi_room_skin_2"] == "Researched"
+    assert after["itemData"]["roomDecorateDic"]["ObjectDrinkSeller"] == [0]
+    assert len(edit.changed_fields) == len(set(edit.changed_fields))
+    # El plano compartido pertenece a Decoraciones, no se contabiliza dos veces.
+    assert "itemData.blueprints.blueprint_room_decorate_drink_seller" in edit.changed_fields
+    categories = {category.key: category.changes for category in edit.categories}
+    assert categories == {"blueprints": 1, "decorations": 2}
+
+
+def test_unified_blueprint_only_shared_removed_leaves_decoration_as_owner():
+    original = source()
+    plan = {
+        "blueprints": [
+            {"id": "blueprint_room_decorate_fishbowl", "status": "Got"},
+        ],
+        "decorations": {"objects": ["ObjectFishBowl"]},
+    }
+    edit = prepare_unified_edit(original, plan)
+    after = json.loads(edit.candidate)
+    assert edit.steps == ("decorations",)
+    assert after["itemData"]["blueprints"]["blueprint_room_decorate_fishbowl"] == "Researched"
+    assert edit.plan["blueprints"] is None
+    assert edit.change_count == 2
+
+
+def test_unified_all_four_decorative_blueprints_resolve_to_researched():
+    original = source()
+    objects = [
+        "ObjectDrinkSeller",
+        "ObjectFishBowl",
+        "ObjectMagicWell",
+        "ObjectMysteriouStatue",
+    ]
+    plan = {
+        "blueprints": [
+            {"id": "blueprint_room_decorate_drink_seller", "status": "Got"},
+            {"id": "blueprint_room_decorate_fishbowl", "status": "Got"},
+            {"id": "blueprint_room_decorate_magic_well", "status": "Got"},
+            {"id": "blueprint_room_decorate_mysteriou_statue", "status": "Got"},
+        ],
+        "decorations": {"objects": objects},
+    }
+    edit = prepare_unified_edit(original, plan)
+    after = json.loads(edit.candidate)
+    assert edit.steps == ("decorations",)
+    for key in (
+        "blueprint_room_decorate_drink_seller",
+        "blueprint_room_decorate_fishbowl",
+        "blueprint_room_decorate_magic_well",
+        "blueprint_room_decorate_mysteriou_statue",
+    ):
+        assert after["itemData"]["blueprints"][key] == "Researched"
+    assert after["statisticData"]["event2Count"]["room_unlock_magic_area"] == 1
+
+
+def test_decorations_facility_flags_are_explicit_and_preserve_unknown_counters():
+    original = source()
+    snapshot = read_decorations(original)
+    facilities = {row["id"]: row for row in snapshot["facilities"]}
+    assert facilities["room_unlock_garden"]["editable"] is True
+    assert facilities["room_unlock_garden"]["present"] is False
+    edit = prepare_decoration_edit(original, {
+        "facilities": ["room_unlock_garden", "room_unlock_work_shop"],
+    })
+    after = json.loads(edit.candidate)["statisticData"]["event2Count"]
+    assert after["room_unlock_garden"] == 1
+    assert after["room_unlock_work_shop"] == 1
+    assert after["unrelated_counter"] == 9
+    assert edit.changed_fields == (
+        "statisticData.event2Count.room_unlock_garden",
+        "statisticData.event2Count.room_unlock_work_shop",
+    )
+    with pytest.raises(InvalidDecorationPlan):
+        prepare_decoration_edit(original, {"facilities": ["room_unlock_statements_count"]})
+
+
+def test_weapon_skin_equip_sets_current_index_and_restores_only_that_field():
+    data = document()
+    data["weaponEvolutionData"] = {
+        "weapons": {
+            "weapon_363": {
+                "Name": "weapon_363",
+                "Level": 0,
+                "CurrentSkinIndex": 0,
+                "UnlockedSkins": ["weapon_363_s_1"],
+            },
+        },
+    }
+    original = source(data)
+    from app.cloud.weapon_skin_editor import (
+        UnknownWeaponSkinEquip,
+        prepare_weapon_skin_equip_edit,
+        read_weapon_skins,
+    )
+
+    edit = prepare_weapon_skin_equip_edit(original, [
+        {"weapon_id": "weapon_363", "skin_id": "weapon_363_s_1"},
+    ])
+    after = json.loads(edit.candidate)["weaponEvolutionData"]["weapons"]["weapon_363"]
+    assert after["CurrentSkinIndex"] == 1
+    assert after["Level"] == 0 and after["UnlockedSkins"] == ["weapon_363_s_1"]
+    assert edit.changed_fields == (
+        "weaponEvolutionData.weapons.weapon_363.CurrentSkinIndex",
+    )
+    snapshot = read_weapon_skins(edit.candidate)
+    equipped = [row for row in snapshot.items if row["id"] == "weapon_363_s_1"][0]
+    assert equipped["equipped"] is True
+
+    noop = prepare_weapon_skin_equip_edit(edit.candidate, [
+        {"weapon_id": "weapon_363", "skin_id": "weapon_363_s_1"},
+    ])
+    assert noop.changed is False
+    assert noop.candidate == edit.candidate
+
+    restore = prepare_weapon_skin_equip_edit(edit.candidate, [
+        {"weapon_id": "weapon_363", "skin_id": None},
+    ])
+    assert json.loads(restore.candidate)["weaponEvolutionData"]["weapons"]["weapon_363"]["CurrentSkinIndex"] == 0
+    with pytest.raises(UnknownWeaponSkinEquip):
+        prepare_weapon_skin_equip_edit(original, [
+            {"weapon_id": "weapon_407", "skin_id": "weapon_407_s_1"},
+        ])
+
+
+def test_unified_unlock_then_equip_weapon_skin_in_one_plan():
+    data = document()
+    data["weaponEvolutionData"] = {"weapons": {}}
+    original = source(data)
+    plan = {
+        "weapon_skins": ["weapon_363_s_1"],
+        "weapon_skin_equip": [
+            {"weapon_id": "weapon_363", "skin_id": "weapon_363_s_1"},
+        ],
+    }
+    edit = prepare_unified_edit(original, plan)
+    assert edit.steps == ("weapon_skins", "weapon_skin_equip")
+    record = json.loads(edit.candidate)["weaponEvolutionData"]["weapons"]["weapon_363"]
+    assert record["UnlockedSkins"] == ["weapon_363_s_1"]
+    assert record["CurrentSkinIndex"] == 1
+    assert "weaponEvolutionData.weapons.weapon_363.UnlockedSkins" in edit.changed_fields
+    assert "weaponEvolutionData.weapons.weapon_363.CurrentSkinIndex" in edit.changed_fields

@@ -539,6 +539,17 @@ export type LabDecorationLevel = {
   path: string | null
 }
 
+export type LabDecorationFacility = {
+  id: string
+  label: string
+  value: unknown
+  present: boolean
+  enabled: boolean
+  editable: boolean
+  reason: string
+  path: string | null
+}
+
 export type LabDecorationAppearance = {
   id: string
   key: string | null
@@ -554,6 +565,7 @@ export type LabDecorations = {
   available: boolean
   objects: LabDecorationObject[]
   levels: LabDecorationLevel[]
+  facilities: LabDecorationFacility[]
   appearances: LabDecorationAppearance[]
   unknown_objects: string[]
   unknown_levels: string[]
@@ -657,7 +669,8 @@ export type LabWeaponSkins = {
   size?: number
   sha256?: string
   serialzed_version?: number
-  equip_policy?: 'read_only_unconfirmed'
+  equip_policy?: 'experimental_e2'
+  equip_evidence?: 'E2'
   evidence?: 'E3'
 }
 
@@ -701,6 +714,7 @@ export type LabUnifiedPlan = {
   weapon_progression?: string[]
   weapon_forge_unlock?: string[]
   weapon_skins?: string[]
+  weapon_skin_equip?: Array<{ weapon_id: string; skin_id: string | null }>
   kill_effects?: number[]
   advanced?: LabAdvancedPlan | null
   hero_levels?: Array<{ code: string; level: number }>
@@ -709,12 +723,13 @@ export type LabUnifiedPlan = {
   decorations?: {
     objects?: string[]
     levels?: Array<{ id: string; level: number }>
+    facilities?: string[]
   } | null
 }
 
 export type LabCategoryKey =
   | 'gems' | 'fish_chip' | 'fish_progress' | 'characters' | 'skills' | 'skins'
-  | 'weapon_progression' | 'weapon_forge_unlock' | 'weapon_skins' | 'kill_effects'
+  | 'weapon_progression' | 'weapon_forge_unlock' | 'weapon_skins' | 'weapon_skin_equip' | 'kill_effects'
   | 'advanced' | 'hero_levels' | 'pet_affinity' | 'blueprints' | 'decorations'
 
 export type LabUnifiedCategory = {

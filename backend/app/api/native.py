@@ -430,6 +430,9 @@ def prepare_unified(payload: UnifiedPrepareInput, request: Request) -> dict[str,
         "weapon_progression": list(payload.weapon_progression),
         "weapon_forge_unlock": list(payload.weapon_forge_unlock),
         "weapon_skins": list(payload.weapon_skins),
+        "weapon_skin_equip": [
+            item.model_dump() for item in payload.weapon_skin_equip
+        ],
         "kill_effects": list(payload.kill_effects),
         "advanced": advanced,
         "hero_levels": [item.model_dump() for item in payload.hero_levels],
@@ -439,6 +442,7 @@ def prepare_unified(payload: UnifiedPrepareInput, request: Request) -> dict[str,
             {
                 "objects": list(payload.decorations.objects),
                 "levels": [item.model_dump() for item in payload.decorations.levels],
+                "facilities": list(payload.decorations.facilities),
             }
             if payload.decorations is not None
             else None

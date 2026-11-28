@@ -8,7 +8,7 @@ export type BulkKey =
   | 'characters' | 'skills' | 'skins' | 'weaponProgression' | 'weaponForgeUnlock' | 'weaponSkins' | 'killEffects'
   | 'pets' | 'petSkins'
   | 'heroLevels' | 'petAffinity' | 'blueprints' | 'blueprintObtain'
-  | 'decorations' | 'decorationLevels'
+  | 'decorations' | 'decorationLevels' | 'facilities'
 export type QuantityKey =
   | 'gems' | 'fishChip' | 'fishProgress' | 'seasonCoin'
   | 'materialsMin' | 'seedsMin' | 'petFoodMin' | 'batteryMin'
@@ -31,6 +31,7 @@ export type Draft = {
     blueprintObtain: Record<string, true>
     decorations: Record<string, true>
     decorationLevels: Record<string, true>
+    facilities: Record<string, true>
   }
   excluded: {
     characters: Record<string, true>
@@ -48,6 +49,7 @@ export type Draft = {
     blueprintObtain: Record<string, true>
     decorations: Record<string, true>
     decorationLevels: Record<string, true>
+    facilities: Record<string, true>
   }
   quick: Partial<Record<QuantityKey, string>>
   materialEdits: Record<string, string>
@@ -59,6 +61,7 @@ export type Draft = {
   blueprintStatus: Record<string, 'Got' | 'Researched'>
   blueprintMode: 'Got' | 'Researched'
   decorationLevels: Record<string, string>
+  weaponSkinEquip: Record<string, string | null>
   reborn: boolean
   battlePass: { seasonId: number | null; level?: string; exp?: string; buy: boolean | null }
 }
@@ -75,6 +78,12 @@ const minimumKeys = ['materialsMin', 'seedsMin', 'petFoodMin', 'batteryMin'] as 
 export const MAX_QUANTITY = 2_147_483_647
 export const protectedMaterial = 'material_fish'
 export const batteryId = 'material_battery'
+export const decorationBlueprintByObject: Record<string, string> = {
+  ObjectDrinkSeller: 'blueprint_room_decorate_drink_seller',
+  ObjectFishBowl: 'blueprint_room_decorate_fishbowl',
+  ObjectMagicWell: 'blueprint_room_decorate_magic_well',
+  ObjectMysteriouStatue: 'blueprint_room_decorate_mysteriou_statue',
+}
 
 export function originalQuantity(value: unknown): number | null {
   return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 ? value : null
@@ -123,7 +132,7 @@ export function createEmptyDraft(): Draft {
       weaponSkins: false, killEffects: false,
       pets: false, petSkins: false,
       heroLevels: false, petAffinity: false, blueprints: false, blueprintObtain: false,
-      decorations: false, decorationLevels: false,
+      decorations: false, decorationLevels: false, facilities: false,
     },
     manual: {
       characters: emptySet(), skills: emptySet(), skins: emptySet(), weaponProgression: emptySet(),
@@ -131,6 +140,7 @@ export function createEmptyDraft(): Draft {
       killEffects: emptySet(), pets: emptySet(), petSkins: emptySet(),
       heroLevels: emptySet(), petAffinity: emptySet(), blueprints: emptySet(),
       blueprintObtain: emptySet(), decorations: emptySet(), decorationLevels: emptySet(),
+      facilities: emptySet(),
     },
     excluded: {
       characters: emptySet(), skills: emptySet(), skins: emptySet(), weaponProgression: emptySet(),
@@ -138,6 +148,7 @@ export function createEmptyDraft(): Draft {
       killEffects: emptySet(), pets: emptySet(), petSkins: emptySet(),
       heroLevels: emptySet(), petAffinity: emptySet(), blueprints: emptySet(),
       blueprintObtain: emptySet(), decorations: emptySet(), decorationLevels: emptySet(),
+      facilities: emptySet(),
     },
     quick: {},
     materialEdits: {},
@@ -149,6 +160,7 @@ export function createEmptyDraft(): Draft {
     blueprintStatus: {},
     blueprintMode: 'Researched',
     decorationLevels: {},
+    weaponSkinEquip: {},
     reborn: false,
     battlePass: { seasonId: null, buy: null },
   }
@@ -311,6 +323,9 @@ function eligibilityFor(save: NativeSaveSummary | null): Eligibility {
       .map((row) => row.id),
     decorationLevels: (advanced?.decorations?.levels ?? [])
       .filter((row) => row.editable && row.level !== null && row.level < row.max_observed)
+      .map((row) => row.id),
+    facilities: (advanced?.decorations?.facilities ?? [])
+      .filter((row) => row.editable)
       .map((row) => row.id),
   }
 }
@@ -486,6 +501,10 @@ export function setDecorationLevel(id: string, value: string, draft: Draft): Dra
   if (value === '') delete next[id]
   else next[id] = value
   return { ...draft, decorationLevels: next }
+}
+
+export function setWeaponSkinEquip(weaponId: string, skinId: string | null, draft: Draft): Draft {
+  return { ...draft, weaponSkinEquip: { ...draft.weaponSkinEquip, [weaponId]: skinId } }
 }
 
 export function setEdit(
@@ -781,6 +800,10 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft, session: N
     bump('Afinidad', petPlan.size)
   }
 
+  const decorationPlan: NonNullable<LabUnifiedPlan['decorations']> = {}
+  const decorationObjects = effectiveUnlockedSet('decorations', draft, selected)
+  if (decorationObjects.length > 0) decorationPlan.objects = decorationObjects
+
   const blueprintPlan = new Map<string, 'Got' | 'Researched'>()
   const selectedBlueprints = new Set(effectiveUnlockedSet('blueprints', draft, selected))
   const selectedObtain = new Set(effectiveUnlockedSet('blueprintObtain', draft, selected))
@@ -797,14 +820,18 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft, session: N
     else if (selectedObtain.has(row.id)) target = 'Got'
     if (target && target !== row.status) blueprintPlan.set(row.id, target)
   }
+  // Decoraciones garantiza el estado investigado de estos planos. Eliminarlos
+  // del plan de Planos deja un único propietario del campo y evita conflictos
+  // independientemente del orden en que el usuario haga la selección.
+  for (const objectId of decorationObjects) {
+    const blueprintId = decorationBlueprintByObject[objectId]
+    if (blueprintId) blueprintPlan.delete(blueprintId)
+  }
   if (blueprintPlan.size > 0) {
     plan.blueprints = Array.from(blueprintPlan, ([id, status]) => ({ id, status }))
     bump('Planos', blueprintPlan.size)
   }
 
-  const decorationPlan: NonNullable<LabUnifiedPlan['decorations']> = {}
-  const decorationObjects = effectiveUnlockedSet('decorations', draft, selected)
-  if (decorationObjects.length > 0) decorationPlan.objects = decorationObjects
   const decorationLevels: Array<{ id: string; level: number }> = []
   const selectedDecorationLevels = new Set(effectiveUnlockedSet('decorationLevels', draft, selected))
   for (const row of advanced?.decorations?.levels ?? []) {
@@ -817,9 +844,36 @@ export function buildDraftPlan(save: NativeSaveSummary, draft: Draft, session: N
     }
   }
   if (decorationLevels.length > 0) decorationPlan.levels = decorationLevels
-  if (decorationObjects.length > 0 || decorationLevels.length > 0) {
+  const facilityPlan = effectiveUnlockedSet('facilities', draft, selected)
+  if (facilityPlan.length > 0) decorationPlan.facilities = facilityPlan
+  if (decorationObjects.length > 0 || decorationLevels.length > 0 || facilityPlan.length > 0) {
     plan.decorations = decorationPlan
-    bump('Decoraciones', decorationObjects.length + decorationLevels.length)
+    bump('Decoraciones', decorationObjects.length + decorationLevels.length + facilityPlan.length)
+  }
+
+  const equipPlan: Array<{ weapon_id: string; skin_id: string | null }> = []
+  const skinItems = save.weapon_skins?.items ?? []
+  const selectedSkinIds = new Set(effectiveUnlockedSet('weaponSkins', draft, selected))
+  const currentByWeapon = new Map<string, number | null>()
+  const skinByWeapon = new Map<string, typeof skinItems>()
+  for (const item of skinItems) {
+    currentByWeapon.set(item.weapon_id, item.current_skin_index)
+    const rows = skinByWeapon.get(item.weapon_id)
+    if (rows) rows.push(item)
+    else skinByWeapon.set(item.weapon_id, [item])
+  }
+  for (const [weaponId, skinId] of Object.entries(draft.weaponSkinEquip).sort(([a], [b]) => a.localeCompare(b))) {
+    const current = currentByWeapon.get(weaponId)
+    if (current === undefined || current === null) continue
+    const targetItem = skinId === null ? null : skinByWeapon.get(weaponId)?.find((item) => item.id === skinId)
+    if (skinId !== null && (!targetItem || (!targetItem.unlocked && !selectedSkinIds.has(skinId)))) continue
+    const target = targetItem ? targetItem.skin_index : 0
+    if (target === current) continue
+    equipPlan.push({ weapon_id: weaponId, skin_id: skinId })
+  }
+  if (equipPlan.length > 0) {
+    plan.weapon_skin_equip = equipPlan
+    bump('Skin activa', equipPlan.length)
   }
 
   return { plan, counts, quantities }
@@ -889,6 +943,8 @@ export function unlockProgress(save: NativeSaveSummary, key: BulkKey, eligible: 
       .filter((row) => row.unlocked).length,
     decorationLevels: () => (advanced?.decorations?.levels ?? [])
       .filter((row) => row.level !== null && row.level >= row.max_observed).length,
+    facilities: () => (advanced?.decorations?.facilities ?? [])
+      .filter((row) => row.enabled).length,
   }[key]()
   const pending = eligible[key].length
   const result = { unlocked, pending, total: unlocked + pending }

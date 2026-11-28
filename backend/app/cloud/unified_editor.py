@@ -28,6 +28,7 @@ from .blueprint_editor import (
     prepare_blueprint_edit,
 )
 from .decoration_editor import (
+    OBJECT_UNLOCK_BLUEPRINTS,
     DecorationEdit,
     normalize_decoration_plan,
     prepare_decoration_edit,
@@ -75,6 +76,8 @@ from .weapon_progression_editor import (
 )
 from .weapon_skin_editor import (
     WeaponSkinEdit,
+    WeaponSkinEquipEdit,
+    prepare_weapon_skin_equip_edit,
     prepare_weapon_skin_unlock_edit,
 )
 
@@ -100,6 +103,7 @@ UNIFIED_CATEGORY_KEYS = frozenset(
         "weapon_progression",
         "weapon_forge_unlock",
         "weapon_skins",
+        "weapon_skin_equip",
         "kill_effects",
         "advanced",
         "hero_levels",
@@ -119,6 +123,7 @@ UNIFIED_OPTIONAL_DEFAULTS: dict[str, object] = {
     "weapon_progression": [],
     "weapon_forge_unlock": [],
     "weapon_skins": [],
+    "weapon_skin_equip": [],
     "kill_effects": [],
 }
 UNIFIED_OPTIONAL_CATEGORY_KEYS = frozenset(UNIFIED_OPTIONAL_DEFAULTS)
@@ -225,6 +230,33 @@ def _weapon_skins(value: object) -> list[str]:
     return result
 
 
+def _weapon_skin_equip(value: object) -> list[dict[str, object]]:
+    if value is None:
+        return []
+    if not isinstance(value, list) or len(value) > 180:
+        raise InvalidUnifiedPlan(
+            "weapon_skin_equip debe ser una lista dentro del máximo admitido."
+        )
+    result: list[dict[str, object]] = []
+    seen: set[str] = set()
+    for item in value:
+        if not isinstance(item, Mapping):
+            raise InvalidUnifiedPlan("weapon_skin_equip contiene una entrada inválida.")
+        weapon_id = item.get("weapon_id")
+        skin_id = item.get("skin_id")
+        if not isinstance(weapon_id, str) or not weapon_id:
+            raise InvalidUnifiedPlan("weapon_skin_equip contiene un arma inválida.")
+        if skin_id is not None and (not isinstance(skin_id, str) or not skin_id):
+            raise InvalidUnifiedPlan("weapon_skin_equip contiene una skin inválida.")
+        if weapon_id in seen:
+            raise InvalidUnifiedPlan(
+                f"weapon_skin_equip repite el arma {weapon_id}."
+            )
+        seen.add(weapon_id)
+        result.append({"weapon_id": weapon_id, "skin_id": skin_id})
+    return sorted(result, key=lambda item: str(item["weapon_id"]))
+
+
 def _kill_effects(value: object) -> list[int]:
     if value is None:
         return []
@@ -295,7 +327,11 @@ def _decorations(value: object) -> dict[str, object] | None:
     if value is None:
         return None
     if isinstance(value, Mapping):
-        if not value.get("objects") and not value.get("levels"):
+        if (
+            not value.get("objects")
+            and not value.get("levels")
+            and not value.get("facilities")
+        ):
             return None
     try:
         return normalize_decoration_plan(value)
@@ -333,6 +369,7 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
         "weapon_progression": _weapons(raw.get("weapon_progression")),
         "weapon_forge_unlock": _weapons(raw.get("weapon_forge_unlock")),
         "weapon_skins": _weapon_skins(raw.get("weapon_skins")),
+        "weapon_skin_equip": _weapon_skin_equip(raw.get("weapon_skin_equip")),
         "kill_effects": _kill_effects(raw.get("kill_effects")),
         "advanced": _advanced(raw.get("advanced")),
         "hero_levels": _code_map(
@@ -354,6 +391,23 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
             for weapon_id in plan["weapon_progression"]
             if weapon_id not in forge_ids
         ]
+    # Los objetos decorativos ya garantizan su plano investigado desde el editor
+    # de decoraciones. Si el usuario también los seleccionó en Planos, dejamos un
+    # único propietario del campo para que el resultado no dependa del orden de
+    # selección y no se produzca un falso conflicto de solapamiento.
+    decorations = plan["decorations"]
+    blueprints = plan["blueprints"]
+    if isinstance(decorations, Mapping) and isinstance(blueprints, dict):
+        required: set[str] = set()
+        for object_id in decorations.get("objects", ()):
+            required.update(OBJECT_UNLOCK_BLUEPRINTS.get(str(object_id), ()))
+        if required:
+            filtered = {
+                blueprint_id: status
+                for blueprint_id, status in blueprints.items()
+                if blueprint_id not in required
+            }
+            plan["blueprints"] = dict(sorted(filtered.items())) if filtered else None
     if not any(
         (
             plan["gems"] is not None,
@@ -365,6 +419,7 @@ def normalize_unified_plan(raw: Mapping[str, object]) -> dict[str, object]:
             plan["weapon_progression"],
             plan["weapon_forge_unlock"],
             plan["weapon_skins"],
+            plan["weapon_skin_equip"],
             plan["kill_effects"],
             plan["advanced"],
             plan["hero_levels"],
@@ -462,6 +517,7 @@ def _category(
         | WeaponProgressionEdit
         | WeaponForgeUnlockEdit
         | WeaponSkinEdit
+        | WeaponSkinEquipEdit
         | KillEffectEdit
         | AdvancedEdit
         | HeroLevelEdit
@@ -535,6 +591,13 @@ def _category(
             "newly_unlocked": list(edit.newly_unlocked),
             "created_weapons": list(edit.created_weapons),
             "kind": "unlock",
+        }
+    elif isinstance(edit, WeaponSkinEquipEdit):
+        detail = {
+            "original": len(edit.changes),
+            "new": len(edit.changes),
+            "equipped": [change.summary() for change in edit.changes],
+            "kind": "equip",
         }
     elif isinstance(edit, KillEffectEdit):
         detail = {
@@ -623,6 +686,14 @@ def prepare_unified_edit(source: bytes, raw_plan: Mapping[str, object]) -> Unifi
             "weapon_skins",
             "Skins de arma",
             lambda value: prepare_weapon_skin_unlock_edit(value, plan["weapon_skins"]),
+        )
+    if plan["weapon_skin_equip"]:
+        apply(
+            "weapon_skin_equip",
+            "Skin de arma activa",
+            lambda value: prepare_weapon_skin_equip_edit(
+                value, plan["weapon_skin_equip"]
+            ),
         )
     if plan["kill_effects"]:
         apply(

@@ -1,6 +1,6 @@
 import {
   BatteryCharging, Check, CircleCheck, Coins, Fish, Gem, Medal,
-  PawPrint, ScrollText, Shirt, Sparkles, Sprout, Swords, Ticket, UserRound, Zap, Package, Armchair,
+  PawPrint, ScrollText, Shirt, Sparkles, Sprout, Swords, Ticket, UserRound, Zap, Package, Armchair, Landmark,
   type LucideIcon,
 } from 'lucide-react'
 import { useId, type ReactNode } from 'react'
@@ -55,6 +55,7 @@ const unlocks: Array<{ key: BulkKey; label: string; control: string; icon: Lucid
   { key: 'killEffects', label: 'Efectos de eliminación', control: 'Todos los efectos', icon: Sparkles },
   { key: 'pets', label: 'Mascotas', control: 'Todas las mascotas', icon: PawPrint },
   { key: 'petSkins', label: 'Skins de mascotas', control: 'Skins de mascotas', icon: Shirt },
+  { key: 'facilities', label: 'Instalaciones del vestíbulo', control: 'Todas las instalaciones pendientes', icon: Landmark },
 ]
 
 export function CategoryIcon({ id }: { id: CategoryId }) {
