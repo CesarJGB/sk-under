@@ -2,7 +2,7 @@
 
 Fecha: 2026-11-27
 Estado: implementación completada y probada localmente; validación física pendiente
-Commit: `PENDING`
+Commit: `901714f`
 
 ## 1. Resultado
 
